@@ -1,3 +1,6 @@
+---
+applyTo: "specifications/**"
+---
 # Personal Color Project - Copilot Instructions
 
 ## Project Overview
