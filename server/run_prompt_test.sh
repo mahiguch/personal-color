@@ -87,14 +87,24 @@ echo "5️⃣ Python依存関係確認..."
 
 cd "$(dirname "$0")"
 
+# 仮想環境の確認・作成
+if [ ! -d ".venv" ]; then
+    echo "📦 仮想環境作成中..."
+    python3 -m venv .venv
+fi
+
+# 仮想環境を有効化
+echo "🔄 仮想環境有効化中..."
+source .venv/bin/activate
+
 # requirements.txtから必要なパッケージをインストール
 if [ -f "requirements.txt" ]; then
     echo "📦 依存関係インストール中..."
-    pip3 install -r requirements.txt
+    pip install -r requirements.txt
     echo "✅ 依存関係インストール完了"
 else
     echo "📦 必要なパッケージをインストール中..."
-    pip3 install google-cloud-aiplatform vertexai pillow asyncio
+    pip install google-cloud-aiplatform vertexai pillow python-dotenv
     echo "✅ パッケージインストール完了"
 fi
 
@@ -116,7 +126,7 @@ fi
 echo "7️⃣ Geminiプロンプトテスト実行..."
 echo ""
 
-python3 test_gemini_prompts.py
+python test_gemini_prompts.py
 
 # 8. 結果確認
 echo ""

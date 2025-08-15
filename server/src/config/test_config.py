@@ -6,6 +6,10 @@ Vertex AI設定とテスト環境設定
 
 import os
 from typing import Optional
+from dotenv import load_dotenv
+
+# .env ファイルを読み込み
+load_dotenv()
 
 # Vertex AI設定
 class VertexAIConfig:
@@ -15,8 +19,8 @@ class VertexAIConfig:
     PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-project-id")
     LOCATION = os.getenv("VERTEX_AI_LOCATION", "asia-northeast1")
     
-    # モデル設定
-    MODEL_NAME = "gemini-1.5-pro-001"
+    # モデル設定（環境変数から取得、フォールバック付き）
+    MODEL_NAME = os.getenv("VERTEX_AI_MODEL", "gemini-1.5-pro")
     
     # APIリクエスト設定
     MAX_TOKENS = 1000
@@ -129,18 +133,21 @@ def setup_environment():
     
     # 4. Python依存関係チェック
     print("4️⃣ Python依存関係確認...")
-    required_packages = [
-        "vertexai", "google-cloud-aiplatform", "pillow", "asyncio"
+    package_checks = [
+        ("vertexai", "vertexai"),
+        ("google-cloud-aiplatform", "google.cloud.aiplatform"),
+        ("pillow", "PIL"),
+        ("asyncio", "asyncio")
     ]
     
     missing_packages = []
-    for package in required_packages:
+    for display_name, import_name in package_checks:
         try:
-            __import__(package.replace("-", "_"))
-            print(f"   ✅ {package}")
+            __import__(import_name)
+            print(f"   ✅ {display_name}")
         except ImportError:
-            print(f"   ❌ {package}")
-            missing_packages.append(package)
+            print(f"   ❌ {display_name}")
+            missing_packages.append(display_name)
     
     if missing_packages:
         print(f"\n📦 以下のパッケージをインストールしてください:")
@@ -149,10 +156,16 @@ def setup_environment():
     # 5. 認証情報チェック
     print("5️⃣ Google Cloud認証確認...")
     cred_env = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+    
+    # ADCファイルのパスをチェック
+    default_cred_path = os.path.expanduser("~/.config/gcloud/application_default_credentials.json")
+    
     if cred_env:
         print(f"   ✅ GOOGLE_APPLICATION_CREDENTIALS: {cred_env}")
+    elif os.path.exists(default_cred_path):
+        print(f"   ✅ Application Default Credentials: {default_cred_path}")
     else:
-        print("   ⚠️ GOOGLE_APPLICATION_CREDENTIALS が設定されていません")
+        print("   ⚠️ Google Cloud認証が見つかりません")
         print("   　gcloud auth application-default login を実行してください")
     
     print("\n" + "=" * 50)

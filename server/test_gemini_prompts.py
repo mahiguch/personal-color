@@ -7,10 +7,13 @@ Geminiプロンプトテスト実行スクリプト
 import json
 import asyncio
 import base64
+import os
 from pathlib import Path
 from typing import Dict, List, Optional
+from dotenv import load_dotenv
 import vertexai
 from vertexai.generative_models import GenerativeModel, Part
+from src.config.test_config import VertexAIConfig, TestConfig
 from src.prompts.personal_color_analysis import (
     get_analysis_prompt,
     get_error_prompt,
@@ -18,22 +21,24 @@ from src.prompts.personal_color_analysis import (
     SAMPLE_IMAGES
 )
 
-# Vertex AI設定
-PROJECT_ID = "your-project-id"  # 実際のプロジェクトIDに変更
-LOCATION = "asia-northeast1"
-MODEL_NAME = "gemini-1.5-pro-001"
+# .env ファイルを読み込み
+load_dotenv()
 
 class GeminiPromptTester:
     def __init__(self):
         """テスター初期化"""
         self.model = None
         self.test_results = []
+        # 設定クラスから値を取得
+        self.project_id = VertexAIConfig.PROJECT_ID
+        self.location = VertexAIConfig.LOCATION
+        self.model_name = VertexAIConfig.MODEL_NAME
         
     async def initialize(self):
         """Vertex AI初期化"""
         try:
-            vertexai.init(project=PROJECT_ID, location=LOCATION)
-            self.model = GenerativeModel(MODEL_NAME)
+            vertexai.init(project=self.project_id, location=self.location)
+            self.model = GenerativeModel(self.model_name)
             print("✅ Vertex AI初期化完了")
         except Exception as e:
             print(f"❌ Vertex AI初期化エラー: {e}")
@@ -103,6 +108,9 @@ class GeminiPromptTester:
             }
             
         except Exception as e:
+            print(f"❌ Gemini API詳細エラー: {type(e).__name__}: {str(e)}")
+            import traceback
+            traceback.print_exc()
             return {
                 "error": "Gemini API エラー",
                 "image_path": image_path,
