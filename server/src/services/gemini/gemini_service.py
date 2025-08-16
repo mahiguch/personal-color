@@ -13,7 +13,7 @@ from datetime import datetime
 from google.cloud import aiplatform
 from google.cloud.aiplatform import gapic
 import vertexai
-from vertexai.generative_models import GenerativeModel, Part, Image
+from vertexai.generative_models import GenerativeModel, Part, Image, GenerationConfig
 
 from ...core.config.settings import get_settings
 from ...core.errors.exceptions import GeminiServiceError, ValidationError
@@ -29,22 +29,51 @@ class GeminiService:
     def __init__(self):
         self.settings = get_settings()
         self._model = None
+        self._metrics = {
+            "total_requests": 0,
+            "successful_requests": 0,
+            "failed_requests": 0,
+            "avg_response_time": 0.0
+        }
         self._initialize_vertex_ai()
     
     def _initialize_vertex_ai(self):
         """Vertex AIの初期化"""
         try:
+            # 必要な設定値の検証
+            if not self.settings.google_cloud_project:
+                raise ValueError("GOOGLE_CLOUD_PROJECT環境変数が設定されていません")
+            
+            if not self.settings.vertex_ai_location:
+                raise ValueError("VERTEX_AI_LOCATION環境変数が設定されていません")
+            
+            # Vertex AI初期化
             vertexai.init(
                 project=self.settings.google_cloud_project,
                 location=self.settings.vertex_ai_location
             )
             
-            self._model = GenerativeModel(
-                model_name=self.settings.gemini_model_name,
-                system_instruction="あなたはパーソナルカラー診断の専門家です。小学5年生にも分かりやすく、親しみやすい表現で診断結果を説明してください。"
+            # 生成設定
+            generation_config = GenerationConfig(
+                max_output_tokens=2048,
+                temperature=0.3,
+                top_p=0.8,
+                top_k=40
             )
             
-            logger.info(f"Vertex AI initialized with model: {self.settings.gemini_model_name}")
+            # Geminiモデル初期化
+            self._model = GenerativeModel(
+                model_name=self.settings.gemini_model_name,
+                generation_config=generation_config,
+                system_instruction="""あなたはパーソナルカラー診断の専門家です。
+小学5年生にも分かりやすく、親しみやすい表現で診断結果を説明してください。
+必ずJSON形式で回答し、正確な診断を行ってください。"""
+            )
+            
+            logger.info(f"Vertex AI initialized successfully:")
+            logger.info(f"  Project: {self.settings.google_cloud_project}")
+            logger.info(f"  Location: {self.settings.vertex_ai_location}")
+            logger.info(f"  Model: {self.settings.gemini_model_name}")
             
         except Exception as e:
             logger.error(f"Failed to initialize Vertex AI: {e}")
@@ -92,7 +121,12 @@ class GeminiService:
             GeminiServiceError: Gemini API関連エラー
             ValidationError: 入力データ検証エラー
         """
+        start_time = datetime.utcnow()
+        self._metrics["total_requests"] += 1
+        
         try:
+            logger.info(f"パーソナルカラー診断開始: 画像サイズ={image.size}, フォーマット={image.format}")
+            
             # 1. プロンプト生成
             prompt_generator = PersonalColorPrompt()
             analysis_prompt = prompt_generator.create_analysis_prompt(metadata)
@@ -114,11 +148,21 @@ class GeminiService:
             # 5. 結果検証
             self._validate_analysis_result(result)
             
+            # メトリクス更新
+            end_time = datetime.utcnow()
+            response_time = (end_time - start_time).total_seconds()
+            self._update_metrics(True, response_time)
+            
+            logger.info(f"パーソナルカラー診断成功: タイプ={result.personal_color_type}, "
+                       f"信頼度={result.confidence}%, 処理時間={response_time:.2f}秒")
+            
             return result
             
         except ValidationError:
+            self._update_metrics(False)
             raise
         except Exception as e:
+            self._update_metrics(False)
             logger.error(f"Personal color analysis failed: {e}")
             raise GeminiServiceError(f"パーソナルカラー診断エラー: {str(e)}")
     
@@ -136,7 +180,7 @@ class GeminiService:
     
     async def _generate_content_async(self, content_parts) -> str:
         """
-        非同期でGemini APIを呼び出し
+        非同期でGemini APIを呼び出し（リトライ機能付き）
         
         Args:
             content_parts: 送信するコンテンツ（テキスト、画像など）
@@ -144,23 +188,55 @@ class GeminiService:
         Returns:
             str: 生成されたレスポンステキスト
         """
-        try:
-            # 非同期でGemini API呼び出し
-            loop = asyncio.get_event_loop()
-            response = await loop.run_in_executor(
-                None, 
-                self._model.generate_content,
-                content_parts
-            )
-            
-            if not response or not response.text:
-                raise GeminiServiceError("Gemini APIからレスポンスが返されませんでした")
-            
-            return response.text.strip()
-            
-        except Exception as e:
-            logger.error(f"Gemini content generation failed: {e}")
-            raise GeminiServiceError(f"Gemini API呼び出しエラー: {str(e)}")
+        max_retries = self.settings.max_retry_attempts
+        
+        for attempt in range(max_retries):
+            try:
+                logger.debug(f"Gemini API call attempt {attempt + 1}/{max_retries}")
+                
+                # 非同期でGemini API呼び出し
+                loop = asyncio.get_event_loop()
+                response = await loop.run_in_executor(
+                    None, 
+                    self._model.generate_content,
+                    content_parts
+                )
+                
+                # レスポンス検証
+                if not response:
+                    raise GeminiServiceError("Gemini APIからレスポンスが返されませんでした")
+                
+                if not hasattr(response, 'text') or not response.text:
+                    # レスポンスがブロックされた場合などの対応
+                    if hasattr(response, 'prompt_feedback'):
+                        feedback = response.prompt_feedback
+                        if hasattr(feedback, 'block_reason'):
+                            raise GeminiServiceError(f"プロンプトがブロックされました: {feedback.block_reason}")
+                    
+                    raise GeminiServiceError("Gemini APIからテキストレスポンスが取得できませんでした")
+                
+                response_text = response.text.strip()
+                if len(response_text) < 10:
+                    raise GeminiServiceError("レスポンスが短すぎます")
+                
+                logger.debug(f"Gemini API call successful on attempt {attempt + 1}")
+                return response_text
+                
+            except GeminiServiceError:
+                # すでに適切にフォーマットされたエラーは再発生
+                raise
+            except Exception as e:
+                logger.warning(f"Gemini API call attempt {attempt + 1} failed: {e}")
+                
+                # 最後の試行の場合は例外を発生
+                if attempt == max_retries - 1:
+                    logger.error(f"All {max_retries} Gemini API attempts failed")
+                    raise GeminiServiceError(f"Gemini API呼び出しエラー: {str(e)}")
+                
+                # リトライ前に少し待機
+                await asyncio.sleep(1.0 * (attempt + 1))
+        
+        raise GeminiServiceError("Gemini API呼び出しが予期しない理由で失敗しました")
     
     def _parse_analysis_response(self, response_text: str) -> "PersonalColorResult":
         """
@@ -184,7 +260,21 @@ class GeminiService:
             result_data = json.loads(json_text)
             
             # PersonalColorResultオブジェクト作成
-            from ...api.endpoints.diagnosis import PersonalColorResult
+            # インポートを遅延させてAPIエンドポイントの循環参照を回避
+            try:
+                from ...api.endpoints.diagnosis import PersonalColorResult
+            except ImportError:
+                # テスト環境などでPersonalColorResultが利用できない場合の代替
+                from dataclasses import dataclass
+                from typing import List
+                
+                @dataclass
+                class PersonalColorResult:
+                    personal_color_type: str
+                    confidence: float
+                    explanation: str
+                    recommended_colors: List[str]
+                    tips: List[str]
             
             return PersonalColorResult(
                 personal_color_type=result_data.get("personal_color_type", ""),
@@ -228,3 +318,42 @@ class GeminiService:
         
         if not result.tips or len(result.tips) == 0:
             raise ValidationError("アドバイスが設定されていません")
+    
+    def _update_metrics(self, success: bool, response_time: Optional[float] = None):
+        """メトリクスを更新"""
+        if success:
+            self._metrics["successful_requests"] += 1
+            if response_time is not None:
+                current_avg = self._metrics["avg_response_time"]
+                total_successful = self._metrics["successful_requests"]
+                # 移動平均で平均応答時間を更新
+                self._metrics["avg_response_time"] = (
+                    (current_avg * (total_successful - 1) + response_time) / total_successful
+                )
+        else:
+            self._metrics["failed_requests"] += 1
+    
+    def get_metrics(self) -> Dict[str, Any]:
+        """現在のメトリクスを取得"""
+        total = self._metrics["total_requests"]
+        success_rate = (
+            (self._metrics["successful_requests"] / total * 100) 
+            if total > 0 else 0.0
+        )
+        
+        return {
+            **self._metrics,
+            "success_rate_percent": round(success_rate, 2),
+            "model_name": self.settings.gemini_model_name,
+            "project": self.settings.google_cloud_project,
+            "location": self.settings.vertex_ai_location
+        }
+    
+    def reset_metrics(self):
+        """メトリクスをリセット"""
+        self._metrics = {
+            "total_requests": 0,
+            "successful_requests": 0,
+            "failed_requests": 0,
+            "avg_response_time": 0.0
+        }

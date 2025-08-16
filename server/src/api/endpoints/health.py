@@ -44,10 +44,13 @@ async def health_check() -> HealthResponse:
     try:
         gemini_service = GeminiService()
         gemini_status = await gemini_service.check_health()
+        gemini_metrics = gemini_service.get_metrics()
+        
         services["gemini"] = {
             "status": "healthy" if gemini_status else "unhealthy",
             "model": settings.gemini_model_name,
-            "location": settings.vertex_ai_location
+            "location": settings.vertex_ai_location,
+            "metrics": gemini_metrics
         }
     except Exception as e:
         logger.error(f"Gemini health check failed: {e}")

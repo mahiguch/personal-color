@@ -20,9 +20,9 @@ class Settings(BaseSettings):
     port: int = Field(default=8000, description="サーバーポート")
     
     # CORS設定
-    allowed_origins: List[str] = Field(
-        default=["http://localhost:3000", "http://127.0.0.1:3000"],
-        description="許可するオリジン"
+    allowed_origins: str = Field(
+        default="http://localhost:3000,http://127.0.0.1:3000",
+        description="許可するオリジン（カンマ区切り）"
     )
     
     # Google Cloud設定
@@ -31,11 +31,11 @@ class Settings(BaseSettings):
         description="Google Cloudプロジェクト ID"
     )
     vertex_ai_location: str = Field(
-        default="us-central1", 
+        default="asia-northeast1", 
         description="Vertex AI リージョン"
     )
     gemini_model_name: str = Field(
-        default="gemini-2.5-pro-002", 
+        default="gemini-2.5-flash", 
         description="使用するGeminiモデル名"
     )
     
