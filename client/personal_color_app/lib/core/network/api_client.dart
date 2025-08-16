@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'api_config.dart';
+import '../error/failures.dart';
 
 /// HTTP API クライアント
 class ApiClient {
@@ -157,27 +158,24 @@ class ApiClient {
   }
 
   /// エラーハンドリング
-  Exception _handleError(DioException error) {
+  Failure _handleError(DioException error) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
-        return Exception('接続がタイムアウトしました');
       case DioExceptionType.sendTimeout:
-        return Exception('送信がタイムアウトしました');
       case DioExceptionType.receiveTimeout:
-        return Exception('受信がタイムアウトしました');
+        return TimeoutFailure(message: error.message ?? 'Timeout error');
       case DioExceptionType.badResponse:
         final statusCode = error.response?.statusCode;
-        final message = error.response?.data?['message'] ?? 'サーバーエラー';
-        return Exception('HTTP $statusCode: $message');
+        final message = error.response?.data?['message'] ?? 'Server error';
+        return ServerFailure(message: message, statusCode: statusCode);
       case DioExceptionType.cancel:
-        return Exception('リクエストがキャンセルされました');
+        return UnexpectedFailure(message: 'Request was cancelled');
       case DioExceptionType.connectionError:
-        return Exception('ネットワーク接続エラー');
+        return NetworkFailure(message: error.message ?? 'Network connection error');
       case DioExceptionType.badCertificate:
-        return Exception('SSL証明書エラー');
+        return NetworkFailure(message: 'SSL certificate error');
       case DioExceptionType.unknown:
-      default:
-        return Exception('未知のエラー: ${error.message}');
+        return UnexpectedFailure(message: error.message ?? 'Unknown error');
     }
   }
 

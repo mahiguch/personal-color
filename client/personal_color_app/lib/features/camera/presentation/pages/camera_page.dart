@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/camera_provider.dart';
 import '../widgets/capture_button.dart';
+import '../../../../shared/widgets/error_display.dart';
 
 /// カメラ画面
 class CameraPage extends StatefulWidget {
@@ -118,30 +119,12 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
       );
     }
 
-    if (provider.hasError) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.error_outline,
-            color: Colors.red,
-            size: 64,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            provider.errorMessage ?? 'エラーが発生しました',
-            style: const TextStyle(color: Colors.white),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              provider.clearError();
-              provider.initialize();
-            },
-            child: const Text('再試行'),
-          ),
-        ],
+    if (provider.hasError && provider.failure != null) {
+      return ErrorDisplay(
+        failure: provider.failure!,
+        onRetry: () {
+          provider.initialize();
+        },
       );
     }
 
@@ -288,7 +271,19 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
                   ElevatedButton(
                     onPressed: provider.isProcessing
                         ? null
-                        : () => provider.processImage(),
+                        : () async {
+                            await provider.processImage();
+                            if (provider.hasError && provider.failure != null) {
+                              if (mounted) {
+                                ErrorSnackBar.show(
+                                  context,
+                                  provider.failure!,
+                                  onAction: () => provider.processImage(),
+                                  actionLabel: 'リトライ',
+                                );
+                              }
+                            }
+                          },
                     child: const Text('画像処理'),
                   ),
                 ] else ...[

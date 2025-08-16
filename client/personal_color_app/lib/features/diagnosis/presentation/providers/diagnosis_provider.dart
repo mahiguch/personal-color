@@ -3,6 +3,7 @@ import '../../domain/entities/diagnosis_result.dart';
 import '../../domain/usecases/diagnose_personal_color.dart';
 import '../../domain/usecases/check_api_health.dart';
 import '../../../../core/usecases/usecase.dart';
+import '../../../../core/error/failures.dart';
 
 /// 診断機能の状態
 enum DiagnosisState {
@@ -25,13 +26,14 @@ class DiagnosisProvider extends ChangeNotifier {
 
   DiagnosisState _state = DiagnosisState.initial;
   DiagnosisResult? _result;
-  String? _errorMessage;
+  Failure? _failure;
   bool _isApiHealthy = false;
 
   // Getters
   DiagnosisState get state => _state;
   DiagnosisResult? get result => _result;
-  String? get errorMessage => _errorMessage;
+  Failure? get failure => _failure;
+  String? get errorMessage => _failure?.userMessage;
   bool get isApiHealthy => _isApiHealthy;
   bool get isLoading => _state == DiagnosisState.loading;
   bool get hasResult => _state == DiagnosisState.completed && _result != null;
@@ -57,7 +59,7 @@ class DiagnosisProvider extends ChangeNotifier {
   /// パーソナルカラー診断を実行
   Future<void> diagnose(String imageBase64) async {
     if (imageBase64.isEmpty) {
-      _setError('画像データが必要です');
+      _setError(const UnexpectedFailure(message: '画像データが必要です'));
       return;
     }
 
@@ -77,7 +79,7 @@ class DiagnosisProvider extends ChangeNotifier {
 
     result.fold(
       (failure) {
-        _setError(failure.message ?? '診断に失敗しました');
+        _setError(UnexpectedFailure(message: failure.toString()));
       },
       (diagnosisResult) {
         _result = diagnosisResult;
@@ -107,12 +109,12 @@ class DiagnosisProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _setError(String message) {
-    _errorMessage = message;
+  void _setError(Failure failure) {
+    _failure = failure;
     _setState(DiagnosisState.error);
   }
 
   void _clearError() {
-    _errorMessage = null;
+    _failure = null;
   }
 }

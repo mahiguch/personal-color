@@ -8,6 +8,7 @@ import '../../domain/usecases/take_picture.dart';
 import '../../domain/usecases/process_image.dart';
 import '../../domain/repositories/camera_repository.dart';
 import '../../../../core/usecases/usecase.dart';
+import '../../../../core/error/failures.dart';
 
 /// カメラ機能の状態
 enum CameraState {
@@ -41,14 +42,15 @@ class CameraProvider extends ChangeNotifier {
   CameraPermission? _permission;
   CameraImage? _capturedImage;
   ProcessedImage? _processedImage;
-  String? _errorMessage;
+  Failure? _failure;
 
   // Getters
   CameraState get state => _state;
   CameraPermission? get permission => _permission;
   CameraImage? get capturedImage => _capturedImage;
   ProcessedImage? get processedImage => _processedImage;
-  String? get errorMessage => _errorMessage;
+  Failure? get failure => _failure;
+  String? get errorMessage => _failure?.userMessage;
   bool get isLoading => _state == CameraState.loading;
   bool get isReady => _state == CameraState.ready;
   bool get isCapturing => _state == CameraState.capturing;
@@ -66,7 +68,7 @@ class CameraProvider extends ChangeNotifier {
     
     result.fold(
       (failure) {
-        _setError(failure.message ?? 'カメラの初期化に失敗しました');
+        _setError(CameraFailure(message: failure.toString()));
       },
       (_) {
         _setState(CameraState.ready);
@@ -85,7 +87,7 @@ class CameraProvider extends ChangeNotifier {
     
     result.fold(
       (failure) {
-        _setError(failure.message ?? '撮影に失敗しました');
+        _setError(CameraFailure(message: failure.toString()));
         _setState(CameraState.ready);
       },
       (image) {
@@ -100,7 +102,7 @@ class CameraProvider extends ChangeNotifier {
     ImageProcessingConfig? config,
   }) async {
     if (_capturedImage == null) {
-      _setError('処理する画像がありません');
+      _setError(const ImageProcessingFailure(message: '処理する画像がありません'));
       return;
     }
 
@@ -116,7 +118,7 @@ class CameraProvider extends ChangeNotifier {
 
     result.fold(
       (failure) {
-        _setError(failure.message ?? '画像処理に失敗しました');
+        _setError(ImageProcessingFailure(message: failure.toString()));
         _setState(CameraState.ready);
       },
       (processedImage) {
@@ -160,12 +162,12 @@ class CameraProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _setError(String message) {
-    _errorMessage = message;
+  void _setError(Failure failure) {
+    _failure = failure;
     _setState(CameraState.error);
   }
 
   void _clearError() {
-    _errorMessage = null;
+    _failure = null;
   }
 }
