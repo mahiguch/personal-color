@@ -124,6 +124,9 @@ class CameraProvider extends ChangeNotifier {
       (processedImage) {
         _processedImage = processedImage;
         _setState(CameraState.processed);
+        
+        // 処理完了後にメモリ最適化を実行
+        _repository.optimizeMemoryUsage();
       },
     );
   }

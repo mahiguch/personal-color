@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 import '../providers/camera_provider.dart';
 import '../widgets/capture_button.dart';
 import '../../../../shared/widgets/error_display.dart';
+import '../../../diagnosis/presentation/providers/diagnosis_provider.dart';
+import '../../../diagnosis/presentation/pages/diagnosis_result_page.dart';
+import '../../../../core/di/injection_container.dart' as di;
 
 /// カメラ画面
 class CameraPage extends StatefulWidget {
@@ -288,14 +291,7 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
                   ),
                 ] else ...[
                   ElevatedButton(
-                    onPressed: () {
-                      // TODO: 診断画面に遷移
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('診断機能は実装中です'),
-                        ),
-                      );
-                    },
+                    onPressed: () => _startDiagnosis(context, provider),
                     child: const Text('診断開始'),
                   ),
                 ],
@@ -305,5 +301,77 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
         ],
       ),
     );
+  }
+
+  /// 診断を開始
+  Future<void> _startDiagnosis(BuildContext context, CameraProvider cameraProvider) async {
+    if (cameraProvider.processedImage == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('画像を処理してから診断してください'),
+        ),
+      );
+      return;
+    }
+
+    try {
+      // 診断プロバイダーを作成
+      final diagnosisProvider = di.sl<DiagnosisProvider>();
+      
+      // ローディング画面を表示
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+
+      // Base64データで診断実行
+      await diagnosisProvider.diagnose(cameraProvider.processedImage!.base64Data);
+
+      // ローディング画面を閉じる
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+
+      // 診断が成功した場合、結果画面に遷移
+      if (diagnosisProvider.hasResult && mounted) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider.value(
+              value: diagnosisProvider,
+              child: DiagnosisResultPage(
+                result: diagnosisProvider.result!,
+                originalImagePath: cameraProvider.capturedImage!.filePath,
+              ),
+            ),
+          ),
+        );
+      } else if (diagnosisProvider.hasError && mounted) {
+        // エラーの場合、エラーメッセージを表示
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(diagnosisProvider.errorMessage ?? '診断でエラーが発生しました'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      // ローディング画面を閉じる
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+      
+      // エラーメッセージを表示
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('診断でエラーが発生しました: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }

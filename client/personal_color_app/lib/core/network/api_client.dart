@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'api_config.dart';
+import 'ssl_pinning.dart';
 import '../error/failures.dart';
 
 /// HTTP API クライアント
@@ -11,6 +12,7 @@ class ApiClient {
     _dio = Dio();
     _setupInterceptors();
     _configureClient();
+    _setupSecurity();
   }
 
   /// Dioクライアントの設定
@@ -20,7 +22,11 @@ class ApiClient {
       connectTimeout: Duration(seconds: ApiConfig.connectTimeout),
       receiveTimeout: Duration(seconds: ApiConfig.receiveTimeout),
       sendTimeout: Duration(seconds: ApiConfig.sendTimeout),
-      headers: ApiConfig.defaultHeaders,
+      headers: {
+        ...ApiConfig.defaultHeaders,
+        ...SslPinning.getSecurityHeaders(),
+        'Accept-Encoding': 'gzip, deflate', // 圧縮対応
+      },
       responseType: ResponseType.json,
       followRedirects: true,
       validateStatus: (status) {
@@ -46,10 +52,39 @@ class ApiClient {
       );
     }
 
-    // リトライインターセプター
+    // パフォーマンス最適化インターセプター
     _dio.interceptors.add(
       InterceptorsWrapper(
+        onRequest: (options, handler) {
+          // リクエスト開始時間を記録
+          options.extra['start_time'] = DateTime.now();
+          
+          // 大きなデータの場合は圧縮を有効化
+          if (options.data != null) {
+            options.headers['Content-Encoding'] = 'gzip';
+          }
+          
+          debugPrint('🚀 API Request: ${options.method} ${options.path}');
+          handler.next(options);
+        },
+        onResponse: (response, handler) {
+          // レスポンス時間を計算
+          final startTime = response.requestOptions.extra['start_time'] as DateTime?;
+          if (startTime != null) {
+            final duration = DateTime.now().difference(startTime);
+            debugPrint('✅ API Response: ${response.statusCode} (${duration.inMilliseconds}ms)');
+          }
+          handler.next(response);
+        },
         onError: (error, handler) async {
+          // エラー時の処理時間も記録
+          final startTime = error.requestOptions.extra['start_time'] as DateTime?;
+          if (startTime != null) {
+            final duration = DateTime.now().difference(startTime);
+            debugPrint('❌ API Error: ${error.response?.statusCode} (${duration.inMilliseconds}ms)');
+          }
+          
+          // リトライ処理
           if (_shouldRetry(error)) {
             try {
               final response = await _retry(error.requestOptions);
@@ -177,6 +212,19 @@ class ApiClient {
       case DioExceptionType.unknown:
         return UnexpectedFailure(message: error.message ?? 'Unknown error');
     }
+  }
+
+  /// セキュリティ設定
+  void _setupSecurity() {
+    // SSL証明書ピニングの設定
+    SslPinning.setupCertificateVerification(_dio);
+    
+    // URL検証
+    SslPinning.validateSslConfiguration(ApiConfig.currentBaseUrl).then((isValid) {
+      if (!isValid) {
+        debugPrint('❌ SSL設定が無効です: ${ApiConfig.currentBaseUrl}');
+      }
+    });
   }
 
   /// リソースクリーンアップ

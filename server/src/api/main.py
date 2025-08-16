@@ -13,6 +13,7 @@ import logging
 from .endpoints.diagnosis import router as diagnosis_router
 from .endpoints.health import router as health_router
 from ..core.config.settings import get_settings
+from ..middleware.rate_limiter import RateLimitMiddleware
 
 # ログ設定
 logging.basicConfig(level=logging.INFO)
@@ -28,6 +29,16 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/docs" if settings.debug else None,
     redoc_url="/redoc" if settings.debug else None,
+)
+
+# ミドルウェア設定
+
+# レート制限ミドルウェア
+app.add_middleware(
+    RateLimitMiddleware,
+    default_requests_per_minute=getattr(settings, 'rate_limit_default', 60),
+    diagnosis_requests_per_minute=getattr(settings, 'rate_limit_diagnosis', 10),
+    burst_limit=getattr(settings, 'rate_limit_burst', 5)
 )
 
 # CORS設定

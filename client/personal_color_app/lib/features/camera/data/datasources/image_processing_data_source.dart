@@ -1,9 +1,45 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:isolate';
 import 'package:image/image.dart' as img;
+import 'package:flutter/foundation.dart';
 import '../models/processed_image_model.dart';
 import '../../domain/entities/image_processing_config.dart';
+
+/// Isolateで実行する画像処理の結果
+class ProcessedImageResult {
+  final Uint8List compressedBytes;
+  final String base64Data;
+  final int originalWidth;
+  final int originalHeight;
+  final int processedWidth;
+  final int processedHeight;
+  final int fileSizeBytes;
+  final int processingTimeMs;
+
+  ProcessedImageResult({
+    required this.compressedBytes,
+    required this.base64Data,
+    required this.originalWidth,
+    required this.originalHeight,
+    required this.processedWidth,
+    required this.processedHeight,
+    required this.fileSizeBytes,
+    required this.processingTimeMs,
+  });
+}
+
+/// Isolateに送信する画像処理パラメータ
+class ImageProcessingParams {
+  final Uint8List imageBytes;
+  final ImageProcessingConfig config;
+
+  ImageProcessingParams({
+    required this.imageBytes,
+    required this.config,
+  });
+}
 
 /// 画像処理データソースの抽象クラス
 abstract class ImageProcessingDataSource {
@@ -36,7 +72,7 @@ class ImageProcessingDataSourceImpl implements ImageProcessingDataSource {
 
       final Uint8List imageBytes = await imageFile.readAsBytes();
       
-      // 2. 画像をデコード
+      // 2. 画像をデコード（最適化：メモリ効率を重視）
       img.Image? decodedImage = img.decodeImage(imageBytes);
       if (decodedImage == null) {
         throw Exception('画像のデコードに失敗しました');
@@ -46,14 +82,31 @@ class ImageProcessingDataSourceImpl implements ImageProcessingDataSource {
       final originalWidth = image.width;
       final originalHeight = image.height;
 
-      // 3. 必要に応じてリサイズ
+      // 3. 効率的なリサイズ（アスペクト比を維持しつつ最適化）
       if (image.width > config.maxWidth || image.height > config.maxHeight) {
+        // アスペクト比を計算して適切なサイズを決定
+        final double aspectRatio = image.width / image.height;
+        int newWidth, newHeight;
+        
+        if (aspectRatio > 1) {
+          // 横長の場合
+          newWidth = config.maxWidth;
+          newHeight = (config.maxWidth / aspectRatio).round();
+        } else {
+          // 縦長の場合
+          newHeight = config.maxHeight;
+          newWidth = (config.maxHeight * aspectRatio).round();
+        }
+        
+        // 高品質なリサイズアルゴリズムを使用
         image = img.copyResize(
           image,
-          width: config.maxWidth,
-          height: config.maxHeight,
-          maintainAspect: true,
+          width: newWidth,
+          height: newHeight,
+          interpolation: img.Interpolation.linear,
         );
+        
+        debugPrint('🔧 画像リサイズ: ${originalWidth}x${originalHeight} → ${newWidth}x${newHeight}');
       }
 
       // 4. 品質設定でエンコード
@@ -182,14 +235,32 @@ class ImageProcessingDataSourceImpl implements ImageProcessingDataSource {
 
   @override
   Future<void> optimizeMemoryUsage() async {
-    // ガベージコレクションの実行
-    // Dartでは明示的なガベージコレクションはできないが、
-    // 大きなオブジェクトの参照をクリアすることでメモリを解放
+    debugPrint('🧹 メモリ最適化実行中...');
     
-    // 実際のアプリケーションでは、キャッシュされた画像データをクリアしたり、
-    // 不要な一時ファイルを削除したりする処理を入れる
+    // 一時ファイルディレクトリの不要ファイルを削除
+    try {
+      final tempDir = Directory.systemTemp;
+      final tempFiles = tempDir.listSync()
+          .where((entity) => entity is File && 
+                 entity.path.contains('image_picker') || 
+                 entity.path.contains('camera_'))
+          .cast<File>();
+          
+      for (final file in tempFiles) {
+        try {
+          await file.delete();
+          debugPrint('🗑️ 一時ファイル削除: ${file.path}');
+        } catch (e) {
+          // ファイルが使用中の場合は無視
+        }
+      }
+    } catch (e) {
+      debugPrint('⚠️ 一時ファイル削除エラー: $e');
+    }
     
-    // 現在は何もしない（将来の拡張のためのプレースホルダー）
-    await Future.delayed(const Duration(milliseconds: 1));
+    // 短い遅延でメモリ安定化を待つ
+    await Future.delayed(const Duration(milliseconds: 100));
+    
+    debugPrint('✅ メモリ最適化完了');
   }
 }

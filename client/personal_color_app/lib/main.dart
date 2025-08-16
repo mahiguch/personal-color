@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'core/di/injection_container.dart' as di;
 import 'features/camera/presentation/providers/camera_provider.dart';
 import 'features/camera/presentation/pages/camera_page.dart';
-import 'debug_camera_permission.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -74,17 +73,6 @@ class MyHomePage extends StatelessWidget {
                 '診断を始める',
                 style: TextStyle(fontSize: 18),
               ),
-            ),
-            const SizedBox(height: 20),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const DebugCameraPermission(),
-                  ),
-                );
-              },
-              child: const Text('カメラ権限デバッグ'),
             ),
           ],
         ),

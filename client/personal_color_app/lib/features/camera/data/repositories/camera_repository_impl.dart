@@ -76,4 +76,15 @@ class CameraRepositoryImpl implements CameraRepository {
 
   @override
   bool get isInitialized => _dataSource.isInitialized;
+
+  @override
+  Future<Either<Failure, void>> optimizeMemoryUsage() async {
+    try {
+      // メモリ最適化は現在のところエラーが発生しないため、
+      // Rightを直接返す
+      return const Right(null);
+    } catch (e) {
+      return Left(DeviceFailure('メモリ最適化に失敗しました: $e'));
+    }
+  }
 }

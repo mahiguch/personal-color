@@ -28,4 +28,7 @@ abstract class CameraRepository {
 
   /// カメラが初期化されているかチェック
   bool get isInitialized;
+
+  /// メモリ使用量を最適化
+  Future<Either<Failure, void>> optimizeMemoryUsage();
 }

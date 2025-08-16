@@ -3,7 +3,7 @@ Diagnosis Endpoints
 パーソナルカラー診断用のエンドポイント
 """
 
-from fastapi import APIRouter, HTTPException, File, UploadFile, Form
+from fastapi import APIRouter, HTTPException, File, UploadFile, Form, Request
 from pydantic import BaseModel, Field, validator
 from typing import Dict, Any, Optional, List
 import base64
@@ -13,7 +13,9 @@ import asyncio
 
 from ...services.gemini.gemini_service import GeminiService
 from ...services.image_processing.image_processor import ImageProcessor
+from ...services.security import cleanup_request_memory, ImageDataBuffer
 from ...core.config.settings import get_settings
+from ...core.privacy import privacy_manager
 from ...core.errors.exceptions import (
     ImageProcessingError,
     GeminiServiceError,
@@ -65,8 +67,8 @@ class DiagnosisResponse(BaseModel):
     processing_time_ms: int = Field(..., description="処理時間（ミリ秒）")
 
 
-@router.post("/diagnose", response_model=DiagnosisResponse)
-async def diagnose_personal_color(request: DiagnosisRequest) -> DiagnosisResponse:
+@router.post("/diagnose", response_model=DiagnosisResponse) 
+async def diagnose_personal_color(request: DiagnosisRequest, http_request: Request = None) -> DiagnosisResponse:
     """
     パーソナルカラー診断を実行
     
@@ -82,12 +84,25 @@ async def diagnose_personal_color(request: DiagnosisRequest) -> DiagnosisRespons
     start_time = datetime.utcnow()
     request_id = f"diag_{int(start_time.timestamp() * 1000)}"
     
+    # プライバシー準拠のアクセスログ
+    client_ip = getattr(http_request.client, 'host', 'unknown') if http_request else 'unknown'
+    user_agent = http_request.headers.get('user-agent') if http_request else None
+    privacy_manager.log_api_access(request_id, client_ip, "/api/v1/diagnose", user_agent)
+    
+    # データ最小化原則の検証
+    privacy_warnings = privacy_manager.validate_data_minimization(request.dict())
+    if privacy_warnings:
+        logger.warning(f"Privacy warnings for {request_id}: {privacy_warnings}")
+    
     logger.info(f"Starting diagnosis request: {request_id}")
     
     try:
         settings = get_settings()
         
-        # 1. 画像データの前処理
+        # 1. 画像データの前処理（セキュアバッファ使用）
+        image_data = base64.b64decode(request.image_base64)
+        secure_buffer = ImageDataBuffer(image_data)
+        
         image_processor = ImageProcessor()
         processed_image = await image_processor.process_base64_image(
             request.image_base64,
@@ -101,14 +116,22 @@ async def diagnose_personal_color(request: DiagnosisRequest) -> DiagnosisRespons
             metadata=request.metadata
         )
         
-        # 3. レスポンス生成
+        # 3. セキュアバッファをクリア
+        secure_buffer.clear()
+        
+        # 4. プライバシー準拠のレスポンス生成
         end_time = datetime.utcnow()
         processing_time_ms = int((end_time - start_time).total_seconds() * 1000)
+        
+        # 診断結果からプライバシーに配慮したレスポンスを作成
+        compliant_result = privacy_manager.create_privacy_compliant_response(
+            diagnosis_result.dict()
+        )
         
         response = DiagnosisResponse(
             request_id=request_id,
             timestamp=start_time.isoformat(),
-            result=diagnosis_result,
+            result=PersonalColorResult(**compliant_result),
             processing_time_ms=processing_time_ms
         )
         
@@ -117,6 +140,9 @@ async def diagnose_personal_color(request: DiagnosisRequest) -> DiagnosisRespons
             f"result: {diagnosis_result.personal_color_type}, "
             f"processing_time: {processing_time_ms}ms"
         )
+        
+        # 5. リクエスト終了時のメモリクリーンアップ
+        await cleanup_request_memory()
         
         return response
         
@@ -163,6 +189,13 @@ async def diagnose_personal_color(request: DiagnosisRequest) -> DiagnosisRespons
                 "detail": str(e) if settings.debug else None
             }
         )
+    
+    finally:
+        # エラー時でも必ずメモリクリーンアップ
+        try:
+            await cleanup_request_memory()
+        except Exception as cleanup_error:
+            logger.error(f"Memory cleanup failed for {request_id}: {cleanup_error}")
 
 
 @router.post("/diagnose/upload", response_model=DiagnosisResponse)
@@ -214,6 +247,17 @@ async def diagnose_with_file_upload(
             status_code=500,
             detail=f"ファイルアップロード処理でエラーが発生しました: {str(e)}"
         )
+
+
+@router.get("/privacy/policy")
+async def get_privacy_policy() -> Dict[str, Any]:
+    """
+    プライバシーポリシー準拠レポート
+    
+    Returns:
+        Dict[str, Any]: プライバシー準拠情報
+    """
+    return privacy_manager.get_privacy_policy_compliance_report()
 
 
 @router.get("/diagnose/test")
