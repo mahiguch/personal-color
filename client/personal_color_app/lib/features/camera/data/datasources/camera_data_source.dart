@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import '../models/camera_image_model.dart';
 import '../../domain/entities/camera_permission.dart';
 
@@ -14,6 +15,7 @@ abstract class CameraDataSource {
   Future<void> disposeCamera();
   bool get isPreviewAvailable;
   bool get isInitialized;
+  Widget? getCameraPreview();
 }
 
 /// カメラデータソースの実装
@@ -171,6 +173,14 @@ class CameraDataSourceImpl implements CameraDataSource {
   @override
   bool get isInitialized => 
       _controller?.value.isInitialized ?? false;
+
+  @override
+  Widget? getCameraPreview() {
+    if (_controller?.value.isInitialized == true) {
+      return CameraPreview(_controller!);
+    }
+    return null;
+  }
 
   /// カメラプレビューウィジェットを取得
   CameraPreview? get cameraPreview => 

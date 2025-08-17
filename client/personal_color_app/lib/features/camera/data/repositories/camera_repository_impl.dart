@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/widgets.dart';
 import '../../../../core/errors/failures.dart';
 import '../../domain/entities/camera_image.dart';
 import '../../domain/entities/camera_permission.dart';
@@ -86,5 +87,10 @@ class CameraRepositoryImpl implements CameraRepository {
     } catch (e) {
       return Left(DeviceFailure('メモリ最適化に失敗しました: $e'));
     }
+  }
+
+  @override
+  Widget? getCameraPreview() {
+    return _dataSource.getCameraPreview();
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/camera_provider.dart';
 import '../widgets/capture_button.dart';
+import '../widgets/camera_preview_widget.dart';
 import '../../../../shared/widgets/error_display.dart';
 import '../../../diagnosis/presentation/providers/diagnosis_provider.dart';
 import '../../../diagnosis/presentation/pages/diagnosis_result_page.dart';
@@ -132,27 +133,25 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
     }
 
     if (provider.isReady && provider.isPreviewAvailable) {
-      // TODO: カメラプレビューを表示
-      // 実際のデータソースインスタンスが必要
-      return Container(
-        width: double.infinity,
-        height: 400,
-        margin: const EdgeInsets.symmetric(horizontal: 32),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white54),
-        ),
-        child: const Center(
-          child: Text(
-            'カメラプレビュー\n（実装中）',
-            style: TextStyle(
-              color: Colors.white54,
-              fontSize: 16,
-            ),
-            textAlign: TextAlign.center,
+      final preview = provider.repository.getCameraPreview();
+      if (preview != null) {
+        return Container(
+          width: double.infinity,
+          height: 400,
+          margin: const EdgeInsets.symmetric(horizontal: 32),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white54),
           ),
-        ),
-      );
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: AspectRatio(
+              aspectRatio: 3 / 4, // 縦長の写真に適した比率
+              child: preview,
+            ),
+          ),
+        );
+      }
     }
 
     return const Text(

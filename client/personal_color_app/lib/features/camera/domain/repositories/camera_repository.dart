@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/widgets.dart';
 import '../../../../core/errors/failures.dart';
 import '../entities/camera_image.dart';
 import '../entities/camera_permission.dart';
@@ -31,4 +32,7 @@ abstract class CameraRepository {
 
   /// メモリ使用量を最適化
   Future<Either<Failure, void>> optimizeMemoryUsage();
+
+  /// カメラプレビューウィジェットを取得
+  Widget? getCameraPreview();
 }

@@ -51,6 +51,7 @@ class CameraProvider extends ChangeNotifier {
   ProcessedImage? get processedImage => _processedImage;
   Failure? get failure => _failure;
   String? get errorMessage => _failure?.userMessage;
+  CameraRepository get repository => _repository;
   bool get isLoading => _state == CameraState.loading;
   bool get isReady => _state == CameraState.ready;
   bool get isCapturing => _state == CameraState.capturing;
