@@ -29,31 +29,43 @@ class DiagnosisResultModel extends DiagnosisResult {
 
   /// APIレスポンスのJSONからモデルを作成
   factory DiagnosisResultModel.fromJson(Map<String, dynamic> json) {
+    // 本番API仕様に合わせてレスポンスをパース
+    final result = json['result'] as Map<String, dynamic>? ?? {};
+    
     return DiagnosisResultModel(
       diagnosisType: PersonalColorTypeExtension.fromApiValue(
-        json['diagnosis_result'] as String,
+        result['personal_color_type'] as String,
       ),
-      confidence: json['confidence'] as int,
-      explanation: json['explanation'] as String,
-      recommendedColors: _parseColorRecommendations(
-        json['recommended_colors'] as List<dynamic>,
+      confidence: (result['confidence'] as num).toInt(),
+      explanation: result['explanation'] as String,
+      recommendedColors: _parseColorList(
+        result['recommended_colors'] as List<dynamic>? ?? [],
       ),
-      avoidColors: _parseColorRecommendations(
-        json['avoid_colors'] as List<dynamic>,
+      avoidColors: const [], // 本番APIではavoid_colorsは含まれていない
+      tips: _parseTipsList(
+        result['tips'] as List<dynamic>? ?? [],
       ),
-      tips: json['tips'] as String,
       requestId: json['request_id'] as String?,
       processingTimeMs: json['processing_time_ms'] as int?,
     );
   }
 
-  /// 色推奨情報をパース
-  static List<ColorRecommendation> _parseColorRecommendations(
+  /// 色推奨情報をパース（本番API形式）
+  static List<ColorRecommendation> _parseColorList(
     List<dynamic> jsonList,
   ) {
     return jsonList
-        .map((item) => ColorRecommendation.fromJson(item as Map<String, dynamic>))
+        .map((colorName) => ColorRecommendation(
+              colorName: colorName.toString(),
+              reason: '',
+              hexColor: null, // 本番APIは色名のみ提供、HEXコードは無し
+            ))
         .toList();
+  }
+
+  /// チップス情報をパース
+  static String _parseTipsList(List<dynamic> jsonList) {
+    return jsonList.join('、');
   }
 
   /// モデルをJSONに変換

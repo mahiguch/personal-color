@@ -45,9 +45,7 @@ class DiagnosisRequestModel extends DiagnosisRequest {
   /// API送信用のJSONフォーマット
   Map<String, dynamic> toApiJson() {
     return {
-      'image_data': imageBase64,
-      'request_id': requestId ?? DateTime.now().millisecondsSinceEpoch.toString(),
-      'timestamp': (timestamp ?? DateTime.now()).toIso8601String(),
+      'image_base64': imageBase64,
       if (metadata != null) 'metadata': metadata,
     };
   }

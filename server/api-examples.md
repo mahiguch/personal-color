@@ -44,16 +44,26 @@ curl -X POST "https://personal-color-api-666814602151.asia-northeast1.run.app/ap
 **期待するレスポンス:**
 ```json
 {
-  "request_id": "diag_1234567890",
-  "timestamp": "2025-08-17T01:00:00.000000Z",
+  "request_id": "diag_1755405413338",
+  "timestamp": "2025-08-17T04:36:53.338183",
   "result": {
-    "personal_color_type": "Spring",
-    "confidence": 85.5,
-    "explanation": "明るく鮮やかな色合いがお似合いです",
-    "recommended_colors": ["#FF6B6B", "#4ECDC4", "#45B7D1"],
-    "tips": ["明るい色を選びましょう", "パステルカラーもおすすめです"]
+    "personal_color_type": "Autumn",
+    "confidence": 85.0,
+    "explanation": "あなたのお肌は、なんだかあったかい感じの黄色っぽい色をしているね！髪の毛は落ち着いた黒色で、瞳もくっきりとした濃い茶色だから、まるで秋の森みたいに、深みのある色がとっても似合うんだよ。",
+    "recommended_colors": [
+      "カーキ",
+      "マスタードイエロー", 
+      "テラコッタ（レンガ色）",
+      "ブラウン",
+      "オリーブグリーン"
+    ],
+    "tips": [
+      "落ち着いた色の服を着ると、あなたの頼りになる素敵な魅力がもっと輝くよ！",
+      "アクセサリーは、キラキラしたゴールド系が特におすすめだよ。",
+      "もしおしゃれをするなら、深みのある緑や茶色、オレンジっぽい色がとっても似合うよ。"
+    ]
   },
-  "processing_time_ms": 1500
+  "processing_time_ms": 23680
 }
 ```
 

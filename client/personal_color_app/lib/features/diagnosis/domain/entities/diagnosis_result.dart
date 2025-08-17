@@ -97,18 +97,27 @@ extension PersonalColorTypeExtension on PersonalColorType {
   String get apiValue {
     switch (this) {
       case PersonalColorType.spring:
-        return 'スプリング';
+        return 'Spring';
       case PersonalColorType.summer:
-        return 'サマー';
+        return 'Summer';
       case PersonalColorType.autumn:
-        return 'オータム';
+        return 'Autumn';
       case PersonalColorType.winter:
-        return 'ウィンター';
+        return 'Winter';
     }
   }
 
   static PersonalColorType fromApiValue(String value) {
     switch (value) {
+      case 'Spring':
+        return PersonalColorType.spring;
+      case 'Summer':
+        return PersonalColorType.summer;
+      case 'Autumn':
+        return PersonalColorType.autumn;
+      case 'Winter':
+        return PersonalColorType.winter;
+      // 日本語版も互換性のために対応
       case 'スプリング':
         return PersonalColorType.spring;
       case 'サマー':

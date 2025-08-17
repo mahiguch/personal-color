@@ -59,7 +59,10 @@ class ColorPaletteWidget extends StatelessWidget {
   }
 
   Widget _buildColorChip(String colorName, String? hexColor) {
-    final color = hexColor != null ? _parseHexColor(hexColor) : _getColorFromName(colorName);
+    // 本番APIでは色名のみが提供される、HEXコードはnullの場合が多い
+    final color = hexColor != null && hexColor.isNotEmpty 
+        ? _parseHexColor(hexColor) 
+        : _getColorFromName(colorName);
     
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -108,8 +111,9 @@ class ColorPaletteWidget extends StatelessWidget {
   }
 
   Color _getColorFromName(String colorName) {
-    // カラー名から対応する色を返す
+    // カラー名から対応する色を返す（本番API対応版）
     final colorMap = {
+      // 従来の色名
       'コーラルピンク': const Color(0xFFFF7F7F),
       'イエローグリーン': const Color(0xFF9ACD32),
       'アクアブルー': const Color(0xFF00CED1),
@@ -127,20 +131,31 @@ class ColorPaletteWidget extends StatelessWidget {
       'ロイヤルブルー': const Color(0xFF4169E1),
       'クリムゾン': const Color(0xFFDC143C),
       'パープル': const Color(0xFF800080),
+      
+      // 本番APIで返される色名対応
+      'カーキ': const Color(0xFF827052),
+      'マスタードイエロー': const Color(0xFFFFDB58),
+      'テラコッタ（レンガ色）': const Color(0xFFE2725B),
+      'ブラウン': const Color(0xFFA0522D),
     };
 
     return colorMap[colorName] ?? Colors.grey;
   }
 
   Color _parseHexColor(String hexColor) {
-    if (hexColor.startsWith('#')) {
-      hexColor = hexColor.substring(1);
+    try {
+      if (hexColor.startsWith('#')) {
+        hexColor = hexColor.substring(1);
+      }
+      if (hexColor.length == 6) {
+        return Color(int.parse('FF$hexColor', radix: 16));
+      } else if (hexColor.length == 8) {
+        return Color(int.parse(hexColor, radix: 16));
+      }
+      return Colors.grey;
+    } catch (e) {
+      // HEX解析に失敗した場合はgreyを返す
+      return Colors.grey;
     }
-    if (hexColor.length == 6) {
-      return Color(int.parse('FF$hexColor', radix: 16));
-    } else if (hexColor.length == 8) {
-      return Color(int.parse(hexColor, radix: 16));
-    }
-    return Colors.grey;
   }
 }

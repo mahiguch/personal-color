@@ -23,7 +23,7 @@ class DiagnosisRemoteDataSourceImpl implements DiagnosisRemoteDataSource {
     try {
       final response = await _apiClient.post(
         ApiConfig.diagnosisEndpoint,
-        data: request.toJson(),
+        data: request.toApiJson(),
         headers: {
           'Content-Type': 'application/json',
         },

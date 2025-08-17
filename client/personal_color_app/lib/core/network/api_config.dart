@@ -1,11 +1,12 @@
 /// API通信設定
 class ApiConfig {
-  static const String baseUrl = 'https://your-api-domain.com'; // TODO: 本番環境のURL
+  static const String baseUrl = 'https://personal-color-api-666814602151.asia-northeast1.run.app'; // 本番環境のURL
   static const String developmentUrl = 'http://localhost:8000'; // 開発環境用
   
   // エンドポイント
-  static const String diagnosisEndpoint = '/api/v1/diagnosis';
-  static const String healthCheckEndpoint = '/health';
+  static const String diagnosisEndpoint = '/api/v1/diagnose';
+  static const String healthCheckEndpoint = '/api/v1/diagnose/test';
+  static const String privacyPolicyEndpoint = '/api/v1/privacy/policy';
   
   // タイムアウト設定（秒）
   static const int connectTimeout = 10;
@@ -25,9 +26,8 @@ class ApiConfig {
   
   /// 現在の環境に応じたベースURL
   static String get currentBaseUrl {
-    // TODO: 環境変数やFlavor設定で切り替え
-    const bool isDevelopment = true; // 開発中はtrue
-    return isDevelopment ? developmentUrl : baseUrl;
+    // 本番環境を使用
+    return baseUrl;
   }
   
   /// 完全なURL
