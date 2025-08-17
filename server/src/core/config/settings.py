@@ -39,6 +39,16 @@ class Settings(BaseSettings):
         description="使用するGeminiモデル名"
     )
     
+    # Firebase設定
+    firebase_project_id: str = Field(
+        default="personal-color-469007",
+        description="Firebase プロジェクト ID"
+    )
+    firebase_credentials_path: str = Field(
+        default="",
+        description="Firebase認証情報ファイルのパス"
+    )
+    
     # API設定
     max_image_size_mb: int = Field(default=10, description="最大画像サイズ(MB)")
     request_timeout_seconds: int = Field(default=30, description="リクエストタイムアウト(秒)")

@@ -5,6 +5,7 @@ uvicorn[standard]==0.24.0
 # Google Cloud & AI
 google-cloud-aiplatform>=1.55.0
 google-auth==2.23.4
+firebase-admin==6.2.0
 
 # Image Processing
 Pillow==10.1.0

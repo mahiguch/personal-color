@@ -3,10 +3,22 @@ import 'package:provider/provider.dart';
 import 'core/di/injection_container.dart' as di;
 import 'features/camera/presentation/providers/camera_provider.dart';
 import 'features/camera/presentation/pages/camera_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'core/services/firebase_app_check_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
+  
+  // Firebase初期化
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  
+  // Firebase App Check初期化
+  await FirebaseAppCheckService.initialize();
+  
   runApp(const MyApp());
 }
 

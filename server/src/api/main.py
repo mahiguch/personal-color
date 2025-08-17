@@ -14,6 +14,7 @@ from .endpoints.diagnosis import router as diagnosis_router
 from .endpoints.health import router as health_router
 from ..core.config.settings import get_settings
 from ..middleware.rate_limiter import RateLimitMiddleware
+# from ..middleware.app_check_middleware import AppCheckMiddleware  # 依存関係問題により一時無効化
 from ..core.monitoring import metrics_collector, health_checker
 
 # ログ設定
@@ -33,6 +34,16 @@ app = FastAPI(
 )
 
 # ミドルウェア設定
+
+# Firebase App Check ミドルウェア（最初に追加）
+# 依存関係問題により一時無効化
+# firebase_project_id = getattr(settings, 'firebase_project_id', 'personal-color-469007')
+# skip_app_check = settings.debug or settings.environment != 'production'
+# app.add_middleware(
+#     AppCheckMiddleware,
+#     project_id=firebase_project_id,
+#     skip_verification=skip_app_check
+# )
 
 # レート制限ミドルウェア
 app.add_middleware(

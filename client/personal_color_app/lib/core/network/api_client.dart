@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'api_config.dart';
 import 'ssl_pinning.dart';
 import '../error/failures.dart';
+import '../services/firebase_app_check_service.dart';
 
 /// HTTP API クライアント
 class ApiClient {
@@ -38,6 +39,27 @@ class ApiClient {
 
   /// インターセプターの設定
   void _setupInterceptors() {
+    // Firebase App Check トークンを自動付与
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          try {
+            // App Checkトークンを取得してヘッダーに追加
+            final token = await FirebaseAppCheckService.getToken();
+            if (token != null) {
+              options.headers['X-Firebase-AppCheck'] = token;
+              debugPrint('🔐 App Check token added to request');
+            } else {
+              debugPrint('⚠️ App Check token not available');
+            }
+          } catch (e) {
+            debugPrint('⚠️ Failed to get App Check token: $e');
+          }
+          handler.next(options);
+        },
+      ),
+    );
+
     // ログ出力（デバッグモードのみ）
     if (kDebugMode) {
       _dio.interceptors.add(
