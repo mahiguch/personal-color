@@ -102,7 +102,7 @@ def mock_image_processor():
 
 
 @pytest.fixture
-async def temp_image_file():
+def temp_image_file():
     """Create a temporary image file for testing"""
     with tempfile.NamedTemporaryFile(suffix='.jpg', delete=False) as tmp_file:
         # Write minimal JPEG data

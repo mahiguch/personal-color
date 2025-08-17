@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  personal-color-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "8000:8000"
+    environment:
+      # Application Settings
+      ENVIRONMENT: production
+      DEBUG: false
+      HOST: 0.0.0.0
+      PORT: 8000
+      
+      # CORS Settings
+      ALLOWED_ORIGINS: "*"
+      
+      # Google Cloud Configuration
+      GOOGLE_CLOUD_PROJECT: personal-color-469007
+      VERTEX_AI_LOCATION: asia-northeast1
+      GEMINI_MODEL_NAME: gemini-2.5-flash
+      
+      # API Configuration
+      MAX_IMAGE_SIZE_MB: 10
+      REQUEST_TIMEOUT_SECONDS: 30
+      MAX_RETRY_ATTEMPTS: 3
+      
+      # Security Settings
+      API_KEY: 11A77CCB-4FA0-4CB8-A1FC-E331EAA24B2E
+      RATE_LIMIT_PER_MINUTE: 60
+      
+      # Rate Limiting (detailed)
+      RATE_LIMIT_DEFAULT: 60
+      RATE_LIMIT_DIAGNOSIS: 10
+      RATE_LIMIT_BURST: 5
+      
+      # Performance Settings
+      WORKER_COUNT: 1
+      MAX_CONCURRENT_REQUESTS: 100
+      
+      # Logging Configuration
+      LOG_LEVEL: INFO
+      
+      # Monitoring Settings
+      ENABLE_METRICS: true
+      ENABLE_TRACING: true
+      
+      # Google Cloud Authentication (for local testing)
+      GOOGLE_APPLICATION_CREDENTIALS: /app/service-account.json
+    volumes:
+      # Mount your service account key if available for testing
+      # - ~/.config/gcloud/application_default_credentials.json:/app/service-account.json:ro
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/diagnose/test"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - personal-color-network
+
+  # 開発環境用 (デバッグ用)
+  personal-color-api-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    ports:
+      - "8001:8000"
+    environment:
+      ENVIRONMENT: development
+      DEBUG: true
+      HOST: 0.0.0.0
+      PORT: 8000
+      GOOGLE_CLOUD_PROJECT: personal-color-469007
+      VERTEX_AI_LOCATION: asia-northeast1
+      GEMINI_MODEL_NAME: gemini-2.5-flash
+      ALLOWED_ORIGINS: "*"
+      LOG_LEVEL: DEBUG
+    volumes:
+      - .:/app
+      - ./logs:/app/logs
+    profiles:
+      - dev
+    networks:
+      - personal-color-network
+
+networks:
+  personal-color-network:
+    driver: bridge
+
+# 本番テスト用プロファイル
+# docker-compose --profile production up

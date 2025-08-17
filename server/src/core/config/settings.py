@@ -48,6 +48,19 @@ class Settings(BaseSettings):
     api_key: str = Field(default="", description="API認証キー")
     rate_limit_per_minute: int = Field(default=60, description="分間レート制限")
     
+    # レート制限詳細設定
+    rate_limit_default: int = Field(default=60, description="デフォルトレート制限")
+    rate_limit_diagnosis: int = Field(default=10, description="診断レート制限")
+    rate_limit_burst: int = Field(default=5, description="バーストレート制限")
+    
+    # パフォーマンス設定
+    worker_count: int = Field(default=4, description="ワーカー数")
+    max_concurrent_requests: int = Field(default=100, description="最大同時リクエスト数")
+    
+    # 監視設定
+    enable_metrics: bool = Field(default=True, description="メトリクス有効化")
+    enable_tracing: bool = Field(default=True, description="トレーシング有効化")
+    
     # ログ設定
     log_level: str = Field(default="INFO", description="ログレベル")
     log_format: str = Field(
@@ -59,6 +72,7 @@ class Settings(BaseSettings):
         env_file = ".env"
         env_file_encoding = "utf-8"
         case_sensitive = False
+        extra = "ignore"  # 未定義の環境変数を無視
 
 
 @lru_cache()

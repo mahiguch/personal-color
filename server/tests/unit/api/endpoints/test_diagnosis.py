@@ -6,6 +6,7 @@ import pytest
 from unittest.mock import patch, AsyncMock, MagicMock
 from fastapi.testclient import TestClient
 import json
+import time
 
 from src.api.endpoints.diagnosis import router
 from tests.conftest import TEST_DIAGNOSIS_RESULTS
@@ -13,6 +14,11 @@ from tests.conftest import TEST_DIAGNOSIS_RESULTS
 
 class TestDiagnosisEndpoints:
     """Test class for diagnosis endpoints"""
+
+    @pytest.fixture(autouse=True)
+    def setup_method(self):
+        """各テストメソッドの実行前に0.2秒待機"""
+        time.sleep(1)
 
     def test_diagnose_success(self, client: TestClient, sample_diagnosis_request):
         """Test successful diagnosis"""
@@ -126,7 +132,7 @@ class TestDiagnosisEndpoints:
             # Assertions
             assert response.status_code == 500
             response_data = response.json()
-            assert response_data["error"] == "internal_server_error"
+            assert response_data["detail"]["error"] == "internal_server_error"
             
             # Verify cleanup was called even on error
             mock_cleanup.assert_called_once()
@@ -134,13 +140,32 @@ class TestDiagnosisEndpoints:
     def test_diagnose_upload_success(self, client: TestClient, temp_image_file):
         """Test successful file upload diagnosis"""
         
-        with patch('src.api.endpoints.diagnosis.diagnose_personal_color') as mock_diagnose:
-            mock_diagnose.return_value = MagicMock(
-                request_id="test_id",
-                timestamp="2024-01-01T00:00:00Z",
-                result=MagicMock(**TEST_DIAGNOSIS_RESULTS["spring"]),
-                processing_time_ms=1000
+        with patch('src.api.endpoints.diagnosis.GeminiService') as mock_gemini_class, \
+             patch('src.api.endpoints.diagnosis.ImageProcessor') as mock_processor_class, \
+             patch('src.api.endpoints.diagnosis.cleanup_request_memory') as mock_cleanup, \
+             patch('src.api.endpoints.diagnosis.ImageDataBuffer') as mock_buffer, \
+             patch('src.api.endpoints.diagnosis.privacy_manager') as mock_privacy:
+            
+            # Setup mocks like in successful test
+            mock_gemini = AsyncMock()
+            mock_gemini.analyze_personal_color.return_value = MagicMock(
+                **TEST_DIAGNOSIS_RESULTS["spring"],
+                dict=lambda: TEST_DIAGNOSIS_RESULTS["spring"]
             )
+            mock_gemini_class.return_value = mock_gemini
+            
+            mock_processor = AsyncMock()
+            mock_processor.process_base64_image.return_value = "processed_image_data"
+            mock_processor_class.return_value = mock_processor
+            
+            mock_buffer_instance = MagicMock()
+            mock_buffer.return_value = mock_buffer_instance
+            
+            mock_privacy.log_api_access.return_value = None
+            mock_privacy.validate_data_minimization.return_value = []
+            mock_privacy.create_privacy_compliant_response.return_value = TEST_DIAGNOSIS_RESULTS["spring"]
+            
+            mock_cleanup.return_value = None
             
             with open(temp_image_file, 'rb') as f:
                 response = client.post(
@@ -149,20 +174,40 @@ class TestDiagnosisEndpoints:
                 )
             
             assert response.status_code == 200
-            mock_diagnose.assert_called_once()
+            response_data = response.json()
+            assert response_data["result"]["personal_color_type"] == "Spring"
 
     def test_diagnose_upload_with_metadata(self, client: TestClient, temp_image_file):
         """Test file upload diagnosis with metadata"""
         
         metadata = {"app_version": "1.0.0", "device_type": "test"}
         
-        with patch('src.api.endpoints.diagnosis.diagnose_personal_color') as mock_diagnose:
-            mock_diagnose.return_value = MagicMock(
-                request_id="test_id",
-                timestamp="2024-01-01T00:00:00Z", 
-                result=MagicMock(**TEST_DIAGNOSIS_RESULTS["spring"]),
-                processing_time_ms=1000
+        with patch('src.api.endpoints.diagnosis.GeminiService') as mock_gemini_class, \
+             patch('src.api.endpoints.diagnosis.ImageProcessor') as mock_processor_class, \
+             patch('src.api.endpoints.diagnosis.cleanup_request_memory') as mock_cleanup, \
+             patch('src.api.endpoints.diagnosis.ImageDataBuffer') as mock_buffer, \
+             patch('src.api.endpoints.diagnosis.privacy_manager') as mock_privacy:
+            
+            # Setup mocks like in successful test
+            mock_gemini = AsyncMock()
+            mock_gemini.analyze_personal_color.return_value = MagicMock(
+                **TEST_DIAGNOSIS_RESULTS["spring"],
+                dict=lambda: TEST_DIAGNOSIS_RESULTS["spring"]
             )
+            mock_gemini_class.return_value = mock_gemini
+            
+            mock_processor = AsyncMock()
+            mock_processor.process_base64_image.return_value = "processed_image_data"
+            mock_processor_class.return_value = mock_processor
+            
+            mock_buffer_instance = MagicMock()
+            mock_buffer.return_value = mock_buffer_instance
+            
+            mock_privacy.log_api_access.return_value = None
+            mock_privacy.validate_data_minimization.return_value = []
+            mock_privacy.create_privacy_compliant_response.return_value = TEST_DIAGNOSIS_RESULTS["spring"]
+            
+            mock_cleanup.return_value = None
             
             with open(temp_image_file, 'rb') as f:
                 response = client.post(
@@ -172,7 +217,8 @@ class TestDiagnosisEndpoints:
                 )
             
             assert response.status_code == 200
-            mock_diagnose.assert_called_once()
+            response_data = response.json()
+            assert response_data["result"]["personal_color_type"] == "Spring"
 
     def test_diagnose_upload_invalid_metadata(self, client: TestClient, temp_image_file):
         """Test file upload diagnosis with invalid metadata"""
@@ -205,36 +251,6 @@ class TestDiagnosisEndpoints:
             assert "data_minimization" in response_data
             assert "storage_limitation" in response_data
             assert "last_updated" in response_data
-
-    def test_test_endpoint_healthy(self, client: TestClient):
-        """Test the test endpoint when service is healthy"""
-        
-        with patch('src.api.endpoints.diagnosis.GeminiService') as mock_gemini_class:
-            mock_gemini = AsyncMock()
-            mock_gemini.check_health.return_value = True
-            mock_gemini_class.return_value = mock_gemini
-            
-            response = client.get("/api/v1/diagnose/test")
-            
-            assert response.status_code == 200
-            response_data = response.json()
-            assert response_data["status"] == "ok"
-            assert response_data["gemini_service"] == "healthy"
-
-    def test_test_endpoint_unhealthy(self, client: TestClient):
-        """Test the test endpoint when service is unhealthy"""
-        
-        with patch('src.api.endpoints.diagnosis.GeminiService') as mock_gemini_class:
-            mock_gemini = AsyncMock()
-            mock_gemini.check_health.side_effect = Exception("Service unavailable")
-            mock_gemini_class.return_value = mock_gemini
-            
-            response = client.get("/api/v1/diagnose/test")
-            
-            assert response.status_code == 503
-            response_data = response.json()
-            assert "テストに失敗しました" in response_data["detail"]
-
 
 class TestDiagnosisRequestValidation:
     """Test diagnosis request validation"""

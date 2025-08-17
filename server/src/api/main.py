@@ -14,6 +14,7 @@ from .endpoints.diagnosis import router as diagnosis_router
 from .endpoints.health import router as health_router
 from ..core.config.settings import get_settings
 from ..middleware.rate_limiter import RateLimitMiddleware
+from ..core.monitoring import metrics_collector, health_checker
 
 # ログ設定
 logging.basicConfig(level=logging.INFO)
@@ -82,6 +83,18 @@ async def startup_event():
 async def shutdown_event():
     """アプリケーション終了時の処理"""
     logger.info("Personal Color Diagnosis API Server shutting down...")
+
+# メトリクスエンドポイント
+@app.get("/metrics")
+async def get_metrics() -> Dict[str, Any]:
+    """メトリクス情報を取得"""
+    return await metrics_collector.get_metrics()
+
+# 詳細ヘルスチェックエンドポイント
+@app.get("/health/detailed")
+async def detailed_health_check() -> Dict[str, Any]:
+    """詳細なヘルスチェック"""
+    return await health_checker.get_comprehensive_health()
 
 # ルートエンドポイント
 @app.get("/")

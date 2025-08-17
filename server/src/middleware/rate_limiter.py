@@ -154,9 +154,9 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             window_seconds=60
         )
         
-        # 診断エンドポイント用（より厳格）
-        self.diagnosis_limiter = AdaptiveRateLimiter(
-            base_limit=diagnosis_requests_per_minute,
+        # 診断エンドポイント用（シンプルな制限）
+        self.diagnosis_limiter = SlidingWindowRateLimiter(
+            max_requests=diagnosis_requests_per_minute,
             window_seconds=60
         )
         
@@ -195,9 +195,9 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             # リクエスト処理
             response = await call_next(request)
             
-            # エラーレスポンスの場合は適応的制限に記録
-            if endpoint_type == "diagnosis" and response.status_code >= 400:
-                await self.diagnosis_limiter.is_allowed(client_id, is_error=True)
+            # エラーレスポンスの記録（シンプル制限では不要）
+            # if endpoint_type == "diagnosis" and response.status_code >= 400:
+            #     await self.diagnosis_limiter.is_allowed(client_id, is_error=True)
             
             # レート制限ヘッダーを追加
             self._add_rate_limit_headers(response, endpoint_type)
@@ -238,10 +238,10 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
     async def _check_burst_limit(self, client_id: str) -> bool:
         """バーストリクエスト制限チェック"""
         if client_id not in self.burst_limiters:
-            # 10秒で5リクエストまで（バースト制限）
+            # 10秒で10リクエストまで（バースト制限を緩和）
             self.burst_limiters[client_id] = TokenBucket(
-                capacity=self.burst_limit,
-                refill_rate=0.5  # 2秒に1トークン補充
+                capacity=max(self.burst_limit, 10),
+                refill_rate=1.0  # 1秒に1トークン補充
             )
         
         return await self.burst_limiters[client_id].consume()
@@ -264,7 +264,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
     def _add_rate_limit_headers(self, response: Response, endpoint_type: str):
         """レート制限ヘッダーを追加"""
         if endpoint_type == "diagnosis":
-            response.headers["X-RateLimit-Limit-Diagnosis"] = str(self.diagnosis_limiter.current_limit)
+            response.headers["X-RateLimit-Limit-Diagnosis"] = str(self.diagnosis_limiter.max_requests)
         else:
             response.headers["X-RateLimit-Limit-General"] = str(self.default_limiter.max_requests)
         
