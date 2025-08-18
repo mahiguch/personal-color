@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- 背景グラデーション -->
+    <radialGradient id="backgroundGradient" cx="50%" cy="50%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FFE4E6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E6F3FF;stop-opacity:1" />
+    </radialGradient>
+    
+    <!-- 鏡フレームのグラデーション -->
+    <linearGradient id="mirrorFrameGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFB6C1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#87CEEB;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- 鏡内側のグラデーション -->
+    <radialGradient id="mirrorInnerGradient" cx="50%" cy="50%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.9" />
+      <stop offset="70%" style="stop-color:#F8F8FF;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#E6E6FA;stop-opacity:0.3" />
+    </radialGradient>
+    
+    <!-- キラキラエフェクト用グラデーション -->
+    <radialGradient id="sparkleGradient" cx="50%" cy="50%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFD700;stop-opacity:0" />
+    </radialGradient>
+  </defs>
+  
+  <!-- 背景 -->
+  <rect width="1024" height="1024" fill="url(#backgroundGradient)"/>
+  
+  <!-- カラースウォッチ（4色） -->
+  <!-- イエベ系カラー（左上） -->
+  <circle cx="200" cy="200" r="60" fill="#FFB347" opacity="0.8"/>
+  <circle cx="200" cy="200" r="45" fill="#FFCCCB" opacity="0.9"/>
+  
+  <!-- イエベ系カラー（右上） -->
+  <circle cx="824" cy="200" r="60" fill="#DDA0DD" opacity="0.8"/>
+  <circle cx="824" cy="200" r="45" fill="#F0E68C" opacity="0.9"/>
+  
+  <!-- ブルベ系カラー（左下） -->
+  <circle cx="200" cy="824" r="60" fill="#98FB98" opacity="0.8"/>
+  <circle cx="200" cy="824" r="45" fill="#87CEEB" opacity="0.9"/>
+  
+  <!-- ブルベ系カラー（右下） -->
+  <circle cx="824" cy="824" r="60" fill="#DDA0DD" opacity="0.8"/>
+  <circle cx="824" cy="824" r="45" fill="#B19CD9" opacity="0.9"/>
+  
+  <!-- 鏡のメインフレーム -->
+  <circle cx="512" cy="512" r="280" fill="url(#mirrorFrameGradient)" stroke="#FFFFFF" stroke-width="8"/>
+  
+  <!-- 鏡の内側（反射面） -->
+  <circle cx="512" cy="512" r="240" fill="url(#mirrorInnerGradient)"/>
+  
+  <!-- キラキラエフェクト（大） -->
+  <g opacity="0.8">
+    <polygon points="400,300 410,320 430,320 416,332 422,352 400,340 378,352 384,332 370,320 390,320" fill="url(#sparkleGradient)"/>
+    <polygon points="620,250 630,270 650,270 636,282 642,302 620,290 598,302 604,282 590,270 610,270" fill="url(#sparkleGradient)"/>
+    <polygon points="350,600 360,620 380,620 366,632 372,652 350,640 328,652 334,632 320,620 340,620" fill="url(#sparkleGradient)"/>
+    <polygon points="670,650 680,670 700,670 686,682 692,702 670,690 648,702 654,682 640,670 660,670" fill="url(#sparkleGradient)"/>
+  </g>
+  
+  <!-- キラキラエフェクト（小） -->
+  <g opacity="0.6">
+    <circle cx="450" cy="380" r="4" fill="#FFFFFF"/>
+    <circle cx="580" cy="420" r="3" fill="#FFFFFF"/>
+    <circle cx="460" cy="580" r="4" fill="#FFFFFF"/>
+    <circle cx="590" cy="620" r="3" fill="#FFFFFF"/>
+    <circle cx="480" cy="450" r="2" fill="#FFD700"/>
+    <circle cx="540" cy="550" r="2" fill="#FFD700"/>
+  </g>
+  
+  <!-- AIを表すシンボル（中央の光） -->
+  <g opacity="0.7">
+    <circle cx="512" cy="512" r="8" fill="#FFD700"/>
+    <path d="M512,480 L520,500 L540,500 L525,512 L530,532 L512,522 L494,532 L499,512 L484,500 L504,500 Z" fill="#FFFFFF"/>
+  </g>
+  
+  <!-- 外縁の装飾リング -->
+  <circle cx="512" cy="512" r="300" fill="none" stroke="url(#mirrorFrameGradient)" stroke-width="4" opacity="0.5"/>
+</svg>

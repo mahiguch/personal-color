@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <!-- グラデーション定義 -->
+    <radialGradient id="backgroundGradient" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" style="stop-color:#FFB6C1;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#87CEEB;stop-opacity:1" />
+    </radialGradient>
+    
+    <linearGradient id="mirrorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFB6C1;stop-opacity:0.8" />
+      <stop offset="50%" style="stop-color:#FFFFFF;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#87CEEB;stop-opacity:0.8" />
+    </linearGradient>
+    
+    <radialGradient id="mirrorInner" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#F0F8FF;stop-opacity:0.1" />
+    </radialGradient>
+    
+    <!-- カラースウォッチのグラデーション -->
+    <linearGradient id="yellowBase" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF6B6B;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="blueBase" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#45B7D1;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="warmTone" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF9A8B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFA726;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="coolTone" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#A8E6CF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#88D8C0;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 背景 -->
+  <rect width="1024" height="1024" fill="url(#backgroundGradient)" />
+  
+  <!-- メインの鏡/レンズ -->
+  <circle cx="512" cy="512" r="280" fill="url(#mirrorGradient)" stroke="#FFFFFF" stroke-width="8" opacity="0.9"/>
+  
+  <!-- 鏡の内側反射効果 -->
+  <circle cx="512" cy="512" r="260" fill="url(#mirrorInner)" opacity="0.6"/>
+  
+  <!-- カラースウォッチ（4方向） -->
+  <!-- 上（イエベ系） -->
+  <circle cx="512" cy="160" r="50" fill="url(#yellowBase)" stroke="#FFFFFF" stroke-width="4"/>
+  
+  <!-- 右（暖色系） -->
+  <circle cx="864" cy="512" r="50" fill="url(#warmTone)" stroke="#FFFFFF" stroke-width="4"/>
+  
+  <!-- 下（ブルベ系） -->
+  <circle cx="512" cy="864" r="50" fill="url(#blueBase)" stroke="#FFFFFF" stroke-width="4"/>
+  
+  <!-- 左（冷色系） -->
+  <circle cx="160" cy="512" r="50" fill="url(#coolTone)" stroke="#FFFFFF" stroke-width="4"/>
+  
+  <!-- 星・キラキラエフェクト -->
+  <!-- 大きな星 -->
+  <g fill="#FFFFFF" opacity="0.8">
+    <polygon points="512,360 522,390 552,390 530,408 540,438 512,420 484,438 494,408 472,390 502,390" />
+  </g>
+  
+  <!-- 小さな星たち -->
+  <g fill="#FFD700" opacity="0.7">
+    <circle cx="420" cy="400" r="6"/>
+    <circle cx="604" cy="430" r="8"/>
+    <circle cx="450" cy="620" r="5"/>
+    <circle cx="580" cy="580" r="7"/>
+  </g>
+  
+  <!-- より小さなキラキラ -->
+  <g fill="#87CEEB" opacity="0.6">
+    <circle cx="380" cy="480" r="3"/>
+    <circle cx="644" cy="520" r="4"/>
+    <circle cx="480" cy="340" r="3"/>
+    <circle cx="560" cy="680" r="4"/>
+    <circle cx="320" cy="600" r="2"/>
+    <circle cx="720" cy="400" r="3"/>
+  </g>
+  
+  <!-- 中央のAI診断シンボル -->
+  <g fill="#87CEEB" opacity="0.5">
+    <!-- 小さな診断チップ的な形 -->
+    <rect x="492" y="532" width="40" height="20" rx="10" fill="#4ECDC4" opacity="0.4"/>
+    <circle cx="502" cy="542" r="3" fill="#FFFFFF"/>
+    <circle cx="512" cy="542" r="3" fill="#FFFFFF"/>
+    <circle cx="522" cy="542" r="3" fill="#FFFFFF"/>
+  </g>
+  
+  <!-- 外周の装飾リング -->
+  <circle cx="512" cy="512" r="320" fill="none" stroke="#FFFFFF" stroke-width="2" opacity="0.3"/>
+  <circle cx="512" cy="512" r="340" fill="none" stroke="#FFB6C1" stroke-width="1" opacity="0.2"/>
+</svg>
