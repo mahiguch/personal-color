@@ -25,12 +25,22 @@ void main() {
   late MockTakePicture mockTakePicture;
   late MockProcessImage mockProcessImage;
   late MockCameraRepository mockRepository;
+  
+  setUpAll(() {
+    // Flutter binding initialization for tests
+    TestWidgetsFlutterBinding.ensureInitialized();
+  });
 
   setUp(() {
     mockInitializeCamera = MockInitializeCamera();
     mockTakePicture = MockTakePicture();
     mockProcessImage = MockProcessImage();
     mockRepository = MockCameraRepository();
+    
+    // Add missing mock setup
+    when(mockRepository.optimizeMemoryUsage()).thenAnswer((_) async => const Right(null));
+    when(mockRepository.disposeCamera()).thenAnswer((_) async => const Right(null));
+    when(mockRepository.isPreviewAvailable).thenReturn(true);
 
     cameraProvider = CameraProvider(
       initializeCamera: mockInitializeCamera,
