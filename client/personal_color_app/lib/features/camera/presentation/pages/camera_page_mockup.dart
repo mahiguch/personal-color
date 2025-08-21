@@ -80,7 +80,7 @@ class _CameraPageMockupState extends State<CameraPageMockup> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.black.withOpacity(0.8),
+              Colors.black.withValues(alpha: 0.8),
               Colors.transparent,
             ],
           ),
@@ -132,7 +132,7 @@ class _CameraPageMockupState extends State<CameraPageMockup> {
             begin: Alignment.bottomCenter,
             end: Alignment.topCenter,
             colors: [
-              Colors.black.withOpacity(0.8),
+              Colors.black.withValues(alpha: 0.8),
               Colors.transparent,
             ],
           ),
@@ -169,7 +169,7 @@ class _CameraPageMockupState extends State<CameraPageMockup> {
         height: 350,
         decoration: BoxDecoration(
           border: Border.all(
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withValues(alpha: 0.8),
             width: 3,
           ),
           borderRadius: BorderRadius.circular(140),
@@ -216,7 +216,7 @@ class _CameraPageMockupState extends State<CameraPageMockup> {
       width: 48,
       height: 48,
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.5),
+        color: Colors.black.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(24),
       ),
       child: Material(
@@ -251,7 +251,7 @@ class _CameraPageMockupState extends State<CameraPageMockup> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.white.withOpacity(0.3),
+              color: Colors.white.withValues(alpha: 0.3),
               blurRadius: 20,
               spreadRadius: 5,
             ),

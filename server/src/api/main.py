@@ -4,6 +4,7 @@ FastAPIを使用したパーソナルカラー診断APIサーバー
 """
 
 from fastapi import FastAPI, HTTPException
+from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import uvicorn
@@ -14,6 +15,7 @@ from .endpoints.diagnosis import router as diagnosis_router
 from .endpoints.health import router as health_router
 from ..core.config.settings import get_settings
 from ..middleware.rate_limiter import RateLimitMiddleware
+
 # from ..middleware.app_check_middleware import AppCheckMiddleware  # 依存関係問題により一時無効化
 from ..core.monitoring import metrics_collector, health_checker
 
@@ -24,6 +26,21 @@ logger = logging.getLogger(__name__)
 # 設定読み込み
 settings = get_settings()
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """アプリケーションのライフサイクル管理"""
+    # 起動時の処理
+    logger.info("Personal Color Diagnosis API Server starting up...")
+    logger.info(f"Debug mode: {settings.debug}")
+    logger.info(f"Environment: {settings.environment}")
+    
+    yield
+    
+    # 終了時の処理
+    logger.info("Personal Color Diagnosis API Server shutting down...")
+
+
 # FastAPIアプリケーション作成
 app = FastAPI(
     title="Personal Color Diagnosis API",
@@ -31,6 +48,7 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/docs" if settings.debug else None,
     redoc_url="/redoc" if settings.debug else None,
+    lifespan=lifespan,
 )
 
 # ミドルウェア設定
@@ -48,9 +66,9 @@ app = FastAPI(
 # レート制限ミドルウェア
 app.add_middleware(
     RateLimitMiddleware,
-    default_requests_per_minute=getattr(settings, 'rate_limit_default', 60),
-    diagnosis_requests_per_minute=getattr(settings, 'rate_limit_diagnosis', 10),
-    burst_limit=getattr(settings, 'rate_limit_burst', 5)
+    default_requests_per_minute=getattr(settings, "rate_limit_default", 60),
+    diagnosis_requests_per_minute=getattr(settings, "rate_limit_diagnosis", 10),
+    burst_limit=getattr(settings, "rate_limit_burst", 5),
 )
 
 # CORS設定
@@ -67,6 +85,7 @@ app.add_middleware(
 app.include_router(health_router, prefix="/api/v1")
 app.include_router(diagnosis_router, prefix="/api/v1")
 
+
 # グローバル例外ハンドラー
 @app.exception_handler(Exception)
 async def global_exception_handler(request, exc: Exception):
@@ -77,23 +96,12 @@ async def global_exception_handler(request, exc: Exception):
         content={
             "error": "Internal server error",
             "message": "サーバー内部エラーが発生しました",
-            "detail": str(exc) if settings.debug else None
-        }
+            "detail": str(exc) if settings.debug else None,
+        },
     )
 
-# 起動イベント
-@app.on_event("startup")
-async def startup_event():
-    """アプリケーション起動時の処理"""
-    logger.info("Personal Color Diagnosis API Server starting up...")
-    logger.info(f"Debug mode: {settings.debug}")
-    logger.info(f"Environment: {settings.environment}")
 
-# 終了イベント
-@app.on_event("shutdown")
-async def shutdown_event():
-    """アプリケーション終了時の処理"""
-    logger.info("Personal Color Diagnosis API Server shutting down...")
+
 
 # メトリクスエンドポイント
 @app.get("/metrics")
@@ -101,11 +109,13 @@ async def get_metrics() -> Dict[str, Any]:
     """メトリクス情報を取得"""
     return await metrics_collector.get_metrics()
 
+
 # 詳細ヘルスチェックエンドポイント
 @app.get("/health/detailed")
 async def detailed_health_check() -> Dict[str, Any]:
     """詳細なヘルスチェック"""
     return await health_checker.get_comprehensive_health()
+
 
 # ルートエンドポイント
 @app.get("/")
@@ -115,8 +125,9 @@ async def root() -> Dict[str, Any]:
         "message": "Personal Color Diagnosis API",
         "version": "1.0.0",
         "status": "running",
-        "docs_url": "/docs" if settings.debug else None
+        "docs_url": "/docs" if settings.debug else None,
     }
+
 
 if __name__ == "__main__":
     uvicorn.run(
@@ -124,5 +135,5 @@ if __name__ == "__main__":
         host=settings.host,
         port=settings.port,
         reload=settings.debug,
-        log_level="info"
+        log_level="info",
     )

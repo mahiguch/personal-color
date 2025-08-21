@@ -12,31 +12,31 @@ logger = logging.getLogger(__name__)
 
 class PersonalColorPrompt:
     """パーソナルカラー診断用プロンプト管理クラス"""
-    
+
     def __init__(self):
         self.base_prompt = self._get_base_analysis_prompt()
         self.error_prompts = self._get_error_prompts()
-    
+
     def create_analysis_prompt(self, metadata: Optional[Dict[str, Any]] = None) -> str:
         """
         診断用プロンプトを生成
-        
+
         Args:
             metadata: 追加のメタデータ
-        
+
         Returns:
             str: 生成されたプロンプト
         """
         prompt = self.base_prompt
-        
+
         # メタデータがある場合は追加情報として含める
         if metadata:
             additional_info = self._format_metadata_info(metadata)
             if additional_info:
                 prompt += f"\n\n【追加情報】\n{additional_info}"
-        
+
         return prompt
-    
+
     def _get_base_analysis_prompt(self) -> str:
         """基本の診断プロンプトを取得"""
         return """あなたは小学5年生にもわかりやすく説明できる、パーソナルカラー診断の専門家です。
@@ -73,7 +73,7 @@ class PersonalColorPrompt:
 }
 
 画像を分析して、上記の形式で診断結果を教えてください。"""
-    
+
     def _get_error_prompts(self) -> Dict[str, str]:
         """エラーケース用プロンプトを取得"""
         return {
@@ -84,7 +84,6 @@ class PersonalColorPrompt:
   "message": "写真にお顔がはっきり写るように、もう一度撮影してみてください！",
   "suggestions": ["明るい場所で撮影する", "カメラに近づく", "正面を向く"]
 }""",
-            
             "poor_image_quality": """画像の品質が診断に不十分です。
 
 {
@@ -92,94 +91,95 @@ class PersonalColorPrompt:
   "message": "もう少し明るくはっきりとした写真で、もう一度お試しください！",
   "suggestions": ["自然光の当たる場所で撮影する", "カメラを安定させる", "ピントを合わせる"]
 }""",
-            
             "multiple_faces": """複数の顔が検出されました。
 
 {
   "error": "複数の人が写っています",
   "message": "診断は一人ずつ行います。一人だけが写った写真で撮影してください！", 
   "suggestions": ["一人で撮影する", "背景に他の人が写らないようにする"]
-}"""
+}""",
         }
-    
+
     def _format_metadata_info(self, metadata: Dict[str, Any]) -> str:
         """メタデータを追加情報として整形"""
         info_parts = []
-        
+
         # アプリバージョン情報
         if "app_version" in metadata:
             info_parts.append(f"アプリバージョン: {metadata['app_version']}")
-        
+
         # プラットフォーム情報
         if "platform" in metadata:
             info_parts.append(f"プラットフォーム: {metadata['platform']}")
-        
+
         # タイムスタンプ
         if "timestamp" in metadata:
             info_parts.append(f"撮影時刻: {metadata['timestamp']}")
-        
+
         # ユーザーからの追加情報
         if "user_notes" in metadata:
             info_parts.append(f"ユーザーメモ: {metadata['user_notes']}")
-        
+
         return "\n".join(info_parts) if info_parts else ""
-    
+
     def get_error_prompt(self, error_type: str) -> str:
         """指定されたエラータイプのプロンプトを取得"""
-        return self.error_prompts.get(error_type, self.error_prompts["poor_image_quality"])
-    
+        return self.error_prompts.get(
+            error_type, self.error_prompts["poor_image_quality"]
+        )
+
     def validate_response_format(self, response_text: str) -> bool:
         """
         レスポンス形式の検証
-        
+
         Args:
             response_text: Geminiからのレスポンステキスト
-        
+
         Returns:
             bool: 正しい形式かどうか
         """
         try:
             # JSONの抽出と解析
-            json_start = response_text.find('{')
-            json_end = response_text.rfind('}') + 1
-            
+            json_start = response_text.find("{")
+            json_end = response_text.rfind("}") + 1
+
             if json_start == -1 or json_end <= json_start:
                 return False
-            
+
             json_text = response_text[json_start:json_end]
             result_data = json.loads(json_text)
-            
+
             # 必須フィールドのチェック
             required_fields = [
                 "personal_color_type",
-                "confidence", 
+                "confidence",
                 "explanation",
                 "recommended_colors",
-                "tips"
+                "tips",
             ]
-            
+
             for field in required_fields:
                 if field not in result_data:
                     logger.warning(f"Missing required field: {field}")
                     return False
-            
+
             # データ型チェック
             if not isinstance(result_data["confidence"], (int, float)):
                 return False
-            
+
             if not isinstance(result_data["recommended_colors"], list):
                 return False
-            
+
             if not isinstance(result_data["tips"], list):
                 return False
-            
+
             # パーソナルカラータイプの検証
             valid_types = ["Spring", "Summer", "Autumn", "Winter"]
             if result_data["personal_color_type"] not in valid_types:
                 return False
-            
+
             return True
-            
+
         except (json.JSONDecodeError, KeyError, TypeError) as e:
             logger.error(f"Response format validation failed: {e}")
             return False

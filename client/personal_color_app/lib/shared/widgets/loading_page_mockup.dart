@@ -194,7 +194,7 @@ class _LoadingPageMockupState extends State<LoadingPageMockup>
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha: 0.5),
                     blurRadius: 20,
                     spreadRadius: 5,
                   ),
@@ -242,7 +242,7 @@ class _LoadingPageMockupState extends State<LoadingPageMockup>
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: colors[index].withOpacity(0.5),
+                    color: colors[index].withValues(alpha: 0.5),
                     blurRadius: 8,
                     spreadRadius: 2,
                   ),
@@ -305,7 +305,7 @@ class _LoadingPageMockupState extends State<LoadingPageMockup>
         
         LinearProgressIndicator(
           value: widget.progress,
-          backgroundColor: Colors.white.withOpacity(0.3),
+          backgroundColor: Colors.white.withValues(alpha: 0.3),
           valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
           minHeight: 8,
         ),
@@ -320,7 +320,7 @@ class _LoadingPageMockupState extends State<LoadingPageMockup>
     return Container(
       padding: const EdgeInsets.all(AppConstants.paddingM),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
+        color: Colors.white.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(AppConstants.borderRadiusM),
       ),
       child: Column(

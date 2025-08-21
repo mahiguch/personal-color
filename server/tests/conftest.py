@@ -44,13 +44,13 @@ def mock_settings():
 def sample_base64_image():
     """Sample base64 encoded image data for testing"""
     # Create a minimal valid JPEG header
-    jpeg_header = b'\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x01\x00H\x00H\x00\x00\xff\xdb\x00C\x00'
-    jpeg_end = b'\xff\xd9'
-    
+    jpeg_header = b"\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x01\x00H\x00H\x00\x00\xff\xdb\x00C\x00"
+    jpeg_end = b"\xff\xd9"
+
     # Create minimal JPEG data
-    minimal_jpeg = jpeg_header + b'\x00' * 100 + jpeg_end
-    
-    return base64.b64encode(minimal_jpeg).decode('utf-8')
+    minimal_jpeg = jpeg_header + b"\x00" * 100 + jpeg_end
+
+    return base64.b64encode(minimal_jpeg).decode("utf-8")
 
 
 @pytest.fixture
@@ -58,10 +58,7 @@ def sample_diagnosis_request(sample_base64_image):
     """Sample diagnosis request for testing"""
     return {
         "image_base64": sample_base64_image,
-        "metadata": {
-            "app_version": "1.0.0",
-            "device_type": "test"
-        }
+        "metadata": {"app_version": "1.0.0", "device_type": "test"},
     }
 
 
@@ -69,18 +66,18 @@ def sample_diagnosis_request(sample_base64_image):
 def mock_gemini_service():
     """Mock Gemini service for testing"""
     mock_service = AsyncMock()
-    
+
     # Mock successful response
     mock_service.analyze_personal_color.return_value = MagicMock(
         personal_color_type="Spring",
         confidence=85.5,
         explanation="Test explanation",
         recommended_colors=["#FF5733", "#33FF57", "#3357FF"],
-        tips=["Test tip 1", "Test tip 2"]
+        tips=["Test tip 1", "Test tip 2"],
     )
-    
+
     mock_service.check_health.return_value = True
-    
+
     return mock_service
 
 
@@ -88,33 +85,33 @@ def mock_gemini_service():
 def mock_image_processor():
     """Mock image processor for testing"""
     mock_processor = AsyncMock()
-    
+
     # Mock successful processing
     mock_processor.process_base64_image.return_value = MagicMock(
         base64_data="processed_base64_data",
         original_path="/tmp/test.jpg",
         compressed_size=1024,
         quality=85,
-        processing_time_ms=100
+        processing_time_ms=100,
     )
-    
+
     return mock_processor
 
 
 @pytest.fixture
 def temp_image_file():
     """Create a temporary image file for testing"""
-    with tempfile.NamedTemporaryFile(suffix='.jpg', delete=False) as tmp_file:
+    with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp_file:
         # Write minimal JPEG data
-        jpeg_header = b'\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x01\x00H\x00H\x00\x00\xff\xdb\x00C\x00'
-        jpeg_end = b'\xff\xd9'
-        minimal_jpeg = jpeg_header + b'\x00' * 100 + jpeg_end
-        
+        jpeg_header = b"\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x01\x00H\x00H\x00\x00\xff\xdb\x00C\x00"
+        jpeg_end = b"\xff\xd9"
+        minimal_jpeg = jpeg_header + b"\x00" * 100 + jpeg_end
+
         tmp_file.write(minimal_jpeg)
         tmp_file.flush()
-        
+
         yield tmp_file.name
-        
+
         # Cleanup
         try:
             os.unlink(tmp_file.name)
@@ -126,7 +123,7 @@ def temp_image_file():
 def mock_privacy_manager():
     """Mock privacy manager for testing"""
     mock_manager = MagicMock()
-    
+
     mock_manager.log_api_access.return_value = None
     mock_manager.validate_data_minimization.return_value = []
     mock_manager.create_privacy_compliant_response.return_value = {
@@ -134,9 +131,9 @@ def mock_privacy_manager():
         "confidence": 85.5,
         "explanation": "Test explanation",
         "recommended_colors": ["#FF5733", "#33FF57", "#3357FF"],
-        "tips": ["Test tip 1", "Test tip 2"]
+        "tips": ["Test tip 1", "Test tip 2"],
     }
-    
+
     return mock_manager
 
 
@@ -150,9 +147,9 @@ def mock_memory_cleanup():
 
 # Test data constants
 TEST_IMAGE_DATA = {
-    "valid_jpeg_header": b'\xff\xd8\xff\xe0\x00\x10JFIF',
-    "valid_png_header": b'\x89PNG\r\n\x1a\n',
-    "invalid_header": b'INVALID',
+    "valid_jpeg_header": b"\xff\xd8\xff\xe0\x00\x10JFIF",
+    "valid_png_header": b"\x89PNG\r\n\x1a\n",
+    "invalid_header": b"INVALID",
 }
 
 TEST_DIAGNOSIS_RESULTS = {
@@ -161,26 +158,26 @@ TEST_DIAGNOSIS_RESULTS = {
         "confidence": 88.5,
         "explanation": "明るく鮮やかな色合いがお似合いです",
         "recommended_colors": ["#FF6B6B", "#4ECDC4", "#45B7D1"],
-        "tips": ["明るい色を選びましょう", "パステルカラーもおすすめです"]
+        "tips": ["明るい色を選びましょう", "パステルカラーもおすすめです"],
     },
     "autumn": {
-        "personal_color_type": "Autumn", 
+        "personal_color_type": "Autumn",
         "confidence": 82.3,
         "explanation": "深く温かみのある色合いがお似合いです",
         "recommended_colors": ["#8B4513", "#DAA520", "#CD853F"],
-        "tips": ["アースカラーを選びましょう", "ゴールド系のアクセサリーがおすすめです"]
-    }
+        "tips": ["アースカラーを選びましょう", "ゴールド系のアクセサリーがおすすめです"],
+    },
 }
 
 
 class AsyncContextManager:
     """Helper class for testing async context managers"""
-    
+
     def __init__(self, return_value=None):
         self.return_value = return_value
-    
+
     async def __aenter__(self):
         return self.return_value
-    
+
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         pass

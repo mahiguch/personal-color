@@ -129,10 +129,10 @@ class ErrorPageMockup extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(AppConstants.paddingL),
           decoration: BoxDecoration(
-            color: config['color'].withOpacity(0.1),
+            color: config['color'].withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(AppConstants.borderRadiusM),
             border: Border.all(
-              color: config['color'].withOpacity(0.3),
+              color: config['color'].withValues(alpha: 0.3),
               width: 1,
             ),
           ),
@@ -161,7 +161,7 @@ class ErrorPageMockup extends StatelessWidget {
       width: 120,
       height: 120,
       decoration: BoxDecoration(
-        color: config['color'].withOpacity(0.1),
+        color: config['color'].withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
       child: Icon(
@@ -182,7 +182,7 @@ class ErrorPageMockup extends StatelessWidget {
         color: AppTheme.surfaceColor,
         borderRadius: BorderRadius.circular(AppConstants.borderRadiusM),
         border: Border.all(
-          color: AppTheme.textLight.withOpacity(0.3),
+          color: AppTheme.textLight.withValues(alpha: 0.3),
           width: 1,
         ),
       ),

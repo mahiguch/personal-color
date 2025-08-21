@@ -8,14 +8,14 @@ from .privacy_manager import (
     PrivacyFilter,
     PrivacyCompliantLogger,
     PrivacyManager,
-    privacy_manager
+    privacy_manager,
 )
 
 __all__ = [
     "DataCategory",
-    "RetentionPolicy", 
+    "RetentionPolicy",
     "PrivacyFilter",
     "PrivacyCompliantLogger",
     "PrivacyManager",
-    "privacy_manager"
+    "privacy_manager",
 ]

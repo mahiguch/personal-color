@@ -150,7 +150,7 @@ class _ResultPageMockupState extends State<ResultPageMockup>
       scale: _scaleAnimation,
       child: Card(
         elevation: 16,
-        shadowColor: mainColor.withOpacity(0.3),
+        shadowColor: mainColor.withValues(alpha: 0.3),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppConstants.borderRadiusL),
         ),
@@ -197,7 +197,7 @@ class _ResultPageMockupState extends State<ResultPageMockup>
             top: 80 + 40 * math.sin(angle),
             child: Icon(
               Icons.star,
-              color: mainColor.withOpacity(0.6),
+              color: mainColor.withValues(alpha: 0.6),
               size: 16,
             ),
           );
@@ -208,7 +208,7 @@ class _ResultPageMockupState extends State<ResultPageMockup>
           width: 100,
           height: 100,
           decoration: BoxDecoration(
-            color: mainColor.withOpacity(0.1),
+            color: mainColor.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(
@@ -248,7 +248,7 @@ class _ResultPageMockupState extends State<ResultPageMockup>
             borderRadius: BorderRadius.circular(AppConstants.borderRadiusM),
             boxShadow: [
               BoxShadow(
-                color: mainColor.withOpacity(0.3),
+                color: mainColor.withValues(alpha: 0.3),
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
@@ -384,7 +384,7 @@ class _ResultPageMockupState extends State<ResultPageMockup>
           child: _buildActionButton(
             text: 'おわり',
             icon: Icons.home,
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha: 0.2),
             textColor: Colors.white,
             onTap: () {
               Navigator.popUntil(context, (route) => route.isFirst);
