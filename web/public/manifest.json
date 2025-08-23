@@ -1,0 +1,27 @@
+{
+  "name": "パーソナルカラー診断アプリ",
+  "short_name": "パーソナルカラー診断",
+  "description": "AIが教える、あなたに似合う色を発見しよう！カメラで写真を撮るだけで、AIがあなたのパーソナルカラー（イエベ・ブルベ）を診断します。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#f97316",
+  "orientation": "portrait-primary",
+  "categories": ["education", "lifestyle", "photo"],
+  "lang": "ja",
+  "dir": "ltr",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/images/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "32x32",
+      "type": "image/x-icon"
+    }
+  ]
+}

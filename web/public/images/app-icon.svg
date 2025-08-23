@@ -1,0 +1,30 @@
+<svg width="144" height="144" viewBox="0 0 144 144" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="primaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8a364"/>
+      <stop offset="100%" style="stop-color:#f97316"/>
+    </linearGradient>
+    <linearGradient id="secondaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ec4899"/>
+      <stop offset="100%" style="stop-color:#f97316"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="72" cy="72" r="72" fill="url(#primaryGradient)"/>
+  
+  <!-- App icon letter "P" -->
+  <text x="72" y="92" 
+        font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" 
+        font-size="64" 
+        font-weight="bold" 
+        fill="white" 
+        text-anchor="middle" 
+        dominant-baseline="middle">P</text>
+        
+  <!-- Decorative color dots -->
+  <circle cx="32" cy="32" r="8" fill="#fbbf24" opacity="0.8"/>
+  <circle cx="112" cy="32" r="6" fill="#3b82f6" opacity="0.8"/>
+  <circle cx="32" cy="112" r="6" fill="#ec4899" opacity="0.8"/>
+  <circle cx="112" cy="112" r="8" fill="#06b6d4" opacity="0.8"/>
+</svg>

@@ -26,10 +26,10 @@ npm install --save-dev @testing-library/react @testing-library/jest-dom jest jes
 ```
 
 **成果物:**
-- [ ] プロジェクトディレクトリの作成
-- [ ] package.json の設定
-- [ ] TypeScript設定の確認
-- [ ] Git初期化とfirst commit
+- [x] プロジェクトディレクトリの作成
+- [x] package.json の設定
+- [x] TypeScript設定の確認
+- [x] Git初期化とfirst commit
 
 ---
 
@@ -48,11 +48,11 @@ npm install --save-dev @testing-library/react @testing-library/jest-dom jest jes
 ```
 
 **設定ファイル:**
-- [ ] `.eslintrc.json` の調整
-- [ ] `.prettierrc` の作成
-- [ ] `jest.config.js` の作成
-- [ ] `playwright.config.ts` の作成
-- [ ] VS Code設定（`.vscode/settings.json`）
+- [x] `.eslintrc.json` の調整
+- [x] `.prettierrc` の作成
+- [x] `jest.config.mjs` の作成
+- [x] `playwright.config.ts` の作成
+- [x] VS Code設定（`.vscode/settings.json`）
 
 ---
 
@@ -65,12 +65,12 @@ npm install --save-dev @testing-library/react @testing-library/jest-dom jest jes
 **依存**: TASK-002
 
 **作成コンポーネント:**
-- [ ] `Button` - プライマリ、セカンダリ、アウトライン variants
-- [ ] `Card` - デフォルト、elevated、outline variants
-- [ ] `Input` - テキスト入力フィールド
-- [ ] `Textarea` - 長文入力フィールド  
-- [ ] `Select` - セレクトボックス
-- [ ] `Badge` - ステータス表示用
+- [x] `Button` - プライマリ、セカンダリ、アウトライン variants
+- [x] `Card` - デフォルト、elevated、outline variants
+- [x] `Input` - テキスト入力フィールド
+- [x] `Textarea` - 長文入力フィールド  
+- [x] `Select` - セレクトボックス
+- [x] `Badge` - ステータス表示用
 
 **ファイル配置:**
 ```
@@ -96,16 +96,16 @@ web/src/components/ui/
 **依存**: TASK-003
 
 **作成コンポーネント:**
-- [ ] `Header` - サイトヘッダー（ナビゲーション含む）
-- [ ] `Footer` - サイトフッター
-- [ ] `Layout` - 共通レイアウトラッパー
-- [ ] `Container` - コンテンツコンテナ
-- [ ] `Breadcrumb` - パンくずリスト
+- [x] `Header` - サイトヘッダー（ナビゲーション含む）
+- [x] `Footer` - サイトフッター
+- [x] `Layout` - 共通レイアウトラッパー
+- [x] `Container` - コンテンツコンテナ
+- [x] `Breadcrumb` - パンくずリスト
 
 **レスポンシブ対応:**
-- [ ] モバイル（375px〜）
-- [ ] タブレット（768px〜）
-- [ ] デスクトップ（1024px〜）
+- [x] モバイル（375px〜）
+- [x] タブレット（768px〜）
+- [x] デスクトップ（1024px〜）
 
 ---
 
@@ -118,20 +118,20 @@ web/src/components/ui/
 **依存**: TASK-004
 
 **セクション実装:**
-- [ ] `HeroSection` - メインビジュアル・CTA
-- [ ] `FeaturesSection` - 3つの主要機能
+- [x] `HeroSection` - メインビジュアル・CTA
+- [x] `FeaturesSection` - 3つの主要機能
 - [ ] `ScreenshotsSection` - アプリ画面ギャラリー
 - [ ] `HowToUseSection` - 使用方法の説明
 - [ ] `TrustSection` - 安全性アピール
 - [ ] `CTASection` - App Storeダウンロード誘導
 
 **データ準備:**
-- [ ] `lib/features-data.ts` - 機能データ
+- [x] `lib/features-data.ts` - 機能データ
 - [ ] `lib/screenshots-data.ts` - スクリーンショット情報
 - [ ] アプリスクリーンショット画像の準備（5枚）
 
 **SEO対応:**
-- [ ] メタデータの設定
+- [x] メタデータの設定
 - [ ] 構造化データの実装
 - [ ] Open Graph設定
 
@@ -144,15 +144,15 @@ web/src/components/ui/
 **依存**: TASK-004
 
 **実装内容:**
-- [ ] Markdownコンテンツの変換
-- [ ] 目次（TOC）コンポーネントの作成
-- [ ] セクションジャンプ機能
-- [ ] 最終更新日の表示
+- [x] Markdownコンテンツの変換
+- [x] 目次（TOC）コンポーネントの作成
+- [x] セクションジャンプ機能
+- [x] 最終更新日の表示
 
 **コンテンツ準備:**
-- [ ] `docs/PRIVACY_POLICY.md` を Web用に調整
-- [ ] 必要に応じてHTML構造に変換
-- [ ] リーガル情報の最終確認
+- [x] `docs/PRIVACY_POLICY.md` を Web用に調整
+- [x] 必要に応じてHTML構造に変換
+- [x] リーガル情報の最終確認
 
 ---
 
@@ -163,19 +163,19 @@ web/src/components/ui/
 **依存**: TASK-004
 
 **機能実装:**
-- [ ] FAQ展開/折りたたみ機能
-- [ ] FAQ検索機能（オプション）
-- [ ] お問い合わせフォーム
-- [ ] フォームバリデーション
+- [x] FAQ展開/折りたたみ機能
+- [x] FAQ検索機能（オプション）
+- [x] お問い合わせフォーム
+- [x] フォームバリデーション
 
 **コンポーネント:**
-- [ ] `FAQSection` - よくある質問
-- [ ] `ContactForm` - お問い合わせフォーム
-- [ ] `FAQItem` - FAQ個別項目
+- [x] `FAQSection` - よくある質問
+- [x] `ContactForm` - お問い合わせフォーム
+- [x] `FAQItem` - FAQ個別項目
 
 **データ準備:**
-- [ ] `lib/faq-data.ts` - FAQ データ
-- [ ] フォーム送信先の設定
+- [x] `lib/faq-data.ts` - FAQ データ
+- [x] フォーム送信先の設定
 
 ---
 
@@ -188,17 +188,17 @@ web/src/components/ui/
 **依存**: TASK-007
 
 **実装機能:**
-- [ ] React Hook Form の統合
-- [ ] Zodスキーマによるバリデーション
-- [ ] リアルタイムバリデーション
-- [ ] エラーメッセージ表示
+- [x] React Hook Form の統合
+- [x] Zodスキーマによるバリデーション
+- [x] リアルタイムバリデーション
+- [x] エラーメッセージ表示
 
 **バリデーションルール:**
-- [ ] 名前: 必須、50文字以内
-- [ ] メールアドレス: 必須、有効な形式
-- [ ] 件名: 必須、選択式
-- [ ] 内容: 必須、10文字以上
-- [ ] デバイス情報: 任意
+- [x] 名前: 必須、50文字以内
+- [x] メールアドレス: 必須、有効な形式
+- [x] 件名: 必須、選択式
+- [x] 内容: 必須、10文字以上
+- [x] デバイス情報: 任意
 
 ---
 
@@ -230,9 +230,9 @@ const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
 
 **セキュリティ対策:**
 - [ ] CSRFトークン実装
-- [ ] レート制限
-- [ ] 入力値サニタイゼーション
-- [ ] スパム対策
+- [x] レート制限
+- [x] 入力値サニタイゼーション
+- [x] スパム対策
 
 ---
 
@@ -245,11 +245,11 @@ const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
 **依存**: TASK-001
 
 **設定ファイル:**
-- [ ] `tailwind.config.js` のカスタマイズ
-- [ ] カラーパレットの定義
-- [ ] フォント設定
-- [ ] スペーシングシステム
-- [ ] ブレイクポイント調整
+- [x] `tailwind.config.ts` のカスタマイズ
+- [x] カラーパレットの定義
+- [x] フォント設定
+- [x] スペーシングシステム
+- [x] ブレイクポイント調整
 
 **CSS変数の定義:**
 ```css
@@ -270,16 +270,16 @@ const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
 **依存**: TASK-005, TASK-006, TASK-007
 
 **対応デバイス:**
-- [ ] iPhone SE (375px)
-- [ ] iPhone 14 Pro (393px)
-- [ ] iPad (768px)
-- [ ] デスクトップ (1024px以上)
+- [x] iPhone SE (375px)
+- [x] iPhone 14 Pro (393px)
+- [x] iPad (768px)
+- [x] デスクトップ (1024px以上)
 
 **確認項目:**
-- [ ] レイアウト崩れがないか
-- [ ] 文字サイズの適切性
-- [ ] タッチ領域の十分な大きさ
-- [ ] 横スクロールの発生確認
+- [x] レイアウト崩れがないか
+- [x] 文字サイズの適切性
+- [x] タッチ領域の十分な大きさ
+- [x] 横スクロールの発生確認
 
 ---
 
@@ -292,14 +292,14 @@ const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
 **依存**: TASK-005
 
 **実装内容:**
-- [ ] Next.js `<Image>` コンポーネントの使用
-- [ ] 適切なサイズでの画像準備
-- [ ] WebP対応
-- [ ] 遅延読み込みの確認
+- [x] Next.js `<Image>` コンポーネントの使用
+- [x] 適切なサイズでの画像準備
+- [x] WebP/AVIF対応
+- [x] 遅延読み込みの確認
 
 **画像準備:**
-- [ ] アプリアイコン: 144x144px (favicon用)
-- [ ] ヒーロー画像: 1200x600px
+- [x] アプリアイコン: 144x144px (favicon用)
+- [x] ヒーロー画像: SVGモックアップ作成
 - [ ] 機能説明画像: 各400x300px
 - [ ] スクリーンショット: モバイル表示サイズ
 
@@ -312,13 +312,13 @@ const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
 **依存**: TASK-011
 
 **最適化項目:**
-- [ ] 動的インポートの実装
-- [ ] 未使用コードの除去
-- [ ] バンドルサイズの分析
-- [ ] Core Web Vitalsの確認
+- [x] 動的インポートの実装
+- [x] 未使用コードの除去
+- [x] バンドルサイズの分析
+- [x] Core Web Vitalsの確認
 
 **分析ツール:**
-- [ ] `@next/bundle-analyzer` の導入
+- [x] `@next/bundle-analyzer` の導入
 - [ ] Lighthouse監査の実行
 - [ ] WebPageTest での確認
 
@@ -333,11 +333,11 @@ const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
 **依存**: TASK-005, TASK-006, TASK-007
 
 **実装項目:**
-- [ ] 各ページのメタデータ設定
+- [x] 各ページのメタデータ設定
 - [ ] 構造化データ (JSON-LD)
 - [ ] sitemap.xml の生成
 - [ ] robots.txt の作成
-- [ ] Open Graph / Twitter Card
+- [x] Open Graph / Twitter Card
 
 **メタデータ例:**
 ```typescript
@@ -606,20 +606,20 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.com
 
 ### 優先度
 - **P0 (最優先)**: App Store申請に必要な機能
-  - TASK-005 (トップページ)
-  - TASK-006 (プライバシーポリシー)  
-  - TASK-007 (サポートページ)
-  - TASK-009 (フォーム送信)
-  - TASK-021 (本番デプロイ)
+  - ✅ TASK-005 (トップページ)
+  - ✅ TASK-006 (プライバシーポリシー)  
+  - ✅ TASK-007 (サポートページ)
+  - ✅ TASK-009 (フォーム送信)
+  - 🔄 TASK-021 (本番デプロイ)
 
 - **P1 (高優先)**: 品質・UX向上
-  - TASK-011 (レスポンシブ)
-  - TASK-014 (SEO)
-  - TASK-015 (アクセシビリティ)
+  - ✅ TASK-011 (レスポンシブ)
+  - 🔄 TASK-014 (SEO)
+  - 🔄 TASK-015 (アクセシビリティ)
 
 - **P2 (中優先)**: 開発効率・保守性
-  - TASK-016 (ユニットテスト)
-  - TASK-017 (E2Eテスト)
+  - 🔄 TASK-016 (ユニットテスト)
+  - 🔄 TASK-017 (E2Eテスト)
 
 ### 見積工数
 - **合計見積**: 約 65時間
@@ -627,10 +627,10 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.com
 - **推奨構成（P0 + P1）**: 約 50時間
 
 ### マイルストーン
-1. **Phase 1**: 基本機能実装 (TASK-001 ~ TASK-009) - 2週間
-2. **Phase 2**: デザイン・最適化 (TASK-010 ~ TASK-015) - 1.5週間  
-3. **Phase 3**: テスト・デプロイ (TASK-016 ~ TASK-021) - 1週間
-4. **Phase 4**: 運用準備 (TASK-022 ~ TASK-026) - 0.5週間
+1. **✅ Phase 1**: 基本機能実装 (TASK-001 ~ TASK-009) - 完了
+2. **🔄 Phase 2**: デザイン・最適化 (TASK-010 ~ TASK-015) - 進行中 (TASK-010~013完了)  
+3. **🔄 Phase 3**: テスト・デプロイ (TASK-016 ~ TASK-021) - 準備中
+4. **🔄 Phase 4**: 運用準備 (TASK-022 ~ TASK-026) - 準備中
 
 ### リスクと対策
 **技術リスク:**
