@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/camera_provider.dart';
@@ -16,6 +17,7 @@ class CameraPage extends StatefulWidget {
 }
 
 class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
+  bool _isDiagnosing = false;
   @override
   void initState() {
     super.initState();
@@ -108,6 +110,88 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
   }
 
   Widget _buildCameraContent(CameraProvider provider) {
+    // 撮影済み画像がある場合は画像を表示
+    if (provider.capturedImage != null) {
+      return Container(
+        width: double.infinity,
+        height: 400,
+        margin: const EdgeInsets.symmetric(horizontal: 32),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: provider.isProcessing ? Colors.orange : Colors.green,
+            width: 2,
+          ),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Stack(
+            children: [
+              // 画像を表示領域全体にフィット
+              Positioned.fill(
+                child: Image.file(
+                  File(provider.capturedImage!.filePath),
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey[800],
+                      child: const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.image_not_supported,
+                              color: Colors.white54,
+                              size: 48,
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              '画像を表示できません',
+                              style: TextStyle(
+                                color: Colors.white54,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              // 処理中・診断中のオーバーレイ
+              if (provider.isProcessing || _isDiagnosing)
+                Container(
+                  color: Colors.black.withValues(alpha: 0.7),
+                  child: const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(
+                          color: Colors.orange,
+                          strokeWidth: 3,
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          '診断中。３０秒待ってね。',
+                          style: TextStyle(
+                            color: Colors.orange,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // カメラ初期化中
     if (provider.isLoading) {
       return const Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -122,6 +206,7 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
       );
     }
 
+    // エラー状態
     if (provider.hasError && provider.failure != null) {
       return ErrorDisplay(
         failure: provider.failure!,
@@ -131,6 +216,7 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
       );
     }
 
+    // カメラプレビュー表示
     if (provider.isReady && provider.isPreviewAvailable) {
       final preview = provider.repository.getCameraPreview();
       if (preview != null) {
@@ -145,7 +231,7 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: AspectRatio(
-              aspectRatio: 3 / 4, // 縦長の写真に適した比率
+              aspectRatio: 3 / 4,
               child: preview,
             ),
           ),
@@ -153,9 +239,17 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
       }
     }
 
-    return const Text(
-      'カメラを初期化中...',
-      style: TextStyle(color: Colors.white),
+    // フォールバック状態
+    return const Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CircularProgressIndicator(color: Colors.white),
+        SizedBox(height: 16),
+        Text(
+          'カメラを初期化中...',
+          style: TextStyle(color: Colors.white),
+        ),
+      ],
     );
   }
 
@@ -172,73 +266,7 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
           ),
           const SizedBox(height: 16),
           
-          // 撮影・処理状況の表示
-          if (provider.capturedImage != null) ...[
-            if (provider.isProcessing) ...[
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.blue.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.blue),
-                ),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      '画像を処理中...',
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                  ],
-                ),
-              ),
-            ] else ...[
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.orange.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.orange),
-                ),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      '診断中...',
-                      style: TextStyle(color: Colors.orange),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-            const SizedBox(height: 16),
-            // 再撮影ボタン
-            ElevatedButton(
-              onPressed: () => provider.clearCapturedImage(),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey[800],
-              ),
-              child: const Text('再撮影'),
-            ),
-          ],
+          const SizedBox(height: 32),
         ],
       ),
     );
@@ -282,7 +310,13 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
       }
 
       // 3. 診断開始
+      setState(() {
+        _isDiagnosing = true;
+      });
       await _startDiagnosis(provider);
+      setState(() {
+        _isDiagnosing = false;
+      });
       
     } catch (e) {
       if (mounted) {

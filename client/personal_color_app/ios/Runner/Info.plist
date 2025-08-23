@@ -30,6 +30,10 @@
 	<string>パーソナルカラー診断のため、カメラで顔写真を撮影します</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>診断結果を写真として保存できます</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>より正確な環境光の分析のため位置情報を使用する場合があります</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>より正確な環境光の分析のため位置情報を使用する場合があります</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
