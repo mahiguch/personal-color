@@ -8,7 +8,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## ディレクトリ構成
 
-- `specifications/` - 設計・仕様書 (要件、設計、テスト設計、タスク)
+- `specifications/` - 設計・仕様書 (要件ごとにサブディレクトリを作成)
+  - `initialize/` - 初期実装の仕様書 (requirements.md, design.md, test_design.md, tasks.md)
+  - `[feature_name]/` - 各機能・要件の仕様書
 - `client/personal_color_app/` - Flutter iOS アプリケーション
 - `server/` - Python サーバーサイドコード (ADK + Vertex AI)
 - `docs/` - iOS セットアップガイド
@@ -114,10 +116,14 @@ src/
 
 ### 仕様駆動開発
 
-1. **要件定義**: `specifications/requirements.md`
-2. **設計**: `specifications/design.md` (DDD適用)
-3. **テスト設計**: `specifications/test_design.md`
-4. **実装**: `specifications/tasks.md` (TDD実践)
+各要件・機能ごとに`specifications/[feature_name]/`ディレクトリを作成し、以下の文書を管理：
+
+1. **要件定義**: `specifications/[feature_name]/requirements.md`
+2. **設計**: `specifications/[feature_name]/design.md` (DDD適用)
+3. **テスト設計**: `specifications/[feature_name]/test_design.md`
+4. **実装**: `specifications/[feature_name]/tasks.md` (TDD実践)
+
+初期実装については`specifications/initialize/`に格納済み。
 
 ### GitHub Instructionsに従う
 
