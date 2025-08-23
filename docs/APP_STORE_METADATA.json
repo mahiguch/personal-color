@@ -42,16 +42,16 @@
     "japanese": {
       "description": "🎨 AIが教える、あなたに似合う色を発見しよう！\n\nパーソナルカラー診断アプリは、最新のAI技術を使って、あなたの肌の色に最も似合うカラータイプ（イエローベース・ブルーベース）を診断する無料アプリです。\n\n## ✨ 特徴\n\n📸 **簡単撮影**\n• カメラで顔を撮影するだけ\n• プライバシー重視：画像は診断後に自動削除\n• 安全で使いやすい設計\n\n🤖 **AI診断**\n• 最新の画像解析技術\n• 数秒で正確な診断結果\n• 専門知識不要で誰でも使える\n\n🎨 **パーソナルカラー結果**\n• イエベ・ブルベの詳しい説明\n• あなたに似合う色のパレット表示\n• ファッションやメイクのアドバイス\n\n👶 **子ども向け設計**\n• 小学5年生でも簡単に使える\n• 分かりやすいイラストと説明\n• 安全で教育的なコンテンツ\n\n## 🎯 こんな人におすすめ\n\n• 自分に似合う色を知りたい人\n• ファッションに興味がある子ども\n• 色について学びたい人\n• パーソナルカラーを気軽に試したい人\n\n## 🔒 プライバシーとセキュリティ\n\n• 撮影した画像は診断後に即座に削除\n• 個人情報は一切保存しません\n• 子どもが安心して使える設計\n• 日本国内のセキュアなサーバーで処理\n\nパーソナルカラーの世界を楽しく学んで、あなたらしい色を見つけましょう！\n\n---\n※ このアプリは娯楽・教育目的です。\n※ 診断結果は参考程度にお楽しみください。",
       "keywords": "パーソナルカラー,イエベ,ブルベ,AI診断,色診断,ファッション,メイク,子ども,教育,エンターテイメント",
-      "marketing_url": "https://your-domain.com/personal-color-app",
-      "support_url": "https://your-domain.com/support",
-      "privacy_policy_url": "https://your-domain.com/privacy-policy"
+      "marketing_url": "https://personal-color-app-support.web.app/",
+      "support_url": "https://personal-color-app-support.web.app/support",
+      "privacy_policy_url": "https://personal-color-app-support.web.app/privacy-policy"
     },
     "english": {
       "description": "🎨 Discover your perfect colors with AI technology!\n\nPersonal Color Analysis App uses cutting-edge AI to determine whether you have a warm (Yellow Base) or cool (Blue Base) undertone, helping you discover colors that make you look your best.\n\n## ✨ Features\n\n📸 **Easy Photo Capture**\n• Simply take a selfie with your front camera\n• Privacy-focused: Images automatically deleted after analysis\n• Safe and user-friendly design\n\n🤖 **AI-Powered Analysis**\n• Advanced image analysis technology\n• Accurate results in seconds\n• No expertise required - anyone can use it\n\n🎨 **Personal Color Results**\n• Detailed explanation of your color type\n• Customized color palette display\n• Fashion and makeup advice\n\n👶 **Kid-Friendly Design**\n• Easy to use for elementary school children\n• Clear illustrations and explanations\n• Safe and educational content\n\n## 🎯 Perfect for\n\n• Anyone wanting to discover their best colors\n• Fashion-interested children\n• People learning about color theory\n• Those curious about personal color analysis\n\n## 🔒 Privacy & Security\n\n• Photos are immediately deleted after analysis\n• No personal information is stored\n• Child-safe design and implementation\n• Secure processing on Japanese servers\n\nExplore the world of personal color and find your perfect palette!\n\n---\n※ This app is for entertainment and educational purposes.\n※ Results are for reference and enjoyment only.",
       "keywords": "personal color,color analysis,warm undertone,cool undertone,AI diagnosis,fashion,makeup,kids,education,entertainment",
-      "marketing_url": "https://your-domain.com/en/personal-color-app",
-      "support_url": "https://your-domain.com/en/support",
-      "privacy_policy_url": "https://your-domain.com/en/privacy-policy"
+      "marketing_url": "https://personal-color-app-support.web.app/en/",
+      "support_url": "https://personal-color-app-support.web.app/en/support",
+      "privacy_policy_url": "https://personal-color-app-support.web.app/en/privacy-policy"
     }
   },
   "technical_requirements": {
@@ -92,7 +92,7 @@
       "first_name": "[開発者名]",
       "last_name": "[開発者姓]",
       "phone_number": "[連絡先電話番号]",
-      "email": "support@[your-domain].com"
+      "email": "support@personal-color-app.com"
     },
     "demo_account": {
       "required": false,

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プライバシーポリシー - パーソナルカラー診断アプリ</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #764ba2;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #667eea;
+        }
+        .important {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .highlight {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .back-link {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .back-link a {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 25px;
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+        .back-link a:hover {
+            transform: translateY(-2px);
+            text-decoration: none;
+            color: white;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            display: block;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔒 プライバシーポリシー</h1>
+        
+        <div class="important">
+            <strong>最終更新日：2025年8月22日</strong>
+        </div>
+
+        <h2>1. 基本方針</h2>
+        <p>パーソナルカラー診断アプリ（以下「当アプリ」）は、ユーザーのプライバシー保護を最重要事項として取り組みます。特に、小学生を含む子どもたちが安心して利用できるよう、厳格なプライバシー保護措置を講じています。</p>
+
+        <h2>2. 収集する情報</h2>
+
+        <h3>2.1 撮影画像</h3>
+        <div class="highlight">
+            <ul>
+                <li><strong>収集目的：</strong> パーソナルカラー診断のためのAI画像解析</li>
+                <li><strong>収集方法：</strong> アプリ内のカメラ機能による顔写真の撮影</li>
+                <li><strong>処理内容：</strong> 
+                    <ul>
+                        <li>肌色の色相・彩度・明度の分析</li>
+                        <li>イエローベース・ブルーベースの判定</li>
+                        <li>診断理由の生成</li>
+                    </ul>
+                </li>
+                <li><strong>保存期間：</strong> <span style="color: red; font-weight: bold;">診断完了後に即座に削除</span>（サーバー上に保存されません）</li>
+                <li><strong>第三者提供：</strong> <span style="color: red; font-weight: bold;">一切行いません</span></li>
+            </ul>
+        </div>
+
+        <h3>2.2 技術的情報</h3>
+        <ul>
+            <li><strong>アプリの使用状況：</strong> クラッシュレポートやエラーログ（個人を特定する情報は含まれません）</li>
+            <li><strong>診断実行回数：</strong> 統計目的のみ（個人との紐付けは行いません）</li>
+            <li><strong>デバイス情報：</strong> アプリの動作改善のための基本的な端末情報</li>
+        </ul>
+
+        <h3>2.3 収集しない情報</h3>
+        <div class="important">
+            <ul>
+                <li><strong>個人識別情報：</strong> 氏名、住所、電話番号等は一切収集しません</li>
+                <li><strong>位置情報：</strong> GPS等の位置情報は収集しません</li>
+                <li><strong>連絡先：</strong> アドレス帳等の情報は収集しません</li>
+            </ul>
+        </div>
+
+        <h2>3. 情報の利用目的</h2>
+        <ul>
+            <li>パーソナルカラー診断サービスの提供</li>
+            <li>診断結果の表示と説明の生成</li>
+            <li>アプリの動作改善・バグ修正</li>
+            <li>サービス利用状況の把握（個人特定不可能な形式）</li>
+        </ul>
+
+        <h2>4. データの管理・セキュリティ</h2>
+        
+        <h3>4.1 撮影画像の取り扱い</h3>
+        <div class="highlight">
+            <code>1. 撮影 → 2. サーバー送信 → 3. AI解析 → 4. 結果返却 → 5. 即座に削除</code>
+            <ul>
+                <li><strong>暗号化通信：</strong> HTTPS/TLSによる通信の暗号化</li>
+                <li><strong>一時処理：</strong> サーバー上での一時的な処理のみ</li>
+                <li><strong>自動削除：</strong> 診断完了と同時に自動削除</li>
+                <li><strong>バックアップなし：</strong> 画像のバックアップは作成されません</li>
+            </ul>
+        </div>
+
+        <h2>5. 第三者への提供</h2>
+        <div class="important">
+            <p><strong>撮影画像および個人に関する情報は、以下の場合を除き第三者に提供しません：</strong></p>
+            <ul>
+                <li>法令に基づく開示要求がある場合</li>
+                <li>ユーザーの生命、身体、財産の保護に必要な場合</li>
+                <li>公衆衛生の向上に必要な場合</li>
+            </ul>
+        </div>
+
+        <h2>6. 子どものプライバシー保護</h2>
+        <div class="highlight">
+            <h3>6.1 特別な配慮</h3>
+            <ul>
+                <li><strong>13歳未満：</strong> より厳格なプライバシー保護措置</li>
+                <li><strong>保護者向け：</strong> 保護者の方への透明な情報提供</li>
+                <li><strong>安全設計：</strong> 子どもが安心して使える機能設計</li>
+            </ul>
+            
+            <h3>6.2 保護者の方へのお願い</h3>
+            <ul>
+                <li>お子様のアプリ使用状況をご確認ください</li>
+                <li>プライバシーに関してご質問がある場合は、お気軽にお問い合わせください</li>
+                <li>不適切な使用を発見された場合は、直ちにご連絡ください</li>
+            </ul>
+        </div>
+
+        <h2>7. 国際的な取り扱い</h2>
+        <h3>7.1 適用法令</h3>
+        <ul>
+            <li><strong>個人情報保護法</strong>（日本）</li>
+            <li><strong>GDPR</strong>（EU一般データ保護規則）- 該当する場合</li>
+            <li><strong>COPPA</strong>（米国児童オンラインプライバシー保護法）- 子どものプライバシー保護</li>
+        </ul>
+
+        <h2>8. お問い合わせ</h2>
+        <div class="important">
+            <p>プライバシーに関するご質問、ご相談、苦情については、以下の連絡先までお願いします：</p>
+            <p>
+                <strong>Email:</strong> support@personal-color-app.com<br>
+                <strong>受付時間:</strong> 平日 10:00-18:00（土日祝除く）
+            </p>
+        </div>
+
+        <h2>9. 免責事項</h2>
+        <ul>
+            <li>当アプリの診断結果は、AI技術による自動分析に基づくものです</li>
+            <li>診断結果は娯楽・教育目的であり、専門的な色彩診断を代替するものではありません</li>
+            <li>診断結果の正確性について保証するものではありません</li>
+        </ul>
+
+        <div class="back-link">
+            <a href="index.html">← サポートページに戻る</a>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; color: #666;">
+            <p>このプライバシーポリシーは、日本の個人情報保護法、EU一般データ保護規則（GDPR）、および米国児童オンラインプライバシー保護法（COPPA）に準拠して作成されています。</p>
+            <p><strong>最終更新日：2025年8月22日</strong></p>
+        </div>
+    </div>
+</body>
+</html>
