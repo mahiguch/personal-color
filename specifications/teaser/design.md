@@ -3,36 +3,45 @@
 ## 1. システム設計概要
 
 ### 1.1 アーキテクチャ
-- **フレームワーク**: Next.js 14 (App Router)
-- **UI**: React 18 + TypeScript
+- **フレームワーク**: Next.js 15 (App Router)
+- **UI**: React 19 + TypeScript
 - **スタイリング**: Tailwind CSS
-- **ホスティング**: Vercel
-- **フォーム処理**: Vercel Forms または Formspree
+- **ホスティング**: Firebase App Hosting
+- **フォーム処理**: Firebase Cloud Functions + Firestore
 
 ### 1.2 ディレクトリ構成
 ```
-web/
-├── src/
-│   ├── app/                    # Next.js App Router
-│   │   ├── page.tsx           # トップページ
-│   │   ├── privacy-policy/    # プライバシーポリシー
-│   │   │   └── page.tsx
-│   │   ├── support/           # サポートページ
-│   │   │   └── page.tsx
-│   │   ├── globals.css        # グローバルスタイル
-│   │   └── layout.tsx         # ルートレイアウト
-│   ├── components/            # React コンポーネント
-│   │   ├── ui/               # 基本UIコンポーネント
-│   │   ├── sections/         # ページセクション
-│   │   └── forms/            # フォームコンポーネント
-│   ├── lib/                  # ユーティリティ
-│   └── types/                # TypeScript型定義
-├── public/               # 静的アセット
-│   ├── images/           # 画像ファイル
-│   └── icons/            # アイコンファイル
-├── __tests__/            # テストファイル
-├── e2e/                  # E2Eテストファイル
-└── scripts/              # スクリプトファイル
+personal-color/
+├── web/                        # Next.js アプリケーション
+│   ├── src/
+│   │   ├── app/                # Next.js App Router
+│   │   │   ├── page.tsx       # トップページ
+│   │   │   ├── privacy-policy/# プライバシーポリシー
+│   │   │   │   └── page.tsx
+│   │   │   ├── support/       # サポートページ
+│   │   │   │   └── page.tsx
+│   │   │   ├── globals.css    # グローバルスタイル
+│   │   │   └── layout.tsx     # ルートレイアウト
+│   │   ├── components/        # React コンポーネント
+│   │   │   ├── ui/           # 基本UIコンポーネント
+│   │   │   ├── sections/     # ページセクション
+│   │   │   └── forms/        # フォームコンポーネント
+│   │   ├── lib/              # ユーティリティ
+│   │   └── types/            # TypeScript型定義
+│   ├── public/               # 静的アセット
+│   │   ├── images/           # 画像ファイル
+│   │   └── manifest.json     # PWA manifest
+│   ├── out/                  # ビルド出力
+│   ├── firebase.json         # Firebase Hosting設定
+│   ├── .firebaserc          # Firebase プロジェクト設定
+│   ├── __tests__/            # テストファイル
+│   ├── e2e/                  # E2Eテストファイル
+│   └── tailwind.config.ts    # Tailwind設定
+└── functions/                # Firebase Cloud Functions
+    ├── src/
+    │   └── index.ts          # フォーム処理関数
+    ├── package.json
+    └── tsconfig.json
 ```
 
 ## 2. ページ設計
@@ -274,50 +283,188 @@ interface CardProps {
 
 ### 4.1 Next.js設定
 
-#### 4.1.1 next.config.js
-```javascript
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: 'export',
-  trailingSlash: true,
-  images: {
-    unoptimized: true
-  },
-  // SEO用メタデータ
-  async generateStaticParams() {
-    return [
-      { slug: [] },
-      { slug: ['privacy-policy'] },
-      { slug: ['support'] }
-    ];
-  }
-}
+#### 4.1.1 next.config.ts
+```typescript
+import type { NextConfig } from 'next';
 
-module.exports = nextConfig;
+const nextConfig: NextConfig = {
+  // Firebase App Hosting用の静的エクスポート設定
+  output: 'export',
+  distDir: './out',
+  trailingSlash: true,
+  
+  // パフォーマンス最適化
+  compress: true,
+  poweredByHeader: false,
+
+  // 画像最適化設定（静的エクスポート用）
+  images: {
+    unoptimized: true, // Firebase App Hosting用
+  },
+  
+  // 開発環境でのバンドル分析
+  ...(process.env.ANALYZE === 'true' && {
+    webpack: (config: any) => {
+      // Bundle analyzer
+      const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+      config.plugins.push(
+        new BundleAnalyzerPlugin({
+          analyzerMode: 'static',
+          openAnalyzer: false,
+          reportFilename: '../bundle-analyzer-report.html',
+        })
+      );
+      return config;
+    },
+  }),
+};
+
+export default nextConfig;
 ```
 
-#### 4.1.2 SEO設定
+#### 4.1.2 Firebase Hosting設定
+```json
+{
+  "hosting": {
+    "source": "./out",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "/api/contact",
+        "function": "contact"
+      }
+    ],
+    "headers": [
+      {
+        "source": "**/*",
+        "headers": [
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          },
+          {
+            "key": "X-Frame-Options",
+            "value": "DENY"
+          },
+          {
+            "key": "Referrer-Policy",
+            "value": "strict-origin-when-cross-origin"
+          }
+        ]
+      },
+      {
+        "source": "**/*.@(js|css)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
+          }
+        ]
+      }
+    ]
+  },
+  "functions": {
+    "source": "../functions",
+    "runtime": "nodejs18"
+  }
+}
+```
+
+#### 4.1.3 SEO設定
 ```typescript
 // web/src/app/layout.tsx
 export const metadata: Metadata = {
-  title: 'パーソナルカラー診断アプリ | AIで簡単！あなたに似合う色を発見',
-  description: 'AIが教える、あなたに似合う色を発見しよう！パーソナルカラー診断アプリで、イエベ・ブルベを簡単診断。',
-  keywords: 'パーソナルカラー,イエベ,ブルベ,AI診断,色診断',
+  title: {
+    default: 'パーソナルカラー診断アプリ | AIで簡単！あなたに似合う色を発見',
+    template: '%s | パーソナルカラー診断アプリ',
+  },
+  description: 'AIが教える、あなたに似合う色を発見しよう！カメラで写真を撮るだけで、AIがあなたのパーソナルカラー（イエベ・ブルベ）を診断。小学5年生以上が安心して楽しめる教育アプリです。',
+  keywords: 'パーソナルカラー,イエベ,ブルベ,AI診断,色診断,似合う色,ファッション,メイク,小学生,子供,安全,教育アプリ',
+  metadataBase: new URL('https://personal-color-app.web.app'),
   openGraph: {
-    title: 'パーソナルカラー診断アプリ',
-    description: 'AIで簡単！あなたに似合う色を発見',
     type: 'website',
     locale: 'ja_JP',
+    title: 'パーソナルカラー診断アプリ | AIで簡単！あなたに似合う色を発見',
+    description: 'AIが教える、あなたに似合う色を発見しよう！カメラで写真を撮るだけで、AIがパーソナルカラーを診断します。',
+    siteName: 'パーソナルカラー診断アプリ',
+    images: ['/images/app-icon.svg'],
+  },
+  twitter: {
+    card: 'summary',
+    title: 'パーソナルカラー診断アプリ | AIで簡単！あなたに似合う色を発見',
+    description: 'AIが教える、あなたに似合う色を発見しよう！',
+    images: ['/images/app-icon.svg'],
   },
 }
 ```
 
 ### 4.2 フォーム処理設計
 
-#### 4.2.1 Vercel Forms設定
+#### 4.2.1 Firebase Cloud Functions設定
+```typescript
+// functions/src/index.ts
+import { onRequest } from 'firebase-functions/v2/https';
+import * as admin from 'firebase-admin';
+
+admin.initializeApp();
+
+export const contact = onRequest(
+  {
+    cors: true,
+    region: 'asia-northeast1', // Tokyo region
+  },
+  async (request, response) => {
+    if (request.method !== 'POST') {
+      response.status(405).json({
+        error: 'Method not allowed',
+        message: 'Only POST requests are allowed',
+      });
+      return;
+    }
+
+    try {
+      const { name, email, subject, message, device_info } = request.body;
+
+      // Basic validation
+      if (!name || !email || !subject || !message) {
+        response.status(400).json({
+          error: 'Missing required fields',
+          message: '必須項目が不足しています。',
+        });
+        return;
+      }
+
+      // Store in Firestore
+      const db = admin.firestore();
+      await db.collection('contact_submissions').add({
+        name,
+        email,
+        subject,
+        message,
+        device_info: device_info || null,
+        ip: request.ip || 'unknown',
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+      response.status(200).json({
+        success: true,
+        message: 'お問い合わせを受け付けました。ご連絡ありがとうございます。',
+      });
+    } catch (error) {
+      console.error('Contact form error:', error);
+      response.status(500).json({
+        error: 'Internal server error',
+        message: 'サーバーエラーが発生しました。しばらく時間をおいてから再度お試しください。',
+      });
+    }
+  }
+);
+```
+
+#### 4.2.2 フロントエンド側の実装
 ```typescript
 // web/src/components/forms/ContactForm.tsx
-interface FormData {
+interface ContactFormData {
   name: string;
   email: string;
   subject: string;
@@ -326,35 +473,44 @@ interface FormData {
 }
 
 const ContactForm = () => {
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-    device_info: ''
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactFormSchema),
   });
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    
+  const onSubmit = async (data: ContactFormData) => {
+    setSubmitStatus('submitting');
+
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
       });
-      
-      if (response.ok) {
-        // 成功処理
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'フォームの送信に失敗しました');
       }
+
+      const result = await response.json();
+      setSubmitStatus('success');
+      reset();
     } catch (error) {
-      // エラーハンドリング
+      console.error('Form submission error:', error);
+      setSubmitStatus('error');
     }
   };
 };
 ```
 
-#### 4.2.2 バリデーション
+#### 4.2.3 バリデーション
 ```typescript
 import { z } from 'zod';
 
@@ -429,25 +585,38 @@ export const featuresData = [
 ## 7. 運用設計
 
 ### 7.1 デプロイメント
-- **プラットフォーム**: Vercel
-- **ドメイン**: 独自ドメイン設定
+- **プラットフォーム**: Firebase App Hosting
+- **ドメイン**: Firebase Hosting + カスタムドメイン設定
 - **SSL**: 自動証明書取得
-- **CDN**: Vercel Edge Network
+- **CDN**: Firebase Hosting Global CDN
+- **関数**: Firebase Cloud Functions (asia-northeast1リージョン)
 
 ### 7.2 監視・メンテナンス
-- **稼働監視**: Vercel Analytics
-- **エラートラッキング**: コンソールログ
-- **フォーム送信**: メール通知
+- **稼働監視**: Firebase Hosting Analytics
+- **エラートラッキング**: Firebase Functions logs
+- **フォーム送信**: Firestore収集 + コンソールログ
+- **パフォーマンス**: Firebase Performance Monitoring
 
 ## 8. 開発フロー
 
 ### 8.1 開発環境
 ```bash
 # プロジェクト作成
-npx create-next-app@latest teaser-site --typescript --tailwind --app
+npx create-next-app@latest web --typescript --tailwind --app
 
 # 追加パッケージ
-npm install zod react-hook-form @hookform/resolvers
+npm install zod react-hook-form @hookform/resolvers lucide-react tailwind-merge clsx
+npm install firebase-tools firebase-admin
+npm install --save-dev @next/bundle-analyzer
+
+# Firebase初期化
+firebase init
+
+# 開発サーバー起動
+npm run dev
+
+# ビルド・デプロイ
+npm run firebase:deploy
 ```
 
 ### 8.2 品質管理
@@ -469,7 +638,9 @@ npm install zod react-hook-form @hookform/resolvers
 - React Hook Form
 
 ### B. 外部サービス
-- Vercel (ホスティング・フォーム処理)
+- Firebase App Hosting (ホスティング)
+- Firebase Cloud Functions (フォーム処理)  
+- Firebase Firestore (フォームデータ保存)
 - 独自ドメイン (DNS設定)
 
 ### C. アセット要件

@@ -1,5 +1,11 @@
 import type { Metadata } from 'next';
-import { Inter, Noto_Sans_JP } from 'next/font/google';
+import {
+  Inter,
+  Noto_Sans_JP,
+  DM_Sans,
+  Crimson_Text,
+  Roboto_Mono,
+} from 'next/font/google';
 import './globals.css';
 
 const inter = Inter({
@@ -8,10 +14,31 @@ const inter = Inter({
   display: 'swap',
 });
 
+const dmSans = DM_Sans({
+  variable: '--font-dm-sans',
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
+});
+
 const notoSansJP = Noto_Sans_JP({
   variable: '--font-noto-sans-jp',
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700', '800'],
+  display: 'swap',
+});
+
+const crimsonText = Crimson_Text({
+  variable: '--font-crimson-text',
+  subsets: ['latin'],
+  weight: ['400', '600', '700'],
+  display: 'swap',
+});
+
+const robotoMono = Roboto_Mono({
+  variable: '--font-roboto-mono',
+  subsets: ['latin'],
+  weight: ['300', '400', '500'],
   display: 'swap',
 });
 
@@ -29,7 +56,7 @@ export const metadata: Metadata = {
   publisher: 'パーソナルカラー診断アプリ',
   category: 'Education',
   classification: 'Educational App',
-  metadataBase: new URL('https://personal-color-app.vercel.app'),
+  metadataBase: new URL('https://personal-color-app.web.app'),
   alternates: {
     canonical: '/',
   },
@@ -94,7 +121,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} ${notoSansJP.variable} font-ja antialiased`}
+        className={`${dmSans.variable} ${inter.variable} ${notoSansJP.variable} ${crimsonText.variable} ${robotoMono.variable} font-sans antialiased bg-white text-gray-900 min-h-screen`}
       >
         {children}
       </body>

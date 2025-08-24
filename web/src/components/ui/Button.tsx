@@ -24,16 +24,17 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50';
+      'inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 tracking-tight';
 
     const variants = {
       primary:
-        'bg-orange-500 text-white hover:bg-orange-600 focus-visible:ring-orange-500',
+        'bg-gray-900 text-white hover:bg-gray-800 focus-visible:ring-gray-900',
       secondary:
-        'bg-blue-500 text-white hover:bg-blue-600 focus-visible:ring-blue-500',
+        'bg-primary-400 text-white hover:bg-primary-500 focus-visible:ring-primary-400',
       outline:
-        'border border-gray-300 bg-white text-gray-900 hover:bg-gray-50 focus-visible:ring-gray-500',
-      ghost: 'text-gray-900 hover:bg-gray-100 focus-visible:ring-gray-500',
+        'border border-gray-200 bg-white text-gray-900 hover:bg-gray-50 hover:border-gray-300 focus-visible:ring-gray-500',
+      ghost:
+        'text-gray-600 hover:text-gray-900 hover:bg-gray-50 focus-visible:ring-gray-500',
     };
 
     const sizes = {

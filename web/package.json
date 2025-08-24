@@ -14,11 +14,15 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "analyze": "ANALYZE=true npm run build",
-    "export": "next export"
+    "export": "next build",
+    "firebase:deploy": "npm run export && firebase deploy --only hosting",
+    "firebase:serve": "npm run export && firebase serve --only hosting"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
     "clsx": "^2.1.1",
+    "firebase-admin": "^13.4.0",
+    "firebase-tools": "^14.14.0",
     "lucide-react": "^0.541.0",
     "next": "15.5.0",
     "react": "19.1.0",

@@ -204,27 +204,42 @@ web/src/components/ui/
 
 ### 4.2 フォーム送信機能
 **タスク ID**: TASK-009
-**概要**: サーバーサイドでのフォーム処理
-**工数見積**: 3時間
+**概要**: Firebase Cloud Functions でのフォーム処理
+**工数見積**: 4時間
 **依存**: TASK-008
 
-**実装選択肢:**
-
-**オプション A: Vercel Forms**
+**実装方式: Firebase Cloud Functions**
 ```typescript
-// app/api/contact/route.ts
-export async function POST(request: Request) {
-  const formData = await request.formData();
-  // Vercel Forms自動処理
-}
+// functions/src/index.ts
+import { onRequest } from 'firebase-functions/v2/https';
+import * as admin from 'firebase-admin';
+
+export const contact = onRequest({
+  cors: true,
+  region: 'asia-northeast1',
+}, async (request, response) => {
+  // バリデーション
+  const { name, email, subject, message, device_info } = request.body;
+  
+  // Firestore に保存
+  const db = admin.firestore();
+  await db.collection('contact_submissions').add({
+    name, email, subject, message, device_info,
+    ip: request.ip || 'unknown',
+    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+  });
+  
+  response.json({ success: true });
+});
 ```
 
-**オプション B: 外部サービス（Formspree等）**
+**フロントエンド側の実装**
 ```typescript
-// フロントエンドから直接送信
-const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
+// 静的サイトから Cloud Function を呼び出し
+const response = await fetch('/api/contact', {
   method: 'POST',
-  body: formData
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(formData)
 });
 ```
 
@@ -449,64 +464,114 @@ const lighthouse = require('lighthouse');
 
 ## 9. デプロイ・本番環境
 
-### 9.1 Vercel設定
+### 9.1 Firebase App Hosting設定
 **タスク ID**: TASK-019
-**概要**: Vercelでの本番環境構築
-**工数見積**: 2時間
+**概要**: Firebase App Hosting での本番環境構築
+**工数見積**: 3時間
 **依存**: TASK-017
 
 **設定項目:**
-- [ ] Vercelアカウントのセットアップ
-- [ ] GitHubリポジトリとの連携
-- [ ] 環境変数の設定
-- [ ] ビルド設定の調整
-- [ ] プレビュー環境の確認
+- [ ] Firebase プロジェクトの作成
+- [ ] Firebase CLI のセットアップ
+- [ ] Firebase Hosting の初期化
+- [ ] Cloud Functions の設定
+- [ ] 静的サイトエクスポートの設定
 
-**環境変数:**
-```bash
-# web/.env.local (ローカル開発用)
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
-CONTACT_EMAIL=mahiguch2@gmail.com
+**必要な設定ファイル:**
+```json
+// firebase.json
+{
+  "hosting": {
+    "source": "./out",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "/api/contact",
+        "function": "contact"
+      }
+    ],
+    "headers": [
+      {
+        "source": "**/*",
+        "headers": [
+          {"key": "X-Content-Type-Options", "value": "nosniff"},
+          {"key": "X-Frame-Options", "value": "DENY"}
+        ]
+      }
+    ]
+  },
+  "functions": {
+    "source": "../functions",
+    "runtime": "nodejs18"
+  }
+}
+```
 
-# Vercel環境変数
-NEXT_PUBLIC_SITE_URL=https://your-domain.com
+```typescript
+// next.config.ts - 静的エクスポート設定
+const nextConfig: NextConfig = {
+  output: 'export',
+  distDir: './out',
+  trailingSlash: true,
+  images: {
+    unoptimized: true, // Firebase App Hosting用
+  },
+};
 ```
 
 ---
 
-### 9.2 独自ドメイン設定
+### 9.2 Firebase カスタムドメイン設定
 **タスク ID**: TASK-020
-**概要**: 独自ドメインの取得と設定
+**概要**: Firebase Hosting での独自ドメイン設定
 **工数見積**: 1時間
 **依存**: TASK-019
 
 **手順:**
 - [ ] ドメイン取得（例: personal-color-app.com）
-- [ ] DNS設定
-- [ ] Vercelでのドメイン追加
-- [ ] SSL証明書の確認
+- [ ] Firebase Hosting でのカスタムドメイン追加
+- [ ] DNS 設定（A レコード/CNAME）
+- [ ] SSL証明書の自動発行確認
 - [ ] リダイレクト設定（www → non-www等）
+
+**Firebase CLI コマンド:**
+```bash
+# カスタムドメイン追加
+firebase hosting:channel:deploy live --only hosting
+firebase hosting:sites:list
+```
 
 ---
 
-### 9.3 本番デプロイ
+### 9.3 Firebase 本番デプロイ
 **タスク ID**: TASK-021
-**概要**: 本番環境へのデプロイと最終確認
+**概要**: Firebase App Hosting への本番デプロイと最終確認
 **工数見積**: 2時間
 **依存**: TASK-020
 
 **デプロイ手順:**
-- [ ] 本番ブランチ（main）へのマージ
-- [ ] 自動デプロイの確認
-- [ ] 本番環境での動作確認
-- [ ] パフォーマンステストの実行
-- [ ] Google Search Console登録
+```bash
+# ビルドとデプロイ
+npm run build
+firebase deploy --only hosting,functions
+
+# プレビューチャンネルでのテスト
+firebase hosting:channel:deploy preview
+```
+
+**確認項目:**
+- [ ] 静的サイト（Next.js export）が正常に表示される
+- [ ] Firebase Cloud Functions が正常に動作する
+- [ ] Firestore へのデータ保存が機能する
+- [ ] CDN キャッシュが適切に設定されている
+- [ ] セキュリティヘッダーが正しく設定されている
 
 **最終確認項目:**
-- [ ] 全ページが正常に表示される
-- [ ] フォーム送信が正常に動作する
+- [ ] 全ページが正常に表示される（personal-color-app.web.app）
+- [ ] フォーム送信が Firestore に正常に保存される
 - [ ] App Store用URLが全て有効
-- [ ] SSL証明書が正しく設定されている
+- [ ] Firebase SSL証明書が正しく設定されている
+- [ ] Google Search Console登録
 
 ---
 
@@ -519,9 +584,9 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.com
 **依存**: TASK-021
 
 **更新URL:**
-- [ ] マーケティングURL: `https://your-domain.com/`
-- [ ] プライバシーポリシーURL: `https://your-domain.com/privacy-policy`
-- [ ] サポートURL: `https://your-domain.com/support`
+- [ ] マーケティングURL: `https://personal-color-app.web.app/`
+- [ ] プライバシーポリシーURL: `https://personal-color-app.web.app/privacy-policy`
+- [ ] サポートURL: `https://personal-color-app.web.app/support`
 
 **確認項目:**
 - [ ] 各URLが正常にアクセスできる
@@ -545,7 +610,9 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.com
 - [ ] セキュリティアラート
 
 **ツール例:**
-- Vercel Analytics（標準）
+- Firebase Analytics（標準）
+- Google Cloud Monitoring
+- Firebase Crashlytics
 - UptimeRobot（サイト監視）
 - Google Search Console
 
@@ -634,9 +701,11 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.com
 
 ### リスクと対策
 **技術リスク:**
-- フォーム送信機能の実装遅延 → 外部サービス（Formspree）の並行検討
-- パフォーマンス要件未達 → 早期でのLighthouse測定とボトルネック特定
+- Firebase Cloud Functions のコールドスタート遅延 → 適切なリージョン選択（asia-northeast1）
+- 静的エクスポートでの制約 → Next.js API Routes を Cloud Functions に移行
+- Firebase プロジェクトの設定ミス → 段階的なデプロイとプレビュー環境でのテスト
 
 **スケジュールリスク:**  
-- デザイン調整時間の延長 → MVP（最小機能）での先行リリース
+- Firebase 設定の学習コスト → 公式ドキュメントとサンプルプロジェクトの活用
+- デプロイ設定の複雑さ → firebase.json と next.config.ts の適切な設定確認
 - テスト工数の増加 → 自動テストの段階的導入

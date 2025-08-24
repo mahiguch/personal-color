@@ -16,8 +16,8 @@
 
 ### 1.3 テスト環境
 - **開発環境**: localhost:3000
-- **ステージング環境**: Vercel Preview
-- **本番環境**: 独自ドメイン
+- **ステージング環境**: Firebase Hosting Preview
+- **本番環境**: Firebase App Hosting (personal-color-app.web.app)
 
 ## 2. 機能テスト設計
 
