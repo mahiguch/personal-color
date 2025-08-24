@@ -10,9 +10,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - `specifications/` - 設計・仕様書 (要件ごとにサブディレクトリを作成)
   - `initialize/` - 初期実装の仕様書 (requirements.md, design.md, test_design.md, tasks.md)
+  - `teaser/` - ティザーサイトの仕様書 (requirements.md, design.md, tasks.md)
   - `[feature_name]/` - 各機能・要件の仕様書
 - `client/personal_color_app/` - Flutter iOS アプリケーション
 - `server/` - Python サーバーサイドコード (ADK + Vertex AI)
+- `web/` - Next.js ティザーサイト (静的サイト)
 - `docs/` - iOS セットアップガイド
 - `scripts/` - セットアップスクリプト
 
@@ -75,14 +77,49 @@ python test_vertex_ai_connection.py
 python test_gemini_prompts.py
 ```
 
+### Next.js (Web - ティザーサイト)
+
+```bash
+cd web
+
+# プロジェクト作成 (初回のみ)
+npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir
+npm install next@15
+
+# 依存関係インストール
+npm install
+
+# shadcn/ui セットアップ (初回のみ)
+npx shadcn-ui@latest init
+npx shadcn-ui@latest add button card badge avatar navigation-menu separator
+
+# 開発サーバー起動
+npm run dev
+
+# 静的サイトビルド
+npm run build
+
+# Firebase App Hosting デプロイ
+firebase deploy --only hosting
+
+# リント・フォーマット
+npm run lint
+npx prettier --write .
+
+# 型チェック
+npx tsc --noEmit
+```
+
 ## アーキテクチャ
 
 ### 技術スタック
 
 - **クライアント**: Flutter 3.13+ (Dart 3.0+) - iOS専用
 - **サーバー**: Python 3.11+ with ADK Python SDK
+- **Web**: Next.js 15 (App Router) + TypeScript - ティザーサイト
 - **AI**: Vertex AI Gemini-2.5-pro
 - **クラウド**: Google Cloud Platform
+- **ホスティング**: Firebase App Hosting (Web), App Store (iOS)
 - **アーキテクチャ**: Clean Architecture + DDD
 
 ### クライアント側アーキテクチャ
@@ -112,6 +149,25 @@ src/
 └── services/      # ビジネスロジック
 ```
 
+### Web側アーキテクチャ (ティザーサイト)
+
+```
+web/src/
+├── app/
+│   ├── page.tsx          # ランディングページ
+│   ├── privacy/page.tsx  # プライバシーポリシー
+│   └── support/page.tsx  # サポート・FAQ
+├── components/
+│   ├── ui/              # shadcn/ui コンポーネント
+│   ├── layout/          # Header, Footer
+│   └── sections/        # Hero, Features, Reviews
+├── lib/                 # ユーティリティ
+└── types/               # TypeScript型定義
+```
+
+Next.js 15 App Router + 静的サイト生成（`output: 'export'`）を採用。
+Figmaデザインベース、Tailwind CSS + shadcn/ui使用。
+
 ## 開発フロー
 
 ### 仕様駆動開発
@@ -124,6 +180,7 @@ src/
 4. **実装**: `specifications/[feature_name]/tasks.md` (TDD実践)
 
 初期実装については`specifications/initialize/`に格納済み。
+ティザーサイトについては`specifications/teaser/`に格納済み。
 
 ### GitHub Instructionsに従う
 
@@ -150,6 +207,14 @@ src/
 - Image: `Pillow`
 - Development: `pytest`, `black`, `flake8`, `mypy`
 
+### Next.js依存関係 (ティザーサイト)
+
+主要パッケージ：
+- Framework: `next@15`, `react`, `typescript`
+- Styling: `tailwindcss`, `@radix-ui/react-*`, `lucide-react`
+- UI Library: `shadcn/ui` components
+- Development: `eslint`, `prettier`
+
 ## セットアップ
 
 ### iOS開発環境
@@ -162,8 +227,15 @@ src/
 1. `scripts/setup_gcp_vertex_ai.sh` を実行
 2. `server/run_prompt_test.sh` でテスト
 
+### Firebase App Hosting (ティザーサイト)
+
+1. Firebase CLI インストール: `npm install -g firebase-tools`
+2. 既存プロジェクト `personal-color` に接続
+3. `web/` でプロジェクト作成後、`firebase deploy --only hosting` でデプロイ
+
 ## テスト戦略
 
 - **Flutter**: Widget テスト + Unit テスト
 - **Python**: pytest による Unit/Integration テスト
+- **Next.js**: 基本的な動作確認 + Lighthouse パフォーマンステスト (80+目標)
 - **AI**: Geminiプロンプトの精度テスト (80%以上目標)
