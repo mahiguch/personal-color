@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Disallow: /api/
+Disallow: /_next/
+
+Sitemap: https://personal-color-app.web.app/sitemap.xml

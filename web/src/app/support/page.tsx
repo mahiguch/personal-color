@@ -1,10 +1,28 @@
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { FAQSection } from '@/components/sections/FAQSection';
+import { faqPageSchema } from '@/lib/structured-data';
+import Script from 'next/script';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'サポート・よくある質問',
+  description: 'パーソナルカラー診断アプリに関するよくある質問と回答。安全性、プライバシー、使用方法についてご案内します。',
+  alternates: {
+    canonical: '/support',
+  },
+};
 
 export default function SupportPage() {
   return (
     <div className="min-h-screen bg-white">
+      <Script
+        id="faq-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqPageSchema),
+        }}
+      />
       <Header />
       <main>
         {/* サポートページヘッダー */}
