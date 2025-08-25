@@ -1,9 +1,9 @@
 'use client';
 
+import Image from 'next/image';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Shield, Eye, Users, Lock, Mail, FileText, AlertTriangle, Check } from 'lucide-react';
 
@@ -288,22 +288,43 @@ export default function PrivacyPage() {
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">特別な配慮</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="text-center">
-                        <div className="w-16 h-16 bg-warm-500 rounded-full flex items-center justify-center mx-auto mb-3">
-                          <Users className="w-8 h-8 text-white" />
+                        <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center mx-auto mb-3 bg-warm-500">
+                          <Image
+                            src="/images/privacy/child-protection.png"
+                            alt="13歳未満の子どものプライバシー保護"
+                            width={64}
+                            height={64}
+                            className="rounded-full object-cover"
+                            unoptimized={false}
+                          />
                         </div>
                         <h4 className="font-medium text-gray-800 mb-2">13歳未満</h4>
                         <p className="text-sm text-gray-600">より厳格なプライバシー保護措置</p>
                       </div>
                       <div className="text-center">
-                        <div className="w-16 h-16 bg-cool-500 rounded-full flex items-center justify-center mx-auto mb-3">
-                          <Shield className="w-8 h-8 text-white" />
+                        <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center mx-auto mb-3 bg-cool-500">
+                          <Image
+                            src="/images/privacy/parent-transparency.png"
+                            alt="保護者向け透明な情報提供"
+                            width={64}
+                            height={64}
+                            className="rounded-full object-cover"
+                            unoptimized={false}
+                          />
                         </div>
                         <h4 className="font-medium text-gray-800 mb-2">保護者向け</h4>
                         <p className="text-sm text-gray-600">透明な情報提供</p>
                       </div>
                       <div className="text-center">
-                        <div className="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-3">
-                          <Lock className="w-8 h-8 text-white" />
+                        <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center mx-auto mb-3 bg-primary-500">
+                          <Image
+                            src="/images/privacy/safe-design.png"
+                            alt="子どもが安心して使える安全設計"
+                            width={64}
+                            height={64}
+                            className="rounded-full object-cover"
+                            unoptimized={false}
+                          />
                         </div>
                         <h4 className="font-medium text-gray-800 mb-2">安全設計</h4>
                         <p className="text-sm text-gray-600">子どもが安心して使える機能設計</p>

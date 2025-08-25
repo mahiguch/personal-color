@@ -1,0 +1,63 @@
+{
+  "name": "パーソナルカラー診断アプリ",
+  "short_name": "パーソナルカラー診断",
+  "description": "AI技術を使用した安全で楽しい子ども向けパーソナルカラー診断アプリ",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#8B5CF6",
+  "orientation": "portrait-primary",
+  "categories": ["education", "lifestyle", "photography"],
+  "lang": "ja",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/app_icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/app_icon.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/app_icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/ScreenShot1.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "メイン画面 - パーソナルカラー診断"
+    },
+    {
+      "src": "/screenshots/ScreenShot2.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "診断結果画面"
+    },
+    {
+      "src": "/screenshots/ScreenShot3.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "カラーパレット表示"
+    }
+  ],
+  "scope": "/",
+  "prefer_related_applications": true,
+  "related_applications": [
+    {
+      "platform": "itunes",
+      "url": "https://apps.apple.com/jp/app/personal-color-diagnosis",
+      "id": "com.personalcolor.diagnosis"
+    }
+  ]
+}
