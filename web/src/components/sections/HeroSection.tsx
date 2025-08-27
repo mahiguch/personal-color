@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { MESSAGES } from '@/lib/constants';
+import { MESSAGES, APP_STORE_URLS } from '@/lib/constants';
 
 export function HeroSection() {
   return (
@@ -27,18 +27,6 @@ export function HeroSection() {
               </p>
             </div>
 
-            {/* CTAボタン */}
-            <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
-              <Button 
-                size="lg"
-                variant="outline"
-                className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 px-10 py-6 rounded-xl font-semibold transition-all duration-300 text-xl"
-                disabled
-              >
-                📖 詳しく見る
-              </Button>
-            </div>
-
             {/* 信頼性アピール */}
             <div className="flex flex-wrap gap-4 justify-center lg:justify-start text-sm text-gray-600">
               <div className="flex items-center space-x-2">
@@ -51,7 +39,7 @@ export function HeroSection() {
               </div>
               <div className="flex items-center space-x-2">
                 <span className="w-2 h-2 bg-accent-warning rounded-full"></span>
-                <span>iOS 15+ 対応予定</span>
+                <span>App Store配信中</span>
               </div>
             </div>
           </div>

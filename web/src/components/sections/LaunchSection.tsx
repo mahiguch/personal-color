@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { MESSAGES, APP_STORE_URLS } from '@/lib/constants';
 
 export function LaunchSection() {
   return (
@@ -10,26 +11,35 @@ export function LaunchSection() {
           {/* Figmaベースのセクション見出し */}
           <div className="text-center space-y-6 mb-16">
             <h2 className="text-4xl sm:text-5xl font-semibold text-gray-900 leading-tight">
-              近日公開予定
+              {MESSAGES.launch.title}
             </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              {MESSAGES.launch.subtitle}
+            </p>
           </div>
 
           {/* 2ボタンレイアウト（Figmaデザインに基づく） */}
           <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
-            <Button 
-              size="lg" 
-              className="bg-gray-900 text-white hover:bg-gray-800 font-medium px-8 py-4 rounded-lg shadow-sm transition-all duration-200"
-              disabled
+            <a 
+              href={APP_STORE_URLS.ios} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-block"
             >
-              App Storeからアプリ取得
-            </Button>
+              <Button 
+                size="lg" 
+                className="bg-gray-900 text-white hover:bg-gray-800 font-medium px-8 py-4 rounded-lg shadow-sm transition-all duration-200"
+              >
+                🍎 App Storeからアプリ取得
+              </Button>
+            </a>
             <Button 
               size="lg" 
               variant="outline"
               className="border-gray-300 text-gray-900 hover:bg-gray-50 font-medium px-8 py-4 rounded-lg transition-all duration-200"
               disabled
             >
-              Google Playからアプリ取得
+              📱 Google Play（準備中）
             </Button>
           </div>
 
@@ -40,7 +50,7 @@ export function LaunchSection() {
                 iOS版
               </h3>
               <p className="text-gray-600 leading-relaxed">
-                App Storeでの配信を2025年春頃に予定しています。リリース後にダウンロード可能です。
+                App Storeで配信中！今すぐダウンロードしてパーソナルカラー診断を体験してください。
               </p>
             </div>
             
@@ -49,7 +59,7 @@ export function LaunchSection() {
                 Android版
               </h3>
               <p className="text-gray-600 leading-relaxed">
-                Google Playでの配信を2025年夏頃に予定しています。リリース後にダウンロード可能です。
+                Google Playでの配信を準備中です。しばらくお待ちください。
               </p>
             </div>
             

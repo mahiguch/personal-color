@@ -7,12 +7,18 @@ export const SITE_CONFIG = {
   ogImage: '/images/hero-gradient-background.webp',
 } as const;
 
+// アプリストアURL
+export const APP_STORE_URLS = {
+  ios: 'https://apps.apple.com/jp/app/id6751162051',
+  android: '', // 今後リリース予定
+} as const;
+
 // メッセージ定数
 export const MESSAGES = {
   hero: {
     title: 'AIが教える、あなたに似合う色を発見しよう！',
     subtitle: '簡単撮影で、パーソナルカラー診断が数秒で完了',
-    cta: '近日公開',
+    cta: 'App Storeでダウンロード',
   },
   features: {
     title: '4つの特徴',
@@ -69,8 +75,8 @@ export const MESSAGES = {
     ],
   },
   launch: {
-    title: '近日公開予定！お楽しみに',
-    subtitle: '安全で楽しいパーソナルカラー診断体験をお届けします',
+    title: 'アプリをダウンロード',
+    subtitle: '安全で楽しいパーソナルカラー診断体験を今すぐ始めよう',
   },
   footer: {
     description: '安全で楽しいAIパーソナルカラー診断アプリ',

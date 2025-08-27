@@ -20,15 +20,17 @@ export const organizationSchema: WithContext<Organization> = {
     "availableLanguage": ["Japanese"],
     "description": "App Storeレビューを通じてお問い合わせください"
   },
-  "sameAs": []
+  "sameAs": [
+    "https://apps.apple.com/jp/app/id6751162051"
+  ]
 };
 
 // Webサイトの構造化データ
 export const websiteSchema: WithContext<WebSite> = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "name": "パーソナルカラー診断アプリ - ティザーサイト",
-  "description": "AI技術を使用した安全で楽しい子ども向けパーソナルカラー診断アプリ",
+  "name": "パーソナルカラー診断アプリ - 公式サイト",
+  "description": "AI技術を使用した安全で楽しい子ども向けパーソナルカラー診断アプリ - App Store配信中",
   "url": "https://personal-color-app.web.app",
   "inLanguage": "ja-JP",
   "copyrightYear": 2025,
@@ -40,7 +42,8 @@ export const websiteSchema: WithContext<WebSite> = {
     "@type": "SoftwareApplication",
     "name": "パーソナルカラー診断アプリ",
     "applicationCategory": "EducationalApplication",
-    "operatingSystem": ["iOS", "Android"]
+    "operatingSystem": ["iOS"],
+    "downloadUrl": "https://apps.apple.com/jp/app/id6751162051"
   }
 };
 
@@ -55,7 +58,7 @@ export const mobileAppSchema: WithContext<WebApplication> = {
     "EducationalApplication",
     "LifestyleApplication"
   ],
-  "operatingSystem": ["iOS", "Android"],
+  "operatingSystem": ["iOS"],
   "author": {
     "@type": "Organization",
     "name": "パーソナルカラー診断アプリ開発チーム"
@@ -67,7 +70,10 @@ export const mobileAppSchema: WithContext<WebApplication> = {
   },
   "inLanguage": "ja-JP",
   "isAccessibleForFree": true,
-  "installUrl": "https://apps.apple.com/jp/app/personal-color-diagnosis",
+  "installUrl": "https://apps.apple.com/jp/app/id6751162051",
+  "downloadUrl": "https://apps.apple.com/jp/app/id6751162051",
+  "releaseNotes": "初回リリース - AI技術による安全なパーソナルカラー診断",
+  "datePublished": "2025-08-27",
   "screenshot": [
     "https://personal-color-app.web.app/screenshots/ScreenShot1.png",
     "https://personal-color-app.web.app/screenshots/ScreenShot2.png",
@@ -128,12 +134,20 @@ export const faqPageSchema: WithContext<FAQPage> = {
       "name": "問題が発生した場合はどこに連絡すればよいですか？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "アプリリリース後は、App Storeのレビュー機能を通じてお問い合わせください。皆様からのフィードバックをお待ちしており、迅速に対応いたします。"
+        "text": "App Storeのレビュー機能を通じてお問い合わせください。皆様からのフィードバックをお待ちしており、迅速に対応いたします。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "アプリはどこでダウンロードできますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "現在、App Storeでダウンロード可能です。Google Play版は準備中で、今後リリース予定です。App Storeで「パーソナルカラー診断アプリ」で検索してください。"
       }
     }
   ],
   "inLanguage": "ja-JP",
-  "dateModified": "2025-08-25",
+  "dateModified": "2025-08-27",
   "author": {
     "@type": "Organization",
     "name": "パーソナルカラー診断アプリ開発チーム"
