@@ -1,0 +1,74 @@
+{
+  "packageName": "com.personalcolor.personal_color_app",
+  "track": "internal",
+  "releaseStatus": "draft",
+  "userFraction": 1.0,
+  "mappingFile": "build/outputs/mapping/release/mapping.txt",
+  "debugSymbols": "build/outputs/native-debug-symbols/release/native-debug-symbols.zip",
+  "releaseNotes": {
+    "ja-JP": "android/app/src/main/play/release-notes/ja-JP/default.txt"
+  },
+  "listing": {
+    "language": "ja-JP",
+    "title": "android/app/src/main/play/listings/ja-JP/title.txt",
+    "shortDescription": "android/app/src/main/play/listings/ja-JP/short-description.txt",
+    "fullDescription": "android/app/src/main/play/listings/ja-JP/full-description.txt"
+  },
+  "images": {
+    "icon": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+    "featureGraphic": "android/app/src/main/play/listings/ja-JP/graphics/feature-graphic/feature-graphic.png",
+    "screenshots": {
+      "phone": [
+        "android/app/src/main/play/listings/ja-JP/graphics/phone-screenshots/screenshot-1.png",
+        "android/app/src/main/play/listings/ja-JP/graphics/phone-screenshots/screenshot-2.png",
+        "android/app/src/main/play/listings/ja-JP/graphics/phone-screenshots/screenshot-3.png"
+      ]
+    }
+  },
+  "contentRating": {
+    "questionnaire": {
+      "violence": false,
+      "bloodAndGore": false,
+      "drugs": false,
+      "gambling": false,
+      "sexualContent": false,
+      "profanity": false,
+      "userGeneratedContent": false,
+      "socialMedia": false,
+      "location": false,
+      "personalInfo": false
+    }
+  },
+  "targetAudience": {
+    "minimumAge": 3,
+    "targetAge": "AGES_5_UNDER"
+  },
+  "dataCollection": {
+    "collectsPersonalInfo": false,
+    "sharesPersonalInfo": false,
+    "encryptsPersonalInfo": true,
+    "deletesPersonalInfo": true
+  },
+  "permissions": {
+    "camera": {
+      "required": true,
+      "reason": "パーソナルカラー診断のために顔写真を撮影します"
+    },
+    "storage": {
+      "required": false,
+      "reason": "診断結果の保存（任意）"
+    }
+  },
+  "categories": {
+    "primary": "LIFESTYLE",
+    "secondary": "BEAUTY"
+  },
+  "contentLabels": ["EVERYONE"],
+  "inAppProducts": [],
+  "subscriptions": [],
+  "adsEnabled": false,
+  "version": {
+    "versionCode": 1,
+    "versionName": "1.0.0"
+  }
+}

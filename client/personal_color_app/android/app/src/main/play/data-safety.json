@@ -1,0 +1,71 @@
+{
+  "safetyLabels": {
+    "dataCollected": [
+      {
+        "category": "PHOTOS",
+        "types": ["PHOTOS"],
+        "purposes": ["APP_FUNCTIONALITY"],
+        "ephemeral": true,
+        "required": false
+      }
+    ],
+    "dataShared": [],
+    "securityPractices": [
+      {
+        "practice": "DATA_ENCRYPTED_IN_TRANSIT",
+        "description": "データは転送中に暗号化されます"
+      },
+      {
+        "practice": "DATA_ENCRYPTED_AT_REST",
+        "description": "データは保存時に暗号化されます"
+      },
+      {
+        "practice": "DATA_DELETION",
+        "description": "ユーザーがデータの削除をリクエストできます"
+      }
+    ]
+  },
+  "dataTypes": {
+    "PHOTOS": {
+      "collected": true,
+      "shared": false,
+      "ephemeral": true,
+      "required": false,
+      "purposes": ["APP_FUNCTIONALITY"],
+      "description": "パーソナルカラー診断のため、カメラで撮影された顔写真を一時的に処理します。画像は端末内でのみ処理され、診断完了後すぐに削除されます。"
+    }
+  },
+  "permissions": {
+    "CAMERA": {
+      "required": true,
+      "purpose": "パーソナルカラー診断のために顔写真を撮影します",
+      "dataAccess": ["PHOTOS"],
+      "runtimePermission": true
+    },
+    "WRITE_EXTERNAL_STORAGE": {
+      "required": false,
+      "purpose": "診断結果画像の保存（ユーザーの任意）",
+      "dataAccess": ["PHOTOS"],
+      "runtimePermission": true
+    }
+  },
+  "targetAudience": {
+    "designed_for_families": true,
+    "target_age": "AGES_5_UNDER",
+    "mixed_audience": true
+  },
+  "adsAndMonetization": {
+    "containsAds": false,
+    "adsPersonalization": false,
+    "inAppPurchases": false,
+    "paidApp": false
+  },
+  "dataHandling": {
+    "collectionMinimized": true,
+    "purposeLimited": true,
+    "retentionLimited": true,
+    "accuracyMaintained": true,
+    "transparencyProvided": true,
+    "userControl": true
+  }
+}
