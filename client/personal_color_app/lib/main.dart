@@ -1,11 +1,15 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'core/di/injection_container.dart' as di;
 import 'features/camera/presentation/providers/camera_provider.dart';
 import 'features/camera/presentation/pages/camera_page.dart';
+import 'features/home/presentation/android/android_home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'core/services/firebase_app_check_service.dart';
+import 'core/platform/theme_selector.dart';
+import 'core/navigation/android_navigation_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,10 +33,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'パーソナルカラー診断アプリ',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: ThemeSelector.getLightTheme(),
+      darkTheme: ThemeSelector.getDarkTheme(),
+      themeMode: ThemeSelector.getThemeMode(),
       home: const MyHomePage(title: 'パーソナルカラー診断'),
     );
   }
@@ -45,6 +48,15 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Androidの場合は専用のホーム画面を使用
+    if (Platform.isAndroid) {
+      return AndroidNavigationService.wrapWithBackHandler(
+        onWillPop: () => AndroidNavigationService.handleSystemBack(context),
+        child: AndroidHomePage(title: title),
+      );
+    }
+    
+    // iOSやその他のプラットフォーム用のフォールバック
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
