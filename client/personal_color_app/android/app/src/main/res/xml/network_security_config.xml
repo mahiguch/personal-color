@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Personal Color Diagnosis App Network Security Configuration -->
+    
+    <!-- Default configuration for all domains -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <!-- Trust system certificate authorities -->
+            <certificates src="system"/>
+        </trust-anchors>
+    </base-config>
+    
+    <!-- Configuration for our API domain -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">personal-color-api-666814602151.asia-northeast1.run.app</domain>
+        <trust-anchors>
+            <!-- Trust system certificate authorities -->
+            <certificates src="system"/>
+        </trust-anchors>
+        <!-- Pin certificates for enhanced security -->
+        <pin-set expiration="2026-08-27">
+            <!-- Google Cloud Run certificate pin - will be updated when certificate changes -->
+            <!-- Note: This needs to be updated with actual certificate pins in production -->
+        </pin-set>
+    </domain-config>
+    
+    <!-- Debug configuration (only for development) -->
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="system"/>
+            <!-- Allow user-added CA certificates in debug builds -->
+            <certificates src="user"/>
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>

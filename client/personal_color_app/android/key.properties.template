@@ -1,0 +1,20 @@
+# Google Play Store Upload Key Configuration
+# 
+# IMPORTANT: This is a template file. The actual key.properties file
+# should contain real values and must NOT be committed to version control.
+# 
+# Copy this file to key.properties and fill in the actual values:
+# cp key.properties.template key.properties
+#
+# Then add key.properties to .gitignore to prevent accidental commits.
+
+storePassword=<YOUR_KEYSTORE_PASSWORD>
+keyPassword=<YOUR_KEY_PASSWORD>
+keyAlias=upload
+storeFile=<PATH_TO_YOUR_KEYSTORE_FILE>
+
+# Example:
+# storePassword=myStrongPassword123
+# keyPassword=myStrongKeyPassword456
+# keyAlias=upload
+# storeFile=../upload-keystore.jks
