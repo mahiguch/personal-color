@@ -1,8 +1,7 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { MESSAGES, APP_STORE_URLS } from '@/lib/constants';
+import { MESSAGES } from '@/lib/constants';
 
 export function HeroSection() {
   return (
