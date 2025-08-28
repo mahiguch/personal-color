@@ -6,13 +6,14 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Debug
 import androidx.annotation.NonNull
+import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.io.ByteArrayOutputStream
 import kotlin.math.min
 
-class PerformanceChannelHandler(private val flutterEngine: FlutterEngine) {
+class PerformanceChannelHandler(private val flutterEngine: FlutterEngine, private val activity: FlutterActivity) {
     private val channelName = "android/performance"
     private var methodChannel: MethodChannel? = null
 
@@ -139,11 +140,7 @@ class PerformanceChannelHandler(private val flutterEngine: FlutterEngine) {
 
     private fun getPerformanceMetrics(result: MethodChannel.Result) {
         try {
-            val context = flutterEngine.activityControlSurface.activity?.applicationContext
-                ?: run {
-                    result.error("NO_CONTEXT", "Context not available", null)
-                    return
-                }
+            val context = activity.applicationContext
 
             val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
             val memInfo = ActivityManager.MemoryInfo()

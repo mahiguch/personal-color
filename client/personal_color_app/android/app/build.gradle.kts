@@ -59,12 +59,8 @@ android {
 
     buildTypes {
         release {
-            // Use release signing config if available, otherwise use debug
-            signingConfig = if (keystorePropertiesFile.exists()) {
-                signingConfigs.getByName("release")
-            } else {
-                signingConfigs.getByName("debug")
-            }
+            // Use debug signing for now (replace with release signing for production)
+            signingConfig = signingConfigs.getByName("debug")
             
             // Enable code shrinking, obfuscation, and optimization
             isMinifyEnabled = true

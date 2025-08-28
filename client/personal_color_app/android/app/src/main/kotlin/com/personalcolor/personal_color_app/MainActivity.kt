@@ -13,15 +13,15 @@ class MainActivity : FlutterActivity() {
         super.configureFlutterEngine(flutterEngine)
         
         // SettingsChannelHandlerの初期化
-        settingsChannelHandler = SettingsChannelHandler(flutterEngine)
+        settingsChannelHandler = SettingsChannelHandler(flutterEngine, this)
         settingsChannelHandler?.setupMethodChannel()
         
         // PerformanceChannelHandlerの初期化
-        performanceChannelHandler = PerformanceChannelHandler(flutterEngine)
+        performanceChannelHandler = PerformanceChannelHandler(flutterEngine, this)
         performanceChannelHandler?.setupMethodChannel()
         
         // LoggingChannelHandlerの初期化
-        loggingChannelHandler = LoggingChannelHandler(flutterEngine)
+        loggingChannelHandler = LoggingChannelHandler(flutterEngine, this)
         loggingChannelHandler?.setupMethodChannel()
     }
 

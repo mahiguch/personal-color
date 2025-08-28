@@ -18,6 +18,10 @@
 -dontwarn com.google.firebase.**
 -dontwarn com.google.android.gms.**
 
+## Google Play Core rules (for dynamic delivery)
+-keep class com.google.android.play.core.** { *; }
+-dontwarn com.google.android.play.core.**
+
 ## Camera plugin rules
 -keep class io.flutter.plugins.camera.** { *; }
 -keep class androidx.camera.** { *; }

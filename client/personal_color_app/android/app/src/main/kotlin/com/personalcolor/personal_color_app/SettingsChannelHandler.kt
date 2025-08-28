@@ -4,11 +4,12 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import androidx.annotation.NonNull
+import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
-class SettingsChannelHandler(private val flutterEngine: FlutterEngine) {
+class SettingsChannelHandler(private val flutterEngine: FlutterEngine, private val activity: FlutterActivity) {
     private val channelName = "android/settings"
     private var methodChannel: MethodChannel? = null
 
@@ -35,18 +36,13 @@ class SettingsChannelHandler(private val flutterEngine: FlutterEngine) {
 
     private fun openAppSettings(result: MethodChannel.Result) {
         try {
-            val context = flutterEngine.activityControlSurface.activity ?: run {
-                result.error("NO_ACTIVITY", "Activity not available", null)
-                return
-            }
-
             val intent = Intent().apply {
                 action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                data = Uri.fromParts("package", context.packageName, null)
+                data = Uri.fromParts("package", activity.packageName, null)
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
 
-            context.startActivity(intent)
+            activity.startActivity(intent)
             result.success(true)
         } catch (e: Exception) {
             result.error("SETTINGS_ERROR", "Failed to open app settings: ${e.message}", e)
@@ -55,18 +51,13 @@ class SettingsChannelHandler(private val flutterEngine: FlutterEngine) {
 
     private fun openPermissionSettings(result: MethodChannel.Result) {
         try {
-            val context = flutterEngine.activityControlSurface.activity ?: run {
-                result.error("NO_ACTIVITY", "Activity not available", null)
-                return
-            }
-
             val intent = Intent().apply {
                 action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                data = Uri.fromParts("package", context.packageName, null)
+                data = Uri.fromParts("package", activity.packageName, null)
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
 
-            context.startActivity(intent)
+            activity.startActivity(intent)
             result.success(true)
         } catch (e: Exception) {
             result.error("PERMISSION_SETTINGS_ERROR", "Failed to open permission settings: ${e.message}", e)

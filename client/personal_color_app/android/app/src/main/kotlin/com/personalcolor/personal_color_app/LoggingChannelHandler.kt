@@ -5,12 +5,13 @@ import android.content.Context
 import android.os.Debug
 import android.util.Log
 import androidx.annotation.NonNull
+import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.util.concurrent.ConcurrentHashMap
 
-class LoggingChannelHandler(private val flutterEngine: FlutterEngine) {
+class LoggingChannelHandler(private val flutterEngine: FlutterEngine, private val activity: FlutterActivity) {
     private val channelName = "android/logging"
     private var methodChannel: MethodChannel? = null
     private var minLogLevel = 1 // INFO level
@@ -155,11 +156,7 @@ class LoggingChannelHandler(private val flutterEngine: FlutterEngine) {
 
     private fun getMemoryInfo(result: MethodChannel.Result) {
         try {
-            val context = flutterEngine.activityControlSurface.activity?.applicationContext
-                ?: run {
-                    result.error("NO_CONTEXT", "Context not available", null)
-                    return
-                }
+            val context = activity.applicationContext
 
             val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
             val memInfo = ActivityManager.MemoryInfo()
