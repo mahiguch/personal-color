@@ -37,24 +37,26 @@ class AndroidHomePage extends StatelessWidget {
       ),
       
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // ヒーローセクション
-              _buildHeroSection(theme),
-              
-              const SizedBox(height: 48),
-              
-              // メインCTAボタン
-              _buildMainCTAButton(context, theme),
-              
-              const SizedBox(height: 24),
-              
-              // サブ情報
-              _buildSubInfo(theme),
-            ],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // ヒーローセクション
+                _buildHeroSection(theme),
+                
+                const SizedBox(height: 48),
+                
+                // メインCTAボタン
+                _buildMainCTAButton(context, theme),
+                
+                const SizedBox(height: 24),
+                
+                // サブ情報
+                _buildSubInfo(theme),
+              ],
+            ),
           ),
         ),
       ),
@@ -146,10 +148,10 @@ class AndroidHomePage extends StatelessWidget {
   Widget _buildMainCTAButton(BuildContext context, ThemeData theme) {
     return SizedBox(
       width: double.infinity,
+      height: 56,
       child: FilledButton(
         onPressed: () => _navigateToDiagnosis(context),
         style: FilledButton.styleFrom(
-          minimumSize: const Size(double.infinity, 56),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),

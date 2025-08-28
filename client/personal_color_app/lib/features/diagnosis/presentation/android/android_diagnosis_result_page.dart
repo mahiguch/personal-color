@@ -139,6 +139,7 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
         // もう一度診断ボタン - FilledButton使用
         SizedBox(
           width: double.infinity,
+          height: 56,
           child: FilledButton.icon(
             onPressed: () => _retakeDiagnosis(context),
             icon: const Icon(Icons.camera_alt),
@@ -146,7 +147,6 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
             style: FilledButton.styleFrom(
               backgroundColor: _getMaterialThemeColor(theme, result.diagnosisType),
               foregroundColor: _getMaterialOnThemeColor(theme, result.diagnosisType),
-              minimumSize: const Size(double.infinity, 56),
             ),
           ),
         ),
@@ -156,6 +156,7 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
         // 結果を保存ボタン - OutlinedButton使用
         SizedBox(
           width: double.infinity,
+          height: 48,
           child: OutlinedButton.icon(
             onPressed: () => _saveResult(context),
             icon: const Icon(Icons.bookmark_border),
@@ -166,7 +167,6 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
                 color: _getMaterialThemeColor(theme, result.diagnosisType),
                 width: 1.5,
               ),
-              minimumSize: const Size(double.infinity, 48),
             ),
           ),
         ),

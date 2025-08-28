@@ -6,6 +6,8 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+    // Google Services plugin for Firebase
+    id("com.google.gms.google-services")
 }
 
 // Load keystore properties for signing
@@ -35,7 +37,7 @@ android {
         // Android 13+ support as specified in design document
         minSdk = 33  // Android 13 (API Level 33)
         targetSdk = 36  // Android 14 (API Level 36)
-        versionCode = 1
+        versionCode = 2
         versionName = "1.0.0"
         
         // Test runner for instrumented tests

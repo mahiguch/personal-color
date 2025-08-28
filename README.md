@@ -27,16 +27,70 @@ AIを使ってユーザーのパーソナルカラー（イエローベース・
 
 ## 技術スタック
 
-- **iOS App**: Flutter 3.13+ (Dart 3.0+)
+- **Mobile App**: Flutter 3.32+ (iOS & Android対応)
+  - iOS: App Store配布
+  - Android: Google Play Store配布
 - **Web**: Next.js 15 (App Router) + TypeScript + Tailwind CSS
 - **Server**: Python 3.11+ + FastAPI + Vertex AI Gemini
-- **Hosting**: App Store (iOS) + Firebase App Hosting (Web)
+- **Hosting**: App Store・Google Play Store (Mobile) + Firebase App Hosting (Web)
+
+## クイックスタート
+
+### 📱 モバイルアプリ開発
+
+```bash
+# プロジェクトディレクトリに移動
+cd client/personal_color_app/
+
+# 初回セットアップ
+make setup
+
+# iOS でデバッグ実行
+make ios-debug
+
+# Android でデバッグ実行  
+make android-debug
+
+# 利用可能なコマンド一覧
+make help
+```
+
+### 🌐 Webサイト開発
+
+```bash
+# Webディレクトリに移動
+cd web/
+
+# 依存関係インストール
+npm install
+
+# 開発サーバー起動
+npm run dev
+```
+
+### 🔧 開発用Makefileコマンド
+
+モバイルアプリ（Flutter）では以下のMakefileコマンドが利用できます：
+
+| コマンド | 説明 |
+|---------|------|
+| `make help` | 利用可能なコマンド一覧表示 |
+| `make setup` | 初回セットアップ |
+| `make ios-debug` | iOS シミュレーターでデバッグ実行 |
+| `make android-debug` | Android エミュレーターでデバッグ実行 |
+| `make ios-release` | iOS リリースビルド |
+| `make android-bundle` | Android App Bundle作成 |
+| `make test` | 全テスト実行 |
+| `make lint` | コード品質チェック |
+| `make clean` | ビルドキャッシュクリア |
+
+詳細は `client/personal_color_app/Makefile` を参照してください。
 
 ## 開発の進め方
 
 1. **仕様書優先**: `specifications/` の各MDファイルを参照
 2. **Clean Architecture**: DDD（ドメイン駆動開発）適用
 3. **TDD**: テスト駆動開発の実践
-4. **モバイルファースト**: iOS 15+対応、レスポンシブデザイン
+4. **クロスプラットフォーム**: iOS・Android両対応、レスポンシブデザイン
 
 詳細は `CLAUDE.md` を参照してください。

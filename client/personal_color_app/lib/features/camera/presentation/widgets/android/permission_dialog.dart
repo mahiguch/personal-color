@@ -230,9 +230,6 @@ class CameraUsageDialog extends StatelessWidget {
       actions: [
         FilledButton(
           onPressed: onStartPressed,
-          style: FilledButton.styleFrom(
-            minimumSize: const Size(double.infinity, 48),
-          ),
           child: const Text('撮影を始める'),
         ),
       ],

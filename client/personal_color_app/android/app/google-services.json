@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "666814602151",
+    "project_id": "personal-color-469007",
+    "storage_bucket": "personal-color-469007.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:666814602151:android:41bc2980717457781ff482",
+        "android_client_info": {
+          "package_name": "com.personalcolor.personal_color_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJzVabmhzl8rwSvWYnz8UTiLnnrc0NEdU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
