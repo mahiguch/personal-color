@@ -28,12 +28,6 @@ class IOSDiagnosisResultPage extends StatelessWidget {
           icon: const Icon(Icons.close),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: () => _shareResult(context),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -151,28 +145,6 @@ class IOSDiagnosisResultPage extends StatelessWidget {
           ),
         ),
         
-        const SizedBox(height: 12),
-        
-        // 結果を保存ボタン
-        SizedBox(
-          width: double.infinity,
-          height: 48,
-          child: OutlinedButton.icon(
-            onPressed: () => _saveResult(context),
-            icon: const Icon(Icons.bookmark_border),
-            label: const Text('結果を保存'),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: _getThemeColor(result.diagnosisType),
-              side: BorderSide(
-                color: _getThemeColor(result.diagnosisType),
-                width: 2,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-        ),
       ],
     );
   }
@@ -212,24 +184,4 @@ class IOSDiagnosisResultPage extends StatelessWidget {
     Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
-  void _saveResult(BuildContext context) {
-    // TODO: ローカルストレージに結果を保存
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('診断結果を保存しました'),
-        backgroundColor: _getThemeColor(result.diagnosisType),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-
-  void _shareResult(BuildContext context) {
-    // TODO: 結果をシェアする機能
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('シェア機能は近日公開予定です'),
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
 }

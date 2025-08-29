@@ -38,12 +38,6 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
           icon: const Icon(Icons.close),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: () => _shareResult(context),
-          ),
-        ],
       ),
       
       body: SingleChildScrollView(
@@ -151,25 +145,6 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
           ),
         ),
         
-        const SizedBox(height: 12),
-        
-        // 結果を保存ボタン - OutlinedButton使用
-        SizedBox(
-          width: double.infinity,
-          height: 48,
-          child: OutlinedButton.icon(
-            onPressed: () => _saveResult(context),
-            icon: const Icon(Icons.bookmark_border),
-            label: const Text('結果を保存'),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: _getMaterialThemeColor(theme, result.diagnosisType),
-              side: BorderSide(
-                color: _getMaterialThemeColor(theme, result.diagnosisType),
-                width: 1.5,
-              ),
-            ),
-          ),
-        ),
       ],
     );
   }
@@ -225,39 +200,4 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
     Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
-  /// 結果を保存
-  void _saveResult(BuildContext context) {
-    final theme = Theme.of(context);
-    
-    // TODO: ローカルストレージに結果を保存
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('診断結果を保存しました'),
-        backgroundColor: theme.colorScheme.primaryContainer,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
-        ),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-
-  /// 結果をシェア
-  void _shareResult(BuildContext context) {
-    final theme = Theme.of(context);
-    
-    // TODO: 結果をシェアする機能
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('シェア機能は近日公開予定です'),
-        backgroundColor: theme.colorScheme.surfaceContainerHigh,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
-        ),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
 }
