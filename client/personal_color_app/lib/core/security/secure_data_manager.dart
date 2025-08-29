@@ -70,7 +70,7 @@ class SecureDataManager {
     try {
       final tempDir = Directory.systemTemp;
       final tempFiles = tempDir.listSync(recursive: true)
-          .where((entity) => entity is File)
+          .whereType<File>()
           .cast<File>()
           .where((file) => _isImageRelatedFile(file.path))
           .toList();

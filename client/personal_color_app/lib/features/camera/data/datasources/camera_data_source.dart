@@ -1,6 +1,5 @@
 import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import '../models/camera_image_model.dart';
 import '../../domain/entities/camera_permission.dart';

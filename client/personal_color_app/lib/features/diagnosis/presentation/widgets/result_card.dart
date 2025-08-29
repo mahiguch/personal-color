@@ -7,10 +7,10 @@ class ResultCard extends StatelessWidget {
   final String originalImagePath;
 
   const ResultCard({
-    Key? key,
+    super.key,
     required this.result,
     required this.originalImagePath,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

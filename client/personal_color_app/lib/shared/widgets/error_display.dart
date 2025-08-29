@@ -8,11 +8,11 @@ class ErrorDisplay extends StatelessWidget {
   final String? customMessage;
 
   const ErrorDisplay({
-    Key? key,
+    super.key,
     required this.failure,
     this.onRetry,
     this.customMessage,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -197,10 +197,10 @@ class ErrorPage extends StatelessWidget {
   final VoidCallback? onRetry;
 
   const ErrorPage({
-    Key? key,
+    super.key,
     required this.failure,
     this.onRetry,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

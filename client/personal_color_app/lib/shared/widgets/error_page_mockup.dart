@@ -236,7 +236,7 @@ class ErrorPageMockup extends StatelessWidget {
                 ),
               ],
             ),
-          )).toList(),
+          )),
         ],
       ),
     );
