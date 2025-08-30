@@ -13,6 +13,7 @@ import logging
 
 from .endpoints.diagnosis import router as diagnosis_router
 from .endpoints.health import router as health_router
+from .endpoints.makeup import router as makeup_router
 from ..core.config.settings import get_settings
 from ..middleware.rate_limiter import RateLimitMiddleware
 
@@ -34,9 +35,9 @@ async def lifespan(app: FastAPI):
     logger.info("Personal Color Diagnosis API Server starting up...")
     logger.info(f"Debug mode: {settings.debug}")
     logger.info(f"Environment: {settings.environment}")
-    
+
     yield
-    
+
     # 終了時の処理
     logger.info("Personal Color Diagnosis API Server shutting down...")
 
@@ -84,6 +85,7 @@ app.add_middleware(
 # ルーター登録
 app.include_router(health_router, prefix="/api/v1")
 app.include_router(diagnosis_router, prefix="/api/v1")
+app.include_router(makeup_router)
 
 
 # グローバル例外ハンドラー
@@ -101,8 +103,6 @@ async def global_exception_handler(request, exc: Exception):
     )
 
 
-
-
 # メトリクスエンドポイント
 @app.get("/metrics")
 async def get_metrics() -> Dict[str, Any]:
@@ -115,6 +115,13 @@ async def get_metrics() -> Dict[str, Any]:
 async def detailed_health_check() -> Dict[str, Any]:
     """詳細なヘルスチェック"""
     return await health_checker.get_comprehensive_health()
+
+
+# シンプルヘルスチェックエンドポイント
+@app.get("/health")
+async def simple_health_check() -> Dict[str, Any]:
+    """シンプルなヘルスチェック"""
+    return {"status": "healthy", "timestamp": "2024-01-01T00:00:00Z"}  # 簡易実装
 
 
 # ルートエンドポイント

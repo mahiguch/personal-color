@@ -40,6 +40,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY --chown=appuser:appuser src/ ./src/
+COPY --chown=appuser:appuser data/ ./data/
 COPY --chown=appuser:appuser .env.production ./.env
 
 # Create necessary directories

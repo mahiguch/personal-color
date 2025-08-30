@@ -1,4 +1,6 @@
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dio/dio.dart';
 
 // Core
 import '../network/api_client.dart';
@@ -23,9 +25,21 @@ import '../../features/diagnosis/domain/usecases/diagnose_personal_color.dart';
 import '../../features/diagnosis/domain/usecases/check_api_health.dart';
 import '../../features/diagnosis/presentation/providers/diagnosis_provider.dart';
 
+// Makeup feature
+import '../../features/makeup/data/datasources/makeup_local_data_source.dart';
+import '../../features/makeup/data/datasources/makeup_remote_data_source.dart';
+import '../../features/makeup/data/repositories/makeup_repository_impl.dart';
+import '../../features/makeup/domain/repositories/makeup_repository.dart';
+import '../../features/makeup/domain/usecases/get_makeup_recommendations.dart';
+import '../../features/makeup/presentation/providers/makeup_recommendation_provider.dart';
+
 final sl = GetIt.instance;
 
 Future<void> init() async {
+  // テスト時の重複登録を避けるため、既存の登録をクリア
+  if (sl.isRegistered<CameraProvider>()) {
+    await sl.reset();
+  }
   //! Features - Camera
   // Providers
   sl.registerFactory(
@@ -81,9 +95,48 @@ Future<void> init() async {
     () => DiagnosisRemoteDataSourceImpl(sl()),
   );
 
+  //! Features - Makeup
+  // Providers
+  sl.registerFactory(
+    () => MakeupRecommendationProvider(
+      getMakeupRecommendations: sl(),
+    ),
+  );
+
+  // Use cases
+  sl.registerLazySingleton(() => GetMakeupRecommendations(sl()));
+
+  // Repository
+  sl.registerLazySingleton<MakeupRepository>(
+    () => MakeupRepositoryImpl(
+      remoteDataSource: sl(),
+      localDataSource: sl(),
+    ),
+  );
+
+  // Data sources
+  sl.registerLazySingleton<MakeupRemoteDataSource>(
+    () => MakeupRemoteDataSourceImpl(
+      dio: sl(),
+    ),
+  );
+
+  sl.registerLazySingleton<MakeupLocalDataSource>(
+    () => MakeupLocalDataSourceImpl(
+      sharedPreferences: sl(),
+    ),
+  );
+
   //! Core
+  // Dio
+  sl.registerLazySingleton<Dio>(() => Dio());
+
   // API Client
   sl.registerLazySingleton<ApiClient>(
     () => ApiClient(),
   );
+
+  // Shared Preferences
+  final sharedPreferences = await SharedPreferences.getInstance();
+  sl.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
 }
