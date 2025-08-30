@@ -53,7 +53,6 @@ class AppTheme {
         primary: primaryColor,
         secondary: secondaryColor,
         surface: surfaceColor,
-        background: backgroundColor,
       ),
       
       // フォント設定（読みやすさ重視）

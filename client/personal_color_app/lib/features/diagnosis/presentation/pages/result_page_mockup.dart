@@ -1,6 +1,13 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import '../../../../shared/theme/app_theme.dart';
+import '../../domain/entities/diagnosis_result.dart';
+import '../../../makeup/presentation/pages/makeup_recommendation_page.dart';
+import '../../../makeup/presentation/providers/makeup_recommendation_provider.dart';
+import '../../../../core/di/injection_container.dart' as di;
+import '../../../../core/services/prefetch_service.dart';
 
 /// 診断結果画面のモックアップ
 /// 小学5年生が楽しく結果を確認できるデザイン
@@ -62,6 +69,9 @@ class _ResultPageMockupState extends State<ResultPageMockup>
     Future.delayed(const Duration(milliseconds: 200), () {
       _scaleController.forward();
     });
+
+    // パフォーマンス最適化: メイクアップデータのプリフェッチ
+    _prefetchMakeupData();
   }
 
   @override
@@ -382,6 +392,21 @@ class _ResultPageMockupState extends State<ResultPageMockup>
         
         Expanded(
           child: _buildActionButton(
+            text: 'おすすめのメイク',
+            icon: Icons.palette,
+            color: Colors.white.withValues(alpha: 0.9),
+            textColor: AppTheme.textPrimary,
+            onTap: () {
+              // メイクアップ推奨ページに遷移
+              _navigateToMakeupRecommendation(context);
+            },
+          ),
+        ),
+        
+        const SizedBox(width: AppConstants.paddingM),
+        
+        Expanded(
+          child: _buildActionButton(
             text: 'おわり',
             icon: Icons.home,
             color: Colors.white.withValues(alpha: 0.2),
@@ -436,6 +461,43 @@ class _ResultPageMockupState extends State<ResultPageMockup>
         ),
       ),
     );
+  }
+
+  /// メイクアップ推奨ページに遷移
+  void _navigateToMakeupRecommendation(BuildContext context) {
+    // 結果からPersonalColorTypeを決定
+    PersonalColorType personalColorType;
+    if (widget.result == 'イエベ') {
+      // イエベの場合はスプリングまたはオータムを選択（ここではスプリングを仮定）
+      personalColorType = PersonalColorType.spring;
+    } else {
+      // ブルベの場合はサマーまたはウィンターを選択（ここではサマーを仮定）
+      personalColorType = PersonalColorType.summer;
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) => ChangeNotifierProvider(
+          create: (_) => di.sl<MakeupRecommendationProvider>(),
+          child: MakeupRecommendationPage(
+            personalColorType: personalColorType,
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// メイクアップデータのプリフェッチ
+  void _prefetchMakeupData() {
+    PersonalColorType personalColorType;
+    if (widget.result == 'イエベ') {
+      personalColorType = PersonalColorType.spring;
+    } else {
+      personalColorType = PersonalColorType.summer;
+    }
+
+    // バックグラウンドでデータをプリフェッチ
+    PrefetchService().prefetchMakeupRecommendations(personalColorType);
   }
 }
 

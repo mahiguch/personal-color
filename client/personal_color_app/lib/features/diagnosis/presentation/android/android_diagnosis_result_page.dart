@@ -5,6 +5,9 @@ import '../providers/diagnosis_provider.dart';
 import '../widgets/android/material_result_card.dart';
 import '../widgets/android/material_color_palette.dart';
 import '../widgets/android/material_tips_section.dart';
+import '../../../makeup/presentation/pages/makeup_recommendation_page.dart';
+import '../../../makeup/presentation/providers/makeup_recommendation_provider.dart';
+import '../../../../core/di/injection_container.dart' as di;
 
 /// Android版診断結果画面 - Material Design 3準拠
 class AndroidDiagnosisResultPage extends StatelessWidget {
@@ -130,17 +133,37 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
   Widget _buildMaterialActionButtons(BuildContext context, ThemeData theme) {
     return Column(
       children: [
-        // もう一度診断ボタン - FilledButton使用
+        // おすすめのメイクボタン - FilledButton使用
         SizedBox(
           width: double.infinity,
           height: 56,
           child: FilledButton.icon(
-            onPressed: () => _retakeDiagnosis(context),
-            icon: const Icon(Icons.camera_alt),
-            label: const Text('もう一度診断する'),
+            onPressed: () => _navigateToMakeupRecommendation(context),
+            icon: const Icon(Icons.palette),
+            label: const Text('おすすめのメイク'),
             style: FilledButton.styleFrom(
               backgroundColor: _getMaterialThemeColor(theme, result.diagnosisType),
               foregroundColor: _getMaterialOnThemeColor(theme, result.diagnosisType),
+            ),
+          ),
+        ),
+        
+        const SizedBox(height: 12),
+        
+        // もう一度診断ボタン - OutlinedButton使用
+        SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: OutlinedButton.icon(
+            onPressed: () => _retakeDiagnosis(context),
+            icon: const Icon(Icons.camera_alt),
+            label: const Text('もう一度診断する'),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: _getMaterialThemeColor(theme, result.diagnosisType),
+              side: BorderSide(
+                color: _getMaterialThemeColor(theme, result.diagnosisType),
+                width: 1,
+              ),
             ),
           ),
         ),
@@ -189,6 +212,20 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
     }
   }
 
+
+  /// メイクアップ推奨ページに移動する
+  void _navigateToMakeupRecommendation(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ChangeNotifierProvider(
+          create: (context) => di.sl<MakeupRecommendationProvider>(),
+          child: MakeupRecommendationPage(
+            personalColorType: result.diagnosisType,
+          ),
+        ),
+      ),
+    );
+  }
 
   /// 診断をやり直す
   void _retakeDiagnosis(BuildContext context) {

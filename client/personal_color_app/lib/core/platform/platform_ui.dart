@@ -44,10 +44,10 @@ class PlatformUI {
   }
   
   /// Android版カメラページ（Material Design）
-  static Widget _buildAndroidCameraPage() {
-    // 後でMaterial Design版を実装
-    return Container(); // 仮実装
-  }
+  // static Widget _buildAndroidCameraPage() {
+  //   // 後でMaterial Design版を実装
+  //   return Container(); // 仮実装
+  // }
   
   /// iOS版結果ページ（既存実装）
   static Widget _buildIOSResultPage(DiagnosisResult result, String originalImagePath) {
@@ -56,10 +56,10 @@ class PlatformUI {
   }
   
   /// Android版結果ページ（Material Design）
-  static Widget _buildAndroidResultPage(DiagnosisResult result, String originalImagePath) {
-    // 後でMaterial Design版を実装
-    return Container(); // 仮実装
-  }
+  // static Widget _buildAndroidResultPage(DiagnosisResult result, String originalImagePath) {
+  //   // 後でMaterial Design版を実装
+  //   return Container(); // 仮実装
+  // }
   
   /// フォールバックカメラページ
   static Widget _buildFallbackCameraPage() {

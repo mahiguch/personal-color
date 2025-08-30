@@ -44,3 +44,13 @@ class ValidationFailure extends Failure {
 class UnknownFailure extends Failure {
   const UnknownFailure([super.message]);
 }
+
+/// データ関連のエラー
+class DataFailure extends Failure {
+  const DataFailure([super.message]);
+}
+
+/// 予期しないエラー
+class UnexpectedFailure extends Failure {
+  const UnexpectedFailure([super.message]);
+}

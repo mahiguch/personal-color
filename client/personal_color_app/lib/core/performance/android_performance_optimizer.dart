@@ -158,9 +158,9 @@ class AndroidPerformanceOptimizer {
       );
       
       if (kDebugMode && result != null) {
-        print('AndroidPerformanceOptimizer: Performance Metrics:');
+        debugPrint('AndroidPerformanceOptimizer: Performance Metrics:');
         result.forEach((key, value) {
-          print('  $key: $value');
+          debugPrint('  $key: $value');
         });
       }
       

@@ -5,6 +5,9 @@ import '../providers/diagnosis_provider.dart';
 import '../widgets/result_card.dart';
 import '../widgets/color_palette_widget.dart';
 import '../widgets/tips_section.dart';
+import '../../../makeup/presentation/pages/makeup_recommendation_page.dart';
+import '../../../makeup/presentation/providers/makeup_recommendation_provider.dart';
+import '../../../../core/di/injection_container.dart' as di;
 
 class IOSDiagnosisResultPage extends StatelessWidget {
   final DiagnosisResult result;
@@ -120,15 +123,15 @@ class IOSDiagnosisResultPage extends StatelessWidget {
   Widget _buildActionButtons(BuildContext context) {
     return Column(
       children: [
-        // もう一度診断ボタン
+        // おすすめのメイクボタン
         SizedBox(
           width: double.infinity,
           height: 56,
           child: ElevatedButton.icon(
-            onPressed: () => _retakeDiagnosis(context),
-            icon: const Icon(Icons.camera_alt),
+            onPressed: () => _navigateToMakeupRecommendation(context),
+            icon: const Icon(Icons.palette),
             label: const Text(
-              'もう一度診断する',
+              'おすすめのメイク',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -141,6 +144,35 @@ class IOSDiagnosisResultPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               elevation: 4,
+            ),
+          ),
+        ),
+        
+        const SizedBox(height: 12),
+        
+        // もう一度診断ボタン
+        SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: OutlinedButton.icon(
+            onPressed: () => _retakeDiagnosis(context),
+            icon: const Icon(Icons.camera_alt),
+            label: const Text(
+              'もう一度診断する',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: _getThemeColor(result.diagnosisType),
+              side: BorderSide(
+                color: _getThemeColor(result.diagnosisType),
+                width: 2,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
           ),
         ),
@@ -173,6 +205,19 @@ class IOSDiagnosisResultPage extends StatelessWidget {
       case PersonalColorType.winter:
         return const Color(0xFF2E7D32); // 深い緑
     }
+  }
+
+  void _navigateToMakeupRecommendation(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ChangeNotifierProvider(
+          create: (context) => di.sl<MakeupRecommendationProvider>(),
+          child: MakeupRecommendationPage(
+            personalColorType: result.diagnosisType,
+          ),
+        ),
+      ),
+    );
   }
 
   void _retakeDiagnosis(BuildContext context) {
