@@ -9,7 +9,7 @@
 # 設定
 SOURCE_DIR = 6.3inch
 OUTPUT_DIRS = 6.5inch 6.9inch
-SCREENSHOTS = ScreenShot1.png ScreenShot2.png ScreenShot3.png
+SCREENSHOTS = ScreenShot1.png ScreenShot2.png ScreenShot3.png ScreenShot4.png
 
 # App Store Connect 必要サイズ
 # iPhone 6.3" (iPhone 16): 1179x2556 px (オリジナル)
