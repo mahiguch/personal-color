@@ -24,6 +24,7 @@ class GetMakeupRecommendations implements UseCase<MakeupRecommendation, GetMakeu
       // 1. リポジトリからメイクアップ推奨データを取得
       final result = await repository.getMakeupRecommendations(
         params.personalColorType,
+        forceRefresh: params.forceRefresh,
       );
 
       return result.fold(

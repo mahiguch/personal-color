@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../../../core/network/api_config.dart';
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
@@ -29,12 +30,19 @@ class MakeupRemoteDataSourceImpl implements MakeupRemoteDataSource {
   Future<MakeupRecommendationModel> getMakeupRecommendations(
     PersonalColorType personalColorType,
   ) async {
+    final startTime = DateTime.now();
+    
     try {
       // パーソナルカラータイプを小文字の文字列に変換
       final colorTypeString = personalColorType.name.toLowerCase();
       
       // APIエンドポイントURL構築
       final url = '${ApiConfig.currentBaseUrl}/api/v1/makeup-recommendations/$colorTypeString';
+      
+      // Request logging
+      debugPrint('🚀 [MAKEUP_API_REQUEST] Fetching makeup recommendations');
+      debugPrint('   URL: $url');
+      debugPrint('   Personal Color Type: $colorTypeString');
       
       // HTTPリクエスト実行
       final response = await dio.get(
@@ -44,18 +52,33 @@ class MakeupRemoteDataSourceImpl implements MakeupRemoteDataSource {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
           },
-          // タイムアウト設定（設計書の2秒以内要件）
-          sendTimeout: const Duration(seconds: 2),
-          receiveTimeout: const Duration(seconds: 2),
+          // ApiConfigのデフォルトタイムアウトを使用（30秒）
         ),
       );
+      
+      final duration = DateTime.now().difference(startTime);
+      debugPrint('✅ [MAKEUP_API_RESPONSE] Request completed in ${duration.inMilliseconds}ms');
 
       // レスポンスステータスコードチェック
       if (response.statusCode == 200) {
         // JSONレスポンスをモデルに変換
         final jsonData = response.data as Map<String, dynamic>;
-        return MakeupRecommendationModel.fromJson(jsonData);
+        final recommendation = MakeupRecommendationModel.fromJson(jsonData);
+        
+        // Success logging with detailed info
+        final totalProducts = _countTotalProducts(jsonData);
+        final aiExplanations = jsonData['ai_explanations'] as Map<String, dynamic>? ?? {};
+        debugPrint('📦 [MAKEUP_API_SUCCESS] Data received:');
+        debugPrint('   Personal Color Type: ${recommendation.personalColorType}');
+        debugPrint('   Total Products: $totalProducts');
+        debugPrint('   AI Explanations: ${aiExplanations.keys.length}');
+        debugPrint('   Request ID: ${jsonData['request_id'] ?? 'unknown'}');
+        
+        return recommendation;
       } else {
+        final duration = DateTime.now().difference(startTime);
+        debugPrint('❌ [MAKEUP_API_ERROR] HTTP error in ${duration.inMilliseconds}ms: ${response.statusCode}');
+        
         // HTTPエラーレスポンス
         throw DioException(
           requestOptions: response.requestOptions,
@@ -65,12 +88,36 @@ class MakeupRemoteDataSourceImpl implements MakeupRemoteDataSource {
         );
       }
     } on DioException catch (e) {
+      final duration = DateTime.now().difference(startTime);
+      debugPrint('❌ [MAKEUP_API_ERROR] Network error in ${duration.inMilliseconds}ms: ${e.type}');
+      debugPrint('   Error message: ${e.message}');
+      
       // Dioの例外を適切にハンドリング
       _handleDioException(e, personalColorType);
       rethrow; // この行は実際には到達しないが、型安全性のため
     } catch (e) {
+      final duration = DateTime.now().difference(startTime);
+      debugPrint('❌ [MAKEUP_API_ERROR] Unexpected error in ${duration.inMilliseconds}ms: $e');
+      
       // その他の予期しない例外
       throw Exception('Unexpected error occurred: $e');
+    }
+  }
+
+  /// 総商品数をカウント
+  int _countTotalProducts(Map<String, dynamic> jsonData) {
+    try {
+      final categories = jsonData['categories'] as Map<String, dynamic>? ?? {};
+      int total = 0;
+      for (final categoryProducts in categories.values) {
+        if (categoryProducts is List) {
+          total += categoryProducts.length;
+        }
+      }
+      return total;
+    } catch (e) {
+      debugPrint('Warning: Failed to count products: $e');
+      return 0;
     }
   }
 

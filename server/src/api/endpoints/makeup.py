@@ -199,42 +199,53 @@ async def get_ai_explanations(
 )
 async def get_makeup_recommendations(personal_color_type: str, request: Request):
     """Get makeup recommendations for a specific personal color type"""
+    
+    # Request logging
+    client_ip = request.client.host if request.client else "unknown"
+    request_id = generate_request_id()
+    logger.info(
+        f"[MAKEUP_API_REQUEST] request_id={request_id}, "
+        f"personal_color_type={personal_color_type}, "
+        f"client_ip={client_ip}, "
+        f"user_agent={request.headers.get('user-agent', 'unknown')}"
+    )
 
     # Apply rate limiting (一時的にコメントアウト)
     # await apply_rate_limiter(request, "makeup_recommendations", max_requests=60, window_seconds=60)
 
-    # Validate personal color type
-    validated_type = validate_personal_color_type(personal_color_type)
-
-    # Load makeup products data
     try:
+        # Validate personal color type
+        validated_type = validate_personal_color_type(personal_color_type)
+        logger.info(f"[MAKEUP_API] request_id={request_id}, validated_type={validated_type}")
+
+        # Load makeup products data
+        logger.info(f"[MAKEUP_API] request_id={request_id}, loading makeup products data")
         products_data = get_makeup_products()
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+        
+        # Check if the personal color type exists in data
+        if validated_type not in products_data:
+            logger.warning(f"[MAKEUP_API] request_id={request_id}, no data found for type: {validated_type}")
+            raise HTTPException(
+                status_code=404,
+                detail=f"No makeup recommendations found for personal color type: {validated_type}",
+            )
 
-    # Check if the personal color type exists in data
-    if validated_type not in products_data:
-        raise HTTPException(
-            status_code=404,
-            detail=f"No makeup recommendations found for personal color type: {validated_type}",
-        )
+        type_data = products_data[validated_type]
+        logger.info(f"[MAKEUP_API] request_id={request_id}, found data for {validated_type}")
 
-    type_data = products_data[validated_type]
+        # Validate data structure
+        required_categories = {"eyeshadow", "cheek", "lip"}
+        missing_categories = required_categories - set(type_data.keys())
+        if missing_categories:
+            logger.error(f"[MAKEUP_API] request_id={request_id}, missing categories: {missing_categories}")
+            raise HTTPException(
+                status_code=500,
+                detail=f"Missing categories in data: {', '.join(missing_categories)}",
+            )
 
-    # Validate data structure
-    required_categories = {"eyeshadow", "cheek", "lip"}
-    missing_categories = required_categories - set(type_data.keys())
-    if missing_categories:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Missing categories in data: {', '.join(missing_categories)}",
-        )
-
-    # Convert data to response models
-    try:
+        # Convert data to response models
         categories = {}
+        total_products = 0
         for category in required_categories:
             category_products = type_data[category]
 
@@ -248,29 +259,57 @@ async def get_makeup_recommendations(personal_color_type: str, request: Request)
                     product = MakeupProduct(**product_data)
                     products.append(product)
                 except Exception as e:
-                    print(
-                        f"Error converting product {product_data.get('id', 'unknown')}: {e}"
+                    logger.warning(
+                        f"[MAKEUP_API] request_id={request_id}, error converting product {product_data.get('id', 'unknown')}: {e}"
                     )
                     continue
 
             categories[category] = products
+            total_products += len(products)
+            logger.info(f"[MAKEUP_API] request_id={request_id}, loaded {len(products)} products for {category}")
 
         # Get AI explanations
+        logger.info(f"[MAKEUP_API] request_id={request_id}, generating AI explanations")
         ai_explanations = await get_ai_explanations(validated_type, products_data)
+        explanations_count = len([v for v in ai_explanations.values() if v])
+        logger.info(f"[MAKEUP_API] request_id={request_id}, generated {explanations_count} AI explanations")
 
         # Generate response
         response = MakeupRecommendationResponse(
             personal_color_type=validated_type,
             categories=categories,
             ai_explanations=ai_explanations,
-            request_id=generate_request_id(),
+            request_id=request_id,
             timestamp=datetime.utcnow().isoformat() + "Z",
+        )
+
+        # Success logging
+        logger.info(
+            f"[MAKEUP_API_RESPONSE] request_id={request_id}, "
+            f"personal_color_type={validated_type}, "
+            f"total_products={total_products}, "
+            f"ai_explanations={explanations_count}, "
+            f"status=success"
         )
 
         return response
 
+    except HTTPException as e:
+        # HTTP exceptions (validation errors, not found, etc.)
+        logger.error(
+            f"[MAKEUP_API_ERROR] request_id={request_id}, "
+            f"status_code={e.status_code}, "
+            f"detail={e.detail}"
+        )
+        raise
     except Exception as e:
-        print(f"Error processing makeup recommendations: {e}")
+        # Unexpected errors
+        logger.error(
+            f"[MAKEUP_API_ERROR] request_id={request_id}, "
+            f"unexpected_error={str(e)}", 
+            exc_info=True
+        )
         raise HTTPException(
-            status_code=500, detail="Error processing makeup recommendations data"
+            status_code=500, 
+            detail="Error processing makeup recommendations data"
         )

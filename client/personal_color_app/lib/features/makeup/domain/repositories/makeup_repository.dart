@@ -12,13 +12,15 @@ abstract class MakeupRepository {
   /// パーソナルカラータイプに基づいてメイクアップ推奨データを取得
   /// 
   /// [personalColorType] 対象のパーソナルカラータイプ
+  /// [forceRefresh] キャッシュを無視して強制的にリモートから取得
   /// 
   /// 成功時は[MakeupRecommendation]を、失敗時は[Failure]を返します。
   /// 
   /// Example:
   /// ```dart
   /// final result = await repository.getMakeupRecommendations(
-  ///   PersonalColorType.spring
+  ///   PersonalColorType.spring,
+  ///   forceRefresh: true,
   /// );
   /// result.fold(
   ///   (failure) => print('Error: ${failure.message}'),
@@ -26,8 +28,9 @@ abstract class MakeupRepository {
   /// );
   /// ```
   Future<Either<Failure, MakeupRecommendation>> getMakeupRecommendations(
-    PersonalColorType personalColorType,
-  );
+    PersonalColorType personalColorType, {
+    bool forceRefresh = false,
+  });
 
   /// メイクアップ推奨データのキャッシュをクリア
   /// 

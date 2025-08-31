@@ -3,111 +3,133 @@
     "eyeshadow": [
       {
         "id": "spring_eye_001",
-        "name": "明るいアイシャドウパレット",
-        "brand": "ナチュラルコスメ",
+        "name": "CEZANNE トーンアップアイシャドウ 06 オレンジカシス",
+        "brand": "CEZANNE",
         "category": "eyeshadow",
-        "price": 1800,
-        "image_url": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08SPRING01",
-        "description": "Springタイプ向けの明るく温かい色合いのパレット",
+        "price": 638,
+        "image_url": "https://m.media-amazon.com/images/I/41fGOzR2DvL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/45XUmpg",
+        "description": "Springタイプにぴったりな明るく温かみのあるオレンジ系パレット。血色感がアップして、自然な印象に仕上がります。",
         "colors": [
-          "コーラルピンク",
-          "ピーチオレンジ",
-          "ゴールドブラウン",
+          "オレンジ",
+          "カシス",
+          "ゴールド",
           "クリーム"
         ]
       },
       {
         "id": "spring_eye_002",
-        "name": "フレッシュ アイカラーパレット",
-        "brand": "キュートメイク",
+        "name": "キャンメイク パーフェクトスタイリストアイズ 14 アンティークルビー",
+        "brand": "キャンメイク",
         "category": "eyeshadow",
-        "price": 1500,
-        "image_url": "https://images.unsplash.com/photo-1583241800975-4b8b3bcea1dc?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08SPRING02",
-        "description": "フレッシュで透明感のある発色が魅力",
-        "colors": ["ライトピンク", "アプリコット", "ライトグリーン", "イエロー"]
+        "price": 858,
+        "image_url": "https://m.media-amazon.com/images/I/61iyJRens0L._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/3HAHRI7",
+        "description": "フレッシュで透明感のある発色が魅力。Springタイプの明るい肌にぴったり合います。",
+        "colors": [
+          "アンティークルビー",
+          "コーラルピンク",
+          "ゴールドベージュ",
+          "ライトブラウン"
+        ]
       },
       {
         "id": "spring_eye_003",
-        "name": "スプリング グロウ パレット",
-        "brand": "ピュアビューティー",
+        "name": "リンメル ショコラスウィートアイズ 015 ストロベリーショコラ",
+        "brand": "リンメル",
         "category": "eyeshadow",
-        "price": 1900,
-        "image_url": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08SPRING03",
-        "description": "自然な輝きと温かみのある色合い",
-        "colors": ["ウォームベージュ", "コーラル", "ゴールド", "ライトブラウン"]
+        "price": 1760,
+        "image_url": "https://m.media-amazon.com/images/I/713XgmLDvCL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/466GVDA",
+        "description": "甘いストロベリーカラーでSpringタイプの可愛らしさを引き出します。ラメ感も上品です。",
+        "colors": [
+          "ストロベリーピンク",
+          "コーラル",
+          "ゴールド",
+          "ライトベージュ"
+        ]
       }
     ],
     "cheek": [
       {
         "id": "spring_cheek_001",
-        "name": "ピーチ チーク",
-        "brand": "フレッシュメイク",
+        "name": "キャンメイク パウダーチークス PW23 シェルピンク",
+        "brand": "キャンメイク",
         "category": "cheek",
-        "price": 1200,
-        "image_url": "https://images.unsplash.com/photo-1631214540230-35f5aa40b115?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08SPRING04",
-        "description": "自然なピーチカラーで健康的な印象",
-        "colors": ["ピーチピンク"]
+        "price": 605,
+        "image_url": "https://m.media-amazon.com/images/I/71hSHbud+iL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/4p5qcJu",
+        "description": "自然なピーチカラーで健康的な印象に。Springタイプの明るい肌にぴったりです。",
+        "colors": [
+          "シェルピンク"
+        ]
       },
       {
         "id": "spring_cheek_002",
-        "name": "コーラル ブラッシュ",
-        "brand": "ナチュラルコスメ",
+        "name": "CEZANNE ナチュラルチークN 16 カシスローズ",
+        "brand": "CEZANNE",
         "category": "cheek",
-        "price": 1400,
-        "image_url": "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08SPRING05",
-        "description": "温かみのあるコーラルカラー",
-        "colors": ["コーラルピンク"]
+        "price": 396,
+        "image_url": "https://m.media-amazon.com/images/I/81wOyDMHjBL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/3HXwVnN",
+        "description": "温かみのあるカシスローズで、Springタイプの血色感をアップ。コスパも抜群です。",
+        "colors": [
+          "カシスローズ"
+        ]
       },
       {
         "id": "spring_cheek_003",
-        "name": "アプリコット チーク",
-        "brand": "キュートメイク",
+        "name": "キャンメイク クリームチーク14 アップルクリームレッド",
+        "brand": "キャンメイク",
         "category": "cheek",
-        "price": 1100,
-        "image_url": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08SPRING06",
-        "description": "やわらかなアプリコットカラーで上品に",
-        "colors": ["アプリコット"]
+        "price": 920,
+        "image_url": "https://m.media-amazon.com/images/I/71ixfbFW2yL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/4g3516v",
+        "description": "赤ちゃんほっぺを叶えるナチュラルレッド。うるおいたっぷりで、質感サラサラ。",
+        "colors": [
+          "クリアハピネス"
+        ]
       }
     ],
     "lip": [
       {
         "id": "spring_lip_001",
-        "name": "コーラル リップ",
-        "brand": "フレッシュメイク",
+        "name": "オペラ リップティント N 05 コーラルピンク",
+        "brand": "オペラ",
         "category": "lip",
-        "price": 1600,
-        "image_url": "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08SPRING07",
-        "description": "明るいコーラルピンクで華やかに",
-        "colors": ["コーラルピンク"]
+        "price": 1650,
+        "image_url": "https://m.media-amazon.com/images/I/21FEFdeVOkL._AC_.jpg",
+        "amazon_url": "https://amzn.to/45WPu3p",
+        "description": "明るいコーラルピンクで華やかに。Springタイプの魅力を最大限に引き出します。",
+        "colors": [
+          "コーラルピンク"
+        ]
       },
       {
         "id": "spring_lip_002",
-        "name": "ピーチ グロス",
-        "brand": "ピュアビューティー",
+        "name": "【BBIA】 レディトゥーウェアウォーターリップスティック #04 ウェットアプリコット",
+        "brand": "BBIA",
         "category": "lip",
-        "price": 1300,
-        "image_url": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08SPRING08",
-        "description": "ツヤ感のあるピーチカラーグロス",
-        "colors": ["ピーチピンク"]
+        "price": 880,
+        "image_url": "https://m.media-amazon.com/images/I/41PlqhM2+rL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/3HW99bX",
+        "description": "ツヤ感のあるアプリコットカラーでフレッシュな印象。溶け込むような仕上がりです。",
+        "colors": [
+          "レディアプリコット"
+        ]
       },
       {
         "id": "spring_lip_003",
-        "name": "オレンジ リップスティック",
-        "brand": "ナチュラルコスメ",
+        "name": "ettusais(エテュセ) リップエディション (ティントルージュ) 03 ピュアコーラル 口紅 2g",
+        "brand": "ettusais",
         "category": "lip",
-        "price": 1700,
-        "image_url": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08SPRING09",
-        "description": "フレッシュなオレンジカラー",
-        "colors": ["オレンジ"]
+        "price": 528,
+        "image_url": "https://m.media-amazon.com/images/I/51a0syI5ERL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/3UT9PSo",
+        "description": "つけたての色が、長時間落ちずに続く。 時間がたっても自然な赤みが続く血色ティント配合。",
+        "colors": [
+          "コーラル"
+        ]
       }
     ]
   },
@@ -115,111 +137,133 @@
     "eyeshadow": [
       {
         "id": "summer_eye_001",
-        "name": "クール アイシャドウパレット",
-        "brand": "エレガントメイク",
+        "name": "ミニ 9 クール シェード アイシャドウ パレット",
+        "brand": "ミニ",
         "category": "eyeshadow",
-        "price": 1950,
-        "image_url": "https://images.unsplash.com/photo-1583241800975-4b8b3bcea1dc?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08SUMMER01",
-        "description": "上品なクールトーンのパレット",
-        "colors": ["ラベンダー", "ローズピンク", "シルバー", "クールグレー"]
+        "price": 638,
+        "image_url": "https://m.media-amazon.com/images/I/51xU57MMX1L._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/45Fzyns",
+        "description": "上品なクールトーンのパレット。Summerタイプの上品な美しさを引き出します。",
+        "colors": [
+          "ネイビー",
+          "ローズピンク",
+          "シルバー",
+          "クールグレー"
+        ]
       },
       {
         "id": "summer_eye_002",
-        "name": "ソフト パステルパレット",
-        "brand": "ソフトビューティー",
+        "name": "キャンメイク パーフェクトスタイリストアイズ 24 メロウミルクティー",
+        "brand": "キャンメイク",
         "category": "eyeshadow",
-        "price": 1650,
-        "image_url": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08SUMMER02",
-        "description": "やさしいパステルカラーの組み合わせ",
+        "price": 858,
+        "image_url": "https://m.media-amazon.com/images/I/615KNb6AYIL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/3JIfyYG",
+        "description": "やさしいパステルカラーの組み合わせ。Summerタイプの涼しげな印象にぴったりです。",
         "colors": [
+          "ミルクティー",
           "パステルピンク",
-          "ライトブルー",
           "ラベンダー",
-          "ミントグリーン"
+          "パールベージュ"
         ]
       },
       {
         "id": "summer_eye_003",
-        "name": "ローズ シマー パレット",
-        "brand": "クラシックコスメ",
+        "name": "リンメル ショコラスウィートアイズ 019 ブルーベリーショコラ",
+        "brand": "リンメル",
         "category": "eyeshadow",
-        "price": 1800,
-        "image_url": "https://images.unsplash.com/photo-1631214540230-35f5aa40b115?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08SUMMER03",
-        "description": "上品なローズトーンとシマー",
-        "colors": ["ローズピンク", "ダスティローズ", "パール", "ソフトブラウン"]
+        "price": 1760,
+        "image_url": "https://m.media-amazon.com/images/I/71eRc8akXwL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/47SBrOY",
+        "description": "上品なブルーベリーカラーがSummerタイプの洗練された美しさを演出します。",
+        "colors": [
+          "ブルーベリー",
+          "ローズピンク",
+          "パール",
+          "ソフトブラウン"
+        ]
       }
     ],
     "cheek": [
       {
         "id": "summer_cheek_001",
-        "name": "ローズ チーク",
-        "brand": "エレガントメイク",
+        "name": "キャンメイク パウダーチークス PW20 ロリポップピンク",
+        "brand": "キャンメイク",
         "category": "cheek",
-        "price": 1350,
-        "image_url": "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08SUMMER04",
-        "description": "上品なローズピンクのチーク",
-        "colors": ["ローズピンク"]
+        "price": 605,
+        "image_url": "https://m.media-amazon.com/images/I/71i-Xl2hicL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/460386b",
+        "description": "上品なローズピンクのチーク。Summerタイプの涼しげな肌によく映えます。",
+        "colors": [
+          "ロリポップピンク"
+        ]
       },
       {
         "id": "summer_cheek_002",
-        "name": "ラベンダー ブラッシュ",
-        "brand": "ソフトビューティー",
+        "name": "CEZANNE ナチュラルチークN 20 ジンジャー",
+        "brand": "CEZANNE",
         "category": "cheek",
-        "price": 1250,
-        "image_url": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08SUMMER05",
-        "description": "やさしいラベンダーカラー",
-        "colors": ["ラベンダーピンク"]
+        "price": 396,
+        "image_url": "https://m.media-amazon.com/images/I/61Yt2sTGGkL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/3JDR4ju",
+        "description": "やさしいジンジャーカラーでSummerタイプの上品さを演出。自然な血色感をプラスします。",
+        "colors": [
+          "ジンジャー"
+        ]
       },
       {
         "id": "summer_cheek_003",
-        "name": "ダスティ ローズ チーク",
-        "brand": "クラシックコスメ",
+        "name": "エクセル パウダー&ペンシルアイブロウEX PD02 キャメルブラウン",
+        "brand": "エクセル",
         "category": "cheek",
-        "price": 1450,
-        "image_url": "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08SUMMER06",
-        "description": "落ち着いたダスティローズ",
-        "colors": ["ダスティローズ"]
+        "price": 1595,
+        "image_url": "https://m.media-amazon.com/images/I/61z-L1lNadS._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/4mD0B8N",
+        "description": "落ち着いたキャメルブラウンでSummerタイプの洗練された印象を作ります。",
+        "colors": [
+          "キャメルブラウン"
+        ]
       }
     ],
     "lip": [
       {
         "id": "summer_lip_001",
-        "name": "ローズ リップ",
-        "brand": "エレガントメイク",
+        "name": "オペラ リップティント N 01 レッド",
+        "brand": "オペラ",
         "category": "lip",
-        "price": 1550,
-        "image_url": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08SUMMER07",
-        "description": "上品なローズカラーのリップ",
-        "colors": ["ローズピンク"]
+        "price": 1650,
+        "image_url": "https://m.media-amazon.com/images/I/510xnR7P2wL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/3JCRwyl",
+        "description": "上品なレッドカラーのリップ。Summerタイプのクールな美しさを引き立てます。",
+        "colors": [
+          "レッド"
+        ]
       },
       {
         "id": "summer_lip_002",
-        "name": "ベリー グロス",
-        "brand": "ソフトビューティー",
+        "name": "to/one(トーン) カラー ブロッサム レフィル 05 レディッシュピンク リップ 天然由来成分 ツヤ うるおい",
+        "brand": "to/one",
         "category": "lip",
-        "price": 1400,
-        "image_url": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08SUMMER08",
-        "description": "やさしいベリーカラーのグロス",
-        "colors": ["ベリーピンク"]
+        "price": 880,
+        "image_url": "https://m.media-amazon.com/images/I/518ZQTG1MgL._AC_SX522_.jpg",
+        "amazon_url": "https://amzn.to/3JyuZmr",
+        "description": "やさしいベリーカラーのグロス。Summerタイプの上品さを演出します。",
+        "colors": [
+          "レディベリー"
+        ]
       },
       {
         "id": "summer_lip_003",
-        "name": "ラベンダー リップ",
-        "brand": "クラシックコスメ",
+        "name": "CEZANNE ラスティンググロスリップ 01 ベリー",
+        "brand": "CEZANNE",
         "category": "lip",
-        "price": 1650,
-        "image_url": "https://images.unsplash.com/photo-1583241800975-4b8b3bcea1dc?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08SUMMER09",
-        "description": "個性的なラベンダーカラー",
-        "colors": ["ラベンダー"]
+        "price": 528,
+        "image_url": "https://m.media-amazon.com/images/I/518ZQTG1MgL._AC_SX522_.jpg",
+        "amazon_url": "https://amzn.to/4fYUTf0",
+        "description": "個性的なベリーカラーでSummerタイプのクールな魅力を演出します。",
+        "colors": [
+          "ベリー"
+        ]
       }
     ]
   },
@@ -227,31 +271,31 @@
     "eyeshadow": [
       {
         "id": "autumn_eye_001",
-        "name": "アーシー アイシャドウパレット",
-        "brand": "リッチコスメ",
+        "name": "CEZANNE トーンアップアイシャドウ 07 レッドブラウン",
+        "brand": "CEZANNE",
         "category": "eyeshadow",
-        "price": 1900,
-        "image_url": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08AUTUMN01",
-        "description": "深みのあるアースカラーパレット",
+        "price": 638,
+        "image_url": "https://m.media-amazon.com/images/I/41Rmkt4PuxL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/4mOhduI",
+        "description": "深みのあるレッドブラウン系パレット。Autumnタイプの温かい魅力を最大限に引き出します。",
         "colors": [
-          "ディープブラウン",
+          "レッドブラウン",
           "バーントオレンジ",
-          "オリーブグリーン",
+          "オリーブ",
           "ゴールド"
         ]
       },
       {
         "id": "autumn_eye_002",
-        "name": "ウォーム ブラウンパレット",
-        "brand": "ナチュラルアース",
+        "name": "キャンメイク パーフェクトスタイリストアイズ 17 プリンセスブーケ",
+        "brand": "キャンメイク",
         "category": "eyeshadow",
-        "price": 1750,
-        "image_url": "https://images.unsplash.com/photo-1631214540230-35f5aa40b115?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08AUTUMN02",
-        "description": "温かみのあるブラウン系パレット",
+        "price": 858,
+        "image_url": "https://m.media-amazon.com/images/I/71vNjZpqg9L._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/4lWZ64q",
+        "description": "温かみのあるブラウン系パレット。Autumnタイプの深みのある美しさにぴったりです。",
         "colors": [
-          "キャメル",
+          "プリンセスブーケ",
           "チョコレートブラウン",
           "カッパー",
           "ウォームベージュ"
@@ -259,84 +303,101 @@
       },
       {
         "id": "autumn_eye_003",
-        "name": "リッチ オータムパレット",
-        "brand": "ディープビューティー",
+        "name": "リンメル ショコラスウィートアイズ 009 ショコラブラウン",
+        "brand": "リンメル",
         "category": "eyeshadow",
-        "price": 1850,
-        "image_url": "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08AUTUMN03",
-        "description": "リッチで深みのある秋カラー",
-        "colors": ["バーガンディ", "ブロンズ", "ディープオレンジ", "マスタード"]
+        "price": 1760,
+        "image_url": "https://m.media-amazon.com/images/I/61vJQ16RniL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/3HM8Joz",
+        "description": "リッチで深みのあるショコラブラウン。Autumnタイプの大人っぽい魅力を演出します。",
+        "colors": [
+          "ショコラブラウン",
+          "ブロンズ",
+          "オレンジ",
+          "マスタード"
+        ]
       }
     ],
     "cheek": [
       {
         "id": "autumn_cheek_001",
-        "name": "テラコッタ チーク",
-        "brand": "リッチコスメ",
+        "name": "キャンメイク パウダーチークス PW38 プラムピンク",
+        "brand": "キャンメイク",
         "category": "cheek",
-        "price": 1400,
-        "image_url": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08AUTUMN04",
-        "description": "深みのあるテラコッタカラー",
-        "colors": ["テラコッタ"]
+        "price": 605,
+        "image_url": "https://m.media-amazon.com/images/I/71i-Xl2hicL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/4p0f7cv",
+        "description": "深みのあるプラムピンクでAutumnタイプの温かい魅力を引き出します。",
+        "colors": [
+          "プラムピンク"
+        ]
       },
       {
         "id": "autumn_cheek_002",
-        "name": "ブロンズ ブラッシュ",
-        "brand": "ナチュラルアース",
+        "name": "CEZANNE ナチュラルチークN 14 ブラウン",
+        "brand": "CEZANNE",
         "category": "cheek",
-        "price": 1300,
-        "image_url": "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08AUTUMN05",
-        "description": "温かみのあるブロンズカラー",
-        "colors": ["ブロンズ"]
+        "price": 396,
+        "image_url": "https://m.media-amazon.com/images/I/51p6q3MHWsL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/45FCFf8",
+        "description": "温かみのあるブラウンカラーでAutumnタイプの深みのある美しさを演出します。",
+        "colors": [
+          "ブラウン"
+        ]
       },
       {
         "id": "autumn_cheek_003",
-        "name": "バーントオレンジ チーク",
-        "brand": "ディープビューティー",
+        "name": "井田両国堂 キャンメイク クリームチーク CL07 コーラルオレンジ",
+        "brand": "キャンメイク",
         "category": "cheek",
-        "price": 1500,
-        "image_url": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08AUTUMN06",
-        "description": "個性的なバーントオレンジ",
-        "colors": ["バーントオレンジ"]
+        "price": 660,
+        "image_url": "https://m.media-amazon.com/images/I/61gPEImhjsL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/45JWjqk",
+        "description": "個性的なコーラルオレンジでAutumnタイプの暖かい印象をプラスします。",
+        "colors": [
+          "コーラルオレンジ"
+        ]
       }
     ],
     "lip": [
       {
         "id": "autumn_lip_001",
-        "name": "ディープ レッドリップ",
-        "brand": "リッチコスメ",
+        "name": "オペラ リップティント N 06 ピンクレッド",
+        "brand": "オペラ",
         "category": "lip",
-        "price": 1700,
-        "image_url": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08AUTUMN07",
-        "description": "深みのあるレッドカラー",
-        "colors": ["ディープレッド"]
+        "price": 1650,
+        "image_url": "https://m.media-amazon.com/images/I/31vg04eBClL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/462TfEF",
+        "description": "深みのあるピンクレッドでAutumnタイプの大人っぽい魅力を引き出します。",
+        "colors": [
+          "ピンクレッド"
+        ]
       },
       {
         "id": "autumn_lip_002",
-        "name": "ブラウン リップスティック",
-        "brand": "ナチュラルアース",
+        "name": "ettusais(エテュセ) リップエディション (ティントルージュ) 09 ココアブラウン",
+        "brand": "ettusais",
         "category": "lip",
-        "price": 1450,
-        "image_url": "https://images.unsplash.com/photo-1583241800975-4b8b3bcea1dc?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08AUTUMN08",
-        "description": "落ち着いたブラウンリップ",
-        "colors": ["ウォームブラウン"]
+        "price": 880,
+        "image_url": "https://m.media-amazon.com/images/I/511LbpOOAFL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/3I239OR",
+        "description": "落ち着いたココアブラウンでAutumnタイプの温かい魅力を演出します。",
+        "colors": [
+          "レディココア"
+        ]
       },
       {
         "id": "autumn_lip_003",
-        "name": "オレンジレッド グロス",
-        "brand": "ディープビューティー",
+        "name": "MAYBELLINE(メイベリン) リップ SP ステイヴィニルインク 61 オレンジ系 口紅",
+        "brand": "MAYBELLINE",
         "category": "lip",
-        "price": 1600,
-        "image_url": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08AUTUMN09",
-        "description": "情熱的なオレンジレッド",
-        "colors": ["オレンジレッド"]
+        "price": 528,
+        "image_url": "https://m.media-amazon.com/images/I/51mnfIxhZcL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/3VrPBPI",
+        "description": "情熱的なオレンジでAutumnタイプの温かい印象をプラスします。",
+        "colors": [
+          "オレンジ"
+        ]
       }
     ]
   },
@@ -344,111 +405,133 @@
     "eyeshadow": [
       {
         "id": "winter_eye_001",
-        "name": "ドラマティック アイパレット",
-        "brand": "ボールドビューティー",
+        "name": "CEZANNE トーンアップアイシャドウ 08 ハニーブラウン",
+        "brand": "CEZANNE",
         "category": "eyeshadow",
-        "price": 1950,
-        "image_url": "https://images.unsplash.com/photo-1631214540230-35f5aa40b115?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08WINTER01",
-        "description": "鮮やかで印象的なカラーパレット",
-        "colors": ["ディープネイビー", "シルバー", "ブラック", "アイシーピンク"]
+        "price": 638,
+        "image_url": "https://m.media-amazon.com/images/I/51QMklEcHyL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/3I23m4B",
+        "description": "鮮やかで印象的なハニーブラウン系パレット。Winterタイプの華やかな美しさを引き出します。",
+        "colors": [
+          "ハニーブラウン",
+          "ディープネイビー",
+          "シルバー",
+          "アイシーピンク"
+        ]
       },
       {
         "id": "winter_eye_002",
-        "name": "クール トーンパレット",
-        "brand": "アイシーメイク",
+        "name": "キャンメイク パーフェクトスタイリストアイズ 10 スウィートフラミンゴ",
+        "brand": "キャンメイク",
         "category": "eyeshadow",
-        "price": 1800,
-        "image_url": "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08WINTER02",
-        "description": "クールで洗練されたトーン",
-        "colors": ["アイシーブルー", "パープル", "チャコールグレー", "プラチナ"]
+        "price": 858,
+        "image_url": "https://m.media-amazon.com/images/I/61k0+mKE8YL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/3Vx2yHX",
+        "description": "クールで洗練されたフラミンゴピンク。Winterタイプの鮮やかな魅力を演出します。",
+        "colors": [
+          "スウィートフラミンゴ",
+          "パープル",
+          "グレー",
+          "プラチナ"
+        ]
       },
       {
         "id": "winter_eye_003",
-        "name": "ジュエル トーンパレット",
-        "brand": "ラグジュアリーコスメ",
+        "name": "BLEND BERRY(ブレンドベリー) オールユーニード クリエイション 002 （トワイライトグルーム）",
+        "brand": "BLEND BERRY",
         "category": "eyeshadow",
-        "price": 1900,
-        "image_url": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08WINTER03",
-        "description": "宝石のような鮮やかなカラー",
+        "price": 1760,
+        "image_url": "https://m.media-amazon.com/images/I/71dWhBxNWtL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/4n5pIAW",
+        "description": "宝石のような鮮やかなベリーカラー。Winterタイプのドラマティックな美しさを演出します。",
         "colors": [
-          "エメラルドグリーン",
+          "トワイライトベリー",
           "ロイヤルブルー",
           "アメジスト",
-          "ダイヤモンド"
+          "シルバー"
         ]
       }
     ],
     "cheek": [
       {
         "id": "winter_cheek_001",
-        "name": "ベリー チーク",
-        "brand": "ボールドビューティー",
+        "name": "Visee(ヴィセ) リシェ リップ&チーククリーム N RO-6 ローズレッド 5.5g",
+        "brand": "Visee",
         "category": "cheek",
-        "price": 1450,
-        "image_url": "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08WINTER04",
-        "description": "鮮やかなベリーカラー",
-        "colors": ["ディープベリー"]
+        "price": 605,
+        "image_url": "https://m.media-amazon.com/images/I/61D5nqPHWxL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/3JErhYf",
+        "description": "鮮やかなローズレッドでWinterタイプの華やかな魅力を引き出します。",
+        "colors": [
+          "ローズレッド"
+        ]
       },
       {
         "id": "winter_cheek_002",
-        "name": "フューシャ ブラッシュ",
-        "brand": "アイシーメイク",
+        "name": "CEZANNE ナチュラルチークN 05 スウィートピンク",
+        "brand": "CEZANNE",
         "category": "cheek",
-        "price": 1350,
-        "image_url": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08WINTER05",
-        "description": "印象的なフューシャピンク",
-        "colors": ["フューシャピンク"]
+        "price": 396,
+        "image_url": "https://m.media-amazon.com/images/I/419uQ900FyL._AC_.jpg",
+        "amazon_url": "https://amzn.to/4n1fIZA",
+        "description": "印象的なスウィートピンクでWinterタイプの鮮やかな魅力を演出します。",
+        "colors": [
+          "スウィートピンク"
+        ]
       },
       {
         "id": "winter_cheek_003",
-        "name": "プラム チーク",
-        "brand": "ラグジュアリーコスメ",
+        "name": "ルアモ（luamo） ナチュラルチークカラー コーラル 2.8g",
+        "brand": "ルアモ（luamo）",
         "category": "cheek",
-        "price": 1500,
-        "image_url": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08WINTER06",
-        "description": "深みのあるプラムカラー",
-        "colors": ["プラム"]
+        "price": 660,
+        "image_url": "https://m.media-amazon.com/images/I/61xE1JU5T2L._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/4n0Fm0G",
+        "description": "深みのあるマグノリアカラーでWinterタイプの洗練された美しさを演出します。",
+        "colors": [
+          "マグノリア"
+        ]
       }
     ],
     "lip": [
       {
         "id": "winter_lip_001",
-        "name": "ルビーレッド リップ",
-        "brand": "ボールドビューティー",
+        "name": "【 オペラ (OPERA ） 】リップティント N (107 オレンジリリー)",
+        "brand": "オペラ",
         "category": "lip",
-        "price": 1750,
+        "price": 1650,
         "image_url": "https://images.unsplash.com/photo-1583241800975-4b8b3bcea1dc?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08WINTER07",
-        "description": "鮮烈なルビーレッド",
-        "colors": ["ルビーレッド"]
+        "amazon_url": "https://amzn.to/4mJyqW2",
+        "description": "鮮烈なオレンジでWinterタイプのドラマティックな魅力を引き出します。",
+        "colors": [
+          "オレンジ"
+        ]
       },
       {
         "id": "winter_lip_002",
-        "name": "ベリー リップスティック",
-        "brand": "アイシーメイク",
+        "name": "マキアージュ ドラマティックエッセンスルージュ RS502 ベリーに誘われて (限定 芳醇シアーカラー) 口紅 ・ リップグロス RS502 ベリーに誘われて 本体 4g",
+        "brand": "マキアージュ",
         "category": "lip",
-        "price": 1500,
-        "image_url": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08WINTER08",
-        "description": "クールなベリーカラー",
-        "colors": ["クールベリー"]
+        "price": 880,
+        "image_url": "https://m.media-amazon.com/images/I/51o452oq9iL._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/4g1H8w3",
+        "description": "クールなレディベリーでWinterタイプの鮮やかな魅力を演出します。",
+        "colors": [
+          "レディベリー"
+        ]
       },
       {
         "id": "winter_lip_003",
-        "name": "プラム グロス",
-        "brand": "ラグジュアリーコスメ",
+        "name": "CEZANNE ラスティンググロスリップ 06 レッド",
+        "brand": "CEZANNE",
         "category": "lip",
-        "price": 1650,
-        "image_url": "https://images.unsplash.com/photo-1631214540230-35f5aa40b115?w=300&h=300&fit=crop",
-        "amazon_url": "https://amazon.co.jp/dp/B08WINTER09",
-        "description": "上品なプラムカラーグロス",
-        "colors": ["プラム"]
+        "price": 528,
+        "image_url": "https://m.media-amazon.com/images/I/41rpNGJDjBS._AC_SX679_.jpg",
+        "amazon_url": "https://amzn.to/4p0R5xS",
+        "description": "上品なレッドカラーでWinterタイプの洗練された美しさを引き立てます。",
+        "colors": [
+          "レッド"
+        ]
       }
     ]
   }

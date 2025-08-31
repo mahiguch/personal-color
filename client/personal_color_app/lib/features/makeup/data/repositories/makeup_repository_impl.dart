@@ -23,21 +23,32 @@ class MakeupRepositoryImpl implements MakeupRepository {
 
   @override
   Future<Either<Failure, MakeupRecommendation>> getMakeupRecommendations(
-    PersonalColorType personalColorType,
-  ) async {
+    PersonalColorType personalColorType, {
+    bool forceRefresh = false,
+  }) async {
     try {
-      // 1. まずローカルキャッシュから取得を試行
-      try {
-        final cachedData = await localDataSource.getCachedMakeupRecommendations(
-          personalColorType,
-        );
-        
-        // キャッシュからの取得に成功した場合はエンティティに変換して返す
-        return Right(cachedData.toEntity());
-      } catch (e) {
-        // キャッシュが存在しない、または期限切れの場合は続行
-        // ログは開発時のみ出力（本番では削除）
-        // print('Cache miss for ${personalColorType.name}: $e');
+      // 1. forceRefreshがfalseの場合のみキャッシュから取得を試行
+      if (!forceRefresh) {
+        try {
+          final cachedData = await localDataSource.getCachedMakeupRecommendations(
+            personalColorType,
+          );
+          
+          // キャッシュからの取得に成功した場合はエンティティに変換して返す
+          return Right(cachedData.toEntity());
+        } catch (e) {
+          // キャッシュが存在しない、または期限切れの場合は続行
+          // ログは開発時のみ出力（本番では削除）
+          // print('Cache miss for ${personalColorType.name}: $e');
+        }
+      } else {
+        // 強制リフレッシュの場合はキャッシュをクリア
+        try {
+          await localDataSource.clearCacheForType(personalColorType);
+        } catch (e) {
+          // キャッシュクリアの失敗は致命的ではないため、警告のみ
+          // print('Warning: Failed to clear cache for ${personalColorType.name}: $e');
+        }
       }
 
       // 2. リモートAPIからデータ取得

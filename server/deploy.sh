@@ -47,64 +47,10 @@ check_prerequisites() {
         exit 1
     fi
     
-    echo -e "${GREEN}✅ Prerequisites check passed${NC}"
-}
-
-# Set up GCP project and services
-setup_gcp() {
-    echo -e "${YELLOW}🔧 Setting up GCP project and services...${NC}"
-    
     # Set the project
     gcloud config set project ${PROJECT_ID}
     
-    # Enable required APIs
-    echo "Enabling required APIs..."
-    gcloud services enable \
-        cloudbuild.googleapis.com \
-        run.googleapis.com \
-        containerregistry.googleapis.com \
-        artifactregistry.googleapis.com \
-        aiplatform.googleapis.com \
-        monitoring.googleapis.com \
-        logging.googleapis.com \
-        cloudprofiler.googleapis.com \
-        cloudtrace.googleapis.com
-    
-    echo -e "${GREEN}✅ GCP setup completed${NC}"
-}
-
-# Create service account and permissions
-setup_service_account() {
-    echo -e "${YELLOW}👤 Setting up service account...${NC}"
-    
-    SA_NAME="personal-color-api-sa"
-    SA_EMAIL="${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
-    
-    # Create service account if it doesn't exist
-    if ! gcloud iam service-accounts describe ${SA_EMAIL} &> /dev/null; then
-        gcloud iam service-accounts create ${SA_NAME} \
-            --display-name="Personal Color API Service Account" \
-            --description="Service account for Personal Color API"
-    fi
-    
-    # Grant necessary permissions
-    gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-        --member="serviceAccount:${SA_EMAIL}" \
-        --role="roles/aiplatform.user"
-    
-    gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-        --member="serviceAccount:${SA_EMAIL}" \
-        --role="roles/monitoring.metricWriter"
-    
-    gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-        --member="serviceAccount:${SA_EMAIL}" \
-        --role="roles/logging.logWriter"
-    
-    gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-        --member="serviceAccount:${SA_EMAIL}" \
-        --role="roles/cloudtrace.agent"
-    
-    echo -e "${GREEN}✅ Service account setup completed${NC}"
+    echo -e "${GREEN}✅ Prerequisites check passed${NC}"
 }
 
 # Build and push Docker image
@@ -136,19 +82,19 @@ build_and_push() {
 deploy_cloudrun() {
     echo -e "${YELLOW}☁️ Deploying to Cloud Run...${NC}"
     
-    # Replace placeholders in service configuration
-    sed "s/PROJECT_ID/${PROJECT_ID}/g" cloudrun-service.yaml > cloudrun-service-deploy.yaml
-    
-    # Deploy the service
-    gcloud run services replace cloudrun-service-deploy.yaml \
+    # Deploy the service using gcloud run deploy
+    gcloud run deploy ${SERVICE_NAME} \
+        --image=${IMAGE_NAME}:latest \
         --platform=managed \
-        --region=${REGION}
-    
-    # Ensure the service allows unauthenticated access (for public API)
-    gcloud run services add-iam-policy-binding ${SERVICE_NAME} \
-        --member="allUsers" \
-        --role="roles/run.invoker" \
-        --region=${REGION}
+        --region=${REGION} \
+        --allow-unauthenticated \
+        --port=8080 \
+        --memory=2Gi \
+        --cpu=1000m \
+        --timeout=60s \
+        --max-instances=10 \
+        --service-account="personal-color-api-sa@${PROJECT_ID}.iam.gserviceaccount.com" \
+        --set-env-vars="ENVIRONMENT=${ENVIRONMENT}"
     
     # Get the service URL
     SERVICE_URL=$(gcloud run services describe ${SERVICE_NAME} \
@@ -158,27 +104,6 @@ deploy_cloudrun() {
     
     echo -e "${GREEN}✅ Cloud Run deployment completed${NC}"
     echo -e "${BLUE}Service URL: ${SERVICE_URL}${NC}"
-    
-    # Clean up temporary file
-    rm -f cloudrun-service-deploy.yaml
-}
-
-# Setup monitoring and alerting
-setup_monitoring() {
-    echo -e "${YELLOW}📊 Setting up monitoring and alerting...${NC}"
-    
-    # Create notification channel (email)
-    # Note: This requires manual setup in the console for the first time
-    echo "Monitoring setup requires manual configuration in Google Cloud Console:"
-    echo "1. Go to Monitoring > Alerting > Notification Channels"
-    echo "2. Create email notification channel"
-    echo "3. Set up alerting policies for:"
-    echo "   - High error rate (>5%)"
-    echo "   - High latency (>10s)"
-    echo "   - High memory usage (>80%)"
-    echo "   - Service down"
-    
-    echo -e "${GREEN}✅ Monitoring setup instructions provided${NC}"
 }
 
 # Run health check
@@ -220,11 +145,8 @@ health_check() {
 # Main deployment flow
 main() {
     check_prerequisites
-    setup_gcp
-    setup_service_account
     build_and_push
     deploy_cloudrun
-    setup_monitoring
     health_check
     
     echo ""
@@ -244,14 +166,11 @@ main() {
     echo ""
     echo -e "${YELLOW}🔧 Next Steps:${NC}"
     echo "1. Update Flutter app API configuration with the new URL"
-    echo "2. Configure custom domain (if needed)"
-    echo "3. Set up monitoring alerts in Google Cloud Console"
-    echo "4. Test the complete application flow"
+    echo "2. Test the complete application flow"
     echo ""
     echo -e "${YELLOW}📊 Monitoring Links:${NC}"
     echo "Cloud Run Console: https://console.cloud.google.com/run/detail/${REGION}/${SERVICE_NAME}/metrics?project=${PROJECT_ID}"
     echo "Logs: https://console.cloud.google.com/logs/query?project=${PROJECT_ID}"
-    echo "Monitoring: https://console.cloud.google.com/monitoring?project=${PROJECT_ID}"
 }
 
 # Run main function

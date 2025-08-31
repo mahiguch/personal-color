@@ -44,18 +44,27 @@ class MockMakeupRepository extends _i1.Mock implements _i3.MakeupRepository {
 
   @override
   _i4.Future<_i2.Either<_i5.Failure, _i6.MakeupRecommendation>>
-  getMakeupRecommendations(_i7.PersonalColorType? personalColorType) =>
+  getMakeupRecommendations(
+    _i7.PersonalColorType? personalColorType, {
+    bool? forceRefresh = false,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#getMakeupRecommendations, [personalColorType]),
+            Invocation.method(
+              #getMakeupRecommendations,
+              [personalColorType],
+              {#forceRefresh: forceRefresh},
+            ),
             returnValue:
                 _i4.Future<
                   _i2.Either<_i5.Failure, _i6.MakeupRecommendation>
                 >.value(
                   _FakeEither_0<_i5.Failure, _i6.MakeupRecommendation>(
                     this,
-                    Invocation.method(#getMakeupRecommendations, [
-                      personalColorType,
-                    ]),
+                    Invocation.method(
+                      #getMakeupRecommendations,
+                      [personalColorType],
+                      {#forceRefresh: forceRefresh},
+                    ),
                   ),
                 ),
           )

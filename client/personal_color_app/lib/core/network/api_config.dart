@@ -9,7 +9,7 @@ class ApiConfig {
   static const String privacyPolicyEndpoint = '/api/v1/privacy/policy';
   
   // タイムアウト設定（秒）
-  static const int connectTimeout = 10;
+  static const int connectTimeout = 30;
   static const int receiveTimeout = 30;
   static const int sendTimeout = 30;
   
