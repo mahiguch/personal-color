@@ -262,8 +262,15 @@ class ProductCardWidget extends StatelessWidget {
     try {
       final uri = Uri.parse(product.amazonUrl);
       
+      // デバッグログ
+      debugPrint('🔗 [URL_LAUNCHER] Attempting to launch URL: ${product.amazonUrl}');
+      debugPrint('   Parsed URI: $uri');
+      debugPrint('   Scheme: ${uri.scheme}');
+      debugPrint('   Host: ${uri.host}');
+      
       // セキュリティ検証: URLの形式をチェック
       if (!_isValidAmazonUrl(uri)) {
+        debugPrint('❌ [URL_LAUNCHER] Invalid Amazon URL: ${product.amazonUrl}');
         if (context.mounted) {
           _showErrorDialog(context, '無効なリンクです');
         }
@@ -273,26 +280,52 @@ class ProductCardWidget extends StatelessWidget {
       // ユーザーに確認ダイアログを表示
       if (context.mounted) {
         final shouldLaunch = await _showLaunchConfirmationDialog(context);
-        if (!shouldLaunch) return;
+        if (!shouldLaunch) {
+          debugPrint('🚫 [URL_LAUNCHER] User cancelled URL launch');
+          return;
+        }
       }
 
-      // URLを開く
+      // URLを開く - Androidではより確実な方法を使用
+      debugPrint('🚀 [URL_LAUNCHER] Checking if URL can be launched...');
       final canLaunch = await canLaunchUrl(uri);
+      debugPrint('   canLaunchUrl result: $canLaunch');
+      
       if (canLaunch) {
         // 触覚フィードバック
         HapticFeedback.lightImpact();
-        await launchUrl(
+        debugPrint('🌐 [URL_LAUNCHER] Launching URL with externalApplication mode...');
+        
+        final result = await launchUrl(
           uri,
           mode: LaunchMode.externalApplication,
         );
+        debugPrint('   launchUrl result: $result');
+        
+        if (!result) {
+          // 外部アプリケーションモードで失敗した場合は、ブラウザモードを試行
+          debugPrint('🔄 [URL_LAUNCHER] Retrying with platformDefault mode...');
+          final retryResult = await launchUrl(
+            uri,
+            mode: LaunchMode.platformDefault,
+          );
+          debugPrint('   retry launchUrl result: $retryResult');
+          
+          if (!retryResult && context.mounted) {
+            _showErrorDialog(context, 'リンクを開くことができませんでした');
+          }
+        }
       } else {
+        debugPrint('❌ [URL_LAUNCHER] Cannot launch URL - no compatible app found');
         if (context.mounted) {
-          _showErrorDialog(context, 'リンクを開くことができませんでした');
+          _showErrorDialog(context, 'リンクを開くことができませんでした\nブラウザアプリがインストールされていない可能性があります');
         }
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      debugPrint('❌ [URL_LAUNCHER] Exception occurred: $e');
+      debugPrint('   Stack trace: $stackTrace');
       if (context.mounted) {
-        _showErrorDialog(context, 'エラーが発生しました');
+        _showErrorDialog(context, 'エラーが発生しました: ${e.toString()}');
       }
     }
   }

@@ -37,9 +37,9 @@ android {
         // Android 13+ support as specified in design document
         minSdk = 33  // Android 13 (API Level 33)
         targetSdk = 36  // Android 14 (API Level 36)
-        versionCode = 2
-        versionName = "1.0.0"
-        
+        versionCode = 3
+        versionName = "1.0.1"
+
         // Test runner for instrumented tests
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         
