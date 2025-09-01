@@ -3,3 +3,6 @@ __pycache__/
 .DS_Store
 .idea/
 .tmp/
+.serena/cache/
+.serena/memories/
+.playwright-mcp/
