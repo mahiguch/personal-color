@@ -14,6 +14,7 @@ import logging
 from .endpoints.diagnosis import router as diagnosis_router
 from .endpoints.health import router as health_router
 from .endpoints.makeup import router as makeup_router
+from .endpoints.clothing import router as clothing_router
 from ..core.config.settings import get_settings
 from ..middleware.rate_limiter import RateLimitMiddleware
 
@@ -86,6 +87,7 @@ app.add_middleware(
 app.include_router(health_router, prefix="/api/v1")
 app.include_router(diagnosis_router, prefix="/api/v1")
 app.include_router(makeup_router)
+app.include_router(clothing_router)
 
 
 # グローバル例外ハンドラー
