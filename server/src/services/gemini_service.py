@@ -23,6 +23,10 @@ from ..prompts.makeup_recommendation_prompts import (
     MakeupCategory,
     MakeupProduct,
 )
+from ..prompts.clothing_recommendation_prompts import (
+    ClothingRecommendationPrompts,
+    ClothingCategory,
+)
 
 # 設定
 from ..core.config.settings import get_settings
@@ -67,7 +71,8 @@ class GeminiService:
         self._initialize_service()
 
         # プロンプト生成器
-        self.prompt_generator = MakeupRecommendationPrompts()
+        self.makeup_prompt_generator = MakeupRecommendationPrompts()
+        self.clothing_prompt_generator = ClothingRecommendationPrompts()
 
         # 7日間のAI説明キャッシュ
         self._ai_cache: Dict[str, Tuple[str, datetime]] = {}
@@ -272,6 +277,148 @@ class GeminiService:
         )
 
         logger.info("Generated fallback makeup explanation")
+        return GenerationResult(
+            success=True,  # フォールバックは成功扱い
+            response=fallback_response,
+            error_message=None,
+            retry_count=0,
+        )
+
+    async def generate_clothing_explanation(
+        self,
+        personal_color_type: PersonalColorType,
+        category: ClothingCategory,
+        products: List[Dict[str, any]],
+    ) -> GenerationResult:
+        """
+        衣料品推奨理由をGemini AIで生成
+
+        Args:
+            personal_color_type: パーソナルカラータイプ
+            category: 衣料品カテゴリ
+            products: 商品データリスト
+
+        Returns:
+            GenerationResult: 生成結果
+        """
+
+        if not self.model:
+            logger.warning("Gemini model not available, returning fallback response")
+            cache_key = f"clothing_{personal_color_type.value}_{category.value}"
+            return await self._generate_clothing_fallback_response(
+                personal_color_type, category, cache_key
+            )
+
+        # キャッシュキー生成
+        cache_key = f"clothing_{personal_color_type.value}_{category.value}"
+        
+        # キャッシュチェック
+        cached_response = self._get_cached_explanation(cache_key)
+        if cached_response:
+            return GenerationResult(
+                success=True,
+                response=cached_response,
+                error_message=None,
+                retry_count=0,
+            )
+
+        # プロンプト生成
+        prompt = self.clothing_prompt_generator.generate_prompt(
+            personal_color_type, category, products
+        )
+
+        logger.info(f"Generating clothing explanation for {personal_color_type.value} {category.value}")
+        logger.debug(f"Prompt: {prompt[:200]}...")  # 最初の200文字のみログ
+
+        # リトライ処理
+        last_error = None
+        for retry in range(self._max_retries):
+            try:
+                # 指数バックオフによる遅延
+                if retry > 0:
+                    delay = min(self._base_delay * (2 ** (retry - 1)), self._max_delay)
+                    logger.info(f"Retrying after {delay:.1f}s delay")
+                    await asyncio.sleep(delay)
+
+                start_time = time.time()
+
+                # 非同期でGemini APIを呼び出し
+                response = await asyncio.to_thread(self._call_gemini_sync, prompt)
+
+                response_time_ms = int((time.time() - start_time) * 1000)
+
+                # レスポンス品質チェック
+                if not response or not response.text or len(response.text.strip()) < 10:
+                    logger.warning(
+                        f"Poor quality response (length: {len(response.text if response.text else '')})"
+                    )
+                    raise GeminiServiceError("AI response failed quality validation")
+
+                # 成功
+                gemini_response = GeminiResponse(
+                    content=response.text.strip(),
+                    generated_at=datetime.utcnow(),
+                    response_time_ms=response_time_ms,
+                    model_used=self.model_name,
+                    is_fallback=False,
+                )
+
+                # キャッシュに保存
+                self._cache_explanation(cache_key, gemini_response.content)
+
+                logger.info(f"Clothing AI generation successful (attempt {retry + 1})")
+                return GenerationResult(
+                    success=True,
+                    response=gemini_response,
+                    error_message=None,
+                    retry_count=retry,
+                )
+
+            except Exception as e:
+                last_error = e
+                logger.warning(f"Clothing AI generation failed (attempt {retry + 1}): {e}")
+
+                # 最後のリトライでない場合は続行
+                if retry < self._max_retries - 1:
+                    continue
+
+        # すべてのリトライが失敗
+        logger.error(
+            f"Clothing AI generation failed after {self._max_retries} attempts: {last_error}"
+        )
+
+        # フォールバック応答を生成
+        return await self._generate_clothing_fallback_response(
+            personal_color_type, category, cache_key
+        )
+
+    async def _generate_clothing_fallback_response(
+        self,
+        personal_color_type: PersonalColorType,
+        category: ClothingCategory,
+        cache_key: str,
+    ) -> GenerationResult:
+        """衣料品用フォールバック応答生成"""
+
+        fallback_content = self.clothing_prompt_generator.get_fallback_explanation(
+            personal_color_type, category
+        )
+
+        # キャッシュに保存（フォールバックも短期間キャッシュ）
+        self._cache_explanation(cache_key, fallback_content)
+
+        fallback_response = GeminiResponse(
+            content=fallback_content,
+            generated_at=datetime.utcnow(),
+            response_time_ms=0,
+            model_used="fallback",
+            is_fallback=True,
+        )
+
+        logger.info(
+            f"Generated clothing fallback explanation for {personal_color_type.value} {category.value}"
+        )
+
         return GenerationResult(
             success=True,  # フォールバックは成功扱い
             response=fallback_response,

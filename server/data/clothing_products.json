@@ -1,0 +1,584 @@
+{
+  "spring": {
+    "tops": [
+      {
+        "id": "spring_tops_001",
+        "name": "コットンブラウス 半袖",
+        "brand": "UNIQLO",
+        "category": "tops",
+        "price": 2990,
+        "image_url": "https://m.media-amazon.com/images/I/61c5GjH2VFL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/spring-tops-001",
+        "description": "軽やかな印象のコットンブラウス。Springタイプの明るい肌色を活かす鮮やかなカラー展開。",
+        "colors": [
+          "ライトピンク",
+          "アイボリー",
+          "コーラル",
+          "ライトブルー"
+        ]
+      },
+      {
+        "id": "spring_tops_002",
+        "name": "リネン混カーディガン",
+        "brand": "GU",
+        "category": "tops",
+        "price": 1990,
+        "image_url": "https://m.media-amazon.com/images/I/71nK5VrGqbL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/spring-tops-002",
+        "description": "春らしい軽やかさのリネン混素材。Springタイプに似合う明るくフレッシュな色合い。",
+        "colors": [
+          "ライトイエロー",
+          "ミントグリーン",
+          "ピーチ",
+          "ライトグレー"
+        ]
+      },
+      {
+        "id": "spring_tops_003",
+        "name": "フレンチスリーブTシャツ",
+        "brand": "MUJI",
+        "category": "tops",
+        "price": 1290,
+        "image_url": "https://m.media-amazon.com/images/I/61xH8+VjRWL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/spring-tops-003",
+        "description": "シンプルで上品なフレンチスリーブ。Springタイプの肌を美しく見せる透明感のある色味。",
+        "colors": [
+          "ソフトピンク",
+          "クリーム",
+          "ラベンダー",
+          "アクアブルー"
+        ]
+      }
+    ],
+    "bottoms": [
+      {
+        "id": "spring_bottoms_001",
+        "name": "フレアスカート ミディ丈",
+        "brand": "ZARA",
+        "category": "bottoms",
+        "price": 3990,
+        "image_url": "https://m.media-amazon.com/images/I/61F7hGW9CJL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/spring-bottoms-001",
+        "description": "エレガントなミディ丈フレアスカート。Springタイプの華やかさを引き立てる明るい色合い。",
+        "colors": [
+          "サクラピンク",
+          "ライトベージュ",
+          "パステルブルー"
+        ]
+      },
+      {
+        "id": "spring_bottoms_002",
+        "name": "ワイドパンツ ストレッチ",
+        "brand": "H&M",
+        "category": "bottoms",
+        "price": 2999,
+        "image_url": "https://m.media-amazon.com/images/I/61Q8rHh6EGL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/spring-bottoms-002",
+        "description": "快適な着心地のワイドパンツ。Springタイプに似合うフレッシュで軽やかな印象。",
+        "colors": [
+          "ライトグリーン",
+          "オフホワイト",
+          "ライトイエロー"
+        ]
+      },
+      {
+        "id": "spring_bottoms_003",
+        "name": "デニムショートパンツ",
+        "brand": "Levi's",
+        "category": "bottoms",
+        "price": 4490,
+        "image_url": "https://m.media-amazon.com/images/I/71cH2vL5FzL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/spring-bottoms-003",
+        "description": "カジュアルで活動的なデニムショーツ。Springタイプの元気で明るい印象にぴったり。",
+        "colors": [
+          "ライトデニム",
+          "ホワイトデニム",
+          "パステルピンクデニム"
+        ]
+      }
+    ],
+    "accessories": [
+      {
+        "id": "spring_accessories_001",
+        "name": "パール調ネックレス",
+        "brand": "4°C",
+        "category": "accessories",
+        "price": 8800,
+        "image_url": "https://m.media-amazon.com/images/I/61j4GkH5+WL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/spring-accessories-001",
+        "description": "上品な輝きのパール調ネックレス。Springタイプの肌を美しく見せる清楚なアクセサリー。",
+        "colors": [
+          "ホワイトパール",
+          "クリームパール",
+          "ライトピンクパール"
+        ]
+      },
+      {
+        "id": "spring_accessories_002",
+        "name": "カラフルトートバッグ",
+        "brand": "MARC JACOBS",
+        "category": "accessories",
+        "price": 15400,
+        "image_url": "https://m.media-amazon.com/images/I/71oJ6EsKcQL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/spring-accessories-002",
+        "description": "鮮やかな色合いのトートバッグ。Springタイプの華やかさを演出する明るいカラーが魅力。",
+        "colors": [
+          "コーラルピンク",
+          "ミントグリーン",
+          "レモンイエロー"
+        ]
+      },
+      {
+        "id": "spring_accessories_003",
+        "name": "フラワーモチーフイヤリング",
+        "brand": "ANNA SUI",
+        "category": "accessories",
+        "price": 5500,
+        "image_url": "https://m.media-amazon.com/images/I/61pL7xHjUkL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/spring-accessories-003",
+        "description": "可憐な花モチーフのイヤリング。Springタイプの若々しさと可愛らしさを強調するデザイン。",
+        "colors": [
+          "パステルピンク",
+          "ライトブルー",
+          "パステルイエロー"
+        ]
+      }
+    ]
+  },
+  "summer": {
+    "tops": [
+      {
+        "id": "summer_tops_001",
+        "name": "シルクブラウス 長袖",
+        "brand": "Theory",
+        "category": "tops",
+        "price": 19800,
+        "image_url": "https://m.media-amazon.com/images/I/51yT6VqHcHL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/summer-tops-001",
+        "description": "上質なシルク素材のエレガントなブラウス。Summerタイプの上品で涼しげな印象を演出。",
+        "colors": [
+          "ラベンダーグレー",
+          "ダスティピンク",
+          "ソフトブルー",
+          "ライトグレー"
+        ]
+      },
+      {
+        "id": "summer_tops_002",
+        "name": "リブニット プルオーバー",
+        "brand": "UNIQLO",
+        "category": "tops",
+        "price": 2990,
+        "image_url": "https://m.media-amazon.com/images/I/61B3yH8qXnL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/summer-tops-002",
+        "description": "柔らかな質感のリブニット。Summerタイプに似合うクールで落ち着いた色合い。",
+        "colors": [
+          "グレーブルー",
+          "ローズグレー",
+          "ライラック",
+          "ミストグリーン"
+        ]
+      },
+      {
+        "id": "summer_tops_003",
+        "name": "ボウタイブラウス",
+        "brand": "IENA",
+        "category": "tops",
+        "price": 14300,
+        "image_url": "https://m.media-amazon.com/images/I/61nK7HVYWQL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/summer-tops-003",
+        "description": "上品なボウタイディテール。Summerタイプのエレガントさを引き立てる洗練された色味。",
+        "colors": [
+          "ダスティブルー",
+          "モーブピンク",
+          "ソフトグレー"
+        ]
+      }
+    ],
+    "bottoms": [
+      {
+        "id": "summer_bottoms_001",
+        "name": "テーパードパンツ",
+        "brand": "PLST",
+        "category": "bottoms",
+        "price": 8800,
+        "image_url": "https://m.media-amazon.com/images/I/61M7K9HSVFL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/summer-bottoms-001",
+        "description": "すっきりとしたシルエットのテーパードパンツ。Summerタイプの知的で上品な印象を演出。",
+        "colors": [
+          "チャコールグレー",
+          "ネイビー",
+          "ダスティピンク"
+        ]
+      },
+      {
+        "id": "summer_bottoms_002",
+        "name": "プリーツロングスカート",
+        "brand": "UNITED ARROWS",
+        "category": "bottoms",
+        "price": 12100,
+        "image_url": "https://m.media-amazon.com/images/I/71R5jL6MHQL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/summer-bottoms-002",
+        "description": "エレガントなプリーツスカート。Summerタイプの優雅さを表現する上品な色合い。",
+        "colors": [
+          "ソフトブルーグレー",
+          "ライラック",
+          "ダスティローズ"
+        ]
+      },
+      {
+        "id": "summer_bottoms_003",
+        "name": "ストレートデニムパンツ",
+        "brand": "YANUK",
+        "category": "bottoms",
+        "price": 16500,
+        "image_url": "https://m.media-amazon.com/images/I/61F8KrM7wPL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/summer-bottoms-003",
+        "description": "品のあるストレートシルエット。Summerタイプに似合うクールでソフトなデニム。",
+        "colors": [
+          "ライトグレーデニム",
+          "ソフトブルーデニム",
+          "ラベンダーグレーデニム"
+        ]
+      }
+    ],
+    "accessories": [
+      {
+        "id": "summer_accessories_001",
+        "name": "シルバーチェーンネックレス",
+        "brand": "Tiffany & Co.",
+        "category": "accessories",
+        "price": 35200,
+        "image_url": "https://m.media-amazon.com/images/I/61L8eF7xPKL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/summer-accessories-001",
+        "description": "上品なシルバーの輝き。Summerタイプのクールで洗練された魅力を引き立てます。",
+        "colors": [
+          "シルバー",
+          "プラチナ調",
+          "ホワイトゴールド調"
+        ]
+      },
+      {
+        "id": "summer_accessories_002",
+        "name": "レザー ハンドバッグ",
+        "brand": "COACH",
+        "category": "accessories",
+        "price": 42900,
+        "image_url": "https://m.media-amazon.com/images/I/71j4YsH8qJL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/summer-accessories-002",
+        "description": "上質なレザーのハンドバッグ。Summerタイプのエレガントさにマッチする落ち着いた色合い。",
+        "colors": [
+          "ダスティブルー",
+          "ソフトグレー",
+          "ローズグレー"
+        ]
+      },
+      {
+        "id": "summer_accessories_003",
+        "name": "パールフープピアス",
+        "brand": "MIKIMOTO",
+        "category": "accessories",
+        "price": 22000,
+        "image_url": "https://m.media-amazon.com/images/I/51K7wH8PzJL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/summer-accessories-003",
+        "description": "上品なパールフープピアス。Summerタイプの優雅で洗練された印象を演出します。",
+        "colors": [
+          "ホワイトパール",
+          "グレーパール",
+          "シルバーパール"
+        ]
+      }
+    ]
+  },
+  "autumn": {
+    "tops": [
+      {
+        "id": "autumn_tops_001",
+        "name": "ウールニット タートルネック",
+        "brand": "MARGARET HOWELL",
+        "category": "tops",
+        "price": 28600,
+        "image_url": "https://m.media-amazon.com/images/I/61H4pL9RJGL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/autumn-tops-001",
+        "description": "上質なウール100%のタートルネック。Autumnタイプの温かみのある肌色を引き立てる深い色合い。",
+        "colors": [
+          "キャメル",
+          "オリーブグリーン",
+          "バーガンディ",
+          "チョコレートブラウン"
+        ]
+      },
+      {
+        "id": "autumn_tops_002",
+        "name": "コーデュロイシャツ",
+        "brand": "POLO RALPH LAUREN",
+        "category": "tops",
+        "price": 15400,
+        "image_url": "https://m.media-amazon.com/images/I/71M8qH3QJNL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/autumn-tops-002",
+        "description": "温かみのあるコーデュロイ素材。Autumnタイプの豊かで深みのある印象を演出します。",
+        "colors": [
+          "テラコッタ",
+          "マスタードイエロー",
+          "フォレストグリーン",
+          "ラストオレンジ"
+        ]
+      },
+      {
+        "id": "autumn_tops_003",
+        "name": "カシミヤブレンドカーディガン",
+        "brand": "BEAMS",
+        "category": "tops",
+        "price": 19800,
+        "image_url": "https://m.media-amazon.com/images/I/61P9kL7WHML._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/autumn-tops-003",
+        "description": "贅沢なカシミヤブレンド素材。Autumnタイプのリッチで落ち着いた魅力を引き出します。",
+        "colors": [
+          "ディープベージュ",
+          "オータムオレンジ",
+          "ダークオリーブ",
+          "ワインレッド"
+        ]
+      }
+    ],
+    "bottoms": [
+      {
+        "id": "autumn_bottoms_001",
+        "name": "ウールスカート Aライン",
+        "brand": "MACKINTOSH PHILOSOPHY",
+        "category": "bottoms",
+        "price": 22000,
+        "image_url": "https://m.media-amazon.com/images/I/61D8pL4RJFL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/autumn-bottoms-001",
+        "description": "上質なウール素材のAラインスカート。Autumnタイプの大人っぽく上品な印象を演出。",
+        "colors": [
+          "キャメル",
+          "ディープグリーン",
+          "バーントオレンジ"
+        ]
+      },
+      {
+        "id": "autumn_bottoms_002",
+        "name": "ワイドパンツ ツイード",
+        "brand": "SHIPS",
+        "category": "bottoms",
+        "price": 16500,
+        "image_url": "https://m.media-amazon.com/images/I/71Q5rH8QKNL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/autumn-bottoms-002",
+        "description": "温かみのあるツイード素材。Autumnタイプのリッチで品のある印象にぴったり。",
+        "colors": [
+          "ブラウンツイード",
+          "オリーブツイード",
+          "オレンジツイード"
+        ]
+      },
+      {
+        "id": "autumn_bottoms_003",
+        "name": "レザーパンツ ストレート",
+        "brand": "ZARA",
+        "category": "bottoms",
+        "price": 9990,
+        "image_url": "https://m.media-amazon.com/images/I/61C7vL6FWHL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/autumn-bottoms-003",
+        "description": "モダンなレザーパンツ。Autumnタイプの力強く洗練された印象を表現。",
+        "colors": [
+          "ダークブラウン",
+          "バーガンディ",
+          "ディープオリーブ"
+        ]
+      }
+    ],
+    "accessories": [
+      {
+        "id": "autumn_accessories_001",
+        "name": "ゴールドチェーンネックレス",
+        "brand": "HERMES",
+        "category": "accessories",
+        "price": 89100,
+        "image_url": "https://m.media-amazon.com/images/I/61M7nL5RJKL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/autumn-accessories-001",
+        "description": "上品なゴールドの輝き。Autumnタイプの温かみのある肌色を美しく引き立てます。",
+        "colors": [
+          "18Kゴールド",
+          "アンティークゴールド",
+          "マットゴールド"
+        ]
+      },
+      {
+        "id": "autumn_accessories_002",
+        "name": "スエードハンドバッグ",
+        "brand": "BOTTEGA VENETA",
+        "category": "accessories",
+        "price": 198000,
+        "image_url": "https://m.media-amazon.com/images/I/71K4jH9QLNL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/autumn-accessories-002",
+        "description": "贅沢なスエード素材のハンドバッグ。Autumnタイプのリッチで上質な印象にマッチ。",
+        "colors": [
+          "テラコッタ",
+          "ディープオリーブ",
+          "ダークキャメル"
+        ]
+      },
+      {
+        "id": "autumn_accessories_003",
+        "name": "アンバー調イヤリング",
+        "brand": "CHANEL",
+        "category": "accessories",
+        "price": 45100,
+        "image_url": "https://m.media-amazon.com/images/I/61P4qL7RJML._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/autumn-accessories-003",
+        "description": "温かみのあるアンバー調イヤリング。Autumnタイプの深みのある魅力を演出します。",
+        "colors": [
+          "アンバー",
+          "トパーズ",
+          "ゴールデンブラウン"
+        ]
+      }
+    ]
+  },
+  "winter": {
+    "tops": [
+      {
+        "id": "winter_tops_001",
+        "name": "シルクブラウス クリスプ",
+        "brand": "MAX MARA",
+        "category": "tops",
+        "price": 49500,
+        "image_url": "https://m.media-amazon.com/images/I/51G7mL4QJNL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/winter-tops-001",
+        "description": "上質なシルク素材のクリスプブラウス。Winterタイプのシャープで洗練された印象を演出。",
+        "colors": [
+          "ピュアホワイト",
+          "アイシーブルー",
+          "ジェットブラック",
+          "ディープレッド"
+        ]
+      },
+      {
+        "id": "winter_tops_002",
+        "name": "カシミヤニット Vネック",
+        "brand": "BRUNELLO CUCINELLI",
+        "category": "tops",
+        "price": 89100,
+        "image_url": "https://m.media-amazon.com/images/I/61H5pL8QKNL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/winter-tops-002",
+        "description": "最高級カシミヤのVネックニット。Winterタイプのクールでエレガントな魅力を引き立てます。",
+        "colors": [
+          "チャコールグレー",
+          "アイシーピンク",
+          "ロイヤルブルー",
+          "純白"
+        ]
+      },
+      {
+        "id": "winter_tops_003",
+        "name": "テーラードジャケット",
+        "brand": "ARMANI",
+        "category": "tops",
+        "price": 132000,
+        "image_url": "https://m.media-amazon.com/images/I/71M6nL7RJQL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/winter-tops-003",
+        "description": "シャープなシルエットのテーラードジャケット。Winterタイプの力強く洗練された印象を表現。",
+        "colors": [
+          "ブラック",
+          "ダークネイビー",
+          "アイスグレー"
+        ]
+      }
+    ],
+    "bottoms": [
+      {
+        "id": "winter_bottoms_001",
+        "name": "ウールパンツ ストレート",
+        "brand": "GIORGIO ARMANI",
+        "category": "bottoms",
+        "price": 66000,
+        "image_url": "https://m.media-amazon.com/images/I/61F5qL4RJKL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/winter-bottoms-001",
+        "description": "上質なウール100%のストレートパンツ。Winterタイプのクールで洗練された印象を演出。",
+        "colors": [
+          "ブラック",
+          "チャコールグレー",
+          "ダークネイビー"
+        ]
+      },
+      {
+        "id": "winter_bottoms_002",
+        "name": "ペンシルスカート",
+        "brand": "SAINT LAURENT",
+        "category": "bottoms",
+        "price": 88000,
+        "image_url": "https://m.media-amazon.com/images/I/71L7qH5RJML._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/winter-bottoms-002",
+        "description": "シャープなシルエットのペンシルスカート。Winterタイプのモダンでエレガントな魅力を引き立てます。",
+        "colors": [
+          "ジェットブラック",
+          "アイシーブルー",
+          "ディープレッド"
+        ]
+      },
+      {
+        "id": "winter_bottoms_003",
+        "name": "ダークデニムパンツ",
+        "brand": "DIESEL",
+        "category": "bottoms",
+        "price": 24200,
+        "image_url": "https://m.media-amazon.com/images/I/61D8pL6RJFL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/winter-bottoms-003",
+        "description": "濃色でシャープなデニムパンツ。Winterタイプのクールで力強い印象にぴったり。",
+        "colors": [
+          "インディゴブラック",
+          "ダークネイビー",
+          "チャコールデニム"
+        ]
+      }
+    ],
+    "accessories": [
+      {
+        "id": "winter_accessories_001",
+        "name": "プラチナチェーンネックレス",
+        "brand": "CARTIER",
+        "category": "accessories",
+        "price": 165000,
+        "image_url": "https://m.media-amazon.com/images/I/51K8nL5RJQL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/winter-accessories-001",
+        "description": "上品なプラチナの輝き。Winterタイプのクールで洗練された魅力を引き立てます。",
+        "colors": [
+          "プラチナ",
+          "ホワイトゴールド",
+          "シルバー"
+        ]
+      },
+      {
+        "id": "winter_accessories_002",
+        "name": "レザーハンドバッグ",
+        "brand": "LOUIS VUITTON",
+        "category": "accessories",
+        "price": 220000,
+        "image_url": "https://m.media-amazon.com/images/I/71J6mL8RJNL._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/winter-accessories-002",
+        "description": "最高級レザーのハンドバッグ。Winterタイプのモダンで力強い印象にマッチします。",
+        "colors": [
+          "ジェットブラック",
+          "アイスホワイト",
+          "ダークネイビー"
+        ]
+      },
+      {
+        "id": "winter_accessories_003",
+        "name": "クリスタルイヤリング",
+        "brand": "SWAROVSKI",
+        "category": "accessories",
+        "price": 13200,
+        "image_url": "https://m.media-amazon.com/images/I/61P7qL4RJML._AC_UY580_.jpg",
+        "amazon_url": "https://amzn.to/winter-accessories-003",
+        "description": "クリアなクリスタルの輝き。Winterタイプのシャープで洗練された印象を演出します。",
+        "colors": [
+          "クリアクリスタル",
+          "アイシーブルー",
+          "ダイヤモンドカット"
+        ]
+      }
+    ]
+  }
+}
