@@ -33,6 +33,13 @@ import '../../features/makeup/domain/repositories/makeup_repository.dart';
 import '../../features/makeup/domain/usecases/get_makeup_recommendations.dart';
 import '../../features/makeup/presentation/providers/makeup_recommendation_provider.dart';
 
+// Clothing feature
+import '../../features/clothing/data/datasources/clothing_remote_data_source.dart';
+import '../../features/clothing/data/repositories/clothing_repository_impl.dart';
+import '../../features/clothing/domain/repositories/clothing_repository.dart';
+import '../../features/clothing/domain/usecases/get_clothing_recommendations.dart';
+import '../../features/clothing/presentation/providers/clothing_recommendation_provider.dart';
+
 final sl = GetIt.instance;
 
 Future<void> init() async {
@@ -125,6 +132,29 @@ Future<void> init() async {
     () => MakeupLocalDataSourceImpl(
       sharedPreferences: sl(),
     ),
+  );
+
+  //! Features - Clothing
+  // Providers
+  sl.registerFactory(
+    () => ClothingRecommendationProvider(
+      getClothingRecommendations: sl(),
+    ),
+  );
+
+  // Use cases
+  sl.registerLazySingleton(() => GetClothingRecommendations(sl()));
+
+  // Repository
+  sl.registerLazySingleton<ClothingRepository>(
+    () => ClothingRepositoryImpl(
+      remoteDataSource: sl(),
+    ),
+  );
+
+  // Data sources
+  sl.registerLazySingleton<ClothingRemoteDataSource>(
+    () => ClothingRemoteDataSourceImpl(dio: sl()),
   );
 
   //! Core

@@ -7,6 +7,8 @@ import '../widgets/color_palette_widget.dart';
 import '../widgets/tips_section.dart';
 import '../../../makeup/presentation/pages/makeup_recommendation_page.dart';
 import '../../../makeup/presentation/providers/makeup_recommendation_provider.dart';
+import '../../../clothing/presentation/pages/clothing_recommendation_page.dart';
+import '../../../clothing/presentation/providers/clothing_recommendation_provider.dart';
 import '../../../../core/di/injection_container.dart' as di;
 
 class IOSDiagnosisResultPage extends StatelessWidget {
@@ -150,6 +152,33 @@ class IOSDiagnosisResultPage extends StatelessWidget {
         
         const SizedBox(height: 12),
         
+        // おすすめのファッションボタン
+        SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: ElevatedButton.icon(
+            onPressed: () => _navigateToClothingRecommendation(context),
+            icon: const Icon(Icons.checkroom),
+            label: const Text(
+              'おすすめのファッション',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: _getThemeColor(result.diagnosisType).withValues(alpha: 0.8),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              elevation: 4,
+            ),
+          ),
+        ),
+        
+        const SizedBox(height: 12),
+        
         // もう一度診断ボタン
         SizedBox(
           width: double.infinity,
@@ -213,6 +242,19 @@ class IOSDiagnosisResultPage extends StatelessWidget {
         builder: (context) => ChangeNotifierProvider(
           create: (context) => di.sl<MakeupRecommendationProvider>(),
           child: MakeupRecommendationPage(
+            personalColorType: result.diagnosisType,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _navigateToClothingRecommendation(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ChangeNotifierProvider(
+          create: (context) => di.sl<ClothingRecommendationProvider>(),
+          child: ClothingRecommendationPage(
             personalColorType: result.diagnosisType,
           ),
         ),
