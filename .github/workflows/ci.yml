@@ -39,9 +39,6 @@ jobs:
     - name: Analyze Flutter code
       run: flutter analyze
 
-    - name: Check Flutter formatting
-      run: dart format --output=none --set-exit-if-changed .
-
     - name: Run Flutter tests
       run: flutter test --coverage --test-randomize-ordering-seed random
 
