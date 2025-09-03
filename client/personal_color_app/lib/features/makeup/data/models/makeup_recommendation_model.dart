@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
 import '../../domain/entities/makeup_product.dart';
 import '../../domain/entities/makeup_recommendation.dart';
@@ -58,13 +60,25 @@ class MakeupRecommendationModel extends MakeupRecommendation {
     }
 
     // AI説明文の変換
-    final aiExplanationsJson = json['ai_explanations'] as Map<String, dynamic>;
+    debugPrint('🔍 [MakeupRecommendationModel] AI説明データの変換開始');
+    final aiExplanationsJson = json['ai_explanations'] as Map<String, dynamic>? ?? {};
+    debugPrint('📋 [MakeupRecommendationModel] ai_explanationsキー: ${aiExplanationsJson.keys.toList()}');
+    
     final aiExplanations = <MakeupCategory, String>{};
 
     for (final entry in aiExplanationsJson.entries) {
-      final category = MakeupCategoryExtension.fromApiValue(entry.key);
-      aiExplanations[category] = entry.value as String;
+      try {
+        final category = MakeupCategoryExtension.fromApiValue(entry.key);
+        final explanation = entry.value as String;
+        aiExplanations[category] = explanation;
+        debugPrint('✅ [MakeupRecommendationModel] $category: ${explanation.length}文字の説明を設定');
+      } catch (e) {
+        debugPrint('❌ [MakeupRecommendationModel] AI説明変換エラー - キー: ${entry.key}, 値: ${entry.value}, エラー: $e');
+      }
     }
+    
+    debugPrint('📊 [MakeupRecommendationModel] 変換後のAI説明数: ${aiExplanations.length}');
+    debugPrint('📋 [MakeupRecommendationModel] 変換後のカテゴリ: ${aiExplanations.keys.toList()}');
 
     // タイムスタンプの変換
     DateTime? timestamp;

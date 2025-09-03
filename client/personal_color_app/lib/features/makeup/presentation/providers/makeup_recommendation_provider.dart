@@ -13,7 +13,10 @@ import '../../domain/usecases/get_makeup_recommendations.dart';
 class MakeupRecommendationProvider extends ChangeNotifier {
   MakeupRecommendationProvider({
     required this.getMakeupRecommendations,
-  });
+  }) {
+    debugPrint('🔧 MakeupRecommendationProvider コンストラクタ');
+    debugPrint('✅ GetMakeupRecommendations注入: ${getMakeupRecommendations.runtimeType}');
+  }
 
   final GetMakeupRecommendations getMakeupRecommendations;
 
@@ -68,35 +71,61 @@ class MakeupRecommendationProvider extends ChangeNotifier {
     PersonalColorType personalColorType, {
     bool forceRefresh = false,
   }) async {
+    debugPrint('📡 loadRecommendations開始');
+    debugPrint('📋 PersonalColorType: $personalColorType');
+    debugPrint('🔄 forceRefresh: $forceRefresh');
+    
     // 既にローディング中の場合は重複実行を防ぐ
-    if (_isLoading) return;
+    if (_isLoading) {
+      debugPrint('⚠️ 既にローディング中のため処理をスキップ');
+      return;
+    }
 
     try {
+      debugPrint('🔧 ローディング状態設定開始');
       _setLoadingState(true);
       _clearError();
+      debugPrint('✅ ローディング状態設定完了');
 
+      debugPrint('🔧 GetMakeupRecommendationsParams作成開始');
       final params = GetMakeupRecommendationsParams(
         personalColorType: personalColorType,
         forceRefresh: forceRefresh,
       );
+      debugPrint('✅ GetMakeupRecommendationsParams作成完了: ${params.toString()}');
 
+      debugPrint('🚀 getMakeupRecommendations実行開始');
       final result = await getMakeupRecommendations(params);
+      debugPrint('✅ getMakeupRecommendations実行完了');
 
+      debugPrint('🔧 結果処理開始');
       result.fold(
         (failure) {
-          _setError(_mapFailureToMessage(failure));
+          debugPrint('❌ エラー結果: ${failure.toString()}');
+          final errorMessage = _mapFailureToMessage(failure);
+          debugPrint('📝 マップされたエラーメッセージ: $errorMessage');
+          _setError(errorMessage);
           _recommendation = null;
         },
         (recommendation) {
+          debugPrint('✅ 成功結果取得');
+          debugPrint('📊 推奨データ: ${recommendation.toString()}');
           _recommendation = recommendation;
           _setSelectedCategory(MakeupCategory.eyeshadow); // デフォルトカテゴリ
+          debugPrint('✅ デフォルトカテゴリ設定完了: ${MakeupCategory.eyeshadow}');
         },
       );
-    } catch (e) {
+      debugPrint('✅ 結果処理完了');
+      
+    } catch (e, stackTrace) {
+      debugPrint('❌ loadRecommendations内で例外: $e');
+      debugPrint('スタックトレース: $stackTrace');
       _setError('予期しないエラーが発生しました: $e');
       _recommendation = null;
     } finally {
+      debugPrint('🏁 ローディング状態をfalseに設定');
       _setLoadingState(false);
+      debugPrint('✅ loadRecommendations完了');
     }
   }
 

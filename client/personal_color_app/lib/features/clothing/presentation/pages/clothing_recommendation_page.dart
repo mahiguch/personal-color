@@ -11,12 +11,16 @@ import '../widgets/clothing_product_card_widget.dart';
 /// パーソナルカラータイプに基づいて衣料品を表示し、
 /// 小学5年生向けにわかりやすいUIで推奨商品を提示します。
 class ClothingRecommendationPage extends StatefulWidget {
-  const ClothingRecommendationPage({
+  ClothingRecommendationPage({
     super.key,
     required this.personalColorType,
-  });
+    this.forceRefresh = false,
+  }) {
+    debugPrint('👗 ClothingRecommendationPage コンストラクタ - PersonalColorType: $personalColorType, forceRefresh: $forceRefresh');
+  }
 
   final PersonalColorType personalColorType;
+  final bool forceRefresh;
 
   @override
   State<ClothingRecommendationPage> createState() => _ClothingRecommendationPageState();
@@ -29,15 +33,28 @@ class _ClothingRecommendationPageState extends State<ClothingRecommendationPage>
   @override
   void initState() {
     super.initState();
+    debugPrint('👗 ClothingRecommendationPage initState開始 - PersonalColorType: ${widget.personalColorType}');
     
     // デフォルトで3カテゴリのタブを作成
     _tabController = TabController(length: 3, vsync: this);
+    debugPrint('✅ TabController作成成功');
+    debugPrint('✅ ClothingRecommendationPage initState完了');
     
     // 初期データ読み込み
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ClothingRecommendationProvider>().loadRecommendations(
-        widget.personalColorType,
-      );
+      try {
+        debugPrint('🔄 PostFrameCallback実行開始');
+        final provider = context.read<ClothingRecommendationProvider>();
+        debugPrint('✅ Provider取得成功: ${provider.runtimeType}');
+        
+        debugPrint('📡 loadRecommendations開始 - PersonalColorType: ${widget.personalColorType}');
+        provider.loadRecommendations(widget.personalColorType, forceRefresh: widget.forceRefresh);
+        debugPrint('✅ loadRecommendations呼び出し完了');
+        
+      } catch (e, stackTrace) {
+        debugPrint('❌ PostFrameCallback内でエラー: $e');
+        debugPrint('スタックトレース: $stackTrace');
+      }
     });
   }
 
@@ -82,20 +99,6 @@ class _ClothingRecommendationPageState extends State<ClothingRecommendationPage>
         color: theme.colorScheme.onSurface,
         onPressed: () => Navigator.of(context).pop(),
       ),
-      actions: [
-        Consumer<ClothingRecommendationProvider>(
-          builder: (context, provider, child) {
-            if (provider.hasData) {
-              return IconButton(
-                icon: const Icon(Icons.refresh),
-                onPressed: () => provider.refresh(widget.personalColorType),
-                tooltip: '更新',
-              );
-            }
-            return const SizedBox.shrink();
-          },
-        ),
-      ],
     );
   }
 

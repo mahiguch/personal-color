@@ -153,13 +153,37 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
         SizedBox(
           width: double.infinity,
           height: 56,
-          child: FilledButton.tonalIcon(
-            onPressed: () => _navigateToClothingRecommendation(context),
-            icon: const Icon(Icons.checkroom),
-            label: const Text('おすすめのファッション'),
-            style: FilledButton.styleFrom(
-              backgroundColor: _getMaterialThemeColor(theme, result.diagnosisType).withValues(alpha: 0.12),
-              foregroundColor: _getMaterialThemeColor(theme, result.diagnosisType),
+          child: GestureDetector(
+            onTap: () => _navigateToClothingRecommendation(context, forceRefresh: false),
+            onLongPress: () {
+              debugPrint('🔄 長押し検知: forceRefresh=trueで実行');
+              _navigateToClothingRecommendation(context, forceRefresh: true);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: _getMaterialThemeColor(theme, result.diagnosisType).withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.checkroom,
+                      color: _getMaterialThemeColor(theme, result.diagnosisType),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'おすすめのファッション',
+                      style: TextStyle(
+                        color: _getMaterialThemeColor(theme, result.diagnosisType),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
@@ -231,25 +255,57 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
 
   /// メイクアップ推奨ページに移動する
   void _navigateToMakeupRecommendation(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => ChangeNotifierProvider(
-          create: (context) => di.sl<MakeupRecommendationProvider>(),
-          child: MakeupRecommendationPage(
-            personalColorType: result.diagnosisType,
+    try {
+      debugPrint('🎨 [Android] おすすめメイクボタン押下: ${result.diagnosisType}');
+      
+      debugPrint('🔧 [Android] MakeupRecommendationProvider作成開始');
+      final provider = di.sl<MakeupRecommendationProvider>();
+      debugPrint('✅ [Android] MakeupRecommendationProvider作成成功');
+      
+      debugPrint('🚀 [Android] MakeupRecommendationPageへナビゲーション開始');
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider.value(
+            value: provider,
+            child: MakeupRecommendationPage(
+              personalColorType: result.diagnosisType,
+            ),
           ),
         ),
-      ),
-    );
+      );
+      debugPrint('✅ [Android] MakeupRecommendationPageナビゲーション成功');
+      
+    } catch (e, stackTrace) {
+      debugPrint('❌ [Android] おすすめメイクナビゲーションエラー: $e');
+      debugPrint('スタックトレース: $stackTrace');
+      
+      // エラーダイアログを表示
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('エラー'),
+          content: Text('メイク推奨機能でエラーが発生しました: $e'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
-  void _navigateToClothingRecommendation(BuildContext context) {
+  void _navigateToClothingRecommendation(BuildContext context, {bool forceRefresh = false}) {
+    debugPrint('👗 [Android] おすすめファッションボタン押下: ${result.diagnosisType} (forceRefresh: $forceRefresh)');
+    
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => ChangeNotifierProvider(
           create: (context) => di.sl<ClothingRecommendationProvider>(),
           child: ClothingRecommendationPage(
             personalColorType: result.diagnosisType,
+            forceRefresh: forceRefresh,
           ),
         ),
       ),

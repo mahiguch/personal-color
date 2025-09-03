@@ -63,6 +63,20 @@ class MakeupRemoteDataSourceImpl implements MakeupRemoteDataSource {
       if (response.statusCode == 200) {
         // JSONレスポンスをモデルに変換
         final jsonData = response.data as Map<String, dynamic>;
+        
+        // APIレスポンスの詳細ログ
+        debugPrint('🔍 [MAKEUP_API_RAW_RESPONSE] Full API Response:');
+        debugPrint('   Response keys: ${jsonData.keys.toList()}');
+        debugPrint('   ai_explanations type: ${jsonData['ai_explanations'].runtimeType}');
+        debugPrint('   ai_explanations value: ${jsonData['ai_explanations']}');
+        if (jsonData['ai_explanations'] is Map) {
+          final aiExpMap = jsonData['ai_explanations'] as Map<String, dynamic>;
+          debugPrint('   ai_explanations map keys: ${aiExpMap.keys.toList()}');
+          for (final entry in aiExpMap.entries) {
+            debugPrint('   ai_explanations["${entry.key}"] = "${entry.value}"');
+          }
+        }
+        
         final recommendation = MakeupRecommendationModel.fromJson(jsonData);
         
         // Success logging with detailed info
