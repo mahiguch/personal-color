@@ -73,7 +73,7 @@ def test_gemini_integration():
         ]
 
         print("=== AI Generation Tests ===")
-        for color_type, category, _description in test_cases:  # _で未使用を明示
+        for color_type, category, _ in test_cases:  # 未使用変数
             print(f"\n--- Test: {color_type.value.title()} {category.value.title()} ---")
 
             result = await service.generate_makeup_explanation(

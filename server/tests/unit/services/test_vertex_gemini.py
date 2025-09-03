@@ -7,6 +7,7 @@ import asyncio
 import sys
 import os
 import logging
+import pytest
 from datetime import datetime
 
 # プロジェクトルートをPATHに追加
@@ -23,6 +24,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+@pytest.mark.skip(reason="Requires Google Cloud credentials - fails in CI")
 def test_gemini_health_check():
     """Gemini APIのヘルスチェックテスト"""
     async def _test():
@@ -46,6 +48,7 @@ def test_gemini_health_check():
     asyncio.run(_test())
 
 
+@pytest.mark.skip(reason="Requires Google Cloud credentials - fails in CI")
 def test_simple_text_generation():
     """シンプルなテキスト生成テスト"""
     async def _test():
@@ -74,6 +77,7 @@ def test_simple_text_generation():
     asyncio.run(_test())
 
 
+@pytest.mark.skip(reason="Requires Google Cloud credentials - fails in CI")
 def test_image_analysis():
     """画像解析テスト（テスト画像使用）"""
     async def _test():
