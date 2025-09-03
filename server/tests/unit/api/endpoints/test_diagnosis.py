@@ -43,7 +43,13 @@ class TestDiagnosisEndpoints:
             mock_gemini_class.return_value = mock_gemini
 
             mock_processor = AsyncMock()
-            mock_processor.process_base64_image.return_value = "processed_image_data"
+            mock_processor.process_base64_image.return_value = MagicMock(
+                base64_data="processed_image_data",
+                original_path="/tmp/test.jpg",
+                compressed_size=1024,
+                quality=85,
+                processing_time_ms=100,
+            )
             mock_processor_class.return_value = mock_processor
 
             mock_buffer_instance = MagicMock()
@@ -125,7 +131,13 @@ class TestDiagnosisEndpoints:
             mock_gemini_class.return_value = mock_gemini
 
             mock_processor = AsyncMock()
-            mock_processor.process_base64_image.return_value = "processed_image_data"
+            mock_processor.process_base64_image.return_value = MagicMock(
+                base64_data="processed_image_data",
+                original_path="/tmp/test.jpg",
+                compressed_size=1024,
+                quality=85,
+                processing_time_ms=100,
+            )
             mock_processor_class.return_value = mock_processor
 
             mock_buffer_instance = MagicMock()
@@ -170,7 +182,13 @@ class TestDiagnosisEndpoints:
             mock_gemini_class.return_value = mock_gemini
 
             mock_processor = AsyncMock()
-            mock_processor.process_base64_image.return_value = "processed_image_data"
+            mock_processor.process_base64_image.return_value = MagicMock(
+                base64_data="processed_image_data",
+                original_path="/tmp/test.jpg",
+                compressed_size=1024,
+                quality=85,
+                processing_time_ms=100,
+            )
             mock_processor_class.return_value = mock_processor
 
             mock_buffer_instance = MagicMock()
@@ -219,7 +237,13 @@ class TestDiagnosisEndpoints:
             mock_gemini_class.return_value = mock_gemini
 
             mock_processor = AsyncMock()
-            mock_processor.process_base64_image.return_value = "processed_image_data"
+            mock_processor.process_base64_image.return_value = MagicMock(
+                base64_data="processed_image_data",
+                original_path="/tmp/test.jpg",
+                compressed_size=1024,
+                quality=85,
+                processing_time_ms=100,
+            )
             mock_processor_class.return_value = mock_processor
 
             mock_buffer_instance = MagicMock()

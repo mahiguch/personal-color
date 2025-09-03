@@ -56,6 +56,11 @@ jobs:
   python-tests:
     name: Python Tests
     runs-on: ubuntu-latest
+    env:
+      GOOGLE_CLOUD_PROJECT: personal-color-469007
+      VERTEX_AI_LOCATION: asia-northeast1
+      VERTEX_AI_MODEL: gemini-2.5-flash
+      ENVIRONMENT: test
     defaults:
       run:
         working-directory: ./server

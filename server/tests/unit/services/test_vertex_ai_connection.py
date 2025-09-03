@@ -36,7 +36,7 @@ def test_imports():
         print("✅ google-cloud-aiplatform OK")
     except ImportError as e:
         print(f"❌ google-cloud-aiplatform エラー: {e}")
-        return False
+        assert False, f"google-cloud-aiplatform import failed: {e}"
 
     try:
         import vertexai
@@ -44,7 +44,7 @@ def test_imports():
         print("✅ vertexai OK")
     except ImportError as e:
         print(f"❌ vertexai エラー: {e}")
-        return False
+        assert False, f"vertexai import failed: {e}"
 
     try:
         from vertexai.generative_models import GenerativeModel
@@ -52,9 +52,7 @@ def test_imports():
         print("✅ GenerativeModel OK")
     except ImportError as e:
         print(f"❌ GenerativeModel エラー: {e}")
-        return False
-
-    return True
+        assert False, f"GenerativeModel import failed: {e}"
 
 
 def test_environment_variables():
@@ -72,7 +70,7 @@ def test_environment_variables():
             print(f"❌ {var}: 未設定")
             missing_vars.append(var)
 
-    return len(missing_vars) == 0
+    assert len(missing_vars) == 0, f"Missing environment variables: {missing_vars}"
 
 
 def test_vertex_ai_initialization():
@@ -90,30 +88,53 @@ def test_vertex_ai_initialization():
 
         vertexai.init(project=project_id, location=location)
         print("✅ Vertex AI初期化成功")
-        return True
 
     except Exception as e:
         print(f"❌ Vertex AI初期化エラー: {e}")
-        return False
+        assert False, f"Vertex AI initialization failed: {e}"
 
+
+import pytest
+
+@pytest.fixture
+def model():
+    """Geminiモデルのテストフィクスチャー"""
+    load_env_file()
+    
+    try:
+        import vertexai
+        from vertexai.generative_models import GenerativeModel
+        
+        project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+        location = os.getenv("VERTEX_AI_LOCATION")
+        model_name = os.getenv("VERTEX_AI_MODEL")
+        
+        vertexai.init(project=project_id, location=location)
+        return GenerativeModel(model_name)
+    except Exception as e:
+        pytest.skip(f"Model initialization failed: {e}")
 
 def test_model_initialization():
     """Geminiモデル初期化テスト"""
     print("4️⃣ Geminiモデル初期化テスト...")
+    load_env_file()
 
     try:
+        import vertexai
         from vertexai.generative_models import GenerativeModel
 
+        project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+        location = os.getenv("VERTEX_AI_LOCATION")
         model_name = os.getenv("VERTEX_AI_MODEL")
         print(f"   モデル: {model_name}")
 
+        vertexai.init(project=project_id, location=location)
         model = GenerativeModel(model_name)
         print("✅ Geminiモデル初期化成功")
-        return True, model
 
     except Exception as e:
         print(f"❌ Geminiモデル初期化エラー: {e}")
-        return False, None
+        assert False, f"Model initialization failed: {e}"
 
 
 def test_simple_generation(model):
@@ -129,22 +150,29 @@ def test_simple_generation(model):
 
         print(f"✅ 生成成功")
         print(f"   レスポンス: {response_text}")
-
-        return True
+        
+        assert response_text, "Response text should not be empty"
 
     except Exception as e:
         print(f"❌ テキスト生成エラー: {e}")
-        return False
+        assert False, f"Text generation failed: {e}"
 
 
 def test_json_response():
     """JSON形式レスポンステスト"""
     print("6️⃣ JSON形式レスポンステスト...")
+    load_env_file()
 
     try:
+        import vertexai
         from vertexai.generative_models import GenerativeModel
 
-        model = GenerativeModel(os.getenv("VERTEX_AI_MODEL"))
+        project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+        location = os.getenv("VERTEX_AI_LOCATION")
+        model_name = os.getenv("VERTEX_AI_MODEL")
+        
+        vertexai.init(project=project_id, location=location)
+        model = GenerativeModel(model_name)
 
         prompt = """
 以下のJSON形式で応答してください：
@@ -169,16 +197,16 @@ def test_json_response():
         parsed_json = json.loads(json_text)
         print("✅ JSON形式レスポンス成功")
         print(f"   パース結果: {parsed_json}")
-
-        return True
+        
+        assert "status" in parsed_json, "JSON response should contain 'status' field"
 
     except json.JSONDecodeError as e:
         print(f"❌ JSON解析エラー: {e}")
         print(f"   レスポンス: {response_text}")
-        return False
+        assert False, f"JSON parsing failed: {e}"
     except Exception as e:
         print(f"❌ JSON形式テストエラー: {e}")
-        return False
+        assert False, f"JSON response test failed: {e}"
 
 
 def main():

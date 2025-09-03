@@ -5,7 +5,8 @@
 サーバー側とクライアント側の統合を確認します。
 """
 
-import asyncio
+from __future__ import annotations
+
 import time
 import json
 import requests
@@ -15,7 +16,7 @@ from datetime import datetime
 
 
 @dataclass
-class TestResult:
+class E2ETestResult:
     """テスト結果"""
 
     test_name: str
@@ -34,9 +35,9 @@ class E2ETestSuite:
 
     def __init__(self, base_url: str = "http://localhost:8000"):
         self.base_url = base_url
-        self.test_results: List[TestResult] = []
+        self.test_results: List[E2ETestResult] = []
 
-    def add_result(self, result: TestResult):
+    def add_result(self, result: E2ETestResult):
         """テスト結果を追加"""
         self.test_results.append(result)
         status = "✓" if result.success else "✗"
@@ -47,7 +48,7 @@ class E2ETestSuite:
             for key, value in result.details.items():
                 print(f"    {key}: {value}")
 
-    def test_api_health_check(self) -> TestResult:
+    def test_api_health_check(self) -> E2ETestResult:
         """APIヘルスチェックテスト"""
         start_time = time.time()
 
@@ -56,14 +57,14 @@ class E2ETestSuite:
             response_time = int((time.time() - start_time) * 1000)
 
             if response.status_code == 200:
-                return TestResult(
+                return E2ETestResult(
                     test_name="API Health Check",
                     success=True,
                     response_time_ms=response_time,
                     details={"status_code": response.status_code},
                 )
             else:
-                return TestResult(
+                return E2ETestResult(
                     test_name="API Health Check",
                     success=False,
                     response_time_ms=response_time,
@@ -72,14 +73,14 @@ class E2ETestSuite:
 
         except Exception as e:
             response_time = int((time.time() - start_time) * 1000)
-            return TestResult(
+            return E2ETestResult(
                 test_name="API Health Check",
                 success=False,
                 response_time_ms=response_time,
                 error_message=str(e),
             )
 
-    def test_makeup_recommendations_all_types(self) -> List[TestResult]:
+    def test_makeup_recommendations_all_types(self) -> List[E2ETestResult]:
         """全パーソナルカラータイプのメイクアップ推奨テスト"""
         results = []
         personal_color_types = ["spring", "summer", "autumn", "winter"]
@@ -111,7 +112,7 @@ class E2ETestSuite:
 
                     if missing_fields:
                         results.append(
-                            TestResult(
+                            E2ETestResult(
                                 test_name=f"Makeup Recommendations - {color_type.title()}",
                                 success=False,
                                 response_time_ms=response_time,
@@ -129,7 +130,7 @@ class E2ETestSuite:
 
                     if missing_categories:
                         results.append(
-                            TestResult(
+                            E2ETestResult(
                                 test_name=f"Makeup Recommendations - {color_type.title()}",
                                 success=False,
                                 response_time_ms=response_time,
@@ -152,7 +153,7 @@ class E2ETestSuite:
 
                     if invalid_counts:
                         results.append(
-                            TestResult(
+                            E2ETestResult(
                                 test_name=f"Makeup Recommendations - {color_type.title()}",
                                 success=False,
                                 response_time_ms=response_time,
@@ -176,7 +177,7 @@ class E2ETestSuite:
 
                     success = len(invalid_explanations) == 0
                     results.append(
-                        TestResult(
+                        E2ETestResult(
                             test_name=f"Makeup Recommendations - {color_type.title()}",
                             success=success,
                             response_time_ms=response_time,
@@ -192,7 +193,7 @@ class E2ETestSuite:
                     )
                 else:
                     results.append(
-                        TestResult(
+                        E2ETestResult(
                             test_name=f"Makeup Recommendations - {color_type.title()}",
                             success=False,
                             response_time_ms=response_time,
@@ -203,7 +204,7 @@ class E2ETestSuite:
             except Exception as e:
                 response_time = int((time.time() - start_time) * 1000)
                 results.append(
-                    TestResult(
+                    E2ETestResult(
                         test_name=f"Makeup Recommendations - {color_type.title()}",
                         success=False,
                         response_time_ms=response_time,
@@ -213,7 +214,7 @@ class E2ETestSuite:
 
         return results
 
-    def test_cache_functionality(self) -> TestResult:
+    def test_cache_functionality(self) -> E2ETestResult:
         """キャッシュ機能テスト"""
         start_time = time.time()
 
@@ -225,7 +226,7 @@ class E2ETestSuite:
             first_response_time = int((time.time() - start_time) * 1000)
 
             if response1.status_code != 200:
-                return TestResult(
+                return E2ETestResult(
                     test_name="Cache Functionality",
                     success=False,
                     response_time_ms=first_response_time,
@@ -240,7 +241,7 @@ class E2ETestSuite:
             second_response_time = int((time.time() - second_start) * 1000)
 
             if response2.status_code != 200:
-                return TestResult(
+                return E2ETestResult(
                     test_name="Cache Functionality",
                     success=False,
                     response_time_ms=second_response_time,
@@ -267,7 +268,7 @@ class E2ETestSuite:
             success = content_match and performance_improvement
             total_time = int((time.time() - start_time) * 1000)
 
-            return TestResult(
+            return E2ETestResult(
                 test_name="Cache Functionality",
                 success=success,
                 response_time_ms=total_time,
@@ -282,14 +283,14 @@ class E2ETestSuite:
 
         except Exception as e:
             total_time = int((time.time() - start_time) * 1000)
-            return TestResult(
+            return E2ETestResult(
                 test_name="Cache Functionality",
                 success=False,
                 response_time_ms=total_time,
                 error_message=str(e),
             )
 
-    def test_error_recovery(self) -> TestResult:
+    def test_error_recovery(self) -> E2ETestResult:
         """エラー回復テスト"""
         start_time = time.time()
 
@@ -305,7 +306,7 @@ class E2ETestSuite:
                 error_data = response.json()
                 has_error_message = "detail" in error_data
 
-                return TestResult(
+                return E2ETestResult(
                     test_name="Error Recovery",
                     success=has_error_message,
                     response_time_ms=response_time,
@@ -318,7 +319,7 @@ class E2ETestSuite:
                     },
                 )
             else:
-                return TestResult(
+                return E2ETestResult(
                     test_name="Error Recovery",
                     success=False,
                     response_time_ms=response_time,
@@ -327,14 +328,14 @@ class E2ETestSuite:
 
         except Exception as e:
             response_time = int((time.time() - start_time) * 1000)
-            return TestResult(
+            return E2ETestResult(
                 test_name="Error Recovery",
                 success=False,
                 response_time_ms=response_time,
                 error_message=str(e),
             )
 
-    def test_response_performance(self) -> TestResult:
+    def test_response_performance(self) -> E2ETestResult:
         """レスポンス性能テスト"""
         start_time = time.time()
 
@@ -351,7 +352,7 @@ class E2ETestSuite:
                 response_times.append(req_time)
 
                 if response.status_code != 200:
-                    return TestResult(
+                    return E2ETestResult(
                         test_name="Response Performance",
                         success=False,
                         response_time_ms=req_time,
@@ -369,7 +370,7 @@ class E2ETestSuite:
             success = performance_ok and cache_performance_ok
             total_time = int((time.time() - start_time) * 1000)
 
-            return TestResult(
+            return E2ETestResult(
                 test_name="Response Performance",
                 success=success,
                 response_time_ms=total_time,
@@ -384,7 +385,7 @@ class E2ETestSuite:
 
         except Exception as e:
             total_time = int((time.time() - start_time) * 1000)
-            return TestResult(
+            return E2ETestResult(
                 test_name="Response Performance",
                 success=False,
                 response_time_ms=total_time,

@@ -14,15 +14,39 @@ from dotenv import load_dotenv
 import vertexai
 from vertexai.generative_models import GenerativeModel, Part
 from src.config.test_config import VertexAIConfig, TestConfig
-from src.prompts.personal_color_analysis import (
-    get_analysis_prompt,
-    get_error_prompt,
-    EXPECTED_RESULTS,
-    SAMPLE_IMAGES,
-)
+from src.prompts.personal_color_analysis import PersonalColorPrompt
 
 # .env ファイルを読み込み
 load_dotenv()
+
+# テスト用データ定義
+EXPECTED_RESULTS = {
+    "spring": {
+        "personal_color_type": "Spring",
+        "explanation": "明るく華やかな色が似合う",
+    },
+    "summer": {
+        "personal_color_type": "Summer", 
+        "explanation": "上品で涼しげな色が似合う",
+    },
+    "autumn": {
+        "personal_color_type": "Autumn",
+        "explanation": "深みのある暖かい色が似合う", 
+    },
+    "winter": {
+        "personal_color_type": "Winter",
+        "explanation": "はっきりした鮮やかな色が似合う",
+    },
+}
+
+SAMPLE_IMAGES = {
+    "spring_type": "test_images/spring_sample.jpg",
+    "summer_type": "test_images/summer_sample.jpg", 
+    "autumn_type": "test_images/autumn_sample.jpg",
+    "winter_type": "test_images/winter_sample.jpg",
+    "poor_quality": "test_images/blurry_sample.jpg",
+    "no_face": "test_images/no_face_sample.jpg",
+}
 
 
 class GeminiPromptTester:
@@ -30,6 +54,7 @@ class GeminiPromptTester:
         """テスター初期化"""
         self.model = None
         self.test_results = []
+        self.prompt_manager = PersonalColorPrompt()
         # 設定クラスから値を取得
         self.project_id = VertexAIConfig.PROJECT_ID
         self.location = VertexAIConfig.LOCATION
@@ -70,7 +95,7 @@ class GeminiPromptTester:
 
         try:
             # Geminiに送信
-            prompt = get_analysis_prompt(include_enhancements=True)
+            prompt = self.prompt_manager.create_analysis_prompt()
             image_part = Part.from_data(
                 data=base64.b64decode(image_data), mime_type="image/jpeg"
             )
@@ -133,15 +158,15 @@ class GeminiPromptTester:
         expected = EXPECTED_RESULTS.get(expected_type, {})
 
         # 1. 診断精度評価 (40点)
-        if "diagnosis_result" in result:
-            if result["diagnosis_result"] == expected.get("diagnosis_result"):
+        if "personal_color_type" in result:
+            if result["personal_color_type"] == expected.get("personal_color_type"):
                 evaluation["accuracy_score"] = 40
             else:
                 evaluation["issues"].append(
-                    f"診断結果が期待値と異なる: {result['diagnosis_result']} != {expected.get('diagnosis_result')}"
+                    f"診断結果が期待値と異なる: {result['personal_color_type']} != {expected.get('personal_color_type')}"
                 )
         else:
-            evaluation["issues"].append("diagnosis_result フィールドがない")
+            evaluation["issues"].append("personal_color_type フィールドがない")
 
         # 2. 説明品質評価 (25点)
         if "explanation" in result:
@@ -168,11 +193,10 @@ class GeminiPromptTester:
 
         # 3. フォーマット準拠評価 (20点)
         required_fields = [
-            "diagnosis_result",
+            "personal_color_type",
             "confidence",
             "explanation",
             "recommended_colors",
-            "avoid_colors",
             "tips",
         ]
         present_fields = sum(1 for field in required_fields if field in result)
@@ -292,7 +316,7 @@ class GeminiPromptTester:
                 eval_data = result["evaluation"]
                 print(f"✅ 画像: {result['image_path']}")
                 print(f"   期待タイプ: {result['expected_type']}")
-                print(f"   診断結果: {result['result'].get('diagnosis_result', 'N/A')}")
+                print(f"   診断結果: {result['result'].get('personal_color_type', 'N/A')}")
                 print(f"   総合スコア: {eval_data['percentage']}%")
                 print(f"   精度: {eval_data['accuracy_score']}/40")
                 print(f"   説明品質: {eval_data['explanation_quality']}/25")

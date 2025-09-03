@@ -185,8 +185,8 @@ class GeminiService:
                     await asyncio.sleep(delay)
 
                 # プロンプト生成
-                system_prompt = self.prompt_generator.generate_system_prompt()
-                user_prompt = self.prompt_generator.generate_user_prompt(
+                system_prompt = self.makeup_prompt_generator.generate_system_prompt()
+                user_prompt = self.makeup_prompt_generator.generate_user_prompt(
                     personal_color_type, category, products
                 )
 
@@ -199,7 +199,7 @@ class GeminiService:
                     raise GeminiServiceError("Empty response from Gemini")
 
                 # 応答品質検証
-                if not self.prompt_generator.validate_ai_response(response.text):
+                if not self.makeup_prompt_generator.validate_ai_response(response.text):
                     logger.warning(
                         f"AI response failed validation: {response.text[:50]}..."
                     )
@@ -261,7 +261,7 @@ class GeminiService:
     ) -> GenerationResult:
         """フォールバック応答生成"""
 
-        fallback_content = self.prompt_generator.generate_fallback_explanation(
+        fallback_content = self.makeup_prompt_generator.get_fallback_explanation(
             personal_color_type, category
         )
 
