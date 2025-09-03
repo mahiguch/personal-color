@@ -15,9 +15,6 @@ jobs:
   flutter-tests:
     name: Flutter Tests
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./client/personal_color_app
 
     steps:
     - name: Checkout code
@@ -48,7 +45,7 @@ jobs:
     - name: Upload Flutter coverage
       uses: codecov/codecov-action@v3
       with:
-        files: ./client/personal_color_app/coverage/lcov.info
+        files: ./coverage/lcov.info
         flags: flutter
         name: flutter-coverage
 
@@ -132,7 +129,6 @@ jobs:
 
     - name: Flutter security check
       run: |
-        cd client/personal_color_app
         flutter pub deps --json > deps.json
         # Check for known vulnerable packages
         echo "Checking Flutter dependencies for security issues..."
@@ -207,14 +203,12 @@ jobs:
 
     - name: Build Flutter App (Android APK)
       run: |
-        cd client/personal_color_app
         flutter pub get
         flutter packages pub run build_runner build --delete-conflicting-outputs
         flutter build apk --release
 
     - name: Build Flutter App (iOS - if macOS runner)
       run: |
-        cd client/personal_color_app
         echo "iOS build would require macOS runner with Xcode"
 
     - name: Setup Python for server build
@@ -233,7 +227,7 @@ jobs:
       with:
         name: build-artifacts
         path: |
-          client/personal_color_app/build/app/outputs/flutter-apk/
+          build/app/outputs/flutter-apk/
           server/dist/
 
   # Deployment (Production)
