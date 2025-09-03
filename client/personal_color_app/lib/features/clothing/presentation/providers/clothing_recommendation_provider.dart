@@ -68,35 +68,62 @@ class ClothingRecommendationProvider extends ChangeNotifier {
     PersonalColorType personalColorType, {
     bool forceRefresh = false,
   }) async {
+    debugPrint('📡 loadRecommendations開始');
+    debugPrint('📋 PersonalColorType: $personalColorType');
+    debugPrint('🔄 forceRefresh: $forceRefresh');
+
     // 既にローディング中の場合は重複実行を防ぐ
-    if (_isLoading) return;
+    if (_isLoading) {
+      debugPrint('⚠️ 既にローディング中のため処理をスキップ');
+      return;
+    }
 
     try {
+      debugPrint('🔧 ローディング状態設定開始');
       _setLoadingState(true);
       _clearError();
+      debugPrint('✅ ローディング状態設定完了');
 
+      debugPrint('🔧 GetClothingRecommendationsParams作成開始');
       final params = GetClothingRecommendationsParams(
         personalColorType: personalColorType,
         forceRefresh: forceRefresh,
       );
+      debugPrint('✅ GetClothingRecommendationsParams作成完了: $params');
 
+      debugPrint('🚀 getClothingRecommendations実行開始');
       final result = await getClothingRecommendations(params);
+      debugPrint('✅ getClothingRecommendations実行完了');
 
+      debugPrint('🔧 結果処理開始');
       result.fold(
         (failure) {
-          _setError(_mapFailureToMessage(failure));
+          debugPrint('❌ エラー結果: $failure');
+          final errorMessage = _mapFailureToMessage(failure);
+          debugPrint('📝 マップされたエラーメッセージ: $errorMessage');
+          _setError(errorMessage);
           _recommendation = null;
         },
         (recommendation) {
+          debugPrint('✅ 成功結果取得');
+          debugPrint('📊 推奨データ詳細:');
+          debugPrint('   isEmpty: ${recommendation.isEmpty}');
+          debugPrint('   availableCategories: ${recommendation.availableCategories}');
+          debugPrint('   totalProducts: ${recommendation.totalProductCount}');
           _recommendation = recommendation;
           _setSelectedCategory(ClothingCategory.tops); // デフォルトカテゴリ
+          debugPrint('✅ デフォルトカテゴリ設定: ${ClothingCategory.tops}');
         },
       );
+      debugPrint('✅ 結果処理完了');
     } catch (e) {
+      debugPrint('❌ 予期しないエラー: $e');
       _setError('予期しないエラーが発生しました: $e');
       _recommendation = null;
     } finally {
+      debugPrint('🏁 ローディング状態をfalseに設定');
       _setLoadingState(false);
+      debugPrint('✅ loadRecommendations完了');
     }
   }
 

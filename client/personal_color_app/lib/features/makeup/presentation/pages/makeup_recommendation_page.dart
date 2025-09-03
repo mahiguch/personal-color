@@ -11,12 +11,16 @@ import '../widgets/product_card_widget.dart';
 /// パーソナルカラータイプに基づいてメイクアップ商品を表示し、
 /// 小学5年生向けにわかりやすいUIで推奨商品を提示します。
 class MakeupRecommendationPage extends StatefulWidget {
-  const MakeupRecommendationPage({
+  MakeupRecommendationPage({
     super.key,
     required this.personalColorType,
-  });
+    this.forceRefresh = false,
+  }) {
+    debugPrint('🎨 MakeupRecommendationPage コンストラクタ - PersonalColorType: $personalColorType, forceRefresh: $forceRefresh');
+  }
 
   final PersonalColorType personalColorType;
+  final bool forceRefresh;
 
   @override
   State<MakeupRecommendationPage> createState() => _MakeupRecommendationPageState();
@@ -30,15 +34,36 @@ class _MakeupRecommendationPageState extends State<MakeupRecommendationPage>
   void initState() {
     super.initState();
     
-    // デフォルトで3カテゴリのタブを作成
-    _tabController = TabController(length: 3, vsync: this);
+    debugPrint('🎨 MakeupRecommendationPage initState開始 - PersonalColorType: ${widget.personalColorType}');
     
-    // 初期データ読み込み
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<MakeupRecommendationProvider>().loadRecommendations(
-        widget.personalColorType,
-      );
-    });
+    try {
+      // デフォルトで3カテゴリのタブを作成
+      _tabController = TabController(length: 3, vsync: this);
+      debugPrint('✅ TabController作成成功');
+      
+      // 初期データ読み込み
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        debugPrint('🔄 PostFrameCallback実行開始');
+        try {
+          final provider = context.read<MakeupRecommendationProvider>();
+          debugPrint('✅ Provider取得成功: ${provider.runtimeType}');
+          
+          debugPrint('📡 loadRecommendations開始 - PersonalColorType: ${widget.personalColorType}');
+          provider.loadRecommendations(widget.personalColorType, forceRefresh: widget.forceRefresh);
+          debugPrint('✅ loadRecommendations呼び出し完了');
+          
+        } catch (e, stackTrace) {
+          debugPrint('❌ PostFrameCallback内でエラー: $e');
+          debugPrint('スタックトレース: $stackTrace');
+        }
+      });
+      
+    } catch (e, stackTrace) {
+      debugPrint('❌ MakeupRecommendationPage initState内でエラー: $e');
+      debugPrint('スタックトレース: $stackTrace');
+    }
+    
+    debugPrint('✅ MakeupRecommendationPage initState完了');
   }
 
   @override
@@ -82,20 +107,6 @@ class _MakeupRecommendationPageState extends State<MakeupRecommendationPage>
         color: theme.colorScheme.onSurface, // 戻るボタンの色を明示的に指定
         onPressed: () => Navigator.of(context).pop(),
       ),
-      actions: [
-        Consumer<MakeupRecommendationProvider>(
-          builder: (context, provider, child) {
-            if (provider.hasData) {
-              return IconButton(
-                icon: const Icon(Icons.refresh),
-                onPressed: () => provider.refresh(widget.personalColorType),
-                tooltip: '更新',
-              );
-            }
-            return const SizedBox.shrink();
-          },
-        ),
-      ],
     );
   }
 
@@ -359,10 +370,8 @@ class _MakeupRecommendationPageState extends State<MakeupRecommendationPage>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // AI説明文
-          if (explanation.isNotEmpty) ...[
-            _buildAiExplanation(explanation),
-            const SizedBox(height: 16),
-          ],
+          _buildAiExplanation(explanation, category),
+          const SizedBox(height: 16),
           
           // 商品リスト
           if (products.isNotEmpty) ...[
@@ -379,9 +388,20 @@ class _MakeupRecommendationPageState extends State<MakeupRecommendationPage>
   }
 
   /// AI説明文カード
-  Widget _buildAiExplanation(String explanation) {
+  Widget _buildAiExplanation(String explanation, MakeupCategory category) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    
+    // AI説明が空の場合の代替メッセージ
+    String displayText;
+    String displayTitle;
+    if (explanation.isEmpty) {
+      displayTitle = 'おすすめの理由';
+      displayText = _getFallbackExplanation(category);
+    } else {
+      displayTitle = 'AIからのアドバイス';
+      displayText = explanation;
+    }
 
     return Card(
       elevation: 1,
@@ -404,7 +424,7 @@ class _MakeupRecommendationPageState extends State<MakeupRecommendationPage>
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'おすすめポイント',
+                  displayTitle,
                   style: theme.textTheme.titleSmall?.copyWith(
                     color: colorScheme.secondary,
                     fontWeight: FontWeight.bold,
@@ -414,7 +434,7 @@ class _MakeupRecommendationPageState extends State<MakeupRecommendationPage>
             ),
             const SizedBox(height: 8),
             Text(
-              explanation,
+              displayText,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurface,
                 height: 1.4,
@@ -479,6 +499,20 @@ class _MakeupRecommendationPageState extends State<MakeupRecommendationPage>
       MakeupCategory.eyeshadow => Icons.visibility,
       MakeupCategory.cheek => Icons.face,
       MakeupCategory.lip => Icons.favorite,
+    };
+  }
+
+  /// AI説明が空の場合のフォールバック説明を取得
+  String _getFallbackExplanation(MakeupCategory category) {
+    final colorTypeDisplayName = widget.personalColorType.displayName;
+    
+    return switch (category) {
+      MakeupCategory.eyeshadow => '$colorTypeDisplayNameのあなたには、肌の色味に合う美しいアイシャドウを選びました。'
+               'お肌を明るく見せて、目元を魅力的に演出してくれます。',
+      MakeupCategory.cheek => '$colorTypeDisplayNameのあなたの肌色にぴったりなチークです。'
+               '自然で健康的な血色感を演出し、お顔全体を明るく見せてくれます。',
+      MakeupCategory.lip => '$colorTypeDisplayNameのあなたに似合うリップカラーを厳選しました。'
+               '唇を美しく彩り、お顔の印象をより魅力的にしてくれます。',
     };
   }
 }

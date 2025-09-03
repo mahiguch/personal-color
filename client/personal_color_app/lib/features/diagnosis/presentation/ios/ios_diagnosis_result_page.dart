@@ -126,23 +126,41 @@ class IOSDiagnosisResultPage extends StatelessWidget {
         SizedBox(
           width: double.infinity,
           height: 56,
-          child: ElevatedButton.icon(
-            onPressed: () => _navigateToMakeupRecommendation(context),
-            icon: const Icon(Icons.palette),
-            label: const Text(
-              'おすすめのメイク',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: _getThemeColor(result.diagnosisType),
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
+          child: GestureDetector(
+            onTap: () => _navigateToMakeupRecommendation(context, forceRefresh: false),
+            onLongPress: () {
+              debugPrint('🔄 長押し検知: forceRefresh=trueで実行');
+              _navigateToMakeupRecommendation(context, forceRefresh: true);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: _getThemeColor(result.diagnosisType),
                 borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.2),
+                    offset: const Offset(0, 2),
+                    blurRadius: 4,
+                  ),
+                ],
               ),
-              elevation: 4,
+              child: const Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.palette, color: Colors.white),
+                    SizedBox(width: 8),
+                    Text(
+                      'おすすめのメイク',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
@@ -153,23 +171,41 @@ class IOSDiagnosisResultPage extends StatelessWidget {
         SizedBox(
           width: double.infinity,
           height: 56,
-          child: ElevatedButton.icon(
-            onPressed: () => _navigateToClothingRecommendation(context),
-            icon: const Icon(Icons.checkroom),
-            label: const Text(
-              'おすすめのファッション',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: _getThemeColor(result.diagnosisType).withValues(alpha: 0.8),
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
+          child: GestureDetector(
+            onTap: () => _navigateToClothingRecommendation(context, forceRefresh: false),
+            onLongPress: () {
+              debugPrint('🔄 長押し検知: forceRefresh=trueで実行');
+              _navigateToClothingRecommendation(context, forceRefresh: true);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: _getThemeColor(result.diagnosisType).withValues(alpha: 0.8),
                 borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.2),
+                    offset: const Offset(0, 2),
+                    blurRadius: 4,
+                  ),
+                ],
               ),
-              elevation: 4,
+              child: const Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.checkroom, color: Colors.white),
+                    SizedBox(width: 8),
+                    Text(
+                      'おすすめのファッション',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
@@ -233,26 +269,59 @@ class IOSDiagnosisResultPage extends StatelessWidget {
     }
   }
 
-  void _navigateToMakeupRecommendation(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => ChangeNotifierProvider(
-          create: (context) => di.sl<MakeupRecommendationProvider>(),
-          child: MakeupRecommendationPage(
-            personalColorType: result.diagnosisType,
+  void _navigateToMakeupRecommendation(BuildContext context, {bool forceRefresh = false}) {
+    try {
+      debugPrint('🎨 おすすめメイクボタン押下: ${result.diagnosisType} (forceRefresh: $forceRefresh)');
+      
+      debugPrint('🔧 MakeupRecommendationProvider作成開始');
+      final provider = di.sl<MakeupRecommendationProvider>();
+      debugPrint('✅ MakeupRecommendationProvider作成成功');
+      
+      debugPrint('🚀 MakeupRecommendationPageへナビゲーション開始');
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider.value(
+            value: provider,
+            child: MakeupRecommendationPage(
+              personalColorType: result.diagnosisType,
+              forceRefresh: forceRefresh,
+            ),
           ),
         ),
-      ),
-    );
+      );
+      debugPrint('✅ MakeupRecommendationPageナビゲーション成功');
+      
+    } catch (e, stackTrace) {
+      debugPrint('❌ おすすめメイクナビゲーションエラー: $e');
+      debugPrint('スタックトレース: $stackTrace');
+      
+      // エラーダイアログを表示
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('エラー'),
+          content: Text('メイク推奨機能でエラーが発生しました: $e'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
-  void _navigateToClothingRecommendation(BuildContext context) {
+  void _navigateToClothingRecommendation(BuildContext context, {bool forceRefresh = false}) {
+    debugPrint('👗 おすすめファッションボタン押下: ${result.diagnosisType} (forceRefresh: $forceRefresh)');
+    
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => ChangeNotifierProvider(
           create: (context) => di.sl<ClothingRecommendationProvider>(),
           child: ClothingRecommendationPage(
             personalColorType: result.diagnosisType,
+            forceRefresh: forceRefresh,
           ),
         ),
       ),

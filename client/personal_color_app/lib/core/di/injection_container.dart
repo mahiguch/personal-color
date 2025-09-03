@@ -47,6 +47,20 @@ Future<void> init() async {
   if (sl.isRegistered<CameraProvider>()) {
     await sl.reset();
   }
+
+  //! Core - 最初に基本的な依存関係を登録
+  // Dio
+  sl.registerLazySingleton<Dio>(() => Dio());
+
+  // API Client
+  sl.registerLazySingleton<ApiClient>(
+    () => ApiClient(),
+  );
+
+  // Shared Preferences
+  final sharedPreferences = await SharedPreferences.getInstance();
+  sl.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
+
   //! Features - Camera
   // Providers
   sl.registerFactory(
@@ -157,16 +171,4 @@ Future<void> init() async {
     () => ClothingRemoteDataSourceImpl(dio: sl()),
   );
 
-  //! Core
-  // Dio
-  sl.registerLazySingleton<Dio>(() => Dio());
-
-  // API Client
-  sl.registerLazySingleton<ApiClient>(
-    () => ApiClient(),
-  );
-
-  // Shared Preferences
-  final sharedPreferences = await SharedPreferences.getInstance();
-  sl.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
 }
