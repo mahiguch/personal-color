@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 env:
-  FLUTTER_VERSION: '3.24.0'
+  FLUTTER_VERSION: '3.35.2'
   PYTHON_VERSION: '3.10'
 
 jobs:
