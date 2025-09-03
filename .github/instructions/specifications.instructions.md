@@ -488,6 +488,11 @@ specification-driven developmentに従います。
 4. **実装は最後** - 設計完了まで実装開始禁止
 5. **issue** - 機能ごとにissueを作成する。
 6. **プルリクエスト** - 各タスク完了時にプルリクエストを作成する。プルリクエストは、issueに関連付ける。
+7. **MCP活用** - 各段階で適切なMCPツールを活用し、効率的に作業を進める：
+   - 技術調査・ドキュメント参照: Context7 MCP
+   - GitHub管理: GitHub MCP
+   - ブラウザ自動化: Playwright MCP
+   - 実装準備: Serena MCP（キャッシュ更新）
 
 ## プロジェクト構造
 

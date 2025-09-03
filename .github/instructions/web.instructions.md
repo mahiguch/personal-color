@@ -91,6 +91,12 @@ web/
 - **静的サイト設定**: `next.config.js` で `output: 'export'`
 - **Firebase App Hosting**: 既存プロジェクト `personal-color` を使用
 
+### MCP活用ガイドライン
+- **実装前準備**: Serena MCPでキャッシュを更新し、プロジェクト情報を最新化
+- **技術調査**: Next.js 15、shadcn/ui、Firebase関連の最新ドキュメントはContext7 MCPで確認
+- **GitHub連携**: issue作成、Pull Request管理はGitHub MCPを利用
+- **ブラウザテスト**: レスポンシブデザイン確認やE2Eテストが必要な場合はPlaywright MCPを活用
+
 ### パフォーマンス要件
 - Next.js 15 Image コンポーネント使用（unoptimized: false）
 - WebP形式画像の優先使用
