@@ -10,7 +10,7 @@ import asyncio
 import logging
 from datetime import datetime
 
-from ...services.gemini.gemini_service import GeminiService
+from ...services.gemini_service import get_gemini_service
 from ...core.config.settings import get_settings
 
 logger = logging.getLogger(__name__)
@@ -43,12 +43,12 @@ async def health_check() -> HealthResponse:
 
     # Vertex AI / Gemini接続チェック
     try:
-        gemini_service = GeminiService()
-        gemini_status = await gemini_service.check_health()
+        gemini_service = get_gemini_service()
+        gemini_status = await gemini_service.health_check()
         gemini_metrics = gemini_service.get_metrics()
 
         services["gemini"] = {
-            "status": "healthy" if gemini_status else "unhealthy",
+            "status": gemini_status.get("status", "unknown"),
             "model": settings.gemini_model_name,
             "location": settings.vertex_ai_location,
             "metrics": gemini_metrics,
@@ -98,8 +98,9 @@ async def readiness_check() -> Dict[str, Any]:
             )
 
         # Gemini APIの簡易チェック
-        gemini_service = GeminiService()
-        is_ready = await gemini_service.check_health()
+        gemini_service = get_gemini_service()
+        gemini_health = await gemini_service.health_check()
+        is_ready = gemini_health.get("status") == "healthy"
 
         if not is_ready:
             raise HTTPException(status_code=503, detail="Gemini service not ready")
