@@ -1,168 +1,178 @@
 """
-Fixed Tests for Gemini service with proper mocking
+Tests for Gemini service with Google Gen AI SDK
 """
 
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 import json
+from datetime import datetime
 
-from src.services.gemini.gemini_service import GeminiService
-from src.core.errors.exceptions import GeminiServiceError
-from tests.conftest import TEST_DIAGNOSIS_RESULTS
+from src.services.gemini_service import GeminiService, GeminiServiceError, GeminiResponse, GenerationResult
+from src.prompts.makeup_recommendation_prompts import PersonalColorType, MakeupCategory
 
 
-class TestGeminiServiceFixed:
-    """Test class for Gemini service with proper mocking"""
+class TestGeminiService:
+    """Test class for Gemini service with Google Gen AI SDK"""
 
     @pytest.fixture
-    def mock_vertex_ai(self):
-        """Mock Vertex AI components"""
+    def mock_google_genai(self):
+        """Mock Google Gen AI SDK components"""
         with patch(
-            "src.services.gemini.gemini_service.vertexai"
-        ) as mock_vertexai, patch(
-            "src.services.gemini.gemini_service.GenerativeModel"
-        ) as mock_model_class, patch(
-            "src.services.gemini.gemini_service.get_settings"
+            "src.services.gemini_service.genai"
+        ) as mock_genai, patch(
+            "src.services.gemini_service.get_settings"
         ) as mock_settings:
             # Mock settings
             mock_settings_obj = MagicMock()
             mock_settings_obj.google_cloud_project = "test-project"
             mock_settings_obj.vertex_ai_location = "us-central1"
-            mock_settings_obj.gemini_model_name = "gemini-pro"
+            mock_settings_obj.use_vertexai = True
             mock_settings.return_value = mock_settings_obj
 
-            # Mock model
-            mock_model = MagicMock()
-            mock_model_class.return_value = mock_model
+            # Mock client
+            mock_client = MagicMock()
+            mock_genai.Client.return_value = mock_client
+
+            # Mock response
+            mock_response = MagicMock()
+            mock_response.text = "テスト生成内容"
+            mock_client.models.generate_content.return_value = mock_response
 
             yield {
-                "vertexai": mock_vertexai,
-                "model_class": mock_model_class,
-                "model": mock_model,
+                "genai": mock_genai,
+                "client": mock_client,
+                "response": mock_response,
                 "settings": mock_settings_obj,
             }
 
-    def test_gemini_service_initialization(self, mock_vertex_ai):
+    def test_gemini_service_initialization(self, mock_google_genai):
         """Test GeminiService initialization"""
         service = GeminiService()
         assert service is not None
-        assert hasattr(service, "analyze_personal_color")
-        assert hasattr(service, "check_health")
+        assert hasattr(service, "generate_makeup_explanation")
+        assert hasattr(service, "health_check")
+        assert service.client is not None
 
     @pytest.mark.asyncio
-    async def test_analyze_personal_color_success(self, mock_vertex_ai):
-        """Test successful personal color analysis"""
+    async def test_generate_makeup_explanation_success(self, mock_google_genai):
+        """Test successful makeup explanation generation"""
 
         service = GeminiService()
+        
+        # Mock successful response that passes validation
+        mock_response = MagicMock()
+        mock_response.text = "あなたのスプリングタイプには、明るくて温かい色がとても似合います。コーラルピンクやゴールドの色で、目元がきらきら輝いて見えますよ。元気で明るい印象になって、みんなが素敵だなって思ってくれるはずです。"
+        service.client.models.generate_content.return_value = mock_response
 
-        # Mock the internal method with success response
-        async def mock_generate_content_async(*args, **kwargs):
-            return json.dumps(
-                {
-                    "personal_color_type": "Spring",
-                    "confidence": 88.5,
-                    "explanation": "明るく鮮やかな色合いがお似合いです",
-                    "recommended_colors": ["#FF6B6B", "#4ECDC4", "#45B7D1"],
-                    "tips": ["明るい色を選びましょう", "パステルカラーもおすすめです"],
-                }
+        # Test data
+        from src.prompts.makeup_recommendation_prompts import MakeupProduct
+        test_products = [
+            MakeupProduct(
+                id="test1",
+                name="テストアイシャドウ",
+                brand="テストブランド",
+                category="eyeshadow",
+                price=1000,
+                description="テスト用",
+                colors=["コーラルピンク"]
             )
-
-        service._generate_content_async = mock_generate_content_async
-
-        # Create sample processed image
-        sample_processed_image = MagicMock(
-            base64_data="sample_base64_data",
-            original_path="/tmp/test.jpg",
-            compressed_size=1024,
-            quality=85,
-            processing_time_ms=100,
-        )
+        ]
 
         # Execute
-        result = await service.analyze_personal_color(sample_processed_image)
+        result = await service.generate_makeup_explanation(
+            PersonalColorType.SPRING, 
+            MakeupCategory.EYESHADOW, 
+            test_products
+        )
 
         # Assertions
-        assert result is not None
-        assert result.personal_color_type == "Spring"
-        assert result.confidence == 88.5
-        assert "明るく鮮やかな" in result.explanation
-        assert len(result.recommended_colors) == 3
-        assert len(result.tips) == 2
+        assert result.success is True
+        assert result.response is not None
+        assert "スプリングタイプ" in result.response.content or "明るくて温かい" in result.response.content
+        assert result.response.model_used == "gemini-1.5-flash"
+        assert result.response.is_fallback is False
 
     @pytest.mark.asyncio
-    async def test_check_health_success(self, mock_vertex_ai):
+    async def test_health_check_success(self, mock_google_genai):
         """Test successful health check"""
 
         service = GeminiService()
-
-        # Mock the internal method with success response
-        async def mock_generate_content_async(*args, **kwargs):
-            return "はい、元気です！"
-
-        service._generate_content_async = mock_generate_content_async
+        
+        # Mock successful response that passes validation  
+        mock_response = MagicMock()
+        mock_response.text = "あなたのスプリングタイプには、明るくて温かい色がとても似合います。"
+        service.client.models.generate_content.return_value = mock_response
 
         # Execute
-        result = await service.check_health()
+        result = await service.health_check()
 
         # Assertions
-        assert result is True
+        assert result["status"] == "healthy"
+        assert "service" in result
+        assert result["service"] == "gemini"
 
     @pytest.mark.asyncio
-    async def test_check_health_failure(self, mock_vertex_ai):
+    async def test_health_check_failure(self, mock_google_genai):
         """Test health check failure"""
 
         service = GeminiService()
-
-        # Mock the internal method with failure
-        async def mock_generate_content_async(*args, **kwargs):
-            raise Exception("API Error")
-
-        service._generate_content_async = mock_generate_content_async
+        service.client = None  # Simulate uninitialized client
 
         # Execute
-        result = await service.check_health()
+        result = await service.health_check()
 
         # Assertions
-        assert result is False
+        assert result["status"] == "degraded"
+        assert "message" in result
+        assert "fallback" in result["message"]
 
     @pytest.mark.asyncio
-    async def test_analyze_personal_color_api_error(self, mock_vertex_ai):
-        """Test personal color analysis with API error"""
+    async def test_generate_makeup_explanation_api_error(self, mock_google_genai):
+        """Test makeup explanation generation with API error"""
 
         service = GeminiService()
+        
+        # Mock API error
+        service.client.models.generate_content.side_effect = Exception("API Error")
 
-        # Mock the internal method with failure
-        async def mock_generate_content_async(*args, **kwargs):
-            raise Exception("API Error")
+        # Test data
+        from src.prompts.makeup_recommendation_prompts import MakeupProduct
+        test_products = [
+            MakeupProduct(
+                id="test1",
+                name="テストアイシャドウ",
+                brand="テストブランド",
+                category="eyeshadow",
+                price=1000,
+                description="テスト用",
+                colors=["コーラルピンク"]
+            )
+        ]
 
-        service._generate_content_async = mock_generate_content_async
-
-        # Create sample processed image
-        sample_processed_image = MagicMock(
-            base64_data="sample_base64_data", original_path="/tmp/test.jpg"
+        # Execute - should fall back to fallback response
+        result = await service.generate_makeup_explanation(
+            PersonalColorType.SPRING, 
+            MakeupCategory.EYESHADOW, 
+            test_products
         )
 
-        # Execute and expect exception
-        with pytest.raises(GeminiServiceError):
-            await service.analyze_personal_color(sample_processed_image)
+        # Should return fallback response, not raise exception
+        assert result.success is True
+        assert result.response is not None
+        assert result.response.is_fallback is True
+        assert result.response.model_used == "fallback"
 
-    @pytest.mark.asyncio
-    async def test_analyze_personal_color_invalid_json(self, mock_vertex_ai):
-        """Test personal color analysis with invalid JSON response"""
-
+    def test_cache_functionality(self, mock_google_genai):
+        """Test cache functionality"""
         service = GeminiService()
-
-        # Mock the internal method with invalid JSON
-        async def mock_generate_content_async(*args, **kwargs):
-            return "Invalid JSON response"
-
-        service._generate_content_async = mock_generate_content_async
-
-        # Create sample processed image
-        sample_processed_image = MagicMock(
-            base64_data="sample_base64_data", original_path="/tmp/test.jpg"
-        )
-
-        # Execute and expect exception
-        with pytest.raises(GeminiServiceError):
-            await service.analyze_personal_color(sample_processed_image)
+        
+        # Test cache stats
+        stats = service.get_cache_stats()
+        assert "total_entries" in stats
+        assert "valid_entries" in stats
+        assert "expired_entries" in stats
+        
+        # Test cache clear
+        service.clear_cache()
+        stats_after_clear = service.get_cache_stats()
+        assert stats_after_clear["total_entries"] == 0
