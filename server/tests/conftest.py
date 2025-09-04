@@ -26,8 +26,8 @@ def event_loop():
 @pytest.fixture
 def client() -> Generator[TestClient, None, None]:
     """FastAPI test client"""
-    with TestClient(app) as test_client:
-        yield test_client
+    test_client = TestClient(app)
+    yield test_client
 
 
 @pytest.fixture
@@ -75,6 +75,19 @@ def mock_gemini_service():
             model_used="gemini-1.5-flash",
             is_fallback=False,
             response_time_ms=150
+        ),
+        error_message=None,
+        retry_count=0
+    )
+
+    # Mock personal color analysis for new image-based diagnosis
+    mock_service.analyze_personal_color_from_image.return_value = MagicMock(
+        success=True,
+        response=MagicMock(
+            content='{"personal_color_type": "Spring", "confidence": 75.0, "explanation": "明るく鮮やかな色合いがお似合いです", "recommended_colors": ["#FF6B6B", "#4ECDC4", "#45B7D1"], "tips": ["明るい色を選びましょう", "パステルカラーもおすすめです"]}',
+            model_used="gemini-1.5-flash",
+            is_fallback=False,
+            response_time_ms=250
         ),
         error_message=None,
         retry_count=0
@@ -145,10 +158,10 @@ def mock_privacy_manager():
     mock_manager.validate_data_minimization.return_value = []
     mock_manager.create_privacy_compliant_response.return_value = {
         "personal_color_type": "Spring",
-        "confidence": 85.5,
-        "explanation": "Test explanation",
-        "recommended_colors": ["#FF5733", "#33FF57", "#3357FF"],
-        "tips": ["Test tip 1", "Test tip 2"],
+        "confidence": 75.0,
+        "explanation": "明るく鮮やかな色合いがお似合いです",
+        "recommended_colors": ["#FF6B6B", "#4ECDC4", "#45B7D1"],
+        "tips": ["明るい色を選びましょう", "パステルカラーもおすすめです"],
     }
 
     return mock_manager

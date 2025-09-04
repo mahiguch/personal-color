@@ -8,7 +8,9 @@ Gemini AI統合サービス
 import asyncio
 import logging
 import time
-from typing import Dict, List, Optional, Tuple
+import base64
+import json
+from typing import Dict, List, Optional, Tuple, Any
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
@@ -28,6 +30,7 @@ from ..prompts.clothing_recommendation_prompts import (
     ClothingRecommendationPrompts,
     ClothingCategory,
 )
+from ..prompts.personal_color_analysis import PersonalColorPrompt
 
 # 設定
 from ..core.config.settings import get_settings
@@ -74,6 +77,7 @@ class GeminiService:
         # プロンプト生成器
         self.makeup_prompt_generator = MakeupRecommendationPrompts()
         self.clothing_prompt_generator = ClothingRecommendationPrompts()
+        self.personal_color_prompt = PersonalColorPrompt()
 
         # 7日間のAI説明キャッシュ
         self._ai_cache: Dict[str, Tuple[str, datetime]] = {}
@@ -552,6 +556,148 @@ class GeminiService:
             health_info["message"] = f"Health check failed: {e}"
 
         return health_info
+
+    async def analyze_personal_color_from_image(
+        self, image_base64: str, metadata: Optional[Dict[str, Any]] = None
+    ) -> GenerationResult:
+        """
+        画像からパーソナルカラーを診断
+
+        Args:
+            image_base64: Base64エンコードされた画像データ
+            metadata: 追加のメタデータ
+
+        Returns:
+            GenerationResult: 診断結果
+        """
+        if not self.client:
+            logger.warning("Gemini client not available, using fallback")
+            return await self._generate_personal_color_fallback()
+
+        # プロンプト生成
+        prompt = self.personal_color_prompt.create_analysis_prompt(metadata)
+
+        logger.info("Starting personal color analysis with Gemini Vision")
+
+        # リトライ処理
+        last_error = None
+        for retry in range(self._max_retries):
+            try:
+                # 指数バックオフによる遅延
+                if retry > 0:
+                    delay = min(self._base_delay * (2 ** (retry - 1)), self._max_delay)
+                    logger.info(f"Retrying personal color analysis after {delay:.1f}s")
+                    await asyncio.sleep(delay)
+
+                start_time = time.time()
+
+                # Gemini Vision APIを呼び出し
+                response = await asyncio.to_thread(
+                    self._call_gemini_vision_sync, prompt, image_base64
+                )
+
+                response_time_ms = int((time.time() - start_time) * 1000)
+
+                # レスポンス品質チェック
+                if not response or not response.text:
+                    raise GeminiServiceError("Empty response from Gemini Vision")
+
+                # JSON形式の検証
+                if not self.personal_color_prompt.validate_response_format(response.text):
+                    logger.warning(f"Personal color response failed validation: {response.text[:100]}...")
+                    raise GeminiServiceError("Personal color response failed validation")
+
+                # 成功
+                gemini_response = GeminiResponse(
+                    content=response.text.strip(),
+                    generated_at=datetime.utcnow(),
+                    response_time_ms=response_time_ms,
+                    model_used=self.model_name,
+                    is_fallback=False,
+                )
+
+                logger.info(f"Personal color analysis successful (attempt {retry + 1})")
+                return GenerationResult(
+                    success=True,
+                    response=gemini_response,
+                    error_message=None,
+                    retry_count=retry,
+                )
+
+            except Exception as e:
+                last_error = e
+                logger.warning(f"Personal color analysis failed (attempt {retry + 1}): {e}")
+
+                # 最後のリトライでない場合は続行
+                if retry < self._max_retries - 1:
+                    continue
+
+        # すべてのリトライが失敗
+        logger.error(
+            f"Personal color analysis failed after {self._max_retries} attempts: {last_error}"
+        )
+
+        # フォールバック応答を生成
+        return await self._generate_personal_color_fallback()
+
+    def _call_gemini_vision_sync(self, prompt: str, image_base64: str):
+        """同期的なGemini Vision API呼び出し"""
+        try:
+            # Base64画像データを準備
+            image_data = base64.b64decode(image_base64)
+
+            # Google Gen AI SDKでの生成設定
+            config = types.GenerateContentConfig(
+                temperature=0.3,  # 診断の一貫性を重視
+                top_p=0.8,
+                top_k=20,
+                max_output_tokens=500,  # 診断結果はもう少し長め
+            )
+
+            if not self.client:
+                raise GeminiServiceError("Client is not initialized")
+
+            # 画像とテキストを含むコンテンツを作成
+            contents = [
+                types.Part(text=prompt),
+                types.Part(inline_data=types.Blob(mime_type="image/jpeg", data=image_data))
+            ]
+
+            response = self.client.models.generate_content(
+                model=self.model_name,
+                contents=contents,
+                config=config,
+            )
+            return response
+
+        except Exception as e:
+            raise GeminiServiceError(f"Gemini Vision API call failed: {e}")
+
+    async def _generate_personal_color_fallback(self) -> GenerationResult:
+        """パーソナルカラー診断用フォールバック応答"""
+        fallback_content = """{
+  "personal_color_type": "Spring",
+  "confidence": 75,
+  "explanation": "現在、AI診断機能は一時的に利用できません。Spring（春）タイプの特徴として、明るく温かい色が似合います。",
+  "recommended_colors": ["コーラルピンク", "ピーチ", "アイボリー", "ライトキャメル", "フレッシュグリーン"],
+  "tips": ["明るい色を選んで、顔色を明るく見せましょう", "暖かみのある色で親しみやすい印象に", "透明感のある色で若々しさをアピール"]
+}"""
+
+        fallback_response = GeminiResponse(
+            content=fallback_content,
+            generated_at=datetime.utcnow(),
+            response_time_ms=0,
+            model_used="fallback",
+            is_fallback=True,
+        )
+
+        logger.info("Generated personal color fallback response")
+        return GenerationResult(
+            success=True,
+            response=fallback_response,
+            error_message=None,
+            retry_count=0,
+        )
 
 
 # シングルトンインスタンス

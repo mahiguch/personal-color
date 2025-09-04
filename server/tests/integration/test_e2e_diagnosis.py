@@ -33,11 +33,19 @@ def setup_common_mocks(
 
     # Setup Gemini service mock
     mock_gemini = AsyncMock()
-    # analyze_personal_color は現在使用されていない（フォールバック実装）
-    # mock_gemini.analyze_personal_color.return_value = MagicMock(
-    #     **TEST_DIAGNOSIS_RESULTS[diagnosis_result],
-    #     dict=lambda: TEST_DIAGNOSIS_RESULTS[diagnosis_result]
-    # )
+    # 新しい画像ベース診断実装に対応
+    mock_analysis_result = MagicMock(
+        success=True,
+        response=MagicMock(
+            content=json.dumps(TEST_DIAGNOSIS_RESULTS[diagnosis_result]),
+            model_used="gemini-1.5-flash",
+            is_fallback=False,
+            response_time_ms=250
+        ),
+        error_message=None,
+        retry_count=0
+    )
+    mock_gemini.analyze_personal_color_from_image.return_value = mock_analysis_result
     mock_gemini_class.return_value = mock_gemini
 
     # Setup Image Processor mock
@@ -135,7 +143,7 @@ class TestE2EDiagnosis:
             # Verify diagnosis result
             result = response_data["result"]
             assert result["personal_color_type"] == "Spring"
-            assert result["confidence"] == 75.0  # フォールバック実装の値
+            assert result["confidence"] == 75.0  # TEST_DIAGNOSIS_RESULTS["spring"]の値
             assert "explanation" in result
             assert "recommended_colors" in result
             assert "tips" in result
@@ -208,10 +216,19 @@ class TestE2EDiagnosis:
     def test_health_check_integration(self, client):
         """Test health check endpoints"""
 
+        # Test liveness probe endpoint (should always return 200)
+        response = client.get("/health/liveness")
+        assert response.status_code == 200
+        data = response.json()
+        assert data["status"] == "alive"
+
         # Test diagnosis test endpoint (health check alternative)
         response = client.get("/api/v1/diagnose/test")
-        # This might fail without mocks, so we'll test for either 200 or expected error status
-        assert response.status_code in [200, 503]  # 503 if service unhealthy
+        # This should now always return 200 (no exceptions thrown)
+        assert response.status_code == 200
+        data = response.json()
+        assert "status" in data
+        assert "gemini_service" in data
 
         # Test diagnosis test endpoint with mocks
         with patch("src.services.gemini_service.genai"), patch(
@@ -402,11 +419,19 @@ class TestE2EPerformance:
 
             # Setup Gemini service mock
             mock_gemini = AsyncMock()
-            # analyze_personal_color は現在使用されていない（フォールバック実装）
-            # mock_gemini.analyze_personal_color.return_value = MagicMock(
-            #     **TEST_DIAGNOSIS_RESULTS["spring"],
-            #     dict=lambda: TEST_DIAGNOSIS_RESULTS["spring"]
-            # )
+            # 新しい画像ベース診断実装に対応
+            mock_analysis_result = MagicMock(
+                success=True,
+                response=MagicMock(
+                    content=json.dumps(TEST_DIAGNOSIS_RESULTS["spring"]),
+                    model_used="gemini-1.5-flash",
+                    is_fallback=False,
+                    response_time_ms=100  # Fast response for performance test
+                ),
+                error_message=None,
+                retry_count=0
+            )
+            mock_gemini.analyze_personal_color_from_image.return_value = mock_analysis_result
             mock_gemini_class.return_value = mock_gemini
 
             mock_processor = AsyncMock()

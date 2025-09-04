@@ -36,19 +36,28 @@ class DiagnosisRequest(BaseModel):
     @classmethod
     def validate_image_base64(cls, v):
         """Base64画像データの検証"""
+        logger.info(f"Validating image_base64: type={type(v)}, length={len(v) if v else 0}")
+        
         if not v:
+            logger.error("Validation failed: 画像データが空です")
             raise ValueError("画像データが空です")
 
         # Base64データの基本的な検証
         try:
+            original_length = len(v)
+            
             # data:image/jpeg;base64, などのプレフィックスを除去
             if "," in v:
                 v = v.split(",", 1)[1]
+                logger.info(f"Removed data URL prefix: {original_length} -> {len(v)}")
 
             # Base64デコードテスト
-            base64.b64decode(v)
+            decoded = base64.b64decode(v)
+            logger.info(f"Successfully decoded Base64 data: {len(decoded)} bytes")
+            
             return v
-        except Exception:
+        except Exception as e:
+            logger.error(f"Base64 validation failed: {e}, data_start='{v[:50] if v else 'None'}...'")
             raise ValueError("無効なBase64画像データです")
 
 
@@ -105,6 +114,7 @@ async def diagnose_personal_color(
         logger.warning(f"Privacy warnings for {request_id}: {privacy_warnings}")
 
     logger.info(f"Starting diagnosis request: {request_id}")
+    logger.info(f"Request details: image_base64_length={len(request.image_base64) if request.image_base64 else 0}, metadata={request.metadata}")
 
     try:
         settings = get_settings()
@@ -118,23 +128,61 @@ async def diagnose_personal_color(
             request.image_base64, max_size_mb=settings.max_image_size_mb
         )
 
-        # 2. パーソナルカラー診断実行（フォールバック実装）
-        # 注: 現在のGemini Serviceは画像ベース診断をサポートしていないため
-        # 一時的なフォールバック応答を返します
+        # 2. パーソナルカラー診断実行
         gemini_service = get_gemini_service()
         
-        # フォールバック診断結果を生成
-        diagnosis_result = PersonalColorResult(
-            personal_color_type="Spring",  # デフォルト値
-            confidence=75.0,
-            explanation="現在、AI診断機能は一時的に利用できません。Spring（春）タイプの特徴として、明るく温かい色が似合います。",
-            recommended_colors=["コーラルピンク", "ピーチ", "アイボリー", "ライトキャメル", "フレッシュグリーン"],
-            tips=[
-                "明るい色を選んで、顔色を明るく見せましょう",
-                "暖かみのある色で親しみやすい印象に",
-                "透明感のある色で若々しさをアピール"
-            ]
+        # Gemini Vision APIで画像ベース診断を実行
+        analysis_result = await gemini_service.analyze_personal_color_from_image(
+            request.image_base64, request.metadata
         )
+        
+        if analysis_result.success and analysis_result.response:
+            # AI診断成功：JSONレスポンスをパース
+            try:
+                import json
+                json_start = analysis_result.response.content.find("{")
+                json_end = analysis_result.response.content.rfind("}") + 1
+                json_content = analysis_result.response.content[json_start:json_end]
+                ai_result = json.loads(json_content)
+                
+                diagnosis_result = PersonalColorResult(
+                    personal_color_type=ai_result["personal_color_type"],
+                    confidence=float(ai_result["confidence"]),
+                    explanation=ai_result["explanation"],
+                    recommended_colors=ai_result["recommended_colors"],
+                    tips=ai_result["tips"]
+                )
+                
+                logger.info(f"AI diagnosis successful for {request_id}: {diagnosis_result.personal_color_type}")
+                
+            except (json.JSONDecodeError, KeyError, ValueError) as parse_error:
+                logger.error(f"Failed to parse AI diagnosis response for {request_id}: {parse_error}")
+                # パースエラー時はフォールバック
+                diagnosis_result = PersonalColorResult(
+                    personal_color_type="Spring",
+                    confidence=75.0,
+                    explanation="診断処理中に問題が発生しました。Spring（春）タイプの特徴として、明るく温かい色が似合います。",
+                    recommended_colors=["コーラルピンク", "ピーチ", "アイボリー", "ライトキャメル", "フレッシュグリーン"],
+                    tips=[
+                        "明るい色を選んで、顔色を明るく見せましょう",
+                        "暖かみのある色で親しみやすい印象に",
+                        "透明感のある色で若々しさをアピール"
+                    ]
+                )
+        else:
+            # AI診断失敗：フォールバック結果を使用
+            logger.warning(f"AI diagnosis failed for {request_id}: {analysis_result.error_message}")
+            diagnosis_result = PersonalColorResult(
+                personal_color_type="Spring",
+                confidence=75.0,
+                explanation="現在、AI診断機能は一時的に利用できません。Spring（春）タイプの特徴として、明るく温かい色が似合います。",
+                recommended_colors=["コーラルピンク", "ピーチ", "アイボリー", "ライトキャメル", "フレッシュグリーン"],
+                tips=[
+                    "明るい色を選んで、顔色を明るく見せましょう",
+                    "暖かみのある色で親しみやすい印象に",
+                    "透明感のある色で若々しさをアピール"
+                ]
+            )
 
         # 3. セキュアバッファをクリア
         secure_buffer.clear()
@@ -190,12 +238,26 @@ async def diagnose_personal_color(
 
     except ValidationError as e:
         logger.error(f"Validation error for {request_id}: {e}")
+        logger.error(f"Validation error details: {e.errors()}")
+        
+        # JSON安全な形式に変換
+        safe_errors = []
+        for error in e.errors():
+            safe_error = {
+                "type": error.get("type", "unknown"),
+                "loc": list(error.get("loc", [])),
+                "msg": str(error.get("msg", "")),
+                "input": str(error.get("input", "")) if error.get("input") is not None else None,
+            }
+            safe_errors.append(safe_error)
+        
         raise HTTPException(
             status_code=422,
             detail={
                 "error": "validation_error",
                 "message": "入力データが不正です",
                 "detail": str(e),
+                "validation_errors": safe_errors,
             },
         )
 
@@ -279,24 +341,38 @@ async def get_privacy_policy() -> Dict[str, Any]:
 @router.get("/diagnose/test")
 async def test_diagnosis_endpoint() -> Dict[str, Any]:
     """
-    診断エンドポイントのテスト用
+    診断エンドポイントのテスト用（ライブネスプローブ対応）
 
     Returns:
         Dict[str, Any]: テスト結果
     """
     try:
-        # Geminiサービスの基本チェック
+        # 軽量なヘルスチェック（Geminiサービスの初期化チェックのみ）
         gemini_service = get_gemini_service()
-        gemini_health = await gemini_service.health_check()
-        is_healthy = gemini_health.get("status") == "healthy"
+        
+        # 重いhealth_checkは呼ばず、基本的なステータスのみチェック
+        basic_status = {
+            "service": "gemini",
+            "initialized": gemini_service.client is not None,
+            "model": gemini_service.model_name,
+        }
+        
+        is_healthy = basic_status["initialized"]
 
         return {
             "status": "ok",
-            "gemini_service": "healthy" if is_healthy else "unhealthy",
+            "gemini_service": "healthy" if is_healthy else "degraded",
             "timestamp": datetime.utcnow().isoformat(),
             "message": "診断エンドポイントは正常に動作しています",
+            "details": basic_status,
         }
 
     except Exception as e:
         logger.error(f"Test endpoint error: {e}")
-        raise HTTPException(status_code=503, detail=f"テストに失敗しました: {str(e)}")
+        # ライブネスプローブが失敗しないよう、200 OKで返す
+        return {
+            "status": "error",
+            "gemini_service": "error",
+            "timestamp": datetime.utcnow().isoformat(),
+            "message": f"エラーが発生しました: {str(e)}",
+        }

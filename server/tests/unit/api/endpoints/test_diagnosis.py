@@ -36,8 +36,19 @@ class TestDiagnosisEndpoints:
         ) as mock_privacy:
             # Setup mocks
             mock_gemini = AsyncMock()
-            # 現在の診断エンドポイントはフォールバック実装を使用するため、
-            # Geminiサービスのmockは必要ありませんが、正常に初期化される必要があります
+            # 新しい画像ベース診断実装に対応
+            mock_analysis_result = MagicMock(
+                success=True,
+                response=MagicMock(
+                    content='{"personal_color_type": "Spring", "confidence": 75.0, "explanation": "明るく鮮やかな色合いがお似合いです", "recommended_colors": ["#FF6B6B", "#4ECDC4", "#45B7D1"], "tips": ["明るい色を選びましょう", "パステルカラーもおすすめです"]}',
+                    model_used="gemini-1.5-flash",
+                    is_fallback=False,
+                    response_time_ms=250
+                ),
+                error_message=None,
+                retry_count=0
+            )
+            mock_gemini.analyze_personal_color_from_image.return_value = mock_analysis_result
             mock_gemini_class.return_value = mock_gemini
 
             mock_processor = AsyncMock()
@@ -75,14 +86,14 @@ class TestDiagnosisEndpoints:
 
             result = response_data["result"]
             assert result["personal_color_type"] == "Spring"
-            assert result["confidence"] == 75.0  # フォールバック実装の値に合わせて修正
+            assert result["confidence"] == 75.0  # TEST_DIAGNOSIS_RESULTSの値に統一
             assert "explanation" in result
             assert "recommended_colors" in result
             assert "tips" in result
 
             # Verify mocks were called
             mock_processor.process_base64_image.assert_called_once()
-            # analyze_personal_color は現在使用されていない（フォールバック実装）
+            mock_gemini.analyze_personal_color_from_image.assert_called_once()
             mock_buffer_instance.clear.assert_called_once()
 
     def test_diagnose_invalid_base64(self, client: TestClient):
@@ -174,11 +185,19 @@ class TestDiagnosisEndpoints:
         ) as mock_privacy:
             # Setup mocks like in successful test
             mock_gemini = AsyncMock()
-            # analyze_personal_color は現在使用されていない（フォールバック実装）
-            # mock_gemini.analyze_personal_color.return_value = MagicMock(
-            #     **TEST_DIAGNOSIS_RESULTS["spring"],
-            #     dict=lambda: TEST_DIAGNOSIS_RESULTS["spring"],
-            # )
+            # 新しい画像ベース診断実装に対応
+            mock_analysis_result = MagicMock(
+                success=True,
+                response=MagicMock(
+                    content='{"personal_color_type": "Spring", "confidence": 75.0, "explanation": "明るく鮮やかな色合いがお似合いです", "recommended_colors": ["#FF6B6B", "#4ECDC4", "#45B7D1"], "tips": ["明るい色を選びましょう", "パステルカラーもおすすめです"]}',
+                    model_used="gemini-1.5-flash",
+                    is_fallback=False,
+                    response_time_ms=250
+                ),
+                error_message=None,
+                retry_count=0
+            )
+            mock_gemini.analyze_personal_color_from_image.return_value = mock_analysis_result
             mock_gemini_class.return_value = mock_gemini
 
             mock_processor = AsyncMock()
@@ -230,11 +249,19 @@ class TestDiagnosisEndpoints:
         ) as mock_privacy:
             # Setup mocks like in successful test
             mock_gemini = AsyncMock()
-            # analyze_personal_color は現在使用されていない（フォールバック実装）
-            # mock_gemini.analyze_personal_color.return_value = MagicMock(
-            #     **TEST_DIAGNOSIS_RESULTS["spring"],
-            #     dict=lambda: TEST_DIAGNOSIS_RESULTS["spring"],
-            # )
+            # 新しい画像ベース診断実装に対応
+            mock_analysis_result = MagicMock(
+                success=True,
+                response=MagicMock(
+                    content='{"personal_color_type": "Spring", "confidence": 75.0, "explanation": "明るく鮮やかな色合いがお似合いです", "recommended_colors": ["#FF6B6B", "#4ECDC4", "#45B7D1"], "tips": ["明るい色を選びましょう", "パステルカラーもおすすめです"]}',
+                    model_used="gemini-1.5-flash",
+                    is_fallback=False,
+                    response_time_ms=250
+                ),
+                error_message=None,
+                retry_count=0
+            )
+            mock_gemini.analyze_personal_color_from_image.return_value = mock_analysis_result
             mock_gemini_class.return_value = mock_gemini
 
             mock_processor = AsyncMock()

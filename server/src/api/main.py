@@ -3,13 +3,20 @@ Personal Color Diagnosis API Server
 FastAPIを使用したパーソナルカラー診断APIサーバー
 """
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.exceptions import RequestValidationError
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import uvicorn
 from typing import Dict, Any
 import logging
+from datetime import datetime
+import warnings
+
+# Pydanticの警告を抑制（Google Gen AI SDK内部の問題）
+warnings.filterwarnings("ignore", message="Field name .* shadows an attribute in parent", category=UserWarning)
+warnings.filterwarnings("ignore", message="Using extra keyword arguments on `Field` is deprecated", category=UserWarning)
 
 from .endpoints.diagnosis import router as diagnosis_router
 from .endpoints.health import router as health_router
@@ -22,8 +29,16 @@ from ..middleware.rate_limiter import RateLimitMiddleware
 from ..core.monitoring import metrics_collector, health_checker
 
 # ログ設定
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
+
+# 不要なログレベルを調整
+logging.getLogger("google").setLevel(logging.WARNING)
+logging.getLogger("google.cloud").setLevel(logging.WARNING)
+logging.getLogger("pydantic").setLevel(logging.WARNING)
 
 # 設定読み込み
 settings = get_settings()
@@ -96,6 +111,44 @@ app.include_router(makeup_router)
 app.include_router(clothing_router)
 
 
+# バリデーション例外ハンドラー
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """リクエストバリデーション例外ハンドラー"""
+    logger.error(f"Validation error on {request.method} {request.url.path}: {exc.errors()}")
+    logger.error(f"Request details - Headers: {dict(request.headers)}")
+    
+    # リクエストボディを安全にログ出力
+    try:
+        if hasattr(request, '_body'):
+            body = await request.body()
+            if body:
+                body_str = body.decode('utf-8')[:500]  # 最初の500文字のみ
+                logger.error(f"Request body (first 500 chars): {body_str}")
+    except Exception as e:
+        logger.error(f"Failed to log request body: {e}")
+    
+    # JSON安全な形式に変換
+    safe_errors = []
+    for error in exc.errors():
+        safe_error = {
+            "type": error.get("type", "unknown"),
+            "loc": list(error.get("loc", [])),
+            "msg": str(error.get("msg", "")),
+            "input": str(error.get("input", "")) if error.get("input") is not None else None,
+        }
+        safe_errors.append(safe_error)
+    
+    return JSONResponse(
+        status_code=422,
+        content={
+            "error": "validation_error",
+            "message": "入力データが不正です",
+            "detail": safe_errors,
+            "request_path": request.url.path,
+        },
+    )
+
 # グローバル例外ハンドラー
 @app.exception_handler(Exception)
 async def global_exception_handler(request, exc: Exception):
@@ -129,7 +182,14 @@ async def detailed_health_check() -> Dict[str, Any]:
 @app.get("/health")
 async def simple_health_check() -> Dict[str, Any]:
     """シンプルなヘルスチェック"""
-    return {"status": "healthy", "timestamp": "2024-01-01T00:00:00Z"}  # 簡易実装
+    return {"status": "healthy", "timestamp": datetime.utcnow().isoformat()}
+
+
+# ライブネスプローブ専用エンドポイント（超軽量）
+@app.get("/health/liveness")
+async def liveness_check() -> Dict[str, str]:
+    """ライブネスプローブ専用エンドポイント"""
+    return {"status": "alive"}
 
 
 # ルートエンドポイント
