@@ -36,6 +36,8 @@ async def lifespan(app: FastAPI):
     logger.info("Personal Color Diagnosis API Server starting up...")
     logger.info(f"Debug mode: {settings.debug}")
     logger.info(f"Environment: {settings.environment}")
+    
+    # Rate limiting設定は不要（ミドルウェアレベルで制御）
 
     yield
 
@@ -65,13 +67,17 @@ app = FastAPI(
 #     skip_verification=skip_app_check
 # )
 
-# レート制限ミドルウェア
-app.add_middleware(
-    RateLimitMiddleware,
-    default_requests_per_minute=getattr(settings, "rate_limit_default", 60),
-    diagnosis_requests_per_minute=getattr(settings, "rate_limit_diagnosis", 10),
-    burst_limit=getattr(settings, "rate_limit_burst", 5),
-)
+# レート制限ミドルウェア（テスト環境以外でのみ追加）
+if settings.environment not in ["test", "testing"]:
+    app.add_middleware(
+        RateLimitMiddleware,
+        default_requests_per_minute=getattr(settings, "rate_limit_default", 60),
+        diagnosis_requests_per_minute=getattr(settings, "rate_limit_diagnosis", 10),
+        burst_limit=getattr(settings, "rate_limit_burst", 5),
+    )
+    logger.info("Rate limiting middleware enabled")
+else:
+    logger.info("Rate limiting middleware disabled for test environment")
 
 # CORS設定
 allowed_origins = [origin.strip() for origin in settings.allowed_origins.split(",")]

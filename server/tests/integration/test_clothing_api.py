@@ -3,16 +3,14 @@
 衣料品API統合テストスクリプト
 """
 
-import asyncio
 import json
-import os
 import sys
 from pathlib import Path
 
-# プロジェクトルートをsys.pathに追加
-sys.path.insert(0, str(Path(__file__).parent / "src"))
+# プロジェクトルートをsys.pathに追加 - 修正されたパス
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
-async def test_clothing_api():
+def test_clothing_api():
     """衣料品API機能の統合テスト"""
     
     print("=== 衣料品API統合テスト ===\n")
@@ -51,7 +49,7 @@ async def test_clothing_api():
         
         # データ読み込みテスト
         products = get_clothing_products()
-        print("✅ get_clothing_products() 成功")
+        print(f"✅ get_clothing_products() 成功: {len(products) if products else 0} カテゴリ")
         
         # バリデーションテスト
         for color_type in ['spring', 'summer', 'autumn', 'winter']:
@@ -158,4 +156,4 @@ async def test_clothing_api():
     print("3. AI生成機能の動作確認")
 
 if __name__ == "__main__":
-    asyncio.run(test_clothing_api())
+    test_clothing_api()

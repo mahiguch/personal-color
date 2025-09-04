@@ -4,7 +4,7 @@
 """
 
 from pydantic_settings import BaseSettings
-from pydantic import Field
+from pydantic import Field, ConfigDict
 from typing import List
 import os
 from functools import lru_cache
@@ -71,11 +71,12 @@ class Settings(BaseSettings):
         description="ログフォーマット",
     )
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = False
-        extra = "ignore"  # 未定義の環境変数を無視
+    model_config = ConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+        extra="ignore"  # 未定義の環境変数を無視
+    )
 
 
 @lru_cache()
