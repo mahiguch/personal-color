@@ -159,7 +159,7 @@ def setup_environment():
     print("4️⃣ Python依存関係確認...")
     package_checks = [
         ("vertexai", "vertexai"),
-        ("google-cloud-aiplatform", "google.cloud.aiplatform"),
+        ("google-genai", "google.genai"),
         ("pillow", "PIL"),
         ("asyncio", "asyncio"),
     ]

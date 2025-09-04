@@ -34,6 +34,22 @@ Google Cloud Vertex AI SDK (`google-cloud-aiplatform`)から統一SDK (`google-g
 ### 対象ファイル
 - `server/tests/unit/services/gemini/test_gemini_service.py`
 
+### 🔧 アーキテクチャ注意事項
+
+**シングルトンパターンの採用**:
+- `GeminiService()`の直接インスタンス化は**非推奨**です
+- 必ず`get_gemini_service()`関数を使用してください
+- シングルトンパターンにより、メモリ効率とAPI接続管理が最適化されます
+
+```python
+# ❌ 非推奨
+service = GeminiService()
+
+# ✅ 推奨
+from src.services.gemini_service import get_gemini_service
+service = get_gemini_service()
+```
+
 ### 移行前後の比較
 
 #### モック・フィクスチャの変更
@@ -98,9 +114,13 @@ def mock_genai_client(self):
 
 #### TC-U001: GeminiService初期化テスト
 
-**目的**: 環境変数による自動初期化の検証
+**目的**: シングルトンパターンによる初期化と環境変数設定の検証
+
+**重要**: `GeminiService()`の直接呼び出しは非推奨です。必ず`get_gemini_service()`関数を使用してください。
 
 ```python
+from src.services.gemini_service import get_gemini_service
+
 def test_gemini_service_initialization_with_env_vars(self, mock_genai_client):
     """Test GeminiService initialization with environment variables"""
     # Given: 環境変数が設定されている
@@ -110,8 +130,8 @@ def test_gemini_service_initialization_with_env_vars(self, mock_genai_client):
         "GOOGLE_CLOUD_LOCATION": "us-central1"
     })
     
-    # When: GeminiServiceを初期化
-    service = GeminiService()
+    # When: Geminiサービスを取得（シングルトンパターン）
+    service = get_gemini_service()
     
     # Then: 正常に初期化される
     assert service is not None
@@ -141,7 +161,7 @@ async def test_generate_makeup_explanation_success(self, mock_genai_client):
     mock_prompt_generator = MagicMock()
     mock_prompt_generator.validate_ai_response.return_value = True
     
-    service = GeminiService()
+    service = get_gemini_service()
     service.makeup_prompt_generator = mock_prompt_generator
     
     # テストデータ
@@ -181,7 +201,7 @@ async def test_api_error_fallback(self, mock_genai_client):
     mock_prompt_generator = MagicMock()
     mock_prompt_generator.get_fallback_explanation.return_value = "フォールバック説明"
     
-    service = GeminiService()
+    service = get_gemini_service()
     service.makeup_prompt_generator = mock_prompt_generator
     
     test_products = [MakeupProduct(...)]  # テストデータ
@@ -211,7 +231,7 @@ async def test_cache_functionality_maintained(self, mock_genai_client):
     mock_response.text = "キャッシュテスト用レスポンス"
     mock_genai_client["client"].models.generate_content.return_value = mock_response
     
-    service = GeminiService()
+    service = get_gemini_service()
     # キャッシュクリア
     service.clear_cache()
     
@@ -246,8 +266,8 @@ def test_missing_environment_variables(self, mock_genai_client):
     # Given: 環境変数未設定
     mock_genai_client["env"].clear()
     
-    # When: GeminiService初期化
-    service = GeminiService()
+    # When: Geminiサービス取得（シングルトンパターン）
+    service = get_gemini_service()
     
     # Then: 適切にハンドリングされる（クライアント未初期化状態）
     assert service.client is None
@@ -266,7 +286,7 @@ async def test_new_sdk_error_handling(self, mock_genai_client):
         code=400, message="Invalid request"
     )
     
-    service = GeminiService()
+    service = get_gemini_service()
     test_products = [MakeupProduct(...)]
     
     # When: API呼び出し

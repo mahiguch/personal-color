@@ -142,8 +142,26 @@ health_check() {
     fi
 }
 
+# Pre-deployment checks
+run_pre_deploy_checks() {
+    echo -e "${YELLOW}🔍 Running pre-deployment checks...${NC}"
+    
+    if [ -f "./scripts/pre_deploy_check.sh" ]; then
+        if ./scripts/pre_deploy_check.sh; then
+            echo -e "${GREEN}✅ Pre-deployment checks passed${NC}"
+        else
+            echo -e "${RED}❌ Pre-deployment checks failed${NC}"
+            echo "Please fix the issues before deploying"
+            exit 1
+        fi
+    else
+        echo -e "${YELLOW}⚠️ Pre-deployment check script not found, skipping${NC}"
+    fi
+}
+
 # Main deployment flow
 main() {
+    run_pre_deploy_checks
     check_prerequisites
     build_and_push
     deploy_cloudrun

@@ -73,7 +73,7 @@ source .venv/bin/activate && flake8 .
 source .venv/bin/activate && mypy .
 
 # Google Gen AI SDK 接続テスト
-source .venv/bin/activate && python -m src.services.gemini_service
+source .venv/bin/activate && python -c "from src.services.gemini_service import get_gemini_service; import asyncio; asyncio.run(get_gemini_service().health_check())"
 
 # Geminiプロンプトテスト
 source .venv/bin/activate && python test_gemini_prompts.py
@@ -149,6 +149,21 @@ src/
 ├── core/          # 共通機能
 ├── prompts/       # Geminiプロンプト定義
 └── services/      # ビジネスロジック
+    └── gemini_service.py  # Google Gen AI SDK統合 (シングルトンパターン)
+```
+
+### 🔧 Gemini Service 使用方法
+
+**重要**: `GeminiService()`の直接インスタンス化は非推奨です。
+
+```python
+# ❌ 非推奨
+from src.services.gemini_service import GeminiService
+service = GeminiService()
+
+# ✅ 推奨 (シングルトンパターン)
+from src.services.gemini_service import get_gemini_service
+service = get_gemini_service()
 ```
 
 ### Web側アーキテクチャ (ティザーサイト)

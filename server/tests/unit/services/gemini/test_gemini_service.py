@@ -7,8 +7,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import json
 from datetime import datetime
 
-from src.services.gemini_service import GeminiService, GeminiServiceError, GeminiResponse, GenerationResult
+from src.services.gemini_service import get_gemini_service, GeminiServiceError, GeminiResponse, GenerationResult
 from src.prompts.makeup_recommendation_prompts import PersonalColorType, MakeupCategory
+import src.services.gemini_service as gemini_service_module
 
 
 class TestGeminiService:
@@ -47,7 +48,11 @@ class TestGeminiService:
 
     def test_gemini_service_initialization(self, mock_google_genai):
         """Test GeminiService initialization"""
-        service = GeminiService()
+        # Reset singleton instance
+        gemini_service_module._gemini_service_instance = None
+        # Reset singleton instance
+        gemini_service_module._gemini_service_instance = None
+        service = get_gemini_service()
         assert service is not None
         assert hasattr(service, "generate_makeup_explanation")
         assert hasattr(service, "health_check")
@@ -57,12 +62,14 @@ class TestGeminiService:
     async def test_generate_makeup_explanation_success(self, mock_google_genai):
         """Test successful makeup explanation generation"""
 
-        service = GeminiService()
-        
-        # Mock successful response that passes validation
+        # Setup mock response before getting service instance
         mock_response = MagicMock()
         mock_response.text = "あなたのスプリングタイプには、明るくて温かい色がとても似合います。コーラルピンクやゴールドの色で、目元がきらきら輝いて見えますよ。元気で明るい印象になって、みんなが素敵だなって思ってくれるはずです。"
-        service.client.models.generate_content.return_value = mock_response
+        mock_google_genai["client"].models.generate_content.return_value = mock_response
+
+        # Reset singleton instance
+        gemini_service_module._gemini_service_instance = None
+        service = get_gemini_service()
 
         # Test data
         from src.prompts.makeup_recommendation_prompts import MakeupProduct
@@ -96,12 +103,14 @@ class TestGeminiService:
     async def test_health_check_success(self, mock_google_genai):
         """Test successful health check"""
 
-        service = GeminiService()
-        
-        # Mock successful response that passes validation  
+        # Setup mock response before getting service instance
         mock_response = MagicMock()
         mock_response.text = "あなたのスプリングタイプには、明るくて温かい色がとても似合います。"
-        service.client.models.generate_content.return_value = mock_response
+        mock_google_genai["client"].models.generate_content.return_value = mock_response
+
+        # Reset singleton instance
+        gemini_service_module._gemini_service_instance = None
+        service = get_gemini_service()
 
         # Execute
         result = await service.health_check()
@@ -115,7 +124,9 @@ class TestGeminiService:
     async def test_health_check_failure(self, mock_google_genai):
         """Test health check failure"""
 
-        service = GeminiService()
+        # Reset singleton instance
+        gemini_service_module._gemini_service_instance = None
+        service = get_gemini_service()
         service.client = None  # Simulate uninitialized client
 
         # Execute
@@ -130,10 +141,12 @@ class TestGeminiService:
     async def test_generate_makeup_explanation_api_error(self, mock_google_genai):
         """Test makeup explanation generation with API error"""
 
-        service = GeminiService()
-        
-        # Mock API error
-        service.client.models.generate_content.side_effect = Exception("API Error")
+        # Mock API error before getting service instance
+        mock_google_genai["client"].models.generate_content.side_effect = Exception("API Error")
+
+        # Reset singleton instance
+        gemini_service_module._gemini_service_instance = None
+        service = get_gemini_service()
 
         # Test data
         from src.prompts.makeup_recommendation_prompts import MakeupProduct
@@ -164,7 +177,9 @@ class TestGeminiService:
 
     def test_cache_functionality(self, mock_google_genai):
         """Test cache functionality"""
-        service = GeminiService()
+        # Reset singleton instance
+        gemini_service_module._gemini_service_instance = None
+        service = get_gemini_service()
         
         # Test cache stats
         stats = service.get_cache_stats()
