@@ -27,6 +27,8 @@ def test_gemini_integration():
         # 環境変数設定確認
         print("Environment Variables:")
         print(f"GOOGLE_CLOUD_PROJECT: {os.getenv('GOOGLE_CLOUD_PROJECT', 'Not set')}")
+        print(f"VERTEX_AI_LOCATION: {os.getenv('VERTEX_AI_LOCATION', 'Not set')}")
+        print(f"GOOGLE_GENAI_USE_VERTEXAI: {os.getenv('GOOGLE_GENAI_USE_VERTEXAI', 'Not set')}")
         print(f"ENVIRONMENT: {os.getenv('ENVIRONMENT', 'Not set')}")
         print(f"DEBUG: {os.getenv('DEBUG', 'Not set')}")
         print()

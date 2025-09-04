@@ -44,6 +44,11 @@ spec:
           value: "asia-northeast1"
         - name: GEMINI_MODEL_NAME
           value: "gemini-2.5-flash"
+        # Google Gen AI SDK Configuration
+        - name: GOOGLE_GENAI_USE_VERTEXAI
+          value: "true"
+        - name: GOOGLE_CLOUD_LOCATION
+          value: "asia-northeast1"
         # CORS Settings
         - name: ALLOWED_ORIGINS
           value: "*"

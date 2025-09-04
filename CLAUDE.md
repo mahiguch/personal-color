@@ -46,6 +46,8 @@ flutter run
 
 ### Python (Server)
 
+**重要**: Pythonコード実行前には必ず仮想環境を有効化してください。
+
 ```bash
 cd server
 
@@ -57,24 +59,24 @@ source .venv/bin/activate
 pip install -r requirements.txt
 
 # プロンプトテスト実行
-./run_prompt_test.sh
+source .venv/bin/activate && ./run_prompt_test.sh
 
 # 単体テスト
-pytest tests/unit/
+source .venv/bin/activate && pytest tests/unit/
 
 # 統合テスト
-pytest tests/integration/
+source .venv/bin/activate && pytest tests/integration/
 
 # リント・フォーマット
-black .
-flake8 .
-mypy .
+source .venv/bin/activate && black .
+source .venv/bin/activate && flake8 .
+source .venv/bin/activate && mypy .
 
-# Vertex AI接続テスト
-python test_vertex_ai_connection.py
+# Google Gen AI SDK 接続テスト
+source .venv/bin/activate && python -c "from src.services.gemini_service import get_gemini_service; import asyncio; asyncio.run(get_gemini_service().health_check())"
 
 # Geminiプロンプトテスト
-python test_gemini_prompts.py
+source .venv/bin/activate && python test_gemini_prompts.py
 ```
 
 ### Next.js (Web - ティザーサイト)
@@ -115,9 +117,9 @@ npx tsc --noEmit
 ### 技術スタック
 
 - **クライアント**: Flutter 3.13+ (Dart 3.0+) - iOS専用
-- **サーバー**: Python 3.11+ with ADK Python SDK
+- **サーバー**: Python 3.10+ with Google Gen AI SDK
 - **Web**: Next.js 15 (App Router) + TypeScript - ティザーサイト
-- **AI**: Vertex AI Gemini-2.5-pro
+- **AI**: Google Gen AI SDK (Vertex AI Gemini-1.5-flash)
 - **クラウド**: Google Cloud Platform
 - **ホスティング**: Firebase App Hosting (Web), App Store (iOS)
 - **アーキテクチャ**: Clean Architecture + DDD
@@ -147,6 +149,21 @@ src/
 ├── core/          # 共通機能
 ├── prompts/       # Geminiプロンプト定義
 └── services/      # ビジネスロジック
+    └── gemini_service.py  # Google Gen AI SDK統合 (シングルトンパターン)
+```
+
+### 🔧 Gemini Service 使用方法
+
+**重要**: `GeminiService()`の直接インスタンス化は非推奨です。
+
+```python
+# ❌ 非推奨
+from src.services.gemini_service import GeminiService
+service = GeminiService()
+
+# ✅ 推奨 (シングルトンパターン)
+from src.services.gemini_service import get_gemini_service
+service = get_gemini_service()
 ```
 
 ### Web側アーキテクチャ (ティザーサイト)
@@ -202,8 +219,8 @@ Figmaデザインベース、Tailwind CSS + shadcn/ui使用。
 ### Python依存関係
 
 主要パッケージ：
-- Web Framework: `fastapi`, `uvicorn`
-- AI: `google-cloud-aiplatform`
+- Web Framework: `fastapi==0.115.6`, `uvicorn==0.32.1`
+- AI: `google-genai==1.33.0` (Google Gen AI SDK)
 - Image: `Pillow`
 - Development: `pytest`, `black`, `flake8`, `mypy`
 
@@ -222,10 +239,10 @@ Figmaデザインベース、Tailwind CSS + shadcn/ui使用。
 1. `docs/iOS_SETUP_GUIDE.md` を参照
 2. `scripts/setup_ios_certificates.sh` を実行
 
-### GCP/Vertex AI
+### GCP/Google Gen AI SDK
 
 1. `scripts/setup_gcp_vertex_ai.sh` を実行
-2. `server/run_prompt_test.sh` でテスト
+2. `source .venv/bin/activate && python -m src.services.gemini_service` でテスト
 
 ### Firebase App Hosting (ティザーサイト)
 

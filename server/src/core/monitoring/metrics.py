@@ -131,10 +131,11 @@ class HealthChecker:
         """Check Vertex AI connectivity"""
         try:
             # Import here to avoid circular dependencies
-            from ...services.gemini.gemini_service import GeminiService
+            from ...services.gemini_service import get_gemini_service
 
-            service = GeminiService()
-            return await service.check_health()
+            service = get_gemini_service()
+            health_result = await service.health_check()
+            return health_result.get("status") == "healthy"
         except Exception as e:
             logger.error(f"Vertex AI health check failed: {e}")
             return False

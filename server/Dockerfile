@@ -6,7 +6,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app \
     PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    GOOGLE_GENAI_USE_VERTEXAI=true
 
 WORKDIR /app
 
@@ -52,10 +53,10 @@ USER appuser
 
 # Health check - use existing diagnosis test endpoint
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:${PORT:-8000}/api/v1/diagnose/test || exit 1
+    CMD curl -f http://localhost:${PORT:-8080}/api/v1/diagnose/test || exit 1
 
 # Expose port
-EXPOSE 8000
+EXPOSE 8080
 
 # Run the application with production settings
-CMD uvicorn src.api.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1 --timeout-keep-alive 30
+CMD uvicorn src.api.main:app --host 0.0.0.0 --port ${PORT:-8080} --workers 1 --timeout-keep-alive 30

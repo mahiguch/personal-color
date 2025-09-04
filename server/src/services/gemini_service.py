@@ -12,9 +12,10 @@ from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
-# Vertex AI Gemini
-import vertexai
-from vertexai.generative_models import GenerativeModel, GenerationConfig
+# Google Gen AI SDK
+import os
+from google import genai
+from google.genai import types
 
 # プロンプト機能
 from ..prompts.makeup_recommendation_prompts import (
@@ -67,7 +68,7 @@ class GeminiService:
     def __init__(self):
         self.settings = get_settings()
         self.model_name = "gemini-1.5-flash"  # 利用可能なGemini Flash
-        self.model: Optional[GenerativeModel] = None
+        self.client: Optional[genai.Client] = None
         self._initialize_service()
 
         # プロンプト生成器
@@ -86,33 +87,36 @@ class GeminiService:
     def _initialize_service(self):
         """Gemini サービスを初期化"""
         try:
-            # Vertex AI初期化
-            vertexai.init(
-                project=self.settings.google_cloud_project,
-                location=self.settings.vertex_ai_location,
-            )
-
-            # Generation config
-            generation_config = GenerationConfig(
-                temperature=0.7,  # 創造性とコンシステンシーのバランス
-                top_p=0.8,  # 高品質な応答のため
-                top_k=20,  # 適度なバラエティ
-                max_output_tokens=200,  # 小学生向け短文
-                stop_sequences=None,
-            )
-
-            # モデル初期化
-            self.model = GenerativeModel(
-                model_name=self.model_name,
-                generation_config=generation_config,
-            )
-
-            logger.info(f"Gemini service initialized with model: {self.model_name}")
+            # Google Gen AI クライアント初期化
+            if self.settings.use_vertexai:
+                # Vertex AI使用
+                self.client = genai.Client(
+                    vertexai=True,
+                    project=self.settings.google_cloud_project,
+                    location=self.settings.vertex_ai_location,
+                )
+                logger.info(
+                    f"Gemini client initialized with Vertex AI: {self.model_name}"
+                )
+            else:
+                # Gemini Developer API使用（環境変数からAPIキー取得）
+                api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+                if api_key:
+                    self.client = genai.Client(api_key=api_key)
+                    logger.info(
+                        f"Gemini client initialized with Developer API: {self.model_name}"
+                    )
+                else:
+                    # 環境変数による自動設定
+                    self.client = genai.Client()
+                    logger.info(
+                        f"Gemini client initialized with environment variables: {self.model_name}"
+                    )
 
         except Exception as e:
             logger.error(f"Failed to initialize Gemini service: {e}")
             # フォールバック処理のため例外は再発生させない
-            self.model = None
+            self.client = None
 
     async def generate_makeup_explanation(
         self,
@@ -143,7 +147,7 @@ class GeminiService:
             )
 
         # Gemini未初期化またはエラー時はフォールバック
-        if not self.model:
+        if not self.client:
             logger.warning("Gemini model not available, using fallback")
             return await self._generate_fallback_response(
                 personal_color_type, category, cache_key
@@ -244,10 +248,21 @@ class GeminiService:
     def _call_gemini_sync(self, prompt: str):
         """同期的なGemini API呼び出し"""
         try:
-            # 2秒のタイムアウト設定
-            response = self.model.generate_content(
-                prompt,
-                stream=False,
+            # Google Gen AI SDKでの生成設定
+            config = types.GenerateContentConfig(
+                temperature=0.7,  # 創造性とコンシステンシーのバランス
+                top_p=0.8,  # 高品質な応答のため
+                top_k=20,  # 適度なバラエティ
+                max_output_tokens=200,  # 小学生向け短文
+            )
+
+            if not self.client:
+                raise GeminiServiceError("Client is not initialized")
+                
+            response = self.client.models.generate_content(
+                model=self.model_name,
+                contents=prompt,
+                config=config,
             )
             return response
         except Exception as e:
@@ -261,7 +276,7 @@ class GeminiService:
     ) -> GenerationResult:
         """フォールバック応答生成"""
 
-        fallback_content = self.makeup_prompt_generator.get_fallback_explanation(
+        fallback_content = self.makeup_prompt_generator.generate_fallback_explanation(
             personal_color_type, category
         )
 
@@ -302,7 +317,7 @@ class GeminiService:
             GenerationResult: 生成結果
         """
 
-        if not self.model:
+        if not self.client:
             logger.warning("Gemini model not available, returning fallback response")
             cache_key = f"clothing_{personal_color_type.value}_{category.value}"
             return await self._generate_clothing_fallback_response(
@@ -311,7 +326,7 @@ class GeminiService:
 
         # キャッシュキー生成
         cache_key = f"clothing_{personal_color_type.value}_{category.value}"
-        
+
         # キャッシュチェック
         cached_response = self._get_cached_explanation(cache_key)
         if cached_response:
@@ -327,7 +342,9 @@ class GeminiService:
             personal_color_type, category, products
         )
 
-        logger.info(f"Generating clothing explanation for {personal_color_type.value} {category.value}")
+        logger.info(
+            f"Generating clothing explanation for {personal_color_type.value} {category.value}"
+        )
         logger.debug(f"Prompt: {prompt[:200]}...")  # 最初の200文字のみログ
 
         # リトライ処理
@@ -376,7 +393,9 @@ class GeminiService:
 
             except Exception as e:
                 last_error = e
-                logger.warning(f"Clothing AI generation failed (attempt {retry + 1}): {e}")
+                logger.warning(
+                    f"Clothing AI generation failed (attempt {retry + 1}): {e}"
+                )
 
                 # 最後のリトライでない場合は続行
                 if retry < self._max_retries - 1:
@@ -400,7 +419,7 @@ class GeminiService:
     ) -> GenerationResult:
         """衣料品用フォールバック応答生成"""
 
-        fallback_content = self.clothing_prompt_generator.get_fallback_explanation(
+        fallback_content = self.clothing_prompt_generator.generate_fallback_explanation(
             personal_color_type, category
         )
 
@@ -484,12 +503,12 @@ class GeminiService:
             "service": "gemini",
             "status": "unknown",
             "model": self.model_name,
-            "initialized": self.model is not None,
+            "initialized": self.client is not None,
             "cache_stats": self.get_cache_stats(),
             "timestamp": datetime.utcnow().isoformat(),
         }
 
-        if not self.model:
+        if not self.client:
             health_info["status"] = "degraded"
             health_info["message"] = "Model not initialized, fallback mode only"
             return health_info

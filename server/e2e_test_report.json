@@ -1,132 +1,19 @@
 {
   "summary": {
-    "total_tests": 8,
-    "passed": 6,
-    "failed": 2,
-    "success_rate": 75.0,
-    "avg_response_time_ms": 5153,
-    "timestamp": "2025-08-30T09:37:10.736353"
+    "total_tests": 1,
+    "passed": 0,
+    "failed": 1,
+    "success_rate": 0.0,
+    "avg_response_time_ms": 13,
+    "timestamp": "2025-09-04T11:48:29.482408"
   },
   "results": [
     {
       "test_name": "API Health Check",
-      "success": true,
-      "response_time_ms": 17,
-      "error_message": "",
-      "details": {
-        "status_code": 200
-      }
-    },
-    {
-      "test_name": "Makeup Recommendations - Spring",
-      "success": true,
-      "response_time_ms": 8773,
-      "error_message": "",
-      "details": {
-        "product_counts": {
-          "lip": 3,
-          "cheek": 3,
-          "eyeshadow": 3
-        },
-        "explanation_lengths": {
-          "eyeshadow": 169,
-          "cheek": 179,
-          "lip": 157
-        },
-        "response_size_bytes": 5274
-      }
-    },
-    {
-      "test_name": "Makeup Recommendations - Summer",
-      "success": true,
-      "response_time_ms": 6452,
-      "error_message": "",
-      "details": {
-        "product_counts": {
-          "lip": 3,
-          "cheek": 3,
-          "eyeshadow": 3
-        },
-        "explanation_lengths": {
-          "eyeshadow": 185,
-          "cheek": 162,
-          "lip": 179
-        },
-        "response_size_bytes": 5253
-      }
-    },
-    {
-      "test_name": "Makeup Recommendations - Autumn",
       "success": false,
-      "response_time_ms": 20004,
-      "error_message": "HTTPConnectionPool(host='localhost', port=8001): Read timed out. (read timeout=20)",
+      "response_time_ms": 13,
+      "error_message": "HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /health (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f8091182650>: Failed to establish a new connection: [Errno 61] Connection refused'))",
       "details": {}
-    },
-    {
-      "test_name": "Makeup Recommendations - Winter",
-      "success": true,
-      "response_time_ms": 5931,
-      "error_message": "",
-      "details": {
-        "product_counts": {
-          "lip": 3,
-          "cheek": 3,
-          "eyeshadow": 3
-        },
-        "explanation_lengths": {
-          "eyeshadow": 186,
-          "cheek": 167,
-          "lip": 157
-        },
-        "response_size_bytes": 5172
-      }
-    },
-    {
-      "test_name": "Cache Functionality",
-      "success": false,
-      "response_time_ms": 10,
-      "error_message": "Cache not working effectively",
-      "details": {
-        "first_response_ms": 6,
-        "second_response_ms": 4,
-        "content_match": true,
-        "performance_improvement": false
-      }
-    },
-    {
-      "test_name": "Error Recovery",
-      "success": true,
-      "response_time_ms": 4,
-      "error_message": "",
-      "details": {
-        "status_code": 400,
-        "error_data": {
-          "detail": "Invalid personal color type: invalid_type. Valid types are: spring, winter, summer, autumn"
-        }
-      }
-    },
-    {
-      "test_name": "Response Performance",
-      "success": true,
-      "response_time_ms": 38,
-      "error_message": "",
-      "details": {
-        "avg_response_ms": 3,
-        "max_response_ms": 4,
-        "min_response_ms": 3,
-        "all_response_times": [
-          4,
-          3,
-          4,
-          4,
-          3,
-          3,
-          3,
-          4,
-          3,
-          3
-        ]
-      }
     }
   ]
 }

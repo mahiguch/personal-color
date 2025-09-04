@@ -33,6 +33,9 @@ class Settings(BaseSettings):
     gemini_model_name: str = Field(
         default="gemini-2.5-flash", description="使用するGeminiモデル名"
     )
+    
+    # Google Gen AI SDK設定
+    use_vertexai: bool = Field(default=True, description="Vertex AI使用フラグ")
 
     # Firebase設定
     firebase_project_id: str = Field(
