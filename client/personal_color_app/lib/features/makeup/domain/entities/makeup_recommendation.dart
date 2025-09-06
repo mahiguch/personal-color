@@ -10,6 +10,8 @@ class MakeupRecommendation extends Equatable {
     required this.aiExplanations,
     this.requestId,
     this.timestamp,
+    this.generatedImageSize,
+    this.generatedImageDateTime,
   });
 
   /// 対象のパーソナルカラータイプ
@@ -27,6 +29,12 @@ class MakeupRecommendation extends Equatable {
   /// タイムスタンプ
   final DateTime? timestamp;
 
+  /// AI生成画像のサイズ情報（生成されている場合のみ）
+  final String? generatedImageSize;
+
+  /// AI生成画像の生成日時（生成されている場合のみ）
+  final DateTime? generatedImageDateTime;
+
   @override
   List<Object?> get props => [
         personalColorType,
@@ -34,6 +42,8 @@ class MakeupRecommendation extends Equatable {
         aiExplanations,
         requestId,
         timestamp,
+        generatedImageSize,
+        generatedImageDateTime,
       ];
 
   /// 特定カテゴリの商品を取得
@@ -104,5 +114,12 @@ class MakeupRecommendation extends Equatable {
     return requiredCategories.every((category) =>
         getProductsByCategory(category).isNotEmpty &&
         getAiExplanation(category).isNotEmpty);
+  }
+
+  /// AI生成画像が利用可能かどうか
+  /// 
+  /// Returns: 生成画像データが存在し、有効な場合はtrue
+  bool get hasGeneratedImage {
+    return generatedImageSize != null && generatedImageDateTime != null;
   }
 }

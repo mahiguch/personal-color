@@ -38,6 +38,7 @@ dependencies:
   # Camera & Image Processing
   camera: ^0.10.5+5
   image: ^4.1.3
+  image_picker: ^1.0.4
   permission_handler: ^11.0.1
   
   # Network & API

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
@@ -104,6 +105,111 @@ class MakeupRepositoryImpl implements MakeupRepository {
       return await localDataSource.getLastCacheUpdateTime(personalColorType);
     } catch (e) {
       return null;
+    }
+  }
+
+  @override
+  Future<Either<Failure, MakeupRecommendation>> getAIMakeupRecommendations(
+    PersonalColorType personalColorType,
+    File imageFile,
+  ) async {
+    try {
+      // 1. 画像ファイルの事前検証
+      if (!await imageFile.exists()) {
+        return const Left(ValidationFailure('Image file does not exist'));
+      }
+
+      final fileSize = await imageFile.length();
+      if (fileSize > 10 * 1024 * 1024) { // 10MB制限
+        return const Left(ValidationFailure('Image file is too large (max 10MB)'));
+      }
+
+      // 2. リモートAPIからAI画像生成付きデータ取得
+      final remoteData = await remoteDataSource.getAIMakeupRecommendations(
+        personalColorType: personalColorType,
+        imageFile: imageFile,
+      );
+
+      // 3. AI画像生成が成功した場合はキャッシュに保存しない
+      // (生成画像は一意で再利用性が低いため)
+      // 通常のメイクアップ推奨データのみキャッシュ
+      if (!remoteData.hasGeneratedImage) {
+        try {
+          // AIMakeupRecommendationModelをMakeupRecommendationModelに変換してキャッシュ
+          final baseModel = remoteData.copyWith(clearGeneratedImage: true);
+          await localDataSource.cacheMakeupRecommendations(
+            personalColorType,
+            baseModel,
+          );
+        } catch (e) {
+          // キャッシュ保存の失敗は致命的ではないため、警告のみ
+          // print('Warning: Failed to cache AI makeup recommendations: $e');
+        }
+      }
+
+      // 4. エンティティに変換して返す
+      return Right(remoteData.toEntity());
+
+    } on DioException catch (e) {
+      // Dioの例外をFailureに変換
+      return Left(_mapAIDioExceptionToFailure(e));
+    } catch (e) {
+      // その他の予期しない例外
+      return Left(UnexpectedFailure('Unexpected error during AI makeup generation: $e'));
+    }
+  }
+
+  /// AI画像生成向けのDioException を適切な Failure に変換
+  /// 
+  /// AI画像生成特有のエラーコードやメッセージに対応
+  Failure _mapAIDioExceptionToFailure(DioException e) {
+    switch (e.type) {
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.sendTimeout:
+      case DioExceptionType.receiveTimeout:
+        return const NetworkFailure('AI makeup generation timeout: Please try again or use a smaller image');
+        
+      case DioExceptionType.badResponse:
+        final statusCode = e.response?.statusCode;
+        switch (statusCode) {
+          case 400:
+            // 詳細なエラーメッセージを解析
+            final errorDetail = e.response?.data?['detail'] as String?;
+            if (errorDetail != null) {
+              if (errorDetail.contains('画像サイズ') || errorDetail.contains('image size')) {
+                return const ValidationFailure('Image is too large. Please use an image smaller than 10MB');
+              } else if (errorDetail.contains('画像形式') || errorDetail.contains('format')) {
+                return const ValidationFailure('Unsupported image format. Please use JPEG, PNG, or WebP');
+              } else if (errorDetail.contains('顔が検出') || errorDetail.contains('face')) {
+                return const ValidationFailure('No face detected in the image. Please use a clear photo with a visible face');
+              } else {
+                return ValidationFailure('Invalid request: $errorDetail');
+              }
+            }
+            return const ValidationFailure('Invalid personal color type or image format');
+          case 404:
+            return const DataFailure('AI makeup service not available for the specified type');
+          case 429:
+            return const NetworkFailure('AI generation limit reached. Please try again later');
+          case 500:
+          case 502:
+          case 503:
+            return const ServerFailure('AI service temporarily unavailable. Please try again later');
+          default:
+            return ServerFailure('AI service error: $statusCode');
+        }
+        
+      case DioExceptionType.connectionError:
+        return const NetworkFailure('Network connection error: Please check your internet connection');
+        
+      case DioExceptionType.cancel:
+        return const NetworkFailure('AI makeup generation was cancelled');
+        
+      case DioExceptionType.badCertificate:
+        return const NetworkFailure('SSL certificate error: Unable to verify server identity');
+        
+      case DioExceptionType.unknown:
+        return NetworkFailure('Network error: ${e.message ?? 'Unknown error occurred'}');
     }
   }
 

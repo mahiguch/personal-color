@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:dartz/dartz.dart';
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
 import '../../../../core/errors/failures.dart';
@@ -53,4 +54,29 @@ abstract class MakeupRepository {
   /// 
   /// 最終更新時刻を返します。キャッシュが存在しない場合はnullを返します。
   Future<DateTime?> getLastCacheUpdateTime(PersonalColorType personalColorType);
+
+  /// AI画像生成機能付きメイクアップ推奨データを取得
+  /// 
+  /// [personalColorType] 対象のパーソナルカラータイプ
+  /// [imageFile] アップロードする画像ファイル
+  /// 
+  /// 成功時は[MakeupRecommendation]を、失敗時は[Failure]を返します。
+  /// AI画像生成に失敗した場合でも、通常のメイクアップ推奨データは取得可能です。
+  /// 
+  /// Example:
+  /// ```dart
+  /// final imageFile = File('/path/to/image.jpg');
+  /// final result = await repository.getAIMakeupRecommendations(
+  ///   PersonalColorType.spring,
+  ///   imageFile,
+  /// );
+  /// result.fold(
+  ///   (failure) => print('Error: ${failure.message}'),
+  ///   (recommendation) => print('Success: AI image generated: ${recommendation.hasGeneratedImage}')
+  /// );
+  /// ```
+  Future<Either<Failure, MakeupRecommendation>> getAIMakeupRecommendations(
+    PersonalColorType personalColorType,
+    File imageFile,
+  );
 }

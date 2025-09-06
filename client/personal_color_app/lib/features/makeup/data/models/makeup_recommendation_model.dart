@@ -149,6 +149,8 @@ class MakeupRecommendationModel extends MakeupRecommendation {
       aiExplanations: aiExplanations,
       requestId: requestId,
       timestamp: timestamp,
+      generatedImageSize: null, // 基本モデルでは画像生成なし
+      generatedImageDateTime: null, // 基本モデルでは画像生成なし
     );
   }
 

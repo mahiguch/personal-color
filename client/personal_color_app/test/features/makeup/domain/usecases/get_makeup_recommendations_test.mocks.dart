@@ -4,6 +4,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
+import 'dart:io' as _i8;
 
 import 'package:dartz/dartz.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
@@ -95,4 +96,30 @@ class MockMakeupRepository extends _i1.Mock implements _i3.MakeupRepository {
             returnValue: _i4.Future<DateTime?>.value(),
           )
           as _i4.Future<DateTime?>);
+
+  @override
+  _i4.Future<_i2.Either<_i5.Failure, _i6.MakeupRecommendation>>
+  getAIMakeupRecommendations(
+    _i7.PersonalColorType? personalColorType,
+    _i8.File? imageFile,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#getAIMakeupRecommendations, [
+              personalColorType,
+              imageFile,
+            ]),
+            returnValue:
+                _i4.Future<
+                  _i2.Either<_i5.Failure, _i6.MakeupRecommendation>
+                >.value(
+                  _FakeEither_0<_i5.Failure, _i6.MakeupRecommendation>(
+                    this,
+                    Invocation.method(#getAIMakeupRecommendations, [
+                      personalColorType,
+                      imageFile,
+                    ]),
+                  ),
+                ),
+          )
+          as _i4.Future<_i2.Either<_i5.Failure, _i6.MakeupRecommendation>>);
 }
