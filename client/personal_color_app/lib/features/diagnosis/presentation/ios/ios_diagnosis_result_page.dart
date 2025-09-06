@@ -369,6 +369,7 @@ class IOSDiagnosisResultPage extends StatelessWidget {
   void _navigateToAIMakeupRecommendation(BuildContext context) async {
     try {
       debugPrint('🤖 AI画像生成メイクボタン押下: ${result.diagnosisType}');
+      final navigator = Navigator.of(context);
       
       // 画像選択ダイアログを表示
       final imageSource = await _showImageSourceDialog(context);
@@ -395,7 +396,7 @@ class IOSDiagnosisResultPage extends StatelessWidget {
       debugPrint('✅ AIMakeupRecommendationProvider作成成功');
       
       debugPrint('🚀 AIMakeupRecommendationPageへナビゲーション開始');
-      Navigator.of(context).push(
+      navigator.push(
         MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider.value(
             value: provider,
@@ -413,6 +414,7 @@ class IOSDiagnosisResultPage extends StatelessWidget {
       debugPrint('スタックトレース: $stackTrace');
       
       // エラーダイアログを表示
+      if (!context.mounted) return;
       showDialog(
         context: context,
         builder: (context) => AlertDialog(

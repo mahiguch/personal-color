@@ -55,7 +55,7 @@ void main() {
       const testImagePath = 'test_assets/test_image_512kb.jpg';
       final testFile = File(testImagePath);
       if (!await testFile.exists()) {
-        print('Skipping integration test: Test image file not found at $testImagePath');
+        debugPrint('Skipping integration test: Test image file not found at $testImagePath');
         return;
       }
 
@@ -118,7 +118,7 @@ void main() {
         expect(find.text('エラーが発生しました'), findsOneWidget);
         expect(find.text('再試行'), findsOneWidget);
         
-        print('AI service not available - test handled gracefully');
+        debugPrint('AI service not available - test handled gracefully');
       }
     });
 
@@ -170,7 +170,7 @@ void main() {
       const testImagePath = 'test_assets/test_image_512kb.jpg';
       final testFile = File(testImagePath);
       if (!await testFile.exists()) {
-        print('Skipping test: Test image file not found');
+        debugPrint('Skipping test: Test image file not found');
         return;
       }
 
@@ -220,7 +220,7 @@ void main() {
       const testImagePath = 'test_assets/test_image_512kb.jpg';
       final testFile = File(testImagePath);
       if (!await testFile.exists()) {
-        print('Skipping test: Test image file not found');
+        debugPrint('Skipping test: Test image file not found');
         return;
       }
 
@@ -291,7 +291,7 @@ void main() {
       const testImagePath = 'test_assets/test_image_512kb.jpg';
       final testFile = File(testImagePath);
       if (!await testFile.exists()) {
-        print('Skipping test: Test image file not found');
+        debugPrint('Skipping test: Test image file not found');
         return;
       }
 
@@ -346,7 +346,7 @@ void main() {
       const testImagePath = 'test_assets/test_image_512kb.jpg';
       final testFile = File(testImagePath);
       if (!await testFile.exists()) {
-        print('Skipping memory pressure test: Test image file not found');
+        debugPrint('Skipping memory pressure test: Test image file not found');
         return;
       }
       
@@ -377,7 +377,7 @@ void main() {
       const testImagePath = 'test_assets/test_image_512kb.jpg';
       final testFile = File(testImagePath);
       if (!await testFile.exists()) {
-        print('Skipping test: Test image file not found');
+        debugPrint('Skipping test: Test image file not found');
         return;
       }
 

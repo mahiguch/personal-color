@@ -3,8 +3,8 @@ import 'package:equatable/equatable.dart';
 import '../errors/failures.dart';
 
 /// ユースケースの抽象クラス
-abstract class UseCase<Type, Params> {
-  Future<Either<Failure, Type>> call(Params params);
+abstract class UseCase<T, Params> {
+  Future<Either<Failure, T>> call(Params params);
 }
 
 /// パラメータが不要な場合に使用

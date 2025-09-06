@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -97,7 +96,7 @@ void main() {
         expect(tapResponseTime, lessThan(500), 
                reason: 'UI response time should be under 500ms: ${tapResponseTime}ms');
         
-        print('UI Response Time: ${tapResponseTime}ms');
+        debugPrint('UI Response Time: ${tapResponseTime}ms');
       }
       
       stopwatch.stop();
@@ -106,10 +105,10 @@ void main() {
       expect(initLoadTime, lessThan(5000), 
              reason: 'Initial load time should be under 5s: ${initLoadTime}ms');
       
-      print('Large Image Performance Results:');
-      print('  File size: 5MB');
-      print('  Initial load time: ${initLoadTime}ms');
-      print('  Test passed: ${initLoadTime < 5000}');
+      debugPrint('Large Image Performance Results:');
+      debugPrint('  File size: 5MB');
+      debugPrint('  Initial load time: ${initLoadTime}ms');
+      debugPrint('  Test passed: ${initLoadTime < 5000}');
       
       // クリーンアップ
       if (largeImageFile.existsSync()) {
@@ -158,10 +157,10 @@ void main() {
         expect(averageRequestTime, lessThan(500), 
                reason: 'Average rapid request time should be under 500ms: ${averageRequestTime.toStringAsFixed(2)}ms');
         
-        print('Rapid Requests Performance:');
-        print('  Number of requests: ${requestTimes.length}');
-        print('  Average request time: ${averageRequestTime.toStringAsFixed(2)}ms');
-        print('  Request times: $requestTimes ms');
+        debugPrint('Rapid Requests Performance:');
+        debugPrint('  Number of requests: ${requestTimes.length}');
+        debugPrint('  Average request time: ${averageRequestTime.toStringAsFixed(2)}ms');
+        debugPrint('  Request times: $requestTimes ms');
       }
       
       if (testFile.existsSync()) {
@@ -212,10 +211,10 @@ void main() {
       expect(fullRenderTime, lessThan(3000), 
              reason: 'Full render time should be under 3s: ${fullRenderTime}ms');
       
-      print('UI Rendering Performance:');
-      print('  Initial render: ${initialRenderTime}ms');
-      print('  Full render: ${fullRenderTime}ms');
-      print('  Render efficiency: ${initialRenderTime < 500 && fullRenderTime < 3000}');
+      debugPrint('UI Rendering Performance:');
+      debugPrint('  Initial render: ${initialRenderTime}ms');
+      debugPrint('  Full render: ${fullRenderTime}ms');
+      debugPrint('  Render efficiency: ${initialRenderTime < 500 && fullRenderTime < 3000}');
       
       if (testFile.existsSync()) {
         testFile.deleteSync();
@@ -252,7 +251,7 @@ void main() {
         // メモリ効率性の確認（各ページが正常に作成される）
         expect(find.byType(AIMakeupRecommendationPage), findsOneWidget);
         
-        print('Memory test iteration ${i + 1}/5 completed');
+        debugPrint('Memory test iteration ${i + 1}/5 completed');
       }
       
       memoryStopwatch.stop();
@@ -262,10 +261,10 @@ void main() {
       expect(totalProcessingTime, lessThan(20000), 
              reason: 'Total memory pressure test should complete within 20s: ${totalProcessingTime}ms');
       
-      print('Memory Pressure Test Results:');
-      print('  Files processed: ${testFiles.length}');
-      print('  Total time: ${totalProcessingTime}ms');
-      print('  Average per file: ${totalProcessingTime / testFiles.length}ms');
+      debugPrint('Memory Pressure Test Results:');
+      debugPrint('  Files processed: ${testFiles.length}');
+      debugPrint('  Total time: ${totalProcessingTime}ms');
+      debugPrint('  Average per file: ${totalProcessingTime / testFiles.length}ms');
       
       // クリーンアップ
       for (final file in testFiles) {
@@ -310,9 +309,9 @@ void main() {
         expect(scrollTime, lessThan(1000), 
                reason: 'Scroll performance should be under 1s: ${scrollTime}ms');
         
-        print('Scroll Performance:');
-        print('  10 scroll operations: ${scrollTime}ms');
-        print('  Average per scroll: ${scrollTime / 10}ms');
+        debugPrint('Scroll Performance:');
+        debugPrint('  10 scroll operations: ${scrollTime}ms');
+        debugPrint('  Average per scroll: ${scrollTime / 10}ms');
       }
       
       if (testFile.existsSync()) {
@@ -377,10 +376,10 @@ void main() {
       final timeoutHandlingTime = timeoutStopwatch.elapsedMilliseconds;
       
       // タイムアウト処理が適切に行われることを確認
-      print('Network Timeout Test:');
-      print('  Handling time: ${timeoutHandlingTime}ms');
-      print('  Error state found: $foundError');
-      print('  App remained responsive: ${timeoutHandlingTime < 35000}');
+      debugPrint('Network Timeout Test:');
+      debugPrint('  Handling time: ${timeoutHandlingTime}ms');
+      debugPrint('  Error state found: $foundError');
+      debugPrint('  App remained responsive: ${timeoutHandlingTime < 35000}');
       
       // アプリが35秒以内に応答することを確認
       expect(timeoutHandlingTime, lessThan(35000), 
@@ -430,10 +429,10 @@ void main() {
       rebuildStopwatch.stop();
       
       // 不要なリビルドが発生していないことを確認
-      print('Widget Rebuild Performance:');
-      print('  Total rebuilds: $rebuildCount');
-      print('  Rebuild time: ${rebuildStopwatch.elapsedMilliseconds}ms');
-      print('  Efficient rebuilding: ${rebuildCount < 20}');
+      debugPrint('Widget Rebuild Performance:');
+      debugPrint('  Total rebuilds: $rebuildCount');
+      debugPrint('  Rebuild time: ${rebuildStopwatch.elapsedMilliseconds}ms');
+      debugPrint('  Efficient rebuilding: ${rebuildCount < 20}');
       
       // 過度なリビルドを防いでいることを確認（API エラーなどで多少のリビルドは許容）
       expect(rebuildCount, lessThan(50), 
