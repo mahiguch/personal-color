@@ -28,5 +28,8 @@ black==23.11.0
 flake8==6.1.0
 mypy==1.7.1
 
+# Performance & Monitoring (tests)
+psutil==5.9.8
+
 # ADK Dependencies (will be added when ADK is available)
 # adk-python-sdk  # To be added when available

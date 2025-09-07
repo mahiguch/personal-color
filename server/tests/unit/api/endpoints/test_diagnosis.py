@@ -141,13 +141,14 @@ class TestDiagnosisEndpoints:
             mock_gemini_class.return_value = mock_gemini
 
             mock_processor = AsyncMock()
-            mock_processor.process_base64_image.return_value = MagicMock(
-                base64_data="processed_image_data",
-                original_path="/tmp/test.jpg",
-                compressed_size=1024,
-                quality=85,
-                processing_time_ms=100,
-            )
+            # AsyncMockの戻り値を適切に設定
+            processing_result = MagicMock()
+            processing_result.base64_data = "processed_image_data"
+            processing_result.original_path = "/tmp/test.jpg"
+            processing_result.compressed_size = 1024
+            processing_result.quality = 85
+            processing_result.processing_time_ms = 100
+            mock_processor.process_base64_image = AsyncMock(return_value=processing_result)
             mock_processor_class.return_value = mock_processor
 
             mock_buffer_instance = MagicMock()

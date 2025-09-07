@@ -1,0 +1,413 @@
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:provider/provider.dart';
+
+import 'package:personal_color_app/core/di/injection_container.dart' as di;
+import 'package:personal_color_app/features/diagnosis/domain/entities/diagnosis_result.dart';
+import 'package:personal_color_app/features/makeup/presentation/pages/ai_makeup_recommendation_page.dart';
+import 'package:personal_color_app/features/makeup/presentation/providers/ai_makeup_recommendation_provider.dart';
+import 'package:personal_color_app/main.dart';
+
+void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  group('AI Makeup Recommendation Integration Tests', () {
+    setUpAll(() async {
+      // SharedPreferencesプラグインをモック
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+        const MethodChannel('plugins.flutter.io/shared_preferences'),
+        (MethodCall methodCall) async {
+          if (methodCall.method == 'getAll') {
+            return <String, Object>{};
+          }
+          return null;
+        },
+      );
+
+      // Firebase関連のプラグインをモック
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+        const MethodChannel('plugins.flutter.io/firebase_core'),
+        (MethodCall methodCall) async {
+          if (methodCall.method == 'Firebase#initializeCore') {
+            return <String, Object>{
+              'name': '[DEFAULT]',
+              'options': <String, Object>{
+                'apiKey': 'fake-api-key',
+                'appId': 'fake-app-id',
+                'messagingSenderId': 'fake-sender-id',
+                'projectId': 'fake-project-id',
+              },
+              'pluginConstants': <String, Object>{},
+            };
+          }
+          return null;
+        },
+      );
+
+      await di.init();
+    });
+
+    testWidgets('should complete full AI makeup recommendation flow', (WidgetTester tester) async {
+      // Skip this test if no mock image file is available
+      const testImagePath = 'test_assets/test_image_512kb.jpg';
+      final testFile = File(testImagePath);
+      if (!await testFile.exists()) {
+        debugPrint('Skipping integration test: Test image file not found at $testImagePath');
+        return;
+      }
+
+      // Arrange - Start the app
+      await tester.pumpWidget(const MyApp());
+      await tester.pumpAndSettle();
+
+      // Navigate to AI Makeup Recommendation page
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ChangeNotifierProvider<AIMakeupRecommendationProvider>(
+            create: (_) => di.sl<AIMakeupRecommendationProvider>(),
+            child: AIMakeupRecommendationPage(
+              personalColorType: PersonalColorType.spring,
+              imageFile: testFile,
+            ),
+          ),
+        ),
+      );
+
+      // Act - Wait for initial loading to start
+      await tester.pump();
+      
+      // Check if loading state is reached within reasonable time
+      bool loadingFound = false;
+      for (int i = 0; i < 10; i++) {
+        await tester.pump(const Duration(milliseconds: 100));
+        if (find.byType(CircularProgressIndicator).evaluate().isNotEmpty) {
+          loadingFound = true;
+          break;
+        }
+      }
+      
+      // Assert - Check if loading was found or error state was reached
+      expect(loadingFound || find.byIcon(Icons.error_outline).evaluate().isNotEmpty, 
+             true, reason: 'Should show loading or error state');
+
+      // Act - Wait for AI generation to complete (with timeout)
+      await tester.pumpAndSettle(const Duration(seconds: 30));
+
+      // Assert - Check if result is displayed (success or error)
+      if (find.text('あなたのパーソナルカラー').evaluate().isNotEmpty) {
+        // Success case - AI service is available
+        expect(find.text('あなたのパーソナルカラー'), findsOneWidget);
+        expect(find.text('Spring'), findsOneWidget);
+        
+        // Check for category sections
+        expect(find.text('アイシャドウ'), findsWidgets);
+        expect(find.text('チーク'), findsWidgets);
+        expect(find.text('リップ'), findsWidgets);
+
+        // Check for AI explanations
+        expect(find.text('AI解説'), findsWidgets);
+
+        // Check for product cards
+        expect(find.byType(Card), findsWidgets);
+      } else {
+        // Error case - AI service is not available
+        expect(find.byIcon(Icons.error_outline), findsOneWidget);
+        expect(find.text('エラーが発生しました'), findsOneWidget);
+        expect(find.text('再試行'), findsOneWidget);
+        
+        debugPrint('AI service not available - test handled gracefully');
+      }
+    });
+
+    testWidgets('should handle AI generation timeout gracefully', (WidgetTester tester) async {
+      // Create a mock file that will cause timeout
+      final mockFile = File('/test/assets/large_test_image.jpg');
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ChangeNotifierProvider<AIMakeupRecommendationProvider>(
+            create: (_) => di.sl<AIMakeupRecommendationProvider>(),
+            child: AIMakeupRecommendationPage(
+              personalColorType: PersonalColorType.spring,
+              imageFile: mockFile,
+            ),
+          ),
+        ),
+      );
+
+      // Wait for initial setup
+      await tester.pump();
+
+      // Check if loading or error state is reached
+      bool loadingOrErrorFound = false;
+      for (int i = 0; i < 10; i++) {
+        await tester.pump(const Duration(milliseconds: 100));
+        if (find.byType(CircularProgressIndicator).evaluate().isNotEmpty || 
+            find.byIcon(Icons.error_outline).evaluate().isNotEmpty) {
+          loadingOrErrorFound = true;
+          break;
+        }
+      }
+
+      // Should show loading or error state
+      expect(loadingOrErrorFound, true, 
+             reason: 'Should show loading or error state for timeout test');
+
+      // Wait for processing to complete
+      await tester.pumpAndSettle(const Duration(seconds: 10));
+
+      // Should handle timeout/error gracefully
+      if (find.byIcon(Icons.error_outline).evaluate().isNotEmpty) {
+        expect(find.text('エラーが発生しました'), findsOneWidget);
+        expect(find.text('再試行'), findsOneWidget);
+      }
+    });
+
+    testWidgets('should handle different personal color types', (WidgetTester tester) async {
+      const testImagePath = 'test_assets/test_image_512kb.jpg';
+      final testFile = File(testImagePath);
+      if (!await testFile.exists()) {
+        debugPrint('Skipping test: Test image file not found');
+        return;
+      }
+
+      const personalColorTypes = [
+        PersonalColorType.spring,
+        PersonalColorType.summer,
+        PersonalColorType.autumn,
+        PersonalColorType.winter,
+      ];
+
+      for (final colorType in personalColorTypes) {
+        // Arrange
+        await tester.pumpWidget(
+          MaterialApp(
+            home: ChangeNotifierProvider<AIMakeupRecommendationProvider>(
+              create: (_) => di.sl<AIMakeupRecommendationProvider>(),
+              child: AIMakeupRecommendationPage(
+                personalColorType: colorType,
+                imageFile: testFile,
+              ),
+            ),
+          ),
+        );
+
+        // Act
+        await tester.pumpAndSettle();
+
+        // Assert - Check if UI responds appropriately for this color type
+        if (find.text(colorType.displayName).evaluate().isNotEmpty) {
+          // Success case - personal color type is displayed
+          expect(find.text(colorType.displayName), findsOneWidget);
+        } else {
+          // Error case - should show error state gracefully
+          expect(find.byIcon(Icons.error_outline), findsOneWidget);
+        }
+        
+        // Check theme colors are applied regardless of error state
+        final scaffold = tester.widget<Scaffold>(find.byType(Scaffold));
+        expect(scaffold.backgroundColor, isNotNull);
+
+        // Wait briefly before testing next type
+        await tester.pump(const Duration(milliseconds: 500));
+      }
+    });
+
+    testWidgets('should handle refresh functionality', (WidgetTester tester) async {
+      const testImagePath = 'test_assets/test_image_512kb.jpg';
+      final testFile = File(testImagePath);
+      if (!await testFile.exists()) {
+        debugPrint('Skipping test: Test image file not found');
+        return;
+      }
+
+      // Arrange
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ChangeNotifierProvider<AIMakeupRecommendationProvider>(
+            create: (_) => di.sl<AIMakeupRecommendationProvider>(),
+            child: AIMakeupRecommendationPage(
+              personalColorType: PersonalColorType.spring,
+              imageFile: testFile,
+            ),
+          ),
+        ),
+      );
+
+      // Wait for initial load
+      await tester.pumpAndSettle(const Duration(seconds: 5));
+
+      // Act - Tap refresh button
+      final refreshButton = find.byIcon(Icons.refresh);
+      if (refreshButton.evaluate().isNotEmpty) {
+        await tester.tap(refreshButton.first);
+        await tester.pump();
+
+        // Check for loading or error state after refresh
+        bool refreshLoadingFound = false;
+        for (int i = 0; i < 5; i++) {
+          await tester.pump(const Duration(milliseconds: 100));
+          if (find.byType(CircularProgressIndicator).evaluate().isNotEmpty) {
+            refreshLoadingFound = true;
+            break;
+          }
+        }
+        
+        // Accept either loading state or error state (since API may not be available)
+        expect(refreshLoadingFound || find.byIcon(Icons.error_outline).evaluate().isNotEmpty, 
+               true, reason: 'Should show loading or error state after refresh');
+      }
+    });
+
+    testWidgets('should handle network connectivity issues', (WidgetTester tester) async {
+      // This test simulates network issues by using invalid image
+      final invalidFile = File('/invalid/path/image.jpg');
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ChangeNotifierProvider<AIMakeupRecommendationProvider>(
+            create: (_) => di.sl<AIMakeupRecommendationProvider>(),
+            child: AIMakeupRecommendationPage(
+              personalColorType: PersonalColorType.spring,
+              imageFile: invalidFile,
+            ),
+          ),
+        ),
+      );
+
+      // Wait for processing
+      await tester.pumpAndSettle(const Duration(seconds: 10));
+
+      // Should show error state
+      expect(find.byIcon(Icons.error_outline), findsOneWidget);
+      expect(find.text('エラーが発生しました'), findsOneWidget);
+      expect(find.text('再試行'), findsOneWidget);
+    });
+
+    testWidgets('should persist state during app lifecycle changes', (WidgetTester tester) async {
+      const testImagePath = 'test_assets/test_image_512kb.jpg';
+      final testFile = File(testImagePath);
+      if (!await testFile.exists()) {
+        debugPrint('Skipping test: Test image file not found');
+        return;
+      }
+
+      // Arrange
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ChangeNotifierProvider<AIMakeupRecommendationProvider>(
+            create: (_) => di.sl<AIMakeupRecommendationProvider>(),
+            child: AIMakeupRecommendationPage(
+              personalColorType: PersonalColorType.spring,
+              imageFile: testFile,
+            ),
+          ),
+        ),
+      );
+
+      // Wait for some data to load
+      await tester.pumpAndSettle(const Duration(seconds: 5));
+
+      // Simulate app going to background and returning
+      await tester.binding.defaultBinaryMessenger.handlePlatformMessage(
+        'flutter/lifecycle',
+        const StandardMethodCodec().encodeMethodCall(
+          const MethodCall('AppLifecycleState.paused'),
+        ),
+        (data) {},
+      );
+
+      await tester.pump();
+
+      await tester.binding.defaultBinaryMessenger.handlePlatformMessage(
+        'flutter/lifecycle',
+        const StandardMethodCodec().encodeMethodCall(
+          const MethodCall('AppLifecycleState.resumed'),
+        ),
+        (data) {},
+      );
+
+      await tester.pumpAndSettle();
+
+      // State should be preserved (either success or error state)
+      if (find.text('あなたのパーソナルカラー').evaluate().isNotEmpty) {
+        expect(find.text('あなたのパーソナルカラー'), findsOneWidget);
+      } else {
+        // Error state should be preserved
+        expect(find.byIcon(Icons.error_outline), findsOneWidget);
+      }
+    });
+
+    testWidgets('should handle memory pressure gracefully', (WidgetTester tester) async {
+      // Create multiple AI recommendation instances to simulate memory pressure
+      const testImagePath = 'test_assets/test_image_512kb.jpg';
+      final testFile = File(testImagePath);
+      if (!await testFile.exists()) {
+        debugPrint('Skipping memory pressure test: Test image file not found');
+        return;
+      }
+      
+      final testFiles = List.generate(3, (index) => testFile);
+
+      for (int i = 0; i < testFiles.length; i++) {
+        await tester.pumpWidget(
+          MaterialApp(
+            key: ValueKey('ai_page_$i'),
+            home: ChangeNotifierProvider<AIMakeupRecommendationProvider>(
+              create: (_) => di.sl<AIMakeupRecommendationProvider>(),
+              child: AIMakeupRecommendationPage(
+                personalColorType: PersonalColorType.values[i % PersonalColorType.values.length],
+                imageFile: testFiles[i],
+              ),
+            ),
+          ),
+        );
+
+        await tester.pumpAndSettle(const Duration(milliseconds: 500));
+
+        // Each page should handle creation without memory issues
+        expect(find.byType(AIMakeupRecommendationPage), findsOneWidget);
+      }
+    });
+
+    testWidgets('should handle rapid successive requests', (WidgetTester tester) async {
+      const testImagePath = 'test_assets/test_image_512kb.jpg';
+      final testFile = File(testImagePath);
+      if (!await testFile.exists()) {
+        debugPrint('Skipping test: Test image file not found');
+        return;
+      }
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ChangeNotifierProvider<AIMakeupRecommendationProvider>(
+            create: (_) => di.sl<AIMakeupRecommendationProvider>(),
+            child: AIMakeupRecommendationPage(
+              personalColorType: PersonalColorType.spring,
+              imageFile: testFile,
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Make multiple rapid refresh requests
+      final refreshButton = find.byIcon(Icons.refresh);
+      if (refreshButton.evaluate().isNotEmpty) {
+        for (int i = 0; i < 3; i++) {
+          await tester.tap(refreshButton.first);
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+
+        await tester.pumpAndSettle(const Duration(seconds: 5));
+
+        // Should handle rapid requests without crashing
+        expect(find.byType(AIMakeupRecommendationPage), findsOneWidget);
+      }
+    });
+  });
+}

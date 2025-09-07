@@ -31,7 +31,9 @@ import '../../features/makeup/data/datasources/makeup_remote_data_source.dart';
 import '../../features/makeup/data/repositories/makeup_repository_impl.dart';
 import '../../features/makeup/domain/repositories/makeup_repository.dart';
 import '../../features/makeup/domain/usecases/get_makeup_recommendations.dart';
+import '../../features/makeup/domain/usecases/get_ai_makeup_recommendations.dart';
 import '../../features/makeup/presentation/providers/makeup_recommendation_provider.dart';
+import '../../features/makeup/presentation/providers/ai_makeup_recommendation_provider.dart';
 
 // Clothing feature
 import '../../features/clothing/data/datasources/clothing_remote_data_source.dart';
@@ -123,9 +125,16 @@ Future<void> init() async {
       getMakeupRecommendations: sl(),
     ),
   );
+  
+  sl.registerFactory(
+    () => AIMakeupRecommendationProvider(
+      getAIMakeupRecommendations: sl(),
+    ),
+  );
 
   // Use cases
   sl.registerLazySingleton(() => GetMakeupRecommendations(sl()));
+  sl.registerLazySingleton(() => GetAIMakeupRecommendations(sl()));
 
   // Repository
   sl.registerLazySingleton<MakeupRepository>(

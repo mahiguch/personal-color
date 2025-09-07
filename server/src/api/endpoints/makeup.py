@@ -3,7 +3,7 @@ import os
 import logging
 from typing import Dict, Any, Optional
 from datetime import datetime
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Request, File, UploadFile, Form
 from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
@@ -15,6 +15,12 @@ from ...services.gemini_service import (
     PersonalColorType as GeminiPersonalColorType,
     MakeupCategory as GeminiMakeupCategory,
     MakeupProduct as GeminiMakeupProduct,
+)
+from ...services.imagen_service import (
+    get_imagen_service,
+    ImageGenerationError,
+    FaceDetectionError,
+    APILimitError,
 )
 from ...prompts.makeup_recommendation_prompts import PersonalColorType, MakeupCategory
 
@@ -40,6 +46,22 @@ class MakeupRecommendationResponse(BaseModel):
     personal_color_type: str
     categories: Dict[str, list[MakeupProduct]]
     ai_explanations: Dict[str, str]
+    request_id: str
+    timestamp: str
+
+
+class GeneratedImageData(BaseModel):
+    image_data: str  # Base64 encoded image
+    mime_type: str
+    generated_at: str
+    model_used: str
+
+
+class AIMakeupRecommendationResponse(BaseModel):
+    personal_color_type: str
+    categories: Dict[str, list[MakeupProduct]]
+    ai_explanations: Dict[str, str]
+    generated_image: Optional[GeneratedImageData]
     request_id: str
     timestamp: str
 
@@ -106,6 +128,36 @@ def validate_personal_color_type(color_type: str) -> str:
             detail=f"Invalid personal color type: {color_type}. "
             f"Valid types are: {', '.join(VALID_PERSONAL_COLOR_TYPES)}",
         )
+
+
+def validate_image_input(image_bytes: bytes, mime_type: str) -> None:
+    """Validate uploaded image for security and format requirements
+
+    Args:
+        image_bytes: Raw image bytes
+        mime_type: MIME type of the image
+
+    Raises:
+        HTTPException: If validation fails
+    """
+    # Check image size (10MB limit)
+    max_size = 10 * 1024 * 1024  # 10MB
+    if len(image_bytes) > max_size:
+        raise HTTPException(
+            status_code=400, detail="画像サイズが大きすぎます。10MB以下の画像をアップロードしてください。"
+        )
+
+    # Check MIME type
+    allowed_types = {"image/jpeg", "image/png", "image/webp"}
+    if mime_type not in allowed_types:
+        raise HTTPException(
+            status_code=400, detail=f"サポートされていない画像形式です。対応形式: {', '.join(allowed_types)}"
+        )
+
+    # Minimum size check (avoid too small images)
+    min_size = 1024  # 1KB minimum
+    if len(image_bytes) < min_size:
+        raise HTTPException(status_code=400, detail="画像が小さすぎます。1KB以上の画像をアップロードしてください。")
 
 
 async def get_ai_explanations(
@@ -199,7 +251,7 @@ async def get_ai_explanations(
 )
 async def get_makeup_recommendations(personal_color_type: str, request: Request):
     """Get makeup recommendations for a specific personal color type"""
-    
+
     # Request logging
     client_ip = request.client.host if request.client else "unknown"
     request_id = generate_request_id()
@@ -216,28 +268,38 @@ async def get_makeup_recommendations(personal_color_type: str, request: Request)
     try:
         # Validate personal color type
         validated_type = validate_personal_color_type(personal_color_type)
-        logger.info(f"[MAKEUP_API] request_id={request_id}, validated_type={validated_type}")
+        logger.info(
+            f"[MAKEUP_API] request_id={request_id}, validated_type={validated_type}"
+        )
 
         # Load makeup products data
-        logger.info(f"[MAKEUP_API] request_id={request_id}, loading makeup products data")
+        logger.info(
+            f"[MAKEUP_API] request_id={request_id}, loading makeup products data"
+        )
         products_data = get_makeup_products()
-        
+
         # Check if the personal color type exists in data
         if validated_type not in products_data:
-            logger.warning(f"[MAKEUP_API] request_id={request_id}, no data found for type: {validated_type}")
+            logger.warning(
+                f"[MAKEUP_API] request_id={request_id}, no data found for type: {validated_type}"
+            )
             raise HTTPException(
                 status_code=404,
                 detail=f"No makeup recommendations found for personal color type: {validated_type}",
             )
 
         type_data = products_data[validated_type]
-        logger.info(f"[MAKEUP_API] request_id={request_id}, found data for {validated_type}")
+        logger.info(
+            f"[MAKEUP_API] request_id={request_id}, found data for {validated_type}"
+        )
 
         # Validate data structure
         required_categories = {"eyeshadow", "cheek", "lip"}
         missing_categories = required_categories - set(type_data.keys())
         if missing_categories:
-            logger.error(f"[MAKEUP_API] request_id={request_id}, missing categories: {missing_categories}")
+            logger.error(
+                f"[MAKEUP_API] request_id={request_id}, missing categories: {missing_categories}"
+            )
             raise HTTPException(
                 status_code=500,
                 detail=f"Missing categories in data: {', '.join(missing_categories)}",
@@ -266,13 +328,17 @@ async def get_makeup_recommendations(personal_color_type: str, request: Request)
 
             categories[category] = products
             total_products += len(products)
-            logger.info(f"[MAKEUP_API] request_id={request_id}, loaded {len(products)} products for {category}")
+            logger.info(
+                f"[MAKEUP_API] request_id={request_id}, loaded {len(products)} products for {category}"
+            )
 
         # Get AI explanations
         logger.info(f"[MAKEUP_API] request_id={request_id}, generating AI explanations")
         ai_explanations = await get_ai_explanations(validated_type, products_data)
         explanations_count = len([v for v in ai_explanations.values() if v])
-        logger.info(f"[MAKEUP_API] request_id={request_id}, generated {explanations_count} AI explanations")
+        logger.info(
+            f"[MAKEUP_API] request_id={request_id}, generated {explanations_count} AI explanations"
+        )
 
         # Generate response
         response = MakeupRecommendationResponse(
@@ -306,10 +372,207 @@ async def get_makeup_recommendations(personal_color_type: str, request: Request)
         # Unexpected errors
         logger.error(
             f"[MAKEUP_API_ERROR] request_id={request_id}, "
-            f"unexpected_error={str(e)}", 
-            exc_info=True
+            f"unexpected_error={str(e)}",
+            exc_info=True,
         )
         raise HTTPException(
-            status_code=500, 
-            detail="Error processing makeup recommendations data"
+            status_code=500, detail="Error processing makeup recommendations data"
+        )
+
+
+@router.post(
+    "/makeup-recommendation",
+    response_model=AIMakeupRecommendationResponse,
+)
+async def get_ai_makeup_recommendation(
+    request: Request,
+    personal_color_type: str = Form(...),
+    image: UploadFile = File(...),
+):
+    """Get AI-generated makeup recommendations with generated image
+
+    AIメイク画像生成機能を含むメイク診断エンドポイント
+    """
+
+    # Request logging
+    client_ip = request.client.host if request.client else "unknown"
+    request_id = generate_request_id()
+    logger.info(
+        f"[AI_MAKEUP_REQUEST] request_id={request_id}, "
+        f"personal_color_type={personal_color_type}, "
+        f"client_ip={client_ip}, "
+        f"user_agent={request.headers.get('user-agent', 'unknown')}, "
+        f"image_filename={image.filename}, "
+        f"image_content_type={image.content_type}"
+    )
+
+    try:
+        # Validate personal color type
+        validated_type = validate_personal_color_type(personal_color_type)
+        logger.info(
+            f"[AI_MAKEUP] request_id={request_id}, validated_type={validated_type}"
+        )
+
+        # Read and validate image
+        logger.info(f"[AI_MAKEUP] request_id={request_id}, reading image file")
+        image_bytes = await image.read()
+        mime_type = image.content_type or "image/jpeg"
+
+        # Validate image input
+        validate_image_input(image_bytes, mime_type)
+        logger.info(
+            f"[AI_MAKEUP] request_id={request_id}, image validation passed, size={len(image_bytes)} bytes"
+        )
+
+        # Load makeup products data
+        logger.info(
+            f"[AI_MAKEUP] request_id={request_id}, loading makeup products data"
+        )
+        products_data = get_makeup_products()
+
+        # Check if the personal color type exists in data
+        if validated_type not in products_data:
+            logger.warning(
+                f"[AI_MAKEUP] request_id={request_id}, no data found for type: {validated_type}"
+            )
+            raise HTTPException(
+                status_code=404,
+                detail=f"No makeup recommendations found for personal color type: {validated_type}",
+            )
+
+        type_data = products_data[validated_type]
+        logger.info(
+            f"[AI_MAKEUP] request_id={request_id}, found data for {validated_type}"
+        )
+
+        # Validate data structure
+        required_categories = {"eyeshadow", "cheek", "lip"}
+        missing_categories = required_categories - set(type_data.keys())
+        if missing_categories:
+            logger.error(
+                f"[AI_MAKEUP] request_id={request_id}, missing categories: {missing_categories}"
+            )
+            raise HTTPException(
+                status_code=500,
+                detail=f"Missing categories in data: {', '.join(missing_categories)}",
+            )
+
+        # Convert data to response models
+        categories = {}
+        total_products = 0
+        for category in required_categories:
+            category_products = type_data[category]
+
+            if not isinstance(category_products, list):
+                raise ValueError(f"Category {category} should be a list")
+
+            # Convert each product to MakeupProduct model
+            products = []
+            for product_data in category_products:
+                try:
+                    product = MakeupProduct(**product_data)
+                    products.append(product)
+                except Exception as e:
+                    logger.warning(
+                        f"[AI_MAKEUP] request_id={request_id}, error converting product {product_data.get('id', 'unknown')}: {e}"
+                    )
+                    continue
+
+            categories[category] = products
+            total_products += len(products)
+            logger.info(
+                f"[AI_MAKEUP] request_id={request_id}, loaded {len(products)} products for {category}"
+            )
+
+        # Get AI explanations
+        logger.info(f"[AI_MAKEUP] request_id={request_id}, generating AI explanations")
+        ai_explanations = await get_ai_explanations(validated_type, products_data)
+        explanations_count = len([v for v in ai_explanations.values() if v])
+        logger.info(
+            f"[AI_MAKEUP] request_id={request_id}, generated {explanations_count} AI explanations"
+        )
+
+        # Generate AI makeup image
+        generated_image = None
+        try:
+            logger.info(
+                f"[AI_MAKEUP] request_id={request_id}, starting AI image generation"
+            )
+            imagen_service = get_imagen_service()
+
+            image_result = await imagen_service.generate_makeup_image(
+                image_bytes, mime_type, validated_type
+            )
+
+            generated_image = GeneratedImageData(
+                image_data=image_result["image_data"],
+                mime_type=image_result["mime_type"],
+                generated_at=image_result["generated_at"],
+                model_used=image_result["model_used"],
+            )
+            logger.info(
+                f"[AI_MAKEUP] request_id={request_id}, AI image generation completed"
+            )
+
+        except FaceDetectionError as e:
+            logger.warning(
+                f"[AI_MAKEUP] request_id={request_id}, face detection failed: {e}"
+            )
+            raise HTTPException(status_code=400, detail=str(e))
+        except APILimitError as e:
+            logger.warning(
+                f"[AI_MAKEUP] request_id={request_id}, API limit reached: {e}"
+            )
+            raise HTTPException(status_code=429, detail=str(e))
+        except ImageGenerationError as e:
+            logger.error(
+                f"[AI_MAKEUP] request_id={request_id}, image generation failed: {e}"
+            )
+            # Continue without generated image rather than failing completely
+            logger.info(
+                f"[AI_MAKEUP] request_id={request_id}, continuing without generated image"
+            )
+
+        # Generate response
+        response = AIMakeupRecommendationResponse(
+            personal_color_type=validated_type,
+            categories=categories,
+            ai_explanations=ai_explanations,
+            generated_image=generated_image,
+            request_id=request_id,
+            timestamp=datetime.utcnow().isoformat() + "Z",
+        )
+
+        # Success logging
+        has_generated_image = generated_image is not None
+        logger.info(
+            f"[AI_MAKEUP_RESPONSE] request_id={request_id}, "
+            f"personal_color_type={validated_type}, "
+            f"total_products={total_products}, "
+            f"ai_explanations={explanations_count}, "
+            f"generated_image={has_generated_image}, "
+            f"status=success"
+        )
+
+        # Clean up image bytes from memory for security
+        del image_bytes
+
+        return response
+
+    except HTTPException as e:
+        # HTTP exceptions (validation errors, not found, etc.)
+        logger.error(
+            f"[AI_MAKEUP_ERROR] request_id={request_id}, "
+            f"status_code={e.status_code}, "
+            f"detail={e.detail}"
+        )
+        raise
+    except Exception as e:
+        # Unexpected errors
+        logger.error(
+            f"[AI_MAKEUP_ERROR] request_id={request_id}, " f"unexpected_error={str(e)}",
+            exc_info=True,
+        )
+        raise HTTPException(
+            status_code=500, detail="Error processing AI makeup recommendation"
         )
