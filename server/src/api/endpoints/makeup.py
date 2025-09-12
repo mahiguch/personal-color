@@ -495,24 +495,32 @@ async def get_ai_makeup_recommendation(
         # Generate AI makeup image
         generated_image = None
         try:
-            logger.info(
-                f"[AI_MAKEUP] request_id={request_id}, starting AI image generation"
-            )
-            imagen_service = get_imagen_service()
+            # 設定確認
+            settings = get_settings()
+            if not settings.ai_image_generation_enabled:
+                logger.warning(
+                    f"[AI_MAKEUP] request_id={request_id}, AI image generation is disabled"
+                )
+            else:
+                logger.info(
+                    f"[AI_MAKEUP] request_id={request_id}, starting AI image generation"
+                )
+                imagen_service = get_imagen_service()
 
-            image_result = await imagen_service.generate_makeup_image(
-                image_bytes, mime_type, validated_type
-            )
+                # 実際の画像生成を実行
+                image_result = await imagen_service.generate_makeup_image(
+                    image_bytes, mime_type, validated_type
+                )
 
-            generated_image = GeneratedImageData(
-                image_data=image_result["image_data"],
-                mime_type=image_result["mime_type"],
-                generated_at=image_result["generated_at"],
-                model_used=image_result["model_used"],
-            )
-            logger.info(
-                f"[AI_MAKEUP] request_id={request_id}, AI image generation completed"
-            )
+                generated_image = GeneratedImageData(
+                    image_data=image_result["image_data"],
+                    mime_type=image_result["mime_type"],
+                    generated_at=image_result["generated_at"],
+                    model_used=image_result["model_used"],
+                )
+                logger.info(
+                    f"[AI_MAKEUP] request_id={request_id}, AI image generation completed successfully"
+                )
 
         except FaceDetectionError as e:
             logger.warning(
@@ -528,9 +536,9 @@ async def get_ai_makeup_recommendation(
             logger.error(
                 f"[AI_MAKEUP] request_id={request_id}, image generation failed: {e}"
             )
-            # Continue without generated image rather than failing completely
+            # フォールバック: 生成失敗時も他の情報は返す
             logger.info(
-                f"[AI_MAKEUP] request_id={request_id}, continuing without generated image"
+                f"[AI_MAKEUP] request_id={request_id}, continuing without generated image due to generation error"
             )
 
         # Generate response

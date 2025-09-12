@@ -1,0 +1,1848 @@
+00:00 +0: loading /Users/mahiguch/dev/personal-color/client/personal_color_app/test/di_test.dart
+00:00 +0: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/di_test.dart: Dependency Injection Test should create MakeupRecommendationProvider without error
+00:00 +0: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/unit/core/network/api_client_test.dart: ApiClient 初期化 正常に初期化される
+✅ SSL設定検証成功: https://personal-color-api-666814602151.asia-northeast1.run.app
+00:00 +1: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/di_test.dart: Dependency Injection Test should create MakeupRecommendationProvider without error
+00:00 +1: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/unit/core/network/api_client_test.dart: ApiClient メソッド存在確認 postメソッドが存在する
+✅ SSL設定検証成功: https://personal-color-api-666814602151.asia-northeast1.run.app
+00:00 +2: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/di_test.dart: Dependency Injection Test should create MakeupRecommendationProvider without error
+00:00 +2: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/unit/core/network/api_client_test.dart: ApiClient メソッド存在確認 getメソッドが存在する
+✅ SSL設定検証成功: https://personal-color-api-666814602151.asia-northeast1.run.app
+00:00 +3: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/di_test.dart: Dependency Injection Test should create MakeupRecommendationProvider without error
+00:00 +3: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/unit/core/network/api_client_test.dart: ApiClient メソッド存在確認 disposeメソッドが存在する
+✅ SSL設定検証成功: https://personal-color-api-666814602151.asia-northeast1.run.app
+00:00 +4: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/di_test.dart: Dependency Injection Test should create MakeupRecommendationProvider without error
+🔧 MakeupRecommendationProvider コンストラクタ
+00:00 +4: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/unit/core/network/api_client_test.dart: ApiClient 設定値確認 dispose処理が正常に実行される
+✅ SSL設定検証成功: https://personal-color-api-666814602151.asia-northeast1.run.app
+00:00 +4: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/di_test.dart: Dependency Injection Test should create MakeupRecommendationProvider without error
+✅ GetMakeupRecommendations注入: GetMakeupRecommendations
+🔧 MakeupRecommendationProvider コンストラクタ
+✅ GetMakeupRecommendations注入: GetMakeupRecommendations
+00:00 +5: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/unit/core/network/api_client_test.dart: ApiClient 設定値確認 dispose処理が正常に実行される
+💾 API Clientリソースをクリーンアップしました
+00:00 +6: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/unit/features/camera/presentation/providers/camera_provider_test.dart: (setUpAll)
+00:00 +6: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/unit/features/camera/presentation/providers/camera_provider_test.dart: CameraProvider 初期化 初期状態はinitialである
+00:00 +7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/unit/features/camera/presentation/providers/camera_provider_test.dart: CameraProvider 初期化 カメラ初期化が成功した場合
+🚀 操作開始: initialize
+⚡ カメラ初期化: 9ms
+00:00 +8: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/unit/features/camera/presentation/providers/camera_provider_test.dart: CameraProvider 写真撮影 撮影が成功した場合
+🚀 操作開始: initialize
+⚡ カメラ初期化: 0ms
+🚀 操作開始: capture
+⚡ 写真撮影: 2ms
+00:00 +9: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/unit/features/camera/presentation/providers/camera_provider_test.dart: CameraProvider 状態管理 エラークリア機能
+00:00 +10: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/unit/features/camera/presentation/providers/camera_provider_test.dart: CameraProvider 状態管理 撮影画像クリア機能
+🚀 操作開始: initialize
+⚡ カメラ初期化: 0ms
+🚀 操作開始: capture
+⚡ 写真撮影: 0ms
+00:00 +11: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/unit/features/camera/presentation/providers/camera_provider_test.dart: CameraProvider プロパティテスト isPreviewAvailable は repository の値を返す
+00:00 +12: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/unit/features/camera/presentation/providers/camera_provider_test.dart: CameraProvider dispose dispose時にrepositoryのdisposeCameraが呼ばれる
+💾 CameraProviderリソースをクリーンアップしました
+00:00 +13: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/unit/features/camera/presentation/providers/camera_provider_test.dart: (tearDownAll)
+00:00 +13: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) (setUpAll)
+00:00 +13: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:01 +14: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:01 +14: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/integration/clothing_integration_test.dart: Clothing Integration Tests should successfully load clothing recommendations through entire stack
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:01 +15: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:01 +15: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/integration/clothing_integration_test.dart: Clothing Integration Tests should handle network error through entire stack
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+❌ エラー結果: DataFailure(Unexpected error occurred: Exception: Network connection failed)
+📝 マップされたエラーメッセージ: データの読み込みに失敗しました。もう一度お試しください
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:01 +16: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:02 +16: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/integration/clothing_integration_test.dart: Clothing Integration Tests should handle repository transformation correctly
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:02 +17: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:02 +17: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/integration/clothing_integration_test.dart: Clothing Integration Tests should handle provider state management correctly
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:02 +18: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:02 +18: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/integration/clothing_integration_test.dart: Clothing Integration Tests should handle spring personal color type correctly
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:02 +19: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:02 +19: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/integration/clothing_integration_test.dart: Clothing Integration Tests should handle refresh functionality end-to-end
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: true
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: true, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:02 +20: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:02 +20: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/integration/clothing_integration_test.dart: Clothing Integration Tests should handle error recovery correctly
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+❌ エラー結果: DataFailure(Unexpected error occurred: Exception: First call failed)
+📝 マップされたエラーメッセージ: データの読み込みに失敗しました。もう一度お試しください
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:02 +21: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:02 +21: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/integration/clothing_integration_test.dart: Clothing Integration Tests should validate complete data flow with all categories
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:02 +22: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:02 +22: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/integration/clothing_integration_test.dart: Clothing Integration Tests should handle concurrent load requests correctly
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+⚠️ 既にローディング中のため処理をスキップ
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+⚠️ 既にローディング中のため処理をスキップ
+00:02 +23: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:02 +24: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:02 +25: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:02 +26: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:02 +27: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:02 +28: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:02 +29: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:02 +30: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:02 +31: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:02 +32: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:02 +32: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/integration/clothing_integration_test.dart: Clothing Integration Tests should handle concurrent load requests correctly
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:02 +33: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:02 +33: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/integration/clothing_integration_test.dart: Clothing Integration Tests should handle provider lifecycle correctly
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:02 +34: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:03 +35: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:03 +36: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:03 +37: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:03 +38: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:03 +39: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:03 +40: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:03 +41: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:03 +42: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:03 +43: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:03 +44: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:03 +45: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:03 +46: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /var/folders/y_/48fjfrrs29jb_jw8t7bvtgbc0000gn/T/ai_makeup_it_MGhzRe/test.png
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:03 +47: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:03 +48: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:03 +49: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:03 +50: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:03 +51: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:03 +52: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:03 +53: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:03 +54: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:03 +55: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:03 +56: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:04 +57: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +57: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider loadRecommendations should emit loading state and success result
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:04 +58: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +58: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider loadRecommendations should emit loading state and error result
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+❌ エラー結果: NetworkFailure(Network connection failed)
+📝 マップされたエラーメッセージ: インターネットの接続を確認してもう一度お試しください
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:04 +59: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +59: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider loadRecommendations should use forceRefresh parameter correctly
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: true
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: true, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:04 +60: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +60: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider loadRecommendations should handle different personal color types
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.summer
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.summer, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops]
+   totalProducts: 1
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:04 +61: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +61: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider loadRecommendations should not call usecase if already loading
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+⚠️ 既にローディング中のため処理をスキップ
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:04 +62: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +62: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider loadRecommendations should clear previous error state on successful load
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+❌ エラー結果: DataFailure(Data error)
+📝 マップされたエラーメッセージ: データの読み込みに失敗しました。もう一度お試しください
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:04 +63: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +63: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider setSelectedCategory should change selected category and notify listeners
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:04 +64: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +64: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider setSelectedCategory should not notify listeners if same category is selected
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:04 +65: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +65: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider refresh should call refresh with personalColorType parameter
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: true
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: true, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:04 +66: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +66: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider clearError should clear error state
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+❌ エラー結果: ValidationFailure(Validation error)
+📝 マップされたエラーメッセージ: データに問題があります。もう一度お試しください
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:04 +67: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +67: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider clear should reset all state to initial values
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:04 +68: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +68: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider selectedCategoryProducts should return products for selected category
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:04 +69: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +70: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +70: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider selectedCategoryExplanation should return explanation for selected category
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:04 +71: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +72: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +72: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider availableCategories should return available categories from recommendation
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+00:04 +72: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /var/folders/y_/48fjfrrs29jb_jw8t7bvtgbc0000gn/T/ai_makeup_it_MGhzRe/test.png
+00:04 +72: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider availableCategories should return available categories from recommendation
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:04 +73: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +74: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +74: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider state management should notify listeners when state changes
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+00:04 +74: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+🔍 [AIMakeupRecommendationModel] AI説明データの変換開始
+00:04 +74: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider state management should notify listeners when state changes
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+00:04 +74: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+📋 [AIMakeupRecommendationModel] ai_explanationsキー: []
+00:04 +74: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider state management should notify listeners when state changes
+✅ 成功結果取得
+📊 推奨データ詳細:
+   isEmpty: false
+   availableCategories: [ClothingCategory.tops, ClothingCategory.bottoms, ClothingCategory.accessories]
+   totalProducts: 3
+✅ デフォルトカテゴリ設定: ClothingCategory.tops
+✅ 結果処理完了
+00:04 +74: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+✅ [AIMakeupRecommendationModel] AI生成画像データを設定 - サイズ: 68B
+📊 [AIMakeupRecommendationModel] 変換後のAI説明数: 0
+00:04 +74: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider state management should notify listeners when state changes
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:04 +74: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+📋 [AIMakeupRecommendationModel] 変換後のカテゴリ: []
+🖼️ [AIMakeupRecommendationModel] AI生成画像: 有り
+00:04 +75: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +76: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +76: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider error message mapping should map NetworkFailure correctly
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+❌ エラー結果: NetworkFailure(Network error)
+📝 マップされたエラーメッセージ: インターネットの接続を確認してもう一度お試しください
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:04 +77: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+✅ [GetAIMakeupRecommendations] データ受信成功
+🔍 [GetAIMakeupRecommendations] AI推奨データの検証開始
+00:04 +77: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider error message mapping should map ServerFailure correctly
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+00:04 +77: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+❌ 妥当性チェック失敗: 推奨データが空
+00:04 +77: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider error message mapping should map ServerFailure correctly
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+00:04 +77: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+❌ [AIMakeupRecommendationProvider] エラー: No AI makeup recommendations found
+00:04 +77: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider error message mapping should map ServerFailure correctly
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+00:04 +77: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+❌ [AIMakeupRecommendationProvider] エラー設定: データの取得に失敗しました
+00:04 +77: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider error message mapping should map ServerFailure correctly
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+❌ エラー結果: ServerFailure(Server error)
+📝 マップされたエラーメッセージ: サーバーで問題が発生しました。もう一度お試しください
+00:04 +77: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:04 +77: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider error message mapping should map ServerFailure correctly
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:04 +78: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +78: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider error message mapping should map DataFailure correctly
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+❌ エラー結果: DataFailure(Data error)
+📝 マップされたエラーメッセージ: データの読み込みに失敗しました。もう一度お試しください
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:04 +79: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +79: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider error message mapping should handle failure with null message
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+🚀 getClothingRecommendations実行開始
+✅ getClothingRecommendations実行完了
+🔧 結果処理開始
+❌ エラー結果: ServerFailure(null)
+📝 マップされたエラーメッセージ: サーバーで問題が発生しました。もう一度お試しください
+✅ 結果処理完了
+🏁 ローディング状態をfalseに設定
+✅ loadRecommendations完了
+00:04 +80: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +80: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/clothing/presentation/providers/clothing_recommendation_provider_test.dart: ClothingRecommendationProvider edge cases should handle empty recommendation gracefully
+📡 loadRecommendations開始
+📋 PersonalColorType: PersonalColorType.spring
+🔄 forceRefresh: false
+🔧 ローディング状態設定開始
+✅ ローディング状態設定完了
+🔧 GetClothingRecommendationsParams作成開始
+✅ GetClothingRecommendationsParams作成完了: GetClothingRecommendationsParams(personalColorType: PersonalColorType.spring, forceRefresh: false, includeStats: false)
+00:04 +81: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:04 +82: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:05 +83: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:05 +84: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:05 +85: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:05 +86: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:05 +87: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:05 +88: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:05 +89: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:05 +90: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:05 +91: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:05 +92: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:05 +92: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should complete full AI makeup recommendation flow
+Skipping integration test: Test image file not found at test_assets/test_image_512kb.jpg
+00:05 +93: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:05 +94: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+00:05 +95: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +95: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/domain/usecases/get_ai_makeup_recommendations_test.dart: GetAIMakeupRecommendations should get AI makeup recommendations from repository when call is successful
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+00:06 +95: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should complete full AI makeup recommendation flow
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/assets/large_test_image.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+00:06 +95: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/domain/usecases/get_ai_makeup_recommendations_test.dart: GetAIMakeupRecommendations should get AI makeup recommendations from repository when call is successful
+   画像ファイル: /test/path/image.jpg
+00:06 +95: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should complete full AI makeup recommendation flow
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:06 +95: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/domain/usecases/get_ai_makeup_recommendations_test.dart: GetAIMakeupRecommendations should get AI makeup recommendations from repository when call is successful
+✅ [GetAIMakeupRecommendations] データ受信成功
+🔍 [GetAIMakeupRecommendations] AI推奨データの検証開始
+  MakeupCategory.eyeshadow: products=true, explanation=true
+  MakeupCategory.cheek: products=true, explanation=true
+  MakeupCategory.lip: products=true, explanation=true
+🖼️ AI生成画像: 成功
+   画像サイズ: 1.2MB
+   生成日時: 2023-12-31 15:00:00.000Z
+✅ AI推奨データ検証完了 - データは完全です
+📊 AI説明文: 3/3カテゴリで取得済み
+00:06 +96: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +96: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/domain/usecases/get_ai_makeup_recommendations_test.dart: GetAIMakeupRecommendations should return DataFailure when AI recommendation is empty
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/path/image.jpg
+✅ [GetAIMakeupRecommendations] データ受信成功
+🔍 [GetAIMakeupRecommendations] AI推奨データの検証開始
+❌ 妥当性チェック失敗: 推奨データが空
+00:06 +97: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +97: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/domain/usecases/get_ai_makeup_recommendations_test.dart: GetAIMakeupRecommendations should return DataFailure when AI recommendation is incomplete
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/path/image.jpg
+✅ [GetAIMakeupRecommendations] データ受信成功
+🔍 [GetAIMakeupRecommendations] AI推奨データの検証開始
+  MakeupCategory.eyeshadow: products=true, explanation=true
+  MakeupCategory.cheek: products=false, explanation=false
+  MakeupCategory.lip: products=false, explanation=false
+❌ 完全性チェック失敗: 必要な商品データが不足
+00:06 +98: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +98: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/domain/usecases/get_ai_makeup_recommendations_test.dart: GetAIMakeupRecommendations should return validation failure for AI-specific errors
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/path/image.jpg
+❌ [GetAIMakeupRecommendations] エラー: Image file is too large (max 10MB)
+00:06 +99: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +99: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/domain/usecases/get_ai_makeup_recommendations_test.dart: GetAIMakeupRecommendations should return network failure for AI generation timeout
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/path/image.jpg
+❌ [GetAIMakeupRecommendations] エラー: AI makeup generation timeout: Please try again or use a smaller image
+00:06 +100: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +100: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/domain/usecases/get_ai_makeup_recommendations_test.dart: GetAIMakeupRecommendations should return server failure for AI service unavailable
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/path/image.jpg
+❌ [GetAIMakeupRecommendations] エラー: AI service temporarily unavailable. Please try again later.
+00:06 +101: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +101: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/domain/usecases/get_ai_makeup_recommendations_test.dart: GetAIMakeupRecommendations should return UnexpectedFailure when repository throws exception
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/path/image.jpg
+❌ [GetAIMakeupRecommendations] 予期しないエラー: FormatException: AI generation unexpected error
+00:06 +102: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +102: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/domain/usecases/get_ai_makeup_recommendations_test.dart: GetAIMakeupRecommendations should work with different personal color types
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.winter
+   画像ファイル: /test/path/image.jpg
+✅ [GetAIMakeupRecommendations] データ受信成功
+🔍 [GetAIMakeupRecommendations] AI推奨データの検証開始
+  MakeupCategory.eyeshadow: products=true, explanation=true
+  MakeupCategory.cheek: products=true, explanation=true
+  MakeupCategory.lip: products=true, explanation=true
+🖼️ AI生成画像: 成功
+   画像サイズ: 1.5MB
+   生成日時: 2023-12-31 16:00:00.000Z
+✅ AI推奨データ検証完了 - データは完全です
+📊 AI説明文: 3/3カテゴリで取得済み
+00:06 +103: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +103: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/domain/usecases/get_ai_makeup_recommendations_test.dart: GetAIMakeupRecommendations should handle AI recommendation with generated image data
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/path/image.jpg
+✅ [GetAIMakeupRecommendations] データ受信成功
+🔍 [GetAIMakeupRecommendations] AI推奨データの検証開始
+  MakeupCategory.eyeshadow: products=true, explanation=true
+  MakeupCategory.cheek: products=true, explanation=true
+  MakeupCategory.lip: products=true, explanation=true
+🖼️ AI生成画像: 成功
+   画像サイズ: 2.1MB
+   生成日時: 2023-12-31 15:30:00.000Z
+✅ AI推奨データ検証完了 - データは完全です
+📊 AI説明文: 3/3カテゴリで取得済み
+00:06 +104: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +105: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +106: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +107: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +107: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should complete full AI makeup recommendation flow
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:06 +107: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/domain/usecases/get_makeup_recommendations_test.dart: GetMakeupRecommendations should get makeup recommendations from repository when call is successful
+🔍 受信したメイクアップ推奨データの検証開始
+📊 isEmpty: false
+📊 availableCategories: [MakeupCategory.eyeshadow, MakeupCategory.cheek, MakeupCategory.lip]
+📂 MakeupCategory.eyeshadow: products=1, explanation=26文字
+  商品例: Test Eyeshadow
+  説明: Test eyeshadow explanation...
+📂 MakeupCategory.cheek: products=1, explanation=22文字
+  商品例: Test Cheek
+  説明: Test cheek explanation...
+📂 MakeupCategory.lip: products=1, explanation=20文字
+  商品例: Test Lip
+  説明: Test lip explanation...
+🔍 完全性チェック開始
+  MakeupCategory.eyeshadow: products=true, explanation=true
+  MakeupCategory.cheek: products=true, explanation=true
+  MakeupCategory.lip: products=true, explanation=true
+✅ AI説明文: 3/3カテゴリで取得済み
+✅ データ妥当性チェック完了 - データは完全です
+00:06 +108: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +108: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/domain/usecases/get_makeup_recommendations_test.dart: GetMakeupRecommendations should return DataFailure when recommendation is empty
+🔍 受信したメイクアップ推奨データの検証開始
+📊 isEmpty: true
+📊 availableCategories: []
+📂 MakeupCategory.eyeshadow: products=0, explanation=0文字
+📂 MakeupCategory.cheek: products=0, explanation=0文字
+📂 MakeupCategory.lip: products=0, explanation=0文字
+❌ 妥当性チェック失敗: 推奨データが空
+00:06 +109: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +109: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/domain/usecases/get_makeup_recommendations_test.dart: GetMakeupRecommendations should return DataFailure when recommendation is incomplete
+🔍 受信したメイクアップ推奨データの検証開始
+📊 isEmpty: false
+📊 availableCategories: [MakeupCategory.eyeshadow]
+📂 MakeupCategory.eyeshadow: products=1, explanation=16文字
+  商品例: Test Eyeshadow
+  説明: Test explanation...
+📂 MakeupCategory.cheek: products=0, explanation=0文字
+📂 MakeupCategory.lip: products=0, explanation=0文字
+🔍 完全性チェック開始
+  MakeupCategory.eyeshadow: products=true, explanation=true
+  MakeupCategory.cheek: products=false, explanation=false
+  MakeupCategory.lip: products=false, explanation=false
+❌ 完全性チェック失敗: 必要な商品データが不足
+00:06 +110: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +111: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +112: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +112: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/domain/usecases/get_makeup_recommendations_test.dart: GetMakeupRecommendations should call repository with correct personal color type
+🔍 受信したメイクアップ推奨データの検証開始
+📊 isEmpty: false
+📊 availableCategories: [MakeupCategory.eyeshadow, MakeupCategory.cheek, MakeupCategory.lip]
+📂 MakeupCategory.eyeshadow: products=1, explanation=28文字
+  商品例: Summer Eyeshadow
+  説明: Summer eyeshadow explanation...
+📂 MakeupCategory.cheek: products=1, explanation=24文字
+  商品例: Summer Cheek
+  説明: Summer cheek explanation...
+📂 MakeupCategory.lip: products=1, explanation=22文字
+  商品例: Summer Lip
+  説明: Summer lip explanation...
+🔍 完全性チェック開始
+  MakeupCategory.eyeshadow: products=true, explanation=true
+  MakeupCategory.cheek: products=true, explanation=true
+  MakeupCategory.lip: products=true, explanation=true
+✅ AI説明文: 3/3カテゴリで取得済み
+✅ データ妥当性チェック完了 - データは完全です
+00:06 +113: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +114: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +115: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +116: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +117: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:06 +117: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /var/folders/y_/48fjfrrs29jb_jw8t7bvtgbc0000gn/T/ai_makeup_it_cam_VCjUXr/test.png
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:07 +117: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should complete full AI makeup recommendation flow
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/assets/large_test_image.jpg
+❌ [GetAIMakeupRecommendations] エラー: Image file does not exist
+❌ [AIMakeupRecommendationProvider] エラー: Image file does not exist
+❌ [AIMakeupRecommendationProvider] エラー設定: Image file does not exist
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:07 +117: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:07 +118: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +119: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +120: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +121: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +122: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +123: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +124: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +125: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +126: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +127: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +128: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +129: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +130: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +131: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +132: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +133: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +134: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +134: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /var/folders/y_/48fjfrrs29jb_jw8t7bvtgbc0000gn/T/ai_makeup_it_cam_VCjUXr/test.png
+🔍 [AIMakeupRecommendationModel] AI説明データの変換開始
+📋 [AIMakeupRecommendationModel] ai_explanationsキー: []
+✅ [AIMakeupRecommendationModel] AI生成画像データを設定 - サイズ: 68B
+📊 [AIMakeupRecommendationModel] 変換後のAI説明数: 0
+📋 [AIMakeupRecommendationModel] 変換後のカテゴリ: []
+🖼️ [AIMakeupRecommendationModel] AI生成画像: 有り
+✅ [GetAIMakeupRecommendations] データ受信成功
+🔍 [GetAIMakeupRecommendations] AI推奨データの検証開始
+❌ 妥当性チェック失敗: 推奨データが空
+❌ [AIMakeupRecommendationProvider] エラー: No AI makeup recommendations found
+❌ [AIMakeupRecommendationProvider] エラー設定: データの取得に失敗しました
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:07 +135: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +136: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +137: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +138: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +139: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:07 +140: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:08 +141: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:08 +142: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:08 +143: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:08 +144: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:08 +145: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:08 +145: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: AI Makeup Integration (Task 3.4) Top → Dialog → Gallery → Color → AI image shows
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /var/folders/y_/48fjfrrs29jb_jw8t7bvtgbc0000gn/T/ai_makeup_it_direct_qj1Ovt/test.png
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /var/folders/y_/48fjfrrs29jb_jw8t7bvtgbc0000gn/T/ai_makeup_it_direct_qj1Ovt/test.png
+🔍 [AIMakeupRecommendationModel] AI説明データの変換開始
+📋 [AIMakeupRecommendationModel] ai_explanationsキー: []
+✅ [AIMakeupRecommendationModel] AI生成画像データを設定 - サイズ: 68B
+📊 [AIMakeupRecommendationModel] 変換後のAI説明数: 0
+📋 [AIMakeupRecommendationModel] 変換後のカテゴリ: []
+🖼️ [AIMakeupRecommendationModel] AI生成画像: 有り
+✅ [GetAIMakeupRecommendations] データ受信成功
+🔍 [GetAIMakeupRecommendations] AI推奨データの検証開始
+❌ 妥当性チェック失敗: 推奨データが空
+❌ [AIMakeupRecommendationProvider] エラー: No AI makeup recommendations found
+❌ [AIMakeupRecommendationProvider] エラー設定: データの取得に失敗しました
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:09 +146: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:09 +146: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should emit loading state during AI generation
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/path/test_image.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:09 +147: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:09 +147: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/integration/ai_makeup_integration_test.dart: (tearDownAll)
+Warning: integration_test plugin was not detected.
+
+If you're running the tests with `flutter drive`, please make sure your tests
+are in the `integration_test/` directory of your package and use
+`flutter test $path_to_test` to run it instead.
+
+If you're running the tests with Android instrumentation or XCTest, this means
+that you are not capturing test results properly! See the following link for
+how to set up the integration_test plugin:
+
+https://docs.flutter.dev/testing/integration-tests
+
+00:09 +147: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:10 +147: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should emit loading state during AI generation
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:10 +148: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:10 +148: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should emit loading state during AI generation
+✅ [AIMakeupRecommendationProvider] データ取得成功
+   総商品数: 3
+   AI生成画像: 有り
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+💬 [AIMakeupRecommendationProvider] 進行状況: 完了！
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:10 +149: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:10 +149: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should set recommendation when use case returns success
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/path/test_image.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:10 +150: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:10 +151: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:10 +152: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:10 +153: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:10 +154: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:11 +155: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:11 +156: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:11 +157: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:11 +157: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should set recommendation when use case returns success
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:11 +158: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:11 +158: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should emit loading state during AI generation
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+00:11 +158: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should set recommendation when use case returns success
+✅ [AIMakeupRecommendationProvider] データ取得成功
+   総商品数: 3
+   AI生成画像: 有り
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+💬 [AIMakeupRecommendationProvider] 進行状況: 完了！
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:11 +159: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:11 +159: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should set error state when use case returns ValidationFailure
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/path/test_image.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:11 +160: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:12 +161: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:12 +162: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:12 +163: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:12 +164: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:12 +164: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should set error state when use case returns ValidationFailure
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:12 +165: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:12 +166: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:12 +167: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:12 +168: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:12 +169: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:12 +170: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:12 +171: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:12 +172: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:12 +172: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should set recommendation when use case returns success
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+00:12 +172: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should set error state when use case returns ValidationFailure
+❌ [AIMakeupRecommendationProvider] エラー: Image file is too large (max 10MB)
+❌ [AIMakeupRecommendationProvider] エラー設定: Image file is too large (max 10MB)
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:12 +173: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:12 +173: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should set error state when use case returns NetworkFailure
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/path/test_image.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:12 +174: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:12 +175: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:12 +176: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:13 +176: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should set error state when use case returns NetworkFailure
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:13 +177: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:13 +177: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should set error state when use case returns NetworkFailure
+❌ [AIMakeupRecommendationProvider] エラー: AI makeup generation timeout: Please try again or use a smaller image
+❌ [AIMakeupRecommendationProvider] エラー設定: ネットワーク接続を確認してください
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:13 +178: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:13 +178: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should set error state when use case returns ServerFailure
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/path/test_image.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:13 +179: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:13 +180: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:14 +181: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:14 +182: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:14 +183: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:14 +184: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:14 +185: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:14 +185: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should set error state when use case returns ServerFailure
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:14 +186: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:14 +187: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:14 +188: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:14 +189: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:14 +189: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should set error state when use case returns ServerFailure
+❌ [AIMakeupRecommendationProvider] エラー: AI service temporarily unavailable. Please try again later.
+❌ [AIMakeupRecommendationProvider] エラー設定: サーバーエラーが発生しました。しばらく時間をおいてから再試行してください
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:14 +190: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:14 +190: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should set error state when use case returns DataFailure
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/path/test_image.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:14 +191: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:15 +191: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should set error state when use case returns DataFailure
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+❌ [AIMakeupRecommendationProvider] エラー: No AI makeup recommendations found
+❌ [AIMakeupRecommendationProvider] エラー設定: データの取得に失敗しました
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:15 +192: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:15 +192: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should handle UnexpectedFailure correctly
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/path/test_image.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:15 +192 -1: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:15 +192 -1: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/regression/existing_flow_test.dart: Regression Tests - Existing Flows (setUpAll) [E]
+  MissingPluginException(No implementation found for method getAll on channel plugins.flutter.io/shared_preferences)
+  dart:async                                                           _Completer.completeError
+  package:shared_preferences/src/shared_preferences_legacy.dart 91:19  SharedPreferences.getInstance
+  ===== asynchronous gap ===========================
+  dart:async                                                           _CustomZone.registerBinaryCallback
+  package:shared_preferences/src/shared_preferences_legacy.dart 86:13  SharedPreferences.getInstance
+  package:personal_color_app/core/di/injection_container.dart 63:53    init
+  test/regression/existing_flow_test.dart 16:16                        main.<fn>.<fn>
+  
+00:15 +192 -1: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:16 +192 -1: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should handle UnexpectedFailure correctly
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+❌ [AIMakeupRecommendationProvider] エラー: AI generation unexpected error
+❌ [AIMakeupRecommendationProvider] エラー設定: AI generation unexpected error
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:16 +193 -1: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:16 +193 -1: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should update progress message during AI generation
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/path/test_image.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:17 +193 -2: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:17 +193 -2: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/camera_performance_test.dart: CameraProvider パフォーマンステスト カメラ初期化パフォーマンステスト [E]
+  type 'Null' is not a subtype of type 'bool'
+  test/performance/camera_performance_test.dart 18:7   MockCameraRepository.isPreviewAvailable
+  test/performance/camera_performance_test.dart 49:33  main.<fn>.<fn>
+  
+00:17 +193 -3: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:17 +193 -3: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/camera_performance_test.dart: CameraProvider パフォーマンステスト 写真撮影パフォーマンステスト [E]
+  Bad state: Cannot call `when` within a stub response
+  package:mockito/src/mock.dart 1299:5                when
+  test/performance/camera_performance_test.dart 49:7  main.<fn>.<fn>
+  
+00:17 +193 -4: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:17 +193 -4: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/camera_performance_test.dart: CameraProvider パフォーマンステスト メモリ最適化機能テスト [E]
+  Bad state: Cannot call `when` within a stub response
+  package:mockito/src/mock.dart 1299:5                when
+  test/performance/camera_performance_test.dart 49:7  main.<fn>.<fn>
+  
+00:17 +193 -5: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:17 +193 -5: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_5120kb.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+00:17 +193 -5: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/camera_performance_test.dart: CameraProvider パフォーマンステスト パフォーマンスメトリクス取得テスト [E]
+  Bad state: Cannot call `when` within a stub response
+  package:mockito/src/mock.dart 1299:5                when
+  test/performance/camera_performance_test.dart 49:7  main.<fn>.<fn>
+  
+00:17 +193 -5: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:17 +193 -6: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:17 +193 -6: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should update progress message during AI generation
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:17 +193 -6: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/camera_performance_test.dart: CameraProvider パフォーマンステスト バッチ更新パフォーマンステスト [E]
+  Bad state: Cannot call `when` within a stub response
+  package:mockito/src/mock.dart 1299:5                when
+  test/performance/camera_performance_test.dart 49:7  main.<fn>.<fn>
+  
+00:17 +193 -6: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/camera_performance_test.dart: UI応答性テスト CameraProvider状態変更時のUI応答性
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: Cannot call `when` within a stub response
+
+When the exception was thrown, this was the stack:
+#0      when (package:mockito/src/mock.dart:1299:5)
+#1      main.<anonymous closure>.<anonymous closure> (file:///Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/camera_performance_test.dart:199:7)
+#2      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#3      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1059:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  CameraProvider状態変更時のUI応答性
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:17 +193 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:17 +193 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/camera_performance_test.dart: UI応答性テスト CameraProvider状態変更時のUI応答性 [E]
+  Test failed. See exception logs above.
+  The test description was: CameraProvider状態変更時のUI応答性
+  
+00:17 +193 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:17 +193 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should update progress message during AI generation
+✅ [AIMakeupRecommendationProvider] データ取得成功
+   総商品数: 3
+   AI生成画像: 有り
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+💬 [AIMakeupRecommendationProvider] 進行状況: 完了！
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:17 +194 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:17 +194 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should handle different personal color types
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.winter
+   画像ファイル: /test/path/test_image.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:18 +194 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_5120kb.jpg
+🔍 [AIMakeupRecommendationModel] AI説明データの変換開始
+📋 [AIMakeupRecommendationModel] ai_explanationsキー: []
+✅ [AIMakeupRecommendationModel] AI生成画像データを設定 - サイズ: 68B
+📊 [AIMakeupRecommendationModel] 変換後のAI説明数: 0
+📋 [AIMakeupRecommendationModel] 変換後のカテゴリ: []
+🖼️ [AIMakeupRecommendationModel] AI生成画像: 有り
+✅ [GetAIMakeupRecommendations] データ受信成功
+🔍 [GetAIMakeupRecommendations] AI推奨データの検証開始
+❌ 妥当性チェック失敗: 推奨データが空
+❌ [AIMakeupRecommendationProvider] エラー: No AI makeup recommendations found
+❌ [AIMakeupRecommendationProvider] エラー設定: データの取得に失敗しました
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:18 +194 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should handle different personal color types
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:18 +194 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_5120kb.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+🧹 [AIMakeupRecommendationProvider] エラークリア
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+UI Response Time: 143ms
+Large Image Performance Results:
+  File size: 5MB
+  Initial load time: 1882ms
+  Test passed: true
+00:18 +195 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:18 +195 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_512kb.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:18 +195 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should update progress message during AI generation
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+00:18 +195 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should handle different personal color types
+✅ [AIMakeupRecommendationProvider] データ取得成功
+   総商品数: 3
+   AI生成画像: 有り
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+💬 [AIMakeupRecommendationProvider] 進行状況: 完了！
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:18 +196 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:18 +196 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should call use case with correct parameters
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/path/test_image.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:19 +196 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:19 +196 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:19 +196 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should call use case with correct parameters
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:19 +197 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:19 +197 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_5120kb.jpg
+❌ [GetAIMakeupRecommendations] エラー: Image file does not exist
+❌ [AIMakeupRecommendationProvider] エラー: Image file does not exist
+❌ [AIMakeupRecommendationProvider] エラー設定: Image file does not exist
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_512kb.jpg
+🔍 [AIMakeupRecommendationModel] AI説明データの変換開始
+📋 [AIMakeupRecommendationModel] ai_explanationsキー: []
+✅ [AIMakeupRecommendationModel] AI生成画像データを設定 - サイズ: 68B
+📊 [AIMakeupRecommendationModel] 変換後のAI説明数: 0
+📋 [AIMakeupRecommendationModel] 変換後のカテゴリ: []
+🖼️ [AIMakeupRecommendationModel] AI生成画像: 有り
+✅ [GetAIMakeupRecommendations] データ受信成功
+🔍 [GetAIMakeupRecommendations] AI推奨データの検証開始
+❌ 妥当性チェック失敗: 推奨データが空
+❌ [AIMakeupRecommendationProvider] エラー: No AI makeup recommendations found
+❌ [AIMakeupRecommendationProvider] エラー設定: データの取得に失敗しました
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:19 +197 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should handle different personal color types
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+00:19 +197 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should call use case with correct parameters
+✅ [AIMakeupRecommendationProvider] データ取得成功
+   総商品数: 3
+   AI生成画像: 有り
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+💬 [AIMakeupRecommendationProvider] 進行状況: 完了！
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:19 +198 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:19 +198 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should reset previous state before new AI generation request
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/path/test_image.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:20 +198 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle multiple rapid requests gracefully
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_512kb.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+🧹 [AIMakeupRecommendationProvider] エラークリア
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+Rapid Requests Performance:
+  Number of requests: 1
+  Average request time: 55.00ms
+  Request times: [55] ms
+00:20 +199 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:20 +199 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_1024kb.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:20 +200 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:20 +201 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:20 +202 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:20 +203 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:20 +203 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should reset previous state before new AI generation request
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:20 +204 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:20 +205 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:20 +206 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:20 +207 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:20 +208 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:20 +209 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:20 +209 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle multiple rapid requests gracefully
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:20 +209 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:20 +210 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:20 +210 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should call use case with correct parameters
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+00:20 +210 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should reset previous state before new AI generation request
+✅ [AIMakeupRecommendationProvider] データ取得成功
+   総商品数: 3
+   AI生成画像: 有り
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+💬 [AIMakeupRecommendationProvider] 進行状況: 完了！
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/path/test_image.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:21 +210 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle multiple rapid requests gracefully
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_512kb.jpg
+❌ [GetAIMakeupRecommendations] エラー: Image file does not exist
+❌ [AIMakeupRecommendationProvider] エラー: Image file does not exist
+❌ [AIMakeupRecommendationProvider] エラー設定: Image file does not exist
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:21 +210 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_1024kb.jpg
+🔍 [AIMakeupRecommendationModel] AI説明データの変換開始
+📋 [AIMakeupRecommendationModel] ai_explanationsキー: []
+✅ [AIMakeupRecommendationModel] AI生成画像データを設定 - サイズ: 68B
+📊 [AIMakeupRecommendationModel] 変換後のAI説明数: 0
+📋 [AIMakeupRecommendationModel] 変換後のカテゴリ: []
+🖼️ [AIMakeupRecommendationModel] AI生成画像: 有り
+✅ [GetAIMakeupRecommendations] データ受信成功
+🔍 [GetAIMakeupRecommendations] AI推奨データの検証開始
+❌ 妥当性チェック失敗: 推奨データが空
+❌ [AIMakeupRecommendationProvider] エラー: No AI makeup recommendations found
+❌ [AIMakeupRecommendationProvider] エラー設定: データの取得に失敗しました
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:21 +210 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should reset previous state before new AI generation request
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:21 +210 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should efficiently render recommendation UI
+UI Rendering Performance:
+  Initial render: 63ms
+  Full render: 1271ms
+  Render efficiency: true
+00:21 +211 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:21 +211 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_2048kb.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:21 +211 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider fetchAIMakeupRecommendations should reset previous state before new AI generation request
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+❌ [AIMakeupRecommendationProvider] エラー: Network error
+❌ [AIMakeupRecommendationProvider] エラー設定: ネットワーク接続を確認してください
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:21 +212 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:21 +212 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider State Management should notify listeners when state changes
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/path/test_image.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:22 +212 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:22 +213 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:22 +213 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider State Management should notify listeners when state changes
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:22 +213 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_2048kb.jpg
+🔍 [AIMakeupRecommendationModel] AI説明データの変換開始
+📋 [AIMakeupRecommendationModel] ai_explanationsキー: []
+✅ [AIMakeupRecommendationModel] AI生成画像データを設定 - サイズ: 68B
+📊 [AIMakeupRecommendationModel] 変換後のAI説明数: 0
+📋 [AIMakeupRecommendationModel] 変換後のカテゴリ: []
+🖼️ [AIMakeupRecommendationModel] AI生成画像: 有り
+✅ [GetAIMakeupRecommendations] データ受信成功
+🔍 [GetAIMakeupRecommendations] AI推奨データの検証開始
+❌ 妥当性チェック失敗: 推奨データが空
+❌ [AIMakeupRecommendationProvider] エラー: No AI makeup recommendations found
+❌ [AIMakeupRecommendationProvider] エラー設定: データの取得に失敗しました
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:22 +213 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle memory pressure efficiently
+Memory test iteration 1/5 completed
+00:22 +213 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.summer
+   画像ファイル: test_assets/test_image_2048kb.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:22 +213 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider State Management should notify listeners when state changes
+✅ [AIMakeupRecommendationProvider] データ取得成功
+   総商品数: 3
+   AI生成画像: 有り
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+💬 [AIMakeupRecommendationProvider] 進行状況: 完了！
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:22 +214 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:23 +214 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider State Management should handle recommendation with generated image correctly
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/path/test_image.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:23 +214 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:23 +214 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider State Management should handle recommendation with generated image correctly
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:23 +214 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.summer
+   画像ファイル: test_assets/test_image_2048kb.jpg
+🔍 [AIMakeupRecommendationModel] AI説明データの変換開始
+📋 [AIMakeupRecommendationModel] ai_explanationsキー: []
+✅ [AIMakeupRecommendationModel] AI生成画像データを設定 - サイズ: 68B
+📊 [AIMakeupRecommendationModel] 変換後のAI説明数: 0
+📋 [AIMakeupRecommendationModel] 変換後のカテゴリ: []
+🖼️ [AIMakeupRecommendationModel] AI生成画像: 有り
+✅ [GetAIMakeupRecommendations] データ受信成功
+🔍 [GetAIMakeupRecommendations] AI推奨データの検証開始
+❌ 妥当性チェック失敗: 推奨データが空
+❌ [AIMakeupRecommendationProvider] エラー: No AI makeup recommendations found
+❌ [AIMakeupRecommendationProvider] エラー設定: データの取得に失敗しました
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:23 +214 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle memory pressure efficiently
+Memory test iteration 2/5 completed
+00:23 +214 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.autumn
+   画像ファイル: test_assets/test_image_2048kb.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:23 +214 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider State Management should notify listeners when state changes
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+00:24 +214 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider State Management should handle recommendation with generated image correctly
+✅ [AIMakeupRecommendationProvider] データ取得成功
+   総商品数: 3
+   AI生成画像: 有り
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+💬 [AIMakeupRecommendationProvider] 進行状況: 完了！
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:24 +215 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:24 +215 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider State Management should handle recommendation without generated image correctly
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /test/path/test_image.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:24 +215 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:24 +215 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider State Management should handle recommendation without generated image correctly
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:24 +215 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.autumn
+   画像ファイル: test_assets/test_image_2048kb.jpg
+🔍 [AIMakeupRecommendationModel] AI説明データの変換開始
+📋 [AIMakeupRecommendationModel] ai_explanationsキー: []
+✅ [AIMakeupRecommendationModel] AI生成画像データを設定 - サイズ: 68B
+📊 [AIMakeupRecommendationModel] 変換後のAI説明数: 0
+📋 [AIMakeupRecommendationModel] 変換後のカテゴリ: []
+🖼️ [AIMakeupRecommendationModel] AI生成画像: 有り
+✅ [GetAIMakeupRecommendations] データ受信成功
+🔍 [GetAIMakeupRecommendations] AI推奨データの検証開始
+❌ 妥当性チェック失敗: 推奨データが空
+❌ [AIMakeupRecommendationProvider] エラー: No AI makeup recommendations found
+❌ [AIMakeupRecommendationProvider] エラー設定: データの取得に失敗しました
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:25 +215 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider State Management should handle recommendation with generated image correctly
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+00:25 +215 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/presentation/providers/ai_makeup_recommendation_provider_test.dart: AIMakeupRecommendationProvider State Management should handle recommendation without generated image correctly
+✅ [AIMakeupRecommendationProvider] データ取得成功
+   総商品数: 3
+   AI生成画像: 無し
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+💬 [AIMakeupRecommendationProvider] 進行状況: 完了！
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:25 +216 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle AI generation timeout gracefully
+00:26 +217 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle memory pressure efficiently
+00:26 +217 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle different personal color types
+Skipping test: Test image file not found
+00:26 +218 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle memory pressure efficiently
+00:26 +218 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle refresh functionality
+Skipping test: Test image file not found
+00:26 +219 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle memory pressure efficiently
+00:26 +219 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should complete full AI makeup recommendation flow
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /invalid/path/image.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:26 +219 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle memory pressure efficiently
+Memory test iteration 3/5 completed
+00:26 +219 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.winter
+   画像ファイル: test_assets/test_image_2048kb.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+00:27 +219 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should complete full AI makeup recommendation flow
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:27 +219 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+00:27 +219 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should complete full AI makeup recommendation flow
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: /invalid/path/image.jpg
+❌ [GetAIMakeupRecommendations] エラー: Image file does not exist
+❌ [AIMakeupRecommendationProvider] エラー: Image file does not exist
+❌ [AIMakeupRecommendationProvider] エラー設定: Image file does not exist
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:27 +219 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.winter
+   画像ファイル: test_assets/test_image_2048kb.jpg
+🔍 [AIMakeupRecommendationModel] AI説明データの変換開始
+📋 [AIMakeupRecommendationModel] ai_explanationsキー: []
+✅ [AIMakeupRecommendationModel] AI生成画像データを設定 - サイズ: 68B
+📊 [AIMakeupRecommendationModel] 変換後のAI説明数: 0
+📋 [AIMakeupRecommendationModel] 変換後のカテゴリ: []
+🖼️ [AIMakeupRecommendationModel] AI生成画像: 有り
+✅ [GetAIMakeupRecommendations] データ受信成功
+🔍 [GetAIMakeupRecommendations] AI推奨データの検証開始
+❌ 妥当性チェック失敗: 推奨データが空
+❌ [AIMakeupRecommendationProvider] エラー: No AI makeup recommendations found
+❌ [AIMakeupRecommendationProvider] エラー設定: データの取得に失敗しました
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:27 +219 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle memory pressure efficiently
+Memory test iteration 4/5 completed
+00:28 +219 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_2048kb.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_2048kb.jpg
+🔍 [AIMakeupRecommendationModel] AI説明データの変換開始
+📋 [AIMakeupRecommendationModel] ai_explanationsキー: []
+✅ [AIMakeupRecommendationModel] AI生成画像データを設定 - サイズ: 68B
+📊 [AIMakeupRecommendationModel] 変換後のAI説明数: 0
+📋 [AIMakeupRecommendationModel] 変換後のカテゴリ: []
+🖼️ [AIMakeupRecommendationModel] AI生成画像: 有り
+✅ [GetAIMakeupRecommendations] データ受信成功
+🔍 [GetAIMakeupRecommendations] AI推奨データの検証開始
+❌ 妥当性チェック失敗: 推奨データが空
+❌ [AIMakeupRecommendationProvider] エラー: No AI makeup recommendations found
+❌ [AIMakeupRecommendationProvider] エラー設定: データの取得に失敗しました
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:29 +219 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle memory pressure efficiently
+Memory test iteration 5/5 completed
+Memory Pressure Test Results:
+  Files processed: 5
+  Total time: 7501ms
+  Average per file: 1500.2ms
+00:29 +220 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle network connectivity issues
+00:29 +220 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_1024kb.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_1024kb.jpg
+🔍 [AIMakeupRecommendationModel] AI説明データの変換開始
+📋 [AIMakeupRecommendationModel] ai_explanationsキー: []
+✅ [AIMakeupRecommendationModel] AI生成画像データを設定 - サイズ: 68B
+📊 [AIMakeupRecommendationModel] 変換後のAI説明数: 0
+📋 [AIMakeupRecommendationModel] 変換後のカテゴリ: []
+🖼️ [AIMakeupRecommendationModel] AI生成画像: 有り
+✅ [GetAIMakeupRecommendations] データ受信成功
+🔍 [GetAIMakeupRecommendations] AI推奨データの検証開始
+❌ 妥当性チェック失敗: 推奨データが空
+❌ [AIMakeupRecommendationProvider] エラー: No AI makeup recommendations found
+❌ [AIMakeupRecommendationProvider] エラー設定: データの取得に失敗しました
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:30 +221 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle network connectivity issues
+00:30 +221 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_512kb.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_512kb.jpg
+🔍 [AIMakeupRecommendationModel] AI説明データの変換開始
+📋 [AIMakeupRecommendationModel] ai_explanationsキー: []
+✅ [AIMakeupRecommendationModel] AI生成画像データを設定 - サイズ: 68B
+📊 [AIMakeupRecommendationModel] 変換後のAI説明数: 0
+📋 [AIMakeupRecommendationModel] 変換後のカテゴリ: []
+🖼️ [AIMakeupRecommendationModel] AI生成画像: 有り
+✅ [GetAIMakeupRecommendations] データ受信成功
+🔍 [GetAIMakeupRecommendations] AI推奨データの検証開始
+❌ 妥当性チェック失敗: 推奨データが空
+❌ [AIMakeupRecommendationProvider] エラー: No AI makeup recommendations found
+❌ [AIMakeupRecommendationProvider] エラー設定: データの取得に失敗しました
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:31 +221 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle network timeout gracefully
+Network Timeout Test:
+  Handling time: 1159ms
+  Error state found: true
+  App remained responsive: true
+00:31 +222 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle network connectivity issues
+00:31 +222 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should handle large image files efficiently
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_256kb.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_256kb.jpg
+🔍 [AIMakeupRecommendationModel] AI説明データの変換開始
+📋 [AIMakeupRecommendationModel] ai_explanationsキー: []
+✅ [AIMakeupRecommendationModel] AI生成画像データを設定 - サイズ: 68B
+📊 [AIMakeupRecommendationModel] 変換後のAI説明数: 0
+📋 [AIMakeupRecommendationModel] 変換後のカテゴリ: []
+🖼️ [AIMakeupRecommendationModel] AI生成画像: 有り
+✅ [GetAIMakeupRecommendations] データ受信成功
+🔍 [GetAIMakeupRecommendations] AI推奨データの検証開始
+❌ 妥当性チェック失敗: 推奨データが空
+❌ [AIMakeupRecommendationProvider] エラー: No AI makeup recommendations found
+❌ [AIMakeupRecommendationProvider] エラー設定: データの取得に失敗しました
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+00:32 +222 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: AI Makeup Performance Tests should optimize widget rebuild performance
+🤖 [AIMakeupRecommendationProvider] AI推奨データ取得開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_256kb.jpg
+⏳ [AIMakeupRecommendationProvider] ローディング状態: true
+🧹 [AIMakeupRecommendationProvider] エラークリア
+💬 [AIMakeupRecommendationProvider] 進行状況: 画像をアップロード中...
+💬 [AIMakeupRecommendationProvider] 進行状況: AI画像生成中...
+🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始
+   パーソナルカラータイプ: PersonalColorType.spring
+   画像ファイル: test_assets/test_image_256kb.jpg
+🔍 [AIMakeupRecommendationModel] AI説明データの変換開始
+📋 [AIMakeupRecommendationModel] ai_explanationsキー: []
+✅ [AIMakeupRecommendationModel] AI生成画像データを設定 - サイズ: 68B
+📊 [AIMakeupRecommendationModel] 変換後のAI説明数: 0
+📋 [AIMakeupRecommendationModel] 変換後のカテゴリ: []
+🖼️ [AIMakeupRecommendationModel] AI生成画像: 有り
+✅ [GetAIMakeupRecommendations] データ受信成功
+🔍 [GetAIMakeupRecommendations] AI推奨データの検証開始
+❌ 妥当性チェック失敗: 推奨データが空
+❌ [AIMakeupRecommendationProvider] エラー: No AI makeup recommendations found
+❌ [AIMakeupRecommendationProvider] エラー設定: データの取得に失敗しました
+💬 [AIMakeupRecommendationProvider] 進行状況: null
+⏳ [AIMakeupRecommendationProvider] ローディング状態: false
+Widget Rebuild Performance:
+  Total rebuilds: 1
+  Rebuild time: 2368ms
+  Efficient rebuilding: true
+00:33 +223 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle network connectivity issues
+00:33 +223 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/performance/ai_makeup_performance_test.dart: (tearDownAll)
+Warning: integration_test plugin was not detected.
+
+If you're running the tests with `flutter drive`, please make sure your tests
+are in the `integration_test/` directory of your package and use
+`flutter test $path_to_test` to run it instead.
+
+If you're running the tests with Android instrumentation or XCTest, this means
+that you are not capturing test results properly! See the following link for
+how to set up the integration_test plugin:
+
+https://docs.flutter.dev/testing/integration-tests
+
+00:33 +223 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle network connectivity issues
+00:36 +224 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should persist state during app lifecycle changes
+Skipping test: Test image file not found
+00:36 +225 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle memory pressure gracefully
+Skipping memory pressure test: Test image file not found
+00:36 +226 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests should handle rapid successive requests
+Skipping test: Test image file not found
+00:36 +227 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: AI Makeup Recommendation Integration Tests (tearDownAll)
+00:36 +227 -7: /Users/mahiguch/dev/personal-color/client/personal_color_app/test/features/makeup/ai_makeup_integration_test.dart: (tearDownAll)
+Warning: integration_test plugin was not detected.
+
+If you're running the tests with `flutter drive`, please make sure your tests
+are in the `integration_test/` directory of your package and use
+`flutter test $path_to_test` to run it instead.
+
+If you're running the tests with Android instrumentation or XCTest, this means
+that you are not capturing test results properly! See the following link for
+how to set up the integration_test plugin:
+
+https://docs.flutter.dev/testing/integration-tests
+
+00:36 +227 -7: Some tests failed.

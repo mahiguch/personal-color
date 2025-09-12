@@ -1,12 +1,10 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
+import '../../domain/entities/makeup_recommendation.dart';
 import '../providers/ai_makeup_recommendation_provider.dart';
-import '../widgets/product_card_widget.dart';
-import '../widgets/generated_image_widget.dart';
-import '../widgets/ai_explanation_card.dart';
-import '../../domain/entities/makeup_product.dart';
 
 /// AI画像生成付きメイクアップ推奨ページ
 /// 
@@ -49,30 +47,35 @@ class _AIMakeupRecommendationPageState extends State<AIMakeupRecommendationPage>
         title: const Text('AI画像生成メイク'),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _fetchRecommendations,
-            tooltip: 'リフレッシュ',
-          ),
-        ],
       ),
-      body: Consumer<AIMakeupRecommendationProvider>(
-        builder: (context, provider, child) {
-          if (provider.isLoading) {
-            return _buildLoadingScreen(provider);
-          }
-
-          if (provider.hasError) {
-            return _buildErrorScreen(provider);
-          }
-
-          if (!provider.hasRecommendation) {
-            return _buildEmptyScreen();
-          }
-
-          return _buildRecommendationScreen(provider);
+      body: GestureDetector(
+        onLongPress: () {
+          // 長押しでリロード
+          _fetchRecommendations();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('画像を再生成中...'),
+              duration: Duration(seconds: 2),
+            ),
+          );
         },
+        child: Consumer<AIMakeupRecommendationProvider>(
+          builder: (context, provider, child) {
+            if (provider.isLoading) {
+              return _buildLoadingScreen(provider);
+            }
+
+            if (provider.hasError) {
+              return _buildErrorScreen(provider);
+            }
+
+            if (!provider.hasRecommendation) {
+              return _buildEmptyScreen();
+            }
+
+            return _buildRecommendationScreen(provider);
+          },
+        ),
       ),
     );
   }
@@ -232,113 +235,138 @@ class _AIMakeupRecommendationPageState extends State<AIMakeupRecommendationPage>
   }
 
   Widget _buildRecommendationScreen(AIMakeupRecommendationProvider provider) {
-    final recommendation = provider.recommendation!;
-    
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // AI生成画像セクション（生成されている場合のみ）
-          if (provider.hasGeneratedImage) ...[
-            GeneratedImageWidget(
-              recommendation: recommendation,
-              personalColorType: widget.personalColorType,
-            ),
-            const SizedBox(height: 24),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            _getBackgroundColor(widget.personalColorType),
+            _getBackgroundColor(widget.personalColorType).withValues(alpha: 0.1),
           ],
-
-          // パーソナルカラータイプ表示
-          _buildPersonalColorTypeCard(recommendation),
-          
-          const SizedBox(height: 24),
-
-          // カテゴリ別商品セクション
-          ...MakeupCategory.values.map((category) {
-            final products = recommendation.getProductsByCategory(category);
-            if (products.isEmpty) return const SizedBox.shrink();
+        ),
+      ),
+      child: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // AI生成画像のみ表示（中央配置・強調）
+            if (provider.hasGeneratedImage) 
+              _buildAIGeneratedImage(provider.recommendation!),
             
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildCategoryHeader(category),
-                const SizedBox(height: 12),
-                
-                // AI説明カード
-                AIExplanationCard(
-                  category: category,
-                  explanation: recommendation.getAiExplanation(category),
-                  personalColorType: widget.personalColorType,
-                ),
-                
-                const SizedBox(height: 16),
-                
-                // 商品一覧
-                ...products.map((product) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: ProductCardWidget(
-                    product: product,
-                  ),
-                )),
-                
-                const SizedBox(height: 24),
-              ],
-            );
-          }),
-        ],
+            // AI生成画像がない場合のプレースホルダー
+            if (!provider.hasGeneratedImage)
+              _buildNoImagePlaceholder(),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildPersonalColorTypeCard(recommendation) {
+  /// AI生成画像がない場合のプレースホルダー
+  Widget _buildNoImagePlaceholder() {
     return Container(
-      padding: const EdgeInsets.all(20),
+      height: 300,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.grey[100],
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.grey[300]!,
+          width: 2,
+          style: BorderStyle.solid,
+        ),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.image_outlined,
+              size: 64,
+              color: Colors.grey[400],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'AI画像生成中...',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: Colors.grey[600],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '少々お待ちください',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Colors.grey[500],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// AI生成画像の美しい表示
+  Widget _buildAIGeneratedImage(MakeupRecommendation recommendation) {
+    // recommendationエンティティから画像データを取得
+    final String? imageData = recommendation.generatedImageData;
+    
+    if (imageData == null || imageData.isEmpty) {
+      return _buildNoImagePlaceholder();
+    }
+    
+    return Container(
+      margin: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: Colors.black.withValues(alpha: 0.3),
+            offset: const Offset(0, 8),
+            blurRadius: 24,
           ),
         ],
       ),
-      child: Row(
-        children: [
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              color: _getThemeColor(widget.personalColorType),
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: const Icon(
-              Icons.auto_awesome,
-              color: Colors.white,
-              size: 30,
-            ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          constraints: const BoxConstraints(
+            maxWidth: 300,
+            maxHeight: 400,
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'あなたのパーソナルカラー',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[600],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  widget.personalColorType.displayName,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: _getThemeColor(widget.personalColorType),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+          child: Image.memory(
+            base64Decode(imageData),
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return _buildImageErrorPlaceholder();
+            },
+          ),
+        ),
+      ),
+    );
+  }
+  
+  /// 画像エラー時のプレースホルダー
+  Widget _buildImageErrorPlaceholder() {
+    return Container(
+      width: 300,
+      height: 400,
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.error_outline,
+            size: 64,
+            color: Colors.grey[400],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            '画像の読み込みに失敗しました',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Colors.grey[600],
             ),
           ),
         ],
@@ -346,28 +374,6 @@ class _AIMakeupRecommendationPageState extends State<AIMakeupRecommendationPage>
     );
   }
 
-  Widget _buildCategoryHeader(MakeupCategory category) {
-    return Row(
-      children: [
-        Container(
-          width: 4,
-          height: 24,
-          decoration: BoxDecoration(
-            color: _getThemeColor(widget.personalColorType),
-            borderRadius: BorderRadius.circular(2),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Text(
-          category.displayName,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: Colors.grey[800],
-          ),
-        ),
-      ],
-    );
-  }
 
   Color _getBackgroundColor(PersonalColorType colorType) {
     switch (colorType) {

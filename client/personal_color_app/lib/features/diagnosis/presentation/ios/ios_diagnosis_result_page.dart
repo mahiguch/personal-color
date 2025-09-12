@@ -1,16 +1,15 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:image_picker/image_picker.dart';
 import '../../domain/entities/diagnosis_result.dart';
 import '../providers/diagnosis_provider.dart';
 import '../widgets/result_card.dart';
 import '../widgets/color_palette_widget.dart';
 import '../widgets/tips_section.dart';
 import '../../../makeup/presentation/pages/makeup_recommendation_page.dart';
-import '../../../makeup/presentation/pages/ai_makeup_recommendation_page.dart';
 import '../../../makeup/presentation/providers/makeup_recommendation_provider.dart';
+import '../../../makeup/presentation/pages/ai_makeup_recommendation_page.dart';
 import '../../../makeup/presentation/providers/ai_makeup_recommendation_provider.dart';
+import 'dart:io';
 import '../../../clothing/presentation/pages/clothing_recommendation_page.dart';
 import '../../../clothing/presentation/providers/clothing_recommendation_provider.dart';
 import '../../../../core/di/injection_container.dart' as di;
@@ -126,100 +125,7 @@ class IOSDiagnosisResultPage extends StatelessWidget {
   Widget _buildActionButtons(BuildContext context) {
     return Column(
       children: [
-        // AI画像生成付きメイクボタン（新機能）
-        Container(
-          width: double.infinity,
-          height: 72, // より高くしてプレミアム感を演出
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                _getThemeColor(result.diagnosisType),
-                _getThemeColor(result.diagnosisType).withValues(alpha: 0.8),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: _getThemeColor(result.diagnosisType).withValues(alpha: 0.4),
-                offset: const Offset(0, 4),
-                blurRadius: 12,
-              ),
-            ],
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(16),
-              onTap: () => _navigateToAIMakeupRecommendation(context),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Icon(
-                        Icons.auto_awesome,
-                        color: Colors.white,
-                        size: 24,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'AI画像生成メイク',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            'あなたの顔でメイク体験',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.white.withValues(alpha: 0.9),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Text(
-                        'NEW',
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-        
-        const SizedBox(height: 16),
-        
-        // おすすめのメイクボタン（既存）
+        // おすすめのメイクボタン
         SizedBox(
           width: double.infinity,
           height: 56,
@@ -309,6 +215,52 @@ class IOSDiagnosisResultPage extends StatelessWidget {
         
         const SizedBox(height: 12),
         
+        // AI画像生成メイクボタン
+        SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: GestureDetector(
+            onTap: () => _navigateToAIMakeup(context),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    _getThemeColor(result.diagnosisType),
+                    _getThemeColor(result.diagnosisType).withValues(alpha: 0.8),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.2),
+                    offset: const Offset(0, 2),
+                    blurRadius: 4,
+                  ),
+                ],
+              ),
+              child: const Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.auto_awesome, color: Colors.white),
+                    SizedBox(width: 8),
+                    Text(
+                      'AI画像生成メイク',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 12),
+        
         // もう一度診断ボタン
         SizedBox(
           width: double.infinity,
@@ -366,108 +318,6 @@ class IOSDiagnosisResultPage extends StatelessWidget {
     }
   }
 
-  void _navigateToAIMakeupRecommendation(BuildContext context) async {
-    try {
-      debugPrint('🤖 AI画像生成メイクボタン押下: ${result.diagnosisType}');
-      final navigator = Navigator.of(context);
-      
-      // 画像選択ダイアログを表示
-      final imageSource = await _showImageSourceDialog(context);
-      if (imageSource == null) {
-        debugPrint('📷 画像選択がキャンセルされました');
-        return;
-      }
-      
-      debugPrint('📷 画像選択開始: $imageSource');
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: imageSource);
-      
-      if (pickedFile == null) {
-        debugPrint('📷 画像が選択されませんでした');
-        return;
-      }
-      
-      final imageFile = File(pickedFile.path);
-      debugPrint('📷 画像選択完了: ${imageFile.path}');
-      
-      // プロバイダー作成
-      debugPrint('🔧 AIMakeupRecommendationProvider作成開始');
-      final provider = di.sl<AIMakeupRecommendationProvider>();
-      debugPrint('✅ AIMakeupRecommendationProvider作成成功');
-      
-      debugPrint('🚀 AIMakeupRecommendationPageへナビゲーション開始');
-      navigator.push(
-        MaterialPageRoute(
-          builder: (context) => ChangeNotifierProvider.value(
-            value: provider,
-            child: AIMakeupRecommendationPage(
-              personalColorType: result.diagnosisType,
-              imageFile: imageFile,
-            ),
-          ),
-        ),
-      );
-      debugPrint('✅ AIMakeupRecommendationPageナビゲーション成功');
-      
-    } catch (e, stackTrace) {
-      debugPrint('❌ AI画像生成メイクナビゲーションエラー: $e');
-      debugPrint('スタックトレース: $stackTrace');
-      
-      // エラーダイアログを表示
-      if (!context.mounted) return;
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('エラー'),
-          content: Text('AI画像生成メイク機能でエラーが発生しました: $e'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
-    }
-  }
-
-  Future<ImageSource?> _showImageSourceDialog(BuildContext context) async {
-    return showDialog<ImageSource>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('画像を選択'),
-        content: const Text('AI画像生成に使用する画像を選択してください'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('キャンセル'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(ImageSource.gallery),
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.photo_library, size: 20),
-                SizedBox(width: 8),
-                Text('ギャラリー'),
-              ],
-            ),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(ImageSource.camera),
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.camera_alt, size: 20),
-                SizedBox(width: 8),
-                Text('カメラ'),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   void _navigateToMakeupRecommendation(BuildContext context, {bool forceRefresh = false}) {
     try {
@@ -526,6 +376,52 @@ class IOSDiagnosisResultPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _navigateToAIMakeup(BuildContext context) {
+    try {
+      debugPrint('🎨 AI画像生成メイクボタン押下: ${result.diagnosisType}');
+      
+      // 元画像ファイルを作成
+      final imageFile = File(originalImagePath);
+      
+      // プロバイダーを作成
+      final provider = di.sl<AIMakeupRecommendationProvider>();
+      
+      // AI画像生成メイクページに直接ナビゲート（モーダルなし）
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider.value(
+            value: provider,
+            child: AIMakeupRecommendationPage(
+              personalColorType: result.diagnosisType,
+              imageFile: imageFile,
+            ),
+          ),
+        ),
+      );
+      
+      debugPrint('✅ AI画像生成メイクページへのナビゲーション成功');
+      
+    } catch (e, stackTrace) {
+      debugPrint('❌ AI画像生成メイクナビゲーションエラー: $e');
+      debugPrint('スタックトレース: $stackTrace');
+      
+      // エラーダイアログを表示
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('エラー'),
+          content: Text('AI画像生成メイク機能でエラーが発生しました: $e'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   void _retakeDiagnosis(BuildContext context) {

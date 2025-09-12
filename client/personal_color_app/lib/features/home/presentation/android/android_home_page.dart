@@ -178,6 +178,7 @@ class AndroidHomePage extends StatelessWidget {
     );
   }
 
+
   /// サブ情報セクション
   Widget _buildSubInfo(ThemeData theme) {
     return Card(
@@ -223,6 +224,7 @@ class AndroidHomePage extends StatelessWidget {
       ),
     );
   }
+
 
   /// Material Motion準拠のページ遷移を作成
   PageRouteBuilder _createMaterialPageRoute(Widget page) {

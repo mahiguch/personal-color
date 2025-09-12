@@ -9,9 +9,12 @@ import base64
 import logging
 from typing import Dict, Any, Optional
 from datetime import datetime
+import asyncio
 
 import google.genai as genai
 from google.genai.types import GenerateContentConfig
+
+from ..core.config.settings import get_settings
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +51,8 @@ class ImagenService:
             client: Google Gen AI クライアント (Noneの場合はモック動作)
         """
         self._client = client
-        self._model_name = "imagen-4.0-generate-001"
+        settings = get_settings()
+        self._model_name = settings.imagen_model_name
         mode = "production" if client is not None else "mock"
         logger.info(f"ImagenService initialized with model: {self._model_name}, mode: {mode}")
 
@@ -83,11 +87,16 @@ class ImagenService:
             # Imagen 4.0 で画像生成
             logger.info(f"Starting AI makeup generation with model: {self._model_name}")
 
-            # Google Gen AI SDK での画像生成 (将来実装)
-            # 現在はモックレスポンスを返す
-            generated_image_data = await self._generate_mock_response(
-                base_image_bytes, personal_color_type
-            )
+            if self._client is None:
+                # 開発環境: モック画像を返す
+                generated_image_data = await self._generate_mock_response(
+                    base_image_bytes, personal_color_type
+                )
+            else:
+                # 本番環境: 実際のImagen 4.0 API呼び出し
+                generated_image_data = await self._generate_real_makeup_image(
+                    image_data, prompt
+                )
 
             logger.info("AI makeup generation completed successfully")
 
@@ -112,7 +121,7 @@ class ImagenService:
                 raise ImageGenerationError(f"画像生成中にエラーが発生しました: {str(e)}")
 
     def _create_makeup_prompt(self, personal_color_type: str) -> str:
-        """メイクアップ生成用プロンプトを作成
+        """改善されたメイクアップ生成用プロンプトを作成
 
         Args:
             personal_color_type: パーソナルカラータイプ
@@ -121,28 +130,137 @@ class ImagenService:
             str: 生成用プロンプト
         """
         color_descriptions = {
-            "spring": "明るく暖かい色調のメイクアップ（コーラルピンク、ゴールド、ピーチ系）",
-            "summer": "涼しく優雅な色調のメイクアップ（ローズピンク、シルバー、ラベンダー系）",
-            "autumn": "深く温かい色調のメイクアップ（ボルドー、ブラウン、オレンジ系）",
-            "winter": "鮮やかで凜々しい色調のメイクアップ（レッド、ブルー、シルバー系）",
+            "spring": {
+                "colors": "明るく暖かい色調（コーラルピンク、ゴールド、ピーチ系）",
+                "style": "自然で健康的な印象",
+                "specific": "桃色のチーク、ゴールド系のアイシャドウ、コーラルピンクのリップ",
+                "atmosphere": "明るく親しみやすい印象"
+            },
+            "summer": {
+                "colors": "涼しく優雅な色調（ローズピンク、シルバー、ラベンダー系）",
+                "style": "上品で涼やかな印象", 
+                "specific": "ローズピンクのチーク、シルバー系のアイシャドウ、ローズ系のリップ",
+                "atmosphere": "エレガントで知的な印象"
+            },
+            "autumn": {
+                "colors": "深く温かい色調（ボルドー、ブラウン、オレンジ系）",
+                "style": "落ち着いた大人っぽい印象",
+                "specific": "オレンジ系のチーク、ブラウン系のアイシャドウ、ボルドー系のリップ",
+                "atmosphere": "温かく包容力のある印象"
+            },
+            "winter": {
+                "colors": "鮮やかで凜々しい色調（レッド、ブルー、シルバー系）",
+                "style": "クールで洗練された印象",
+                "specific": "クールピンクのチーク、シルバー系のアイシャドウ、レッド系のリップ",
+                "atmosphere": "凛々しくクールな印象"
+            }
         }
 
-        color_desc = color_descriptions.get(personal_color_type, "自然で美しいメイクアップ")
+        color_info = color_descriptions.get(personal_color_type, {
+            "colors": "自然で美しい色調",
+            "style": "自然で健康的な印象",
+            "specific": "自然なメイクアップ",
+            "atmosphere": "自然で親しみやすい印象"
+        })
 
         prompt = f"""
-        この写真の人物に{color_desc}を施してください。
+        Create a natural, age-appropriate makeup look for this person using {color_info['colors']}.
         
-        メイクの要件:
-        - 自然で上品な仕上がり
-        - {personal_color_type}パーソナルカラーに最適な色選択
-        - アイシャドウ、チーク、リップを含む
-        - 元の顔立ちを活かした美しい仕上がり
+        Requirements:
+        - Style: {color_info['style']}
+        - Specific makeup elements: {color_info['specific']}
+        - Target atmosphere: {color_info['atmosphere']}
         - 小学5年生でも理解できる年齢適切な内容
+        - 自然で上品な仕上がり
+        - Suitable for elementary school age (age-appropriate, natural finish)
+        - High quality, photorealistic result
+        - Maintain original facial features and expression
+        - Enhance natural beauty without heavy makeup
+        - Colors should complement {personal_color_type} personal color palette
         
-        高品質で自然な仕上がりの画像を生成してください。
+        Generate a professional makeup look that creates a beautiful, natural appearance appropriate for a young person.
         """
 
         return prompt.strip()
+
+    async def _generate_real_makeup_image(
+        self, image_data: Dict[str, str], prompt: str
+    ) -> Dict[str, str]:
+        """実際のImagen 4.0 APIを使用した画像生成（新規実装）"""
+        try:
+            # 設定を取得
+            settings = get_settings()
+            
+            # Google Gen AI SDK を使用した画像生成
+            config = GenerateContentConfig(
+                system_instruction="You are a professional makeup artist AI that creates natural, age-appropriate makeup looks.",
+                temperature=0.7,
+                candidate_count=1,
+            )
+            
+            # クライアント呼び出し（非同期/同期の両方に対応）
+            def _build_contents():
+                return [
+                    {
+                        "parts": [
+                            {"text": prompt},
+                            {
+                                "inline_data": {
+                                    "mime_type": image_data["mime_type"],
+                                    "data": image_data["data"],
+                                }
+                            },
+                        ]
+                    }
+                ]
+
+            try:
+                response = None
+                # 優先: 非同期クライアント（実関数がコルーチンである場合のみ）
+                agenerate = getattr(self._client, "agenerate_content", None) if self._client is not None else None
+                if agenerate is not None and asyncio.iscoroutinefunction(agenerate):
+                    call = agenerate(
+                        model=self._model_name,
+                        contents=_build_contents(),
+                        config=config,
+                    )
+                    # awaitable であれば await、そうでなければそのまま扱う
+                    if asyncio.iscoroutine(call):
+                        response = await asyncio.wait_for(
+                            call, timeout=settings.ai_image_timeout_seconds
+                        )
+                    else:
+                        # 非awaitable（モック）をそのまま使用
+                        response = call
+                # フォールバック: 同期クライアントインターフェース（mock.models.generate_content など）
+                elif self._client is not None and hasattr(self._client, "models") and hasattr(self._client.models, "generate_content"):
+                    response = self._client.models.generate_content(
+                        model=self._model_name,
+                        contents=_build_contents(),
+                        config=config,
+                    )
+                else:
+                    raise ImageGenerationError("有効なAIクライアントが初期化されていません")
+            except asyncio.TimeoutError:
+                raise ImageGenerationError("AI画像生成がタイムアウトしました。しばらく時間をおいてお試しください。")
+            
+            # 生成された画像データを取得
+            if response.candidates and response.candidates[0].content.parts:
+                for part in response.candidates[0].content.parts:
+                    if hasattr(part, 'inline_data') and part.inline_data:
+                        return {
+                            "image_data": part.inline_data.data,
+                            "mime_type": part.inline_data.mime_type or "image/jpeg"
+                        }
+            
+            raise ImageGenerationError("生成された画像データが取得できませんでした")
+            
+        except ImageGenerationError:
+            # ImageGenerationErrorは再発生
+            raise
+        except Exception as e:
+            logger.error(f"Real image generation failed: {e}", exc_info=True)
+            raise ImageGenerationError(f"AI画像生成エラー: {str(e)}")
 
     async def _generate_mock_response(
         self, base_image_bytes: bytes, personal_color_type: str

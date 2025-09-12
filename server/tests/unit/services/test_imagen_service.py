@@ -6,6 +6,7 @@ Google Gen AI SDK を使用したAI画像生成サービスのテストスイー
 
 import pytest
 import base64
+import asyncio
 from unittest.mock import Mock, patch, AsyncMock
 from typing import Dict, Any
 
@@ -37,9 +38,10 @@ class TestImagenService:
         return b"fake_image_data_for_testing"
 
     @pytest.mark.asyncio
-    async def test_generate_makeup_image_success(self, imagen_service, sample_image_bytes):
-        """正常系: AIメイク画像生成成功"""
+    async def test_generate_makeup_image_success_mock_client(self, sample_image_bytes):
+        """正常系: AIメイク画像生成成功 (モッククライアント)"""
         # Arrange
+        imagen_service = ImagenService(None)  # モッククライアント
         personal_color_type = "spring"
         mime_type = "image/jpeg"
 
@@ -67,9 +69,10 @@ class TestImagenService:
         assert len(decoded_data) > 0
 
     @pytest.mark.asyncio
-    async def test_generate_makeup_image_face_detection_error(self, imagen_service, sample_image_bytes):
+    async def test_generate_makeup_image_face_detection_error(self, sample_image_bytes):
         """異常系: 顔検出失敗エラー"""
         # Arrange
+        imagen_service = ImagenService(None)  # モッククライアント
         with patch.object(imagen_service, '_generate_mock_response', side_effect=Exception("face not detected")):
             
             # Act & Assert
@@ -81,9 +84,10 @@ class TestImagenService:
             assert "顔が検出できませんでした" in str(exc_info.value)
 
     @pytest.mark.asyncio
-    async def test_generate_makeup_image_api_limit_error(self, imagen_service, sample_image_bytes):
+    async def test_generate_makeup_image_api_limit_error(self, sample_image_bytes):
         """異常系: API制限エラー"""
         # Arrange
+        imagen_service = ImagenService(None)  # モッククライアント
         with patch.object(imagen_service, '_generate_mock_response', side_effect=Exception("quota exceeded")):
             
             # Act & Assert
@@ -95,9 +99,10 @@ class TestImagenService:
             assert "API利用制限に達しました" in str(exc_info.value)
 
     @pytest.mark.asyncio
-    async def test_generate_makeup_image_generic_error(self, imagen_service, sample_image_bytes):
+    async def test_generate_makeup_image_generic_error(self, sample_image_bytes):
         """異常系: 一般的なエラー"""
         # Arrange
+        imagen_service = ImagenService(None)  # モッククライアント
         with patch.object(imagen_service, '_generate_mock_response', side_effect=Exception("unknown error")):
             
             # Act & Assert
@@ -114,10 +119,11 @@ class TestImagenService:
         prompt = imagen_service._create_makeup_prompt("spring")
         
         # Assert
-        assert "明るく暖かい色調のメイクアップ" in prompt
-        assert "コーラルピンク、ゴールド、ピーチ系" in prompt
-        assert "springパーソナルカラーに最適な色選択" in prompt
-        assert "小学5年生でも理解できる年齢適切な内容" in prompt
+        assert "明るく暖かい色調（コーラルピンク、ゴールド、ピーチ系）" in prompt
+        assert "自然で健康的な印象" in prompt
+        assert "spring personal color" in prompt
+        assert "age-appropriate" in prompt
+        assert "桃色のチーク、ゴールド系のアイシャドウ、コーラルピンクのリップ" in prompt
 
     def test_create_makeup_prompt_summer(self, imagen_service):
         """プロンプト生成テスト: Summer タイプ"""
@@ -125,8 +131,11 @@ class TestImagenService:
         prompt = imagen_service._create_makeup_prompt("summer")
         
         # Assert
-        assert "涼しく優雅な色調のメイクアップ" in prompt
-        assert "ローズピンク、シルバー、ラベンダー系" in prompt
+        assert "涼しく優雅な色調（ローズピンク、シルバー、ラベンダー系）" in prompt
+        assert "上品で涼やかな印象" in prompt
+        assert "summer personal color" in prompt
+        assert "age-appropriate" in prompt
+        assert "ローズピンクのチーク、シルバー系のアイシャドウ、ローズ系のリップ" in prompt
 
     def test_create_makeup_prompt_autumn(self, imagen_service):
         """プロンプト生成テスト: Autumn タイプ"""
@@ -134,8 +143,11 @@ class TestImagenService:
         prompt = imagen_service._create_makeup_prompt("autumn")
         
         # Assert
-        assert "深く温かい色調のメイクアップ" in prompt
-        assert "ボルドー、ブラウン、オレンジ系" in prompt
+        assert "深く温かい色調（ボルドー、ブラウン、オレンジ系）" in prompt
+        assert "落ち着いた大人っぽい印象" in prompt
+        assert "autumn personal color" in prompt
+        assert "age-appropriate" in prompt
+        assert "オレンジ系のチーク、ブラウン系のアイシャドウ、ボルドー系のリップ" in prompt
 
     def test_create_makeup_prompt_winter(self, imagen_service):
         """プロンプト生成テスト: Winter タイプ"""
@@ -143,8 +155,11 @@ class TestImagenService:
         prompt = imagen_service._create_makeup_prompt("winter")
         
         # Assert
-        assert "鮮やかで凜々しい色調のメイクアップ" in prompt
-        assert "レッド、ブルー、シルバー系" in prompt
+        assert "鮮やかで凜々しい色調（レッド、ブルー、シルバー系）" in prompt
+        assert "クールで洗練された印象" in prompt
+        assert "winter personal color" in prompt
+        assert "age-appropriate" in prompt
+        assert "クールピンクのチーク、シルバー系のアイシャドウ、レッド系のリップ" in prompt
 
     def test_create_makeup_prompt_unknown_type(self, imagen_service):
         """プロンプト生成テスト: 未知のタイプ"""
@@ -152,7 +167,11 @@ class TestImagenService:
         prompt = imagen_service._create_makeup_prompt("unknown")
         
         # Assert
-        assert "自然で美しいメイクアップ" in prompt
+        assert "自然で美しい色調" in prompt
+        assert "自然で健康的な印象" in prompt
+        assert "age-appropriate" in prompt
+        assert "自然なメイクアップ" in prompt
+        assert "unknown personal color" in prompt
 
     @pytest.mark.asyncio
     async def test_generate_mock_response(self, imagen_service, sample_image_bytes):
@@ -171,6 +190,90 @@ class TestImagenService:
         # Base64エンコードされていることを確認
         decoded_data = base64.b64decode(result["image_data"])
         assert decoded_data == sample_image_bytes
+
+    @pytest.mark.asyncio
+    async def test_generate_real_makeup_image_success(self, sample_image_bytes):
+        """実際のAPI呼び出し成功テスト"""
+        # Arrange
+        mock_client = AsyncMock()
+        mock_response = Mock()
+        mock_candidate = Mock()
+        mock_content = Mock()
+        mock_part = Mock()
+        mock_inline_data = Mock()
+        
+        mock_inline_data.data = "generated_image_base64_data"
+        mock_inline_data.mime_type = "image/jpeg"
+        mock_part.inline_data = mock_inline_data
+        mock_content.parts = [mock_part]
+        mock_candidate.content = mock_content
+        mock_response.candidates = [mock_candidate]
+        
+        mock_client.agenerate_content = AsyncMock(return_value=mock_response)
+        
+        imagen_service = ImagenService(mock_client)
+        image_data = {
+            "mime_type": "image/jpeg",
+            "data": base64.b64encode(sample_image_bytes).decode("utf-8")
+        }
+        prompt = "test makeup prompt"
+        
+        # Act
+        result = await imagen_service._generate_real_makeup_image(image_data, prompt)
+        
+        # Assert
+        assert isinstance(result, dict)
+        assert result["image_data"] == "generated_image_base64_data"
+        assert result["mime_type"] == "image/jpeg"
+        
+        # APIが適切に呼び出されたことを確認
+        mock_client.agenerate_content.assert_called_once()
+        call_args = mock_client.agenerate_content.call_args
+        assert call_args[1]["model"] == "imagen-4.0-generate-001"
+        assert len(call_args[1]["contents"]) == 1
+        assert len(call_args[1]["contents"][0]["parts"]) == 2
+
+    @pytest.mark.asyncio
+    async def test_generate_real_makeup_image_timeout_error(self, sample_image_bytes):
+        """実際のAPI呼び出しタイムアウトエラーテスト"""
+        # Arrange
+        mock_client = AsyncMock()
+        mock_client.agenerate_content = AsyncMock(side_effect=asyncio.TimeoutError())
+        
+        imagen_service = ImagenService(mock_client)
+        image_data = {
+            "mime_type": "image/jpeg", 
+            "data": base64.b64encode(sample_image_bytes).decode("utf-8")
+        }
+        prompt = "test makeup prompt"
+        
+        # Act & Assert
+        with pytest.raises(ImageGenerationError) as exc_info:
+            await imagen_service._generate_real_makeup_image(image_data, prompt)
+        
+        assert "AI画像生成がタイムアウトしました" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_generate_real_makeup_image_no_image_data(self, sample_image_bytes):
+        """実際のAPI呼び出し画像データなしエラーテスト"""
+        # Arrange
+        mock_client = AsyncMock()
+        mock_response = Mock()
+        mock_response.candidates = []
+        mock_client.agenerate_content = AsyncMock(return_value=mock_response)
+        
+        imagen_service = ImagenService(mock_client)
+        image_data = {
+            "mime_type": "image/jpeg",
+            "data": base64.b64encode(sample_image_bytes).decode("utf-8")
+        }
+        prompt = "test makeup prompt"
+        
+        # Act & Assert
+        with pytest.raises(ImageGenerationError) as exc_info:
+            await imagen_service._generate_real_makeup_image(image_data, prompt)
+        
+        assert "生成された画像データが取得できませんでした" in str(exc_info.value)
 
 
 class TestImagenServiceSingleton:

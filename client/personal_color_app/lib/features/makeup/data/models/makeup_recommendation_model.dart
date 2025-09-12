@@ -16,6 +16,9 @@ class MakeupRecommendationModel extends MakeupRecommendation {
     required super.aiExplanations,
     super.requestId,
     super.timestamp,
+    super.generatedImageData,
+    super.generatedImageSize,
+    super.generatedImageDateTime,
   });
 
   /// JSON から MakeupRecommendationModel を作成
@@ -136,6 +139,9 @@ class MakeupRecommendationModel extends MakeupRecommendation {
       aiExplanations: entity.aiExplanations,
       requestId: entity.requestId,
       timestamp: entity.timestamp,
+      generatedImageData: entity.generatedImageData,
+      generatedImageSize: entity.generatedImageSize,
+      generatedImageDateTime: entity.generatedImageDateTime,
     );
   }
 
@@ -149,8 +155,9 @@ class MakeupRecommendationModel extends MakeupRecommendation {
       aiExplanations: aiExplanations,
       requestId: requestId,
       timestamp: timestamp,
-      generatedImageSize: null, // 基本モデルでは画像生成なし
-      generatedImageDateTime: null, // 基本モデルでは画像生成なし
+      generatedImageData: generatedImageData, // 画像データを含む
+      generatedImageSize: generatedImageSize, // 基本モデルでは画像生成なし
+      generatedImageDateTime: generatedImageDateTime, // 基本モデルでは画像生成なし
     );
   }
 
