@@ -36,6 +36,11 @@ class Settings(BaseSettings):
     
     # Google Gen AI SDK設定
     use_vertexai: bool = Field(default=True, description="Vertex AI使用フラグ")
+    
+    # Imagen 4.0 設定
+    imagen_model_name: str = Field(
+        default="imagen-4.0-generate-001", description="使用するImagenモデル名"
+    )
 
     # Firebase設定
     firebase_project_id: str = Field(
@@ -49,6 +54,11 @@ class Settings(BaseSettings):
     max_image_size_mb: int = Field(default=10, description="最大画像サイズ(MB)")
     request_timeout_seconds: int = Field(default=30, description="リクエストタイムアウト(秒)")
     max_retry_attempts: int = Field(default=3, description="最大リトライ回数")
+    
+    # AI画像生成設定
+    ai_image_generation_enabled: bool = Field(default=True, description="AI画像生成機能の有効化")
+    ai_image_max_retries: int = Field(default=3, description="AI画像生成の最大リトライ回数")
+    ai_image_timeout_seconds: int = Field(default=30, description="AI画像生成のタイムアウト(秒)")
 
     # セキュリティ設定
     api_key: str = Field(default="", description="API認証キー")

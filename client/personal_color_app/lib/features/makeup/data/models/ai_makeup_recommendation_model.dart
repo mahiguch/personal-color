@@ -22,6 +22,9 @@ class AIMakeupRecommendationModel extends MakeupRecommendationModel {
     this.generatedImage,
     super.requestId,
     super.timestamp,
+    super.generatedImageData,
+    super.generatedImageSize,
+    super.generatedImageDateTime,
   });
 
   /// JSON から AIMakeupRecommendationModel を作成
@@ -119,6 +122,9 @@ class AIMakeupRecommendationModel extends MakeupRecommendationModel {
       generatedImage: generatedImage,
       requestId: json['request_id'] as String?,
       timestamp: timestamp,
+      generatedImageData: generatedImage?.imageData,
+      generatedImageSize: generatedImage?.readableSize,
+      generatedImageDateTime: generatedImage?.generatedAtDateTime,
     );
   }
 
@@ -152,6 +158,9 @@ class AIMakeupRecommendationModel extends MakeupRecommendationModel {
       generatedImage: generatedImage,
       requestId: entity.requestId,
       timestamp: entity.timestamp,
+      generatedImageData: entity.generatedImageData,
+      generatedImageSize: entity.generatedImageSize,
+      generatedImageDateTime: entity.generatedImageDateTime,
     );
   }
 
@@ -170,6 +179,9 @@ class AIMakeupRecommendationModel extends MakeupRecommendationModel {
       generatedImage: generatedImage,
       requestId: model.requestId,
       timestamp: model.timestamp,
+      generatedImageData: model.generatedImageData,
+      generatedImageSize: model.generatedImageSize,
+      generatedImageDateTime: model.generatedImageDateTime,
     );
   }
 
@@ -208,6 +220,7 @@ class AIMakeupRecommendationModel extends MakeupRecommendationModel {
       aiExplanations: aiExplanations,
       requestId: requestId,
       timestamp: timestamp,
+      generatedImageData: generatedImage?.imageData, // AI生成画像のBase64データを含む
       generatedImageSize: generatedImageSize, // AI生成画像のサイズ情報を含む
       generatedImageDateTime: generatedImageDateTime, // AI生成画像の生成日時を含む
     );
@@ -252,6 +265,9 @@ class AIMakeupRecommendationModel extends MakeupRecommendationModel {
       generatedImage: clearGeneratedImage ? null : (generatedImage ?? this.generatedImage),
       requestId: requestId ?? this.requestId,
       timestamp: timestamp ?? this.timestamp,
+      generatedImageData: clearGeneratedImage ? null : (generatedImage?.imageData ?? generatedImageData),
+      generatedImageSize: clearGeneratedImage ? null : (generatedImage?.readableSize ?? generatedImageSize),
+      generatedImageDateTime: clearGeneratedImage ? null : (generatedImage?.generatedAtDateTime ?? generatedImageDateTime),
     );
   }
 

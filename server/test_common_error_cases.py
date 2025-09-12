@@ -4,15 +4,26 @@ Test common error cases that might come from the mobile app
 モバイルアプリから送信される可能性のある一般的なエラーケースをテスト
 """
 
+import os
 import requests
+import pytest
 import json
 import base64
 from PIL import Image
 import io
 
+@pytest.mark.integration
 def test_api_validation_cases():
     """API経由でのバリデーションケースをテスト"""
-    api_url = "https://personal-color-api-666814602151.asia-northeast1.run.app/api/v1/diagnose"
+    # 実環境のエンドポイントに対する検証テスト。
+    # CIやネットワークが禁止された環境ではスキップ。
+    if os.getenv("ENABLE_EXTERNAL_API_TESTS", "0") != "1":
+        pytest.skip("External API tests are disabled (set ENABLE_EXTERNAL_API_TESTS=1 to run)")
+
+    api_url = os.getenv(
+        "EXTERNAL_DIAGNOSE_URL",
+        "https://personal-color-api-666814602151.asia-northeast1.run.app/api/v1/diagnose",
+    )
     
     print("=== Testing API Validation Cases ===")
     

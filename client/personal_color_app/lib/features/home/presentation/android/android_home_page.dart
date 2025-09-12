@@ -2,9 +2,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../camera/presentation/providers/camera_provider.dart';
 import '../../../camera/presentation/pages/camera_page.dart';
 import '../../../../core/di/injection_container.dart' as di;
+import '../../../diagnosis/domain/entities/diagnosis_result.dart';
+import '../../../makeup/presentation/providers/ai_makeup_recommendation_provider.dart';
+import '../../../makeup/presentation/pages/ai_makeup_recommendation_page.dart';
 
 /// Android版ホーム画面 - Material Design 3準拠
 class AndroidHomePage extends StatelessWidget {
@@ -48,13 +52,26 @@ class AndroidHomePage extends StatelessWidget {
                 
                 const SizedBox(height: 48),
                 
-                // メインCTAボタン
-                _buildMainCTAButton(context, theme),
-                
-                const SizedBox(height: 24),
-                
-                // サブ情報
-                _buildSubInfo(theme),
+            // メインCTAボタン
+            _buildMainCTAButton(context, theme),
+            
+            const SizedBox(height: 24),
+            
+            // AI画像生成メイクボタン
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: OutlinedButton.icon(
+                onPressed: () => _navigateToAIMakeup(context),
+                icon: const Icon(Icons.auto_awesome),
+                label: const Text('AI画像生成メイク'),
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // サブ情報
+            _buildSubInfo(theme),
               ],
             ),
           ),
@@ -178,6 +195,7 @@ class AndroidHomePage extends StatelessWidget {
     );
   }
 
+
   /// サブ情報セクション
   Widget _buildSubInfo(ThemeData theme) {
     return Card(
@@ -223,6 +241,78 @@ class AndroidHomePage extends StatelessWidget {
       ),
     );
   }
+
+  /// AI画像生成メイク画面への遷移
+  Future<void> _navigateToAIMakeup(BuildContext context) async {
+    final navigator = Navigator.of(context);
+    // 画像選択ダイアログ
+    final source = await showDialog<ImageSource>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('画像を選択'),
+        content: const Text('AI画像生成に使用する画像を選択してください'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(ImageSource.gallery),
+            child: const Text('ギャラリー'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(ImageSource.camera),
+            child: const Text('カメラ'),
+          ),
+        ],
+      ),
+    );
+
+    if (source == null) return;
+
+    final picker = ImagePicker();
+    final xfile = await picker.pickImage(source: source);
+    if (xfile == null) return;
+
+    // カラータイプ選択（未選択ならSpring）
+    if (!navigator.mounted) return;
+    final selectedType = await showDialog<PersonalColorType>(
+      context: navigator.context,
+      builder: (ctx) => SimpleDialog(
+        title: const Text('パーソナルカラータイプを選択'),
+        children: [
+          SimpleDialogOption(
+            onPressed: () => Navigator.of(ctx).pop(PersonalColorType.spring),
+            child: const Text('スプリング（春）'),
+          ),
+          SimpleDialogOption(
+            onPressed: () => Navigator.of(ctx).pop(PersonalColorType.summer),
+            child: const Text('サマー（夏）'),
+          ),
+          SimpleDialogOption(
+            onPressed: () => Navigator.of(ctx).pop(PersonalColorType.autumn),
+            child: const Text('オータム（秋）'),
+          ),
+          SimpleDialogOption(
+            onPressed: () => Navigator.of(ctx).pop(PersonalColorType.winter),
+            child: const Text('ウィンター（冬）'),
+          ),
+        ],
+      ),
+    );
+
+    final type = selectedType ?? PersonalColorType.spring;
+
+    if (!navigator.mounted) return;
+    navigator.push(
+      _createMaterialPageRoute(
+        ChangeNotifierProvider(
+          create: (_) => di.sl<AIMakeupRecommendationProvider>(),
+          child: AIMakeupRecommendationPage(
+            personalColorType: type,
+            imageFile: File(xfile.path),
+          ),
+        ),
+      ),
+    );
+  }
+
 
   /// Material Motion準拠のページ遷移を作成
   PageRouteBuilder _createMaterialPageRoute(Widget page) {

@@ -10,6 +10,7 @@ class MakeupRecommendation extends Equatable {
     required this.aiExplanations,
     this.requestId,
     this.timestamp,
+    this.generatedImageData,
     this.generatedImageSize,
     this.generatedImageDateTime,
   });
@@ -29,6 +30,9 @@ class MakeupRecommendation extends Equatable {
   /// タイムスタンプ
   final DateTime? timestamp;
 
+  /// AI生成画像のBase64データ（生成されている場合のみ）
+  final String? generatedImageData;
+
   /// AI生成画像のサイズ情報（生成されている場合のみ）
   final String? generatedImageSize;
 
@@ -42,6 +46,7 @@ class MakeupRecommendation extends Equatable {
         aiExplanations,
         requestId,
         timestamp,
+        generatedImageData,
         generatedImageSize,
         generatedImageDateTime,
       ];
@@ -120,6 +125,6 @@ class MakeupRecommendation extends Equatable {
   /// 
   /// Returns: 生成画像データが存在し、有効な場合はtrue
   bool get hasGeneratedImage {
-    return generatedImageSize != null && generatedImageDateTime != null;
+    return generatedImageData != null && generatedImageData!.isNotEmpty;
   }
 }

@@ -304,3 +304,6 @@ Figmaデザインベース、Tailwind CSS + shadcn/ui使用。
 - **Python**: pytest による Unit/Integration テスト
 - **Next.js**: 基本的な動作確認 + Lighthouse パフォーマンステスト (80+目標)
 - **AI**: Geminiプロンプトの精度テスト (80%以上目標)
+
+## Instruction
+- .github/instructions/*.md を参照してください。

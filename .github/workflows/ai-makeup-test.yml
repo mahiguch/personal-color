@@ -1,0 +1,88 @@
+name: AI Makeup - Server + Mobile Tests
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+  push:
+    branches: [ main ]
+
+jobs:
+  server-tests:
+    name: Server (Python) Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('server/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Lint & Type (Black, Flake8, MyPy)
+        run: |
+          black --check .
+          flake8
+          mypy
+
+      - name: Run tests (pytest)
+        env:
+          GOOGLE_CLOUD_PROJECT: test-project
+          VERTEX_AI_LOCATION: us-central1
+        run: |
+          pytest -q
+
+  flutter-tests:
+    name: Flutter (Client) Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client/personal_color_app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Flutter Pub Get
+        run: flutter pub get
+
+      - name: Run Flutter Tests
+        run: |
+          # Run all tests (unit, widget, integration-style)
+          flutter test -r expanded
+
+      - name: Dart Analyze
+        run: dart analyze
+
+      - name: Dart Format Check
+        run: |
+          dart format --set-exit-if-changed .
+
+  all-green:
+    name: Quality Gate
+    runs-on: ubuntu-latest
+    needs: [server-tests, flutter-tests]
+    steps:
+      - name: All checks passed
+        run: echo "All phase-4 checks passed."
+

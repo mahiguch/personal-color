@@ -40,6 +40,8 @@ void main() {
       );
     });
 
+    const oneByOnePngBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMB/URbqk8AAAAASUVORK5CYII=';
+
     final validRecommendation = MakeupRecommendation(
       personalColorType: personalColorType,
       categories: {
@@ -92,6 +94,7 @@ void main() {
       timestamp: DateTime.parse('2023-12-31T15:00:00Z'),
       generatedImageSize: '1.2MB',
       generatedImageDateTime: DateTime.parse('2023-12-31T15:00:00Z'),
+      generatedImageData: oneByOnePngBase64,
     );
 
     test('should get AI makeup recommendations from repository when call is successful', () async {
@@ -285,6 +288,7 @@ void main() {
         },
         generatedImageSize: '1.5MB',
         generatedImageDateTime: DateTime.parse('2023-12-31T16:00:00Z'),
+        generatedImageData: oneByOnePngBase64,
       );
 
       when(mockRepository.getAIMakeupRecommendations(PersonalColorType.winter, mockImageFile))
@@ -350,6 +354,7 @@ void main() {
         },
         generatedImageSize: '2.1MB',
         generatedImageDateTime: DateTime.parse('2023-12-31T15:30:00Z'),
+        generatedImageData: oneByOnePngBase64,
       );
 
       when(mockRepository.getAIMakeupRecommendations(personalColorType, mockImageFile))

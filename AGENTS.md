@@ -40,3 +40,6 @@
 ## Security & Configuration Tips
 - Never commit secrets. Use `server/.env.example` as a template; keep real env in `.env`.
 - Validate inputs at API boundaries and avoid logging PII; images must be deleted after processing per spec.
+
+## Instruction
+- read .github/instructions/*.md

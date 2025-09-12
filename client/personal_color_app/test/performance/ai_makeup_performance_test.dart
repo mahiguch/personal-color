@@ -9,6 +9,9 @@ import 'package:personal_color_app/core/di/injection_container.dart' as di;
 import 'package:personal_color_app/features/diagnosis/domain/entities/diagnosis_result.dart';
 import 'package:personal_color_app/features/makeup/presentation/pages/ai_makeup_recommendation_page.dart';
 import 'package:personal_color_app/features/makeup/presentation/providers/ai_makeup_recommendation_provider.dart';
+import 'package:personal_color_app/features/makeup/data/datasources/makeup_remote_data_source.dart';
+import 'package:personal_color_app/features/makeup/data/models/ai_makeup_recommendation_model.dart';
+import 'package:personal_color_app/features/makeup/data/models/makeup_recommendation_model.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -47,6 +50,18 @@ void main() {
       );
       
       await di.init();
+
+      // ネットワーク依存を避けるため、RemoteDataSourceをフェイクに差し替え
+      // （テストの安定性と速度向上のため）
+      try {
+        if (di.sl.isRegistered<MakeupRemoteDataSource>()) {
+          await di.sl.unregister<MakeupRemoteDataSource>();
+        }
+      } catch (_) {}
+
+      di.sl.registerLazySingleton<MakeupRemoteDataSource>(
+        () => _FakeMakeupRemoteDataSourcePerf(),
+      );
     });
 
     File createTestImageFile(int sizeKB) {
@@ -134,29 +149,22 @@ void main() {
       await tester.pumpAndSettle();
       
       // 高速連続リクエスト（5回）
-      final refreshButton = find.byIcon(Icons.refresh);
       final requestTimes = <int>[];
-      
-      if (refreshButton.evaluate().isNotEmpty) {
-        for (int i = 0; i < 5; i++) {
-          final stopwatch = Stopwatch()..start();
-          
-          await tester.tap(refreshButton.first);
-          await tester.pump();
-          
-          stopwatch.stop();
-          requestTimes.add(stopwatch.elapsedMilliseconds);
-          
-          // 短い間隔で次のリクエスト
-          await tester.pump(const Duration(milliseconds: 100));
-        }
-        
-        // 全リクエストが合理的な時間内で処理されることを確認
+      for (int i = 0; i < 5; i++) {
+        final refreshButton = find.byIcon(Icons.refresh);
+        if (refreshButton.evaluate().isEmpty) break;
+        final stopwatch = Stopwatch()..start();
+        await tester.tap(refreshButton.first);
+        await tester.pump();
+        stopwatch.stop();
+        requestTimes.add(stopwatch.elapsedMilliseconds);
+        // 短い間隔で次のリクエスト
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      if (requestTimes.isNotEmpty) {
         final averageRequestTime = requestTimes.fold(0, (sum, time) => sum + time) / requestTimes.length;
-        
-        expect(averageRequestTime, lessThan(500), 
-               reason: 'Average rapid request time should be under 500ms: ${averageRequestTime.toStringAsFixed(2)}ms');
-        
+        expect(averageRequestTime, lessThan(500),
+            reason: 'Average rapid request time should be under 500ms: ${averageRequestTime.toStringAsFixed(2)}ms');
         debugPrint('Rapid Requests Performance:');
         debugPrint('  Number of requests: ${requestTimes.length}');
         debugPrint('  Average request time: ${averageRequestTime.toStringAsFixed(2)}ms');
@@ -416,13 +424,12 @@ void main() {
       // 複数回のstate変更を誘発
       await tester.pumpAndSettle();
       
-      final refreshButton = find.byIcon(Icons.refresh);
-      if (refreshButton.evaluate().isNotEmpty) {
-        // リフレッシュ操作を3回実行
-        for (int i = 0; i < 3; i++) {
-          await tester.tap(refreshButton.first);
-          await tester.pump();
-        }
+      // リフレッシュ操作を最大3回実行（存在する場合のみ）
+      for (int i = 0; i < 3; i++) {
+        final refreshButton = find.byIcon(Icons.refresh);
+        if (refreshButton.evaluate().isEmpty) break;
+        await tester.tap(refreshButton.first);
+        await tester.pump();
       }
       
       await tester.pumpAndSettle();
@@ -443,4 +450,39 @@ void main() {
       }
     });
   });
+}
+
+/// フェイクのリモートデータソース（パフォーマンステスト用）
+class _FakeMakeupRemoteDataSourcePerf implements MakeupRemoteDataSource {
+  @override
+  Future<AIMakeupRecommendationModel> getAIMakeupRecommendations({
+    required PersonalColorType personalColorType,
+    required File imageFile,
+  }) async {
+    final json = <String, dynamic>{
+      'personal_color_type': personalColorType.name,
+      'categories': {
+        'eyeshadow': <Map<String, dynamic>>[],
+        'cheek': <Map<String, dynamic>>[],
+        'lip': <Map<String, dynamic>>[],
+      },
+      'ai_explanations': <String, String>{},
+      'generated_image': {
+        'image_data': 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMB/URbqk8AAAAASUVORK5CYII=',
+        'mime_type': 'image/png',
+        'generated_at': DateTime.now().toUtc().toIso8601String(),
+        'model_used': 'imagen-4.0-generate-001',
+      },
+      'request_id': 'perf_fake_req',
+      'timestamp': DateTime.now().toUtc().toIso8601String(),
+    };
+
+    return AIMakeupRecommendationModel.fromJson(json);
+  }
+
+  @override
+  Future<MakeupRecommendationModel> getMakeupRecommendations(
+      PersonalColorType personalColorType) {
+    return Future.error(UnimplementedError());
+  }
 }
