@@ -86,6 +86,7 @@ class IosHomePage extends StatelessWidget {
   }
 
   Future<void> _navigateToAIMakeup(BuildContext context) async {
+    final navigator = Navigator.of(context);
     // 画像選択ダイアログ
     final source = await showDialog<ImageSource>(
       context: context,
@@ -112,8 +113,9 @@ class IosHomePage extends StatelessWidget {
     if (xfile == null) return;
 
     // パーソナルカラー選択（省略可能: 未選択時はSpring）
+    if (!navigator.mounted) return;
     final selectedType = await showDialog<PersonalColorType>(
-      context: context,
+      context: navigator.context,
       builder: (ctx) => SimpleDialog(
         title: const Text('パーソナルカラータイプを選択'),
         children: [
@@ -139,7 +141,8 @@ class IosHomePage extends StatelessWidget {
 
     final type = selectedType ?? PersonalColorType.spring;
 
-    Navigator.of(context).push(
+    if (!navigator.mounted) return;
+    navigator.push(
       MaterialPageRoute(
         builder: (context) => ChangeNotifierProvider(
           create: (_) => di.sl<AIMakeupRecommendationProvider>(),

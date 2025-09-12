@@ -52,13 +52,26 @@ class AndroidHomePage extends StatelessWidget {
                 
                 const SizedBox(height: 48),
                 
-                // メインCTAボタン
-                _buildMainCTAButton(context, theme),
-                
-                const SizedBox(height: 24),
-                
-                // サブ情報
-                _buildSubInfo(theme),
+            // メインCTAボタン
+            _buildMainCTAButton(context, theme),
+            
+            const SizedBox(height: 24),
+            
+            // AI画像生成メイクボタン
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: OutlinedButton.icon(
+                onPressed: () => _navigateToAIMakeup(context),
+                icon: const Icon(Icons.auto_awesome),
+                label: const Text('AI画像生成メイク'),
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // サブ情報
+            _buildSubInfo(theme),
               ],
             ),
           ),
@@ -231,6 +244,7 @@ class AndroidHomePage extends StatelessWidget {
 
   /// AI画像生成メイク画面への遷移
   Future<void> _navigateToAIMakeup(BuildContext context) async {
+    final navigator = Navigator.of(context);
     // 画像選択ダイアログ
     final source = await showDialog<ImageSource>(
       context: context,
@@ -257,8 +271,9 @@ class AndroidHomePage extends StatelessWidget {
     if (xfile == null) return;
 
     // カラータイプ選択（未選択ならSpring）
+    if (!navigator.mounted) return;
     final selectedType = await showDialog<PersonalColorType>(
-      context: context,
+      context: navigator.context,
       builder: (ctx) => SimpleDialog(
         title: const Text('パーソナルカラータイプを選択'),
         children: [
@@ -284,7 +299,8 @@ class AndroidHomePage extends StatelessWidget {
 
     final type = selectedType ?? PersonalColorType.spring;
 
-    Navigator.of(context).push(
+    if (!navigator.mounted) return;
+    navigator.push(
       _createMaterialPageRoute(
         ChangeNotifierProvider(
           create: (_) => di.sl<AIMakeupRecommendationProvider>(),

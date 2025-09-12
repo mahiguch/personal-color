@@ -32,7 +32,7 @@ void main() {
   group('AIMakeupRecommendationProvider', () {
     const personalColorType = PersonalColorType.spring;
 
-    const _oneByOnePngBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMB/URbqk8AAAAASUVORK5CYII=';
+    const oneByOnePngBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMB/URbqk8AAAAASUVORK5CYII=';
 
     final validRecommendation = MakeupRecommendation(
       personalColorType: personalColorType,
@@ -86,7 +86,7 @@ void main() {
       timestamp: DateTime.parse('2023-12-31T15:00:00Z'),
       generatedImageSize: '1.5MB',
       generatedImageDateTime: DateTime.parse('2023-12-31T15:00:00Z'),
-      generatedImageData: _oneByOnePngBase64,
+      generatedImageData: oneByOnePngBase64,
     );
 
     group('Initial State', () {
@@ -293,7 +293,7 @@ void main() {
         },
         generatedImageSize: '1.8MB',
         generatedImageDateTime: DateTime.parse('2023-12-31T16:00:00Z'),
-        generatedImageData: _oneByOnePngBase64,
+        generatedImageData: oneByOnePngBase64,
       );
 
         when(mockUseCase.call(any))
@@ -370,7 +370,7 @@ void main() {
           aiExplanations: validRecommendation.aiExplanations,
           generatedImageSize: '2.1MB',
           generatedImageDateTime: DateTime.parse('2023-12-31T15:30:00Z'),
-          generatedImageData: _oneByOnePngBase64,
+          generatedImageData: oneByOnePngBase64,
         );
 
         when(mockUseCase.call(any))
