@@ -9,6 +9,7 @@ import 'package:personal_color_app/features/makeup/presentation/widgets/generate
 void main() {
   group('GeneratedImageWidget', () {
     late MakeupRecommendation testRecommendation;
+    const _oneByOnePngBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMB/URbqk8AAAAASUVORK5CYII=';
 
     setUp(() {
       testRecommendation = MakeupRecommendation(
@@ -33,6 +34,7 @@ void main() {
         },
         generatedImageSize: '1.5MB',
         generatedImageDateTime: DateTime.parse('2023-12-31T15:00:00Z'),
+        generatedImageData: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMB/URbqk8AAAAASUVORK5CYII=',
       );
     });
 
@@ -94,6 +96,7 @@ void main() {
                 aiExplanations: testRecommendation.aiExplanations,
                 generatedImageSize: testRecommendation.generatedImageSize,
                 generatedImageDateTime: testRecommendation.generatedImageDateTime,
+                generatedImageData: _oneByOnePngBase64,
               ),
               personalColorType: PersonalColorType.winter,
             ),
@@ -209,6 +212,7 @@ void main() {
         aiExplanations: testRecommendation.aiExplanations,
         generatedImageSize: '15.2MB',
         generatedImageDateTime: testRecommendation.generatedImageDateTime,
+        generatedImageData: _oneByOnePngBase64,
       );
 
       // Act
@@ -247,6 +251,7 @@ void main() {
                 aiExplanations: testRecommendation.aiExplanations,
                 generatedImageSize: testRecommendation.generatedImageSize,
                 generatedImageDateTime: testRecommendation.generatedImageDateTime,
+                generatedImageData: _oneByOnePngBase64,
                 ),
                 personalColorType: colorType,
               ),

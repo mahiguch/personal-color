@@ -23,7 +23,10 @@ class GeneratedImageWidget extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return Container(
+    return Semantics(
+      label: 'AI生成画像',
+      container: true,
+      child: Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -51,11 +54,14 @@ class GeneratedImageWidget extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 
   Widget _buildHeader(BuildContext context) {
-    return Container(
+    return Semantics(
+      label: 'AI生成画像',
+      child: Container(
       padding: const EdgeInsets.all(20),
       child: Row(
         children: [
@@ -100,6 +106,7 @@ class GeneratedImageWidget extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
 

@@ -73,6 +73,7 @@ class CameraProvider extends ChangeNotifier {
   
   late OptimizedNotifier _optimizedNotifier;
   StreamController<String>? _progressController;
+  bool _disposed = false;
 
   CameraState _state = CameraState.initial;
   CameraPermission? _permission;
@@ -213,6 +214,7 @@ class CameraProvider extends ChangeNotifier {
     _optimizedNotifier.dispose();
     await _repository.disposeCamera();
     super.dispose();
+    _disposed = true;
     debugPrint('💾 CameraProviderリソースをクリーンアップしました');
   }
 
@@ -245,9 +247,11 @@ class CameraProvider extends ChangeNotifier {
     _state = newState;
     
     _optimizedNotifier.requestUpdate(() {
-      if (!_isUpdating) {
+      if (!_isUpdating && !_disposed) {
         _isUpdating = true;
-        notifyListeners();
+        if (!_disposed) {
+          notifyListeners();
+        }
         _isUpdating = false;
       }
     });

@@ -215,50 +215,6 @@ class IOSDiagnosisResultPage extends StatelessWidget {
         
         const SizedBox(height: 12),
         
-        // AI画像生成メイクボタン
-        SizedBox(
-          width: double.infinity,
-          height: 56,
-          child: GestureDetector(
-            onTap: () => _navigateToAIMakeup(context),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    _getThemeColor(result.diagnosisType),
-                    _getThemeColor(result.diagnosisType).withValues(alpha: 0.8),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.2),
-                    offset: const Offset(0, 2),
-                    blurRadius: 4,
-                  ),
-                ],
-              ),
-              child: const Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.auto_awesome, color: Colors.white),
-                    SizedBox(width: 8),
-                    Text(
-                      'AI画像生成メイク',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-
         const SizedBox(height: 12),
         
         // もう一度診断ボタン
@@ -378,51 +334,7 @@ class IOSDiagnosisResultPage extends StatelessWidget {
     );
   }
 
-  void _navigateToAIMakeup(BuildContext context) {
-    try {
-      debugPrint('🎨 AI画像生成メイクボタン押下: ${result.diagnosisType}');
-      
-      // 元画像ファイルを作成
-      final imageFile = File(originalImagePath);
-      
-      // プロバイダーを作成
-      final provider = di.sl<AIMakeupRecommendationProvider>();
-      
-      // AI画像生成メイクページに直接ナビゲート（モーダルなし）
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => ChangeNotifierProvider.value(
-            value: provider,
-            child: AIMakeupRecommendationPage(
-              personalColorType: result.diagnosisType,
-              imageFile: imageFile,
-            ),
-          ),
-        ),
-      );
-      
-      debugPrint('✅ AI画像生成メイクページへのナビゲーション成功');
-      
-    } catch (e, stackTrace) {
-      debugPrint('❌ AI画像生成メイクナビゲーションエラー: $e');
-      debugPrint('スタックトレース: $stackTrace');
-      
-      // エラーダイアログを表示
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('エラー'),
-          content: Text('AI画像生成メイク機能でエラーが発生しました: $e'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
-    }
-  }
+  // AI画像生成メイクはホーム画面から起動に変更（本画面からは削除）
 
   void _retakeDiagnosis(BuildContext context) {
     // 診断プロバイダーをリセット

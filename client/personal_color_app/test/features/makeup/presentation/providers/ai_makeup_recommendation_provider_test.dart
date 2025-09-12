@@ -32,6 +32,8 @@ void main() {
   group('AIMakeupRecommendationProvider', () {
     const personalColorType = PersonalColorType.spring;
 
+    const _oneByOnePngBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMB/URbqk8AAAAASUVORK5CYII=';
+
     final validRecommendation = MakeupRecommendation(
       personalColorType: personalColorType,
       categories: {
@@ -84,6 +86,7 @@ void main() {
       timestamp: DateTime.parse('2023-12-31T15:00:00Z'),
       generatedImageSize: '1.5MB',
       generatedImageDateTime: DateTime.parse('2023-12-31T15:00:00Z'),
+      generatedImageData: _oneByOnePngBase64,
     );
 
     group('Initial State', () {
@@ -287,10 +290,11 @@ void main() {
             MakeupCategory.eyeshadow: 'AI generated explanation for winter eyeshadow selection',
             MakeupCategory.cheek: 'AI generated explanation for winter cheek selection',
             MakeupCategory.lip: 'AI generated explanation for winter lip selection',
-          },
-          generatedImageSize: '1.8MB',
-          generatedImageDateTime: DateTime.parse('2023-12-31T16:00:00Z'),
-        );
+        },
+        generatedImageSize: '1.8MB',
+        generatedImageDateTime: DateTime.parse('2023-12-31T16:00:00Z'),
+        generatedImageData: _oneByOnePngBase64,
+      );
 
         when(mockUseCase.call(any))
             .thenAnswer((_) async => Right(winterRecommendation));
@@ -366,6 +370,7 @@ void main() {
           aiExplanations: validRecommendation.aiExplanations,
           generatedImageSize: '2.1MB',
           generatedImageDateTime: DateTime.parse('2023-12-31T15:30:00Z'),
+          generatedImageData: _oneByOnePngBase64,
         );
 
         when(mockUseCase.call(any))
