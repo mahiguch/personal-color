@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
 import 'package:provider/provider.dart';
 
 import 'package:personal_color_app/core/di/injection_container.dart' as di;
@@ -12,9 +10,9 @@ import 'package:personal_color_app/features/makeup/presentation/providers/ai_mak
 import 'package:personal_color_app/features/makeup/data/datasources/makeup_remote_data_source.dart';
 import 'package:personal_color_app/features/makeup/data/models/ai_makeup_recommendation_model.dart';
 import 'package:personal_color_app/features/makeup/data/models/makeup_recommendation_model.dart';
+import '../helpers/integration_test_setup.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('AI Makeup Performance Tests', () {
     setUpAll(() async {

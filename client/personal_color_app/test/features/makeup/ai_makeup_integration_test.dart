@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
 import 'package:provider/provider.dart';
 
 import 'package:personal_color_app/core/di/injection_container.dart' as di;
@@ -10,44 +8,12 @@ import 'package:personal_color_app/features/diagnosis/domain/entities/diagnosis_
 import 'package:personal_color_app/features/makeup/presentation/pages/ai_makeup_recommendation_page.dart';
 import 'package:personal_color_app/features/makeup/presentation/providers/ai_makeup_recommendation_provider.dart';
 import 'package:personal_color_app/main.dart';
+import '../../helpers/integration_test_setup.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
   group('AI Makeup Recommendation Integration Tests', () {
     setUpAll(() async {
-      // SharedPreferencesプラグインをモック
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        const MethodChannel('plugins.flutter.io/shared_preferences'),
-        (MethodCall methodCall) async {
-          if (methodCall.method == 'getAll') {
-            return <String, Object>{};
-          }
-          return null;
-        },
-      );
-
-      // Firebase関連のプラグインをモック
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        const MethodChannel('plugins.flutter.io/firebase_core'),
-        (MethodCall methodCall) async {
-          if (methodCall.method == 'Firebase#initializeCore') {
-            return <String, Object>{
-              'name': '[DEFAULT]',
-              'options': <String, Object>{
-                'apiKey': 'fake-api-key',
-                'appId': 'fake-app-id',
-                'messagingSenderId': 'fake-sender-id',
-                'projectId': 'fake-project-id',
-              },
-              'pluginConstants': <String, Object>{},
-            };
-          }
-          return null;
-        },
-      );
-
-      await di.init();
+      await setupIntegrationTest();
     });
 
     testWidgets('should complete full AI makeup recommendation flow', (WidgetTester tester) async {
@@ -141,10 +107,10 @@ void main() {
       // Wait for initial setup
       await tester.pump();
 
-      // Check if loading or error state is reached
+      // Check if loading or error state is reached with shorter timeout
       bool loadingOrErrorFound = false;
-      for (int i = 0; i < 10; i++) {
-        await tester.pump(const Duration(milliseconds: 100));
+      for (int i = 0; i < 5; i++) {  // Reduced from 10 to 5 iterations
+        await tester.pump(const Duration(milliseconds: 50));  // Reduced from 100ms to 50ms
         if (find.byType(CircularProgressIndicator).evaluate().isNotEmpty || 
             find.byIcon(Icons.error_outline).evaluate().isNotEmpty) {
           loadingOrErrorFound = true;
@@ -156,8 +122,8 @@ void main() {
       expect(loadingOrErrorFound, true, 
              reason: 'Should show loading or error state for timeout test');
 
-      // Wait for processing to complete
-      await tester.pumpAndSettle(const Duration(seconds: 10));
+      // Wait for processing to complete with shorter timeout
+      await tester.pumpAndSettle(const Duration(milliseconds: 500));
 
       // Should handle timeout/error gracefully
       if (find.byIcon(Icons.error_outline).evaluate().isNotEmpty) {
