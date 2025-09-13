@@ -7,7 +7,9 @@ import 'package:personal_color_app/main.dart';
 import 'package:personal_color_app/features/diagnosis/domain/entities/diagnosis_result.dart';
 import 'package:personal_color_app/features/diagnosis/presentation/ios/ios_diagnosis_result_page.dart';
 import 'package:personal_color_app/features/makeup/presentation/providers/makeup_recommendation_provider.dart';
+import 'package:personal_color_app/features/diagnosis/presentation/providers/diagnosis_provider.dart';
 import 'package:personal_color_app/core/di/injection_container.dart' as di;
+import 'package:personal_color_app/core/network/api_client.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +29,20 @@ void main() {
       );
 
       await di.init();
+    });
+
+    tearDown(() async {
+      // Dispose ApiClient after each test to prevent pending timers
+      if (di.sl.isRegistered<ApiClient>()) {
+        di.sl<ApiClient>().dispose();
+      }
+    });
+
+    tearDownAll(() async {
+      // Ensure background timers are cleaned up to avoid pending timer errors
+      if (di.sl.isRegistered<ApiClient>()) {
+        di.sl<ApiClient>().dispose();
+      }
     });
 
     testWidgets('Home page retains primary buttons', (tester) async {
@@ -59,6 +75,9 @@ void main() {
             providers: [
               ChangeNotifierProvider(
                 create: (_) => di.sl<MakeupRecommendationProvider>(),
+              ),
+              ChangeNotifierProvider(
+                create: (_) => di.sl<DiagnosisProvider>(),
               ),
             ],
             child: IOSDiagnosisResultPage(

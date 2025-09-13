@@ -4,7 +4,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:dartz/dartz.dart';
 
-import 'package:personal_color_app/core/errors/failures.dart';
+import 'package:personal_color_app/core/error/failures.dart';
 import 'package:personal_color_app/features/diagnosis/domain/entities/diagnosis_result.dart';
 import 'package:personal_color_app/features/makeup/domain/entities/makeup_product.dart';
 import 'package:personal_color_app/features/makeup/domain/entities/makeup_recommendation.dart';
@@ -143,7 +143,7 @@ void main() {
 
       test('should set error state when use case returns ValidationFailure', () async {
         // Arrange
-        const failure = ValidationFailure('Image file is too large (max 10MB)');
+        const failure = ValidationFailure(message: 'Image file is too large (max 10MB)');
         when(mockUseCase.call(any))
             .thenAnswer((_) async => const Left(failure));
 
@@ -155,13 +155,13 @@ void main() {
         expect(provider.hasError, true);
         expect(provider.hasRecommendation, false);
         expect(provider.recommendation, null);
-        expect(provider.errorMessage, 'Image file is too large (max 10MB)');
+        expect(provider.errorMessage, 'バリデーションエラーが発生しました');
         expect(provider.hasGeneratedImage, false);
       });
 
       test('should set error state when use case returns NetworkFailure', () async {
         // Arrange
-        const failure = NetworkFailure('AI makeup generation timeout: Please try again or use a smaller image');
+        const failure = NetworkFailure(message: 'AI makeup generation timeout: Please try again or use a smaller image');
         when(mockUseCase.call(any))
             .thenAnswer((_) async => const Left(failure));
 
@@ -176,7 +176,7 @@ void main() {
 
       test('should set error state when use case returns ServerFailure', () async {
         // Arrange
-        const failure = ServerFailure('AI service temporarily unavailable. Please try again later.');
+        const failure = ServerFailure(message: 'AI service temporarily unavailable. Please try again later.');
         when(mockUseCase.call(any))
             .thenAnswer((_) async => const Left(failure));
 
@@ -191,7 +191,7 @@ void main() {
 
       test('should set error state when use case returns DataFailure', () async {
         // Arrange
-        const failure = DataFailure('No AI makeup recommendations found');
+        const failure = DataFailure(message: 'No AI makeup recommendations found');
         when(mockUseCase.call(any))
             .thenAnswer((_) async => const Left(failure));
 
@@ -206,7 +206,7 @@ void main() {
 
       test('should handle UnexpectedFailure correctly', () async {
         // Arrange
-        const failure = UnexpectedFailure('AI generation unexpected error');
+        const failure = UnexpectedFailure(message: 'AI generation unexpected error');
         when(mockUseCase.call(any))
             .thenAnswer((_) async => const Left(failure));
 
@@ -333,7 +333,7 @@ void main() {
         expect(provider.hasError, false);
 
         // Arrange - Set up for second call that fails
-        const failure = NetworkFailure('Network error');
+        const failure = NetworkFailure(message: 'Network error');
         when(mockUseCase.call(any))
             .thenAnswer((_) async => const Left(failure));
 

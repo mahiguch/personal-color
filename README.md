@@ -86,6 +86,59 @@ npm run dev
 
 詳細は `client/personal_color_app/Makefile` を参照してください。
 
+## 運用ドキュメントへのリンク集
+
+- API仕様（概要と例）: `docs/API_DIAGNOSIS.md`
+- OpenAPIスナップショット: `docs/openapi_example.json`
+- エラーコード一覧（日本語/英語対訳）: `docs/ERROR_CODES.md`
+- デプロイ手順書（Server/FastAPI）: `docs/DEPLOYMENT.md`
+- モニタリング設定ガイド: `docs/MONITORING.md`
+- トラブルシューティングガイド: `docs/TROUBLESHOOTING.md`
+- CI/CD 構成概要: `docs/CI_CD.md`
+
+## サーバー設定と機能フラグ（FastAPI）
+
+### .env 設定
+
+サーバーの環境変数は `server/.env` に設定できます。雛形は `server/.env.example` を参照してください。
+
+主な変数:
+
+- `ENHANCED_DIAGNOSIS_ENABLED` (デフォルト: `true`)
+  - 拡張診断（年代・性別推定を含む `/api/v1/diagnose-enhanced`）の有効/無効を切り替えます。
+  - `false` の場合、このエンドポイントは `404` と以下のエラーを返します:
+    ```json
+    {"detail": {"error": "feature_disabled", "message": "Enhanced diagnosis is currently disabled"}}
+    ```
+- `MAX_IMAGE_SIZE_MB` (デフォルト: `10`)
+  - 受け付ける画像の最大サイズ（MB）
+- `REQUEST_TIMEOUT_SECONDS`, `MAX_RETRY_ATTEMPTS`
+  - 診断処理のタイムアウトとリトライ回数
+
+その他、CORS や Vertex AI/Gemini の設定も `.env.example` を参照して下さい。
+
+### OpenAPI / API ドキュメント
+
+- 開発モード（`DEBUG=true`）では FastAPI のドキュメントが有効です:
+  - Swagger UI: `http://localhost:8000/docs`
+  - ReDoc: `http://localhost:8000/redoc`
+
+拡張診断エンドポイント:
+
+- `POST /api/v1/diagnose-enhanced`
+  - 入力: `image_base64` (必須), `metadata` (任意)
+  - 出力: `EnhancedDiagnosisResponse`
+    - `result.person_analysis.age_group`: `child|student|adult|middleAge|senior`
+    - `result.person_analysis.gender`: `male|female|unknown`
+  - 機能フラグが `false` の場合は上記の `feature_disabled` エラーを返します。
+
+通常診断エンドポイント:
+
+- `POST /api/v1/diagnose`
+  - 入力: `image_base64`, `metadata`
+  - 出力: `DiagnosisResponse`
+  - レスポンス JSON のパースはサーバーサービス層で行われ、妥当性検証済みです。
+
 ## 開発の進め方
 
 1. **仕様書優先**: `specifications/` の各MDファイルを参照

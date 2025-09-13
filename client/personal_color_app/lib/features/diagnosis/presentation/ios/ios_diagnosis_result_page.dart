@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/config/feature_flags.dart';
 import '../../domain/entities/diagnosis_result.dart';
 import '../providers/diagnosis_provider.dart';
+import '../services/content_adaptation_service.dart';
 import '../widgets/result_card.dart';
 import '../widgets/color_palette_widget.dart';
 import '../widgets/tips_section.dart';
+import '../widgets/person_info_display.dart';
 import '../../../makeup/presentation/pages/makeup_recommendation_page.dart';
 import '../../../makeup/presentation/providers/makeup_recommendation_provider.dart';
 import '../../../clothing/presentation/pages/clothing_recommendation_page.dart';
@@ -23,56 +26,84 @@ class IOSDiagnosisResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: _getBackgroundColor(result.diagnosisType),
-      appBar: AppBar(
-        title: const Text('診断結果'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // メイン結果カード
-            ResultCard(
-              result: result,
-              originalImagePath: originalImagePath,
+    return Consumer<DiagnosisProvider>(
+      builder: (context, provider, child) {
+        final adaptiveContent = provider.adaptiveContent;
+        final uiTheme = adaptiveContent?.uiTheme ?? const AdaptiveUiTheme.defaultTheme();
+        
+        return Scaffold(
+          backgroundColor: _getAdaptiveBackgroundColor(result.diagnosisType, uiTheme),
+          appBar: AppBar(
+            title: Text(
+              '診断結果',
+              style: TextStyle(
+                fontSize: 18 * uiTheme.fontScale,
+                color: Color(uiTheme.primaryColor),
+              ),
             ),
-            
-            const SizedBox(height: 24),
-            
-            // 詳細説明
-            _buildExplanationSection(context),
-            
-            const SizedBox(height: 24),
-            
-            // おすすめカラーパレット
-            ColorPaletteWidget(
-              colors: result.recommendedColors,
-              title: 'あなたに似合う色',
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            automaticallyImplyLeading: false,
+          ),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // 人物情報表示（プライバシー設定に基づく）
+                if (FeatureFlags.privacyUiEnabled && adaptiveContent?.displayInfo.hasDisplayInfo == true)
+                  PersonInfoDisplay(
+                    displayInfo: adaptiveContent!.displayInfo,
+                    theme: uiTheme,
+                  ),
+                
+                if (FeatureFlags.privacyUiEnabled && adaptiveContent?.displayInfo.hasDisplayInfo == true)
+                  const SizedBox(height: 16),
+                
+                // メイン結果カード
+                ResultCard(
+                  result: result,
+                  originalImagePath: originalImagePath,
+                  adaptiveTheme: uiTheme,
+                ),
+                
+                const SizedBox(height: 24),
+                
+                // 詳細説明（適応化済み）
+                _buildExplanationSection(context, adaptiveContent, uiTheme),
+                
+                const SizedBox(height: 24),
+                
+                // おすすめカラーパレット（適応化済み）
+                ColorPaletteWidget(
+                  colors: adaptiveContent?.colorRecommendations ?? result.recommendedColors,
+                  title: 'あなたに似合う色',
+                  adaptiveTheme: uiTheme,
+                ),
+                
+                const SizedBox(height: 24),
+                
+                // アドバイス・コツ（適応化済み）
+                TipsSection(
+                  tips: adaptiveContent?.tips ?? result.tips,
+                  adaptiveTheme: uiTheme,
+                ),
+                
+                const SizedBox(height: 32),
+                
+                // アクションボタン
+                _buildActionButtons(context, uiTheme),
+                
+                const SizedBox(height: 16),
+              ],
             ),
-            
-            const SizedBox(height: 24),
-            
-            // アドバイス・コツ
-            TipsSection(tips: result.tips),
-            
-            const SizedBox(height: 32),
-            
-            // アクションボタン
-            _buildActionButtons(context),
-            
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildExplanationSection(BuildContext context) {
+  Widget _buildExplanationSection(BuildContext context, AdaptiveContent? adaptiveContent, AdaptiveUiTheme uiTheme) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -92,9 +123,9 @@ class IOSDiagnosisResultPage extends StatelessWidget {
           Row(
             children: [
               Icon(
-                Icons.lightbulb_outline,
-                color: _getThemeColor(result.diagnosisType),
-                size: 24,
+                _getAdaptiveIcon(uiTheme.iconStyle),
+                color: Color(uiTheme.primaryColor),
+                size: 24 * uiTheme.fontScale,
               ),
               const SizedBox(width: 8),
               Text(
@@ -102,16 +133,18 @@ class IOSDiagnosisResultPage extends StatelessWidget {
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.grey[800],
+                  fontSize: 16 * uiTheme.fontScale,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 16),
           Text(
-            result.explanation,
+            adaptiveContent?.explanation ?? result.explanation,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               height: 1.6,
               color: Colors.grey[700],
+              fontSize: 14 * uiTheme.fontScale,
             ),
           ),
         ],
@@ -119,7 +152,7 @@ class IOSDiagnosisResultPage extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context) {
+  Widget _buildActionButtons(BuildContext context, AdaptiveUiTheme uiTheme) {
     return Column(
       children: [
         // おすすめのメイクボタン
@@ -134,7 +167,7 @@ class IOSDiagnosisResultPage extends StatelessWidget {
             },
             child: Container(
               decoration: BoxDecoration(
-                color: _getThemeColor(result.diagnosisType).withValues(alpha: 0.8),
+                color: Color(uiTheme.primaryColor).withValues(alpha: 0.8),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
@@ -144,16 +177,16 @@ class IOSDiagnosisResultPage extends StatelessWidget {
                   ),
                 ],
               ),
-              child: const Center(
+              child: Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.palette, color: Colors.white),
-                    SizedBox(width: 8),
+                    Icon(Icons.palette, color: Colors.white, size: 24 * uiTheme.fontScale),
+                    const SizedBox(width: 8),
                     Text(
                       'おすすめのメイク',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 16 * uiTheme.fontScale,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
@@ -179,7 +212,7 @@ class IOSDiagnosisResultPage extends StatelessWidget {
             },
             child: Container(
               decoration: BoxDecoration(
-                color: _getThemeColor(result.diagnosisType).withValues(alpha: 0.8),
+                color: Color(uiTheme.primaryColor).withValues(alpha: 0.8),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
@@ -189,16 +222,16 @@ class IOSDiagnosisResultPage extends StatelessWidget {
                   ),
                 ],
               ),
-              child: const Center(
+              child: Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.checkroom, color: Colors.white),
-                    SizedBox(width: 8),
+                    Icon(Icons.checkroom, color: Colors.white, size: 24 * uiTheme.fontScale),
+                    const SizedBox(width: 8),
                     Text(
                       'おすすめのファッション',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 16 * uiTheme.fontScale,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
@@ -221,17 +254,17 @@ class IOSDiagnosisResultPage extends StatelessWidget {
           child: OutlinedButton.icon(
             onPressed: () => _retakeDiagnosis(context),
             icon: const Icon(Icons.camera_alt),
-            label: const Text(
+            label: Text(
               'もう一度診断する',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 16 * uiTheme.fontScale,
                 fontWeight: FontWeight.bold,
               ),
             ),
             style: OutlinedButton.styleFrom(
-              foregroundColor: _getThemeColor(result.diagnosisType),
+              foregroundColor: Color(uiTheme.primaryColor),
               side: BorderSide(
-                color: _getThemeColor(result.diagnosisType),
+                color: Color(uiTheme.primaryColor),
                 width: 2,
               ),
               shape: RoundedRectangleBorder(
@@ -245,31 +278,27 @@ class IOSDiagnosisResultPage extends StatelessWidget {
     );
   }
 
-  Color _getBackgroundColor(PersonalColorType colorType) {
-    switch (colorType) {
-      case PersonalColorType.spring:
-        return const Color(0xFFFFF8E1); // 春らしい明るい黄色ベース
-      case PersonalColorType.summer:
-        return const Color(0xFFF3E5F5); // 夏らしい涼しい紫ベース
-      case PersonalColorType.autumn:
-        return const Color(0xFFFFF3E0); // 秋らしい暖かいオレンジベース
-      case PersonalColorType.winter:
-        return const Color(0xFFE8F5E8); // 冬らしいクールな緑ベース
+  Color _getAdaptiveBackgroundColor(PersonalColorType colorType, AdaptiveUiTheme uiTheme) {
+    // 適応化テーマの主色を淡くした背景色を生成
+    final baseColor = Color(uiTheme.primaryColor);
+    return baseColor.withValues(alpha: 0.05);
+  }
+
+  IconData _getAdaptiveIcon(IconStyle iconStyle) {
+    switch (iconStyle) {
+      case IconStyle.playful:
+        return Icons.star_rounded;
+      case IconStyle.modern:
+        return Icons.lightbulb_outline;
+      case IconStyle.professional:
+        return Icons.business_center;
+      case IconStyle.elegant:
+        return Icons.diamond_outlined;
+      case IconStyle.classic:
+        return Icons.auto_awesome;
     }
   }
 
-  Color _getThemeColor(PersonalColorType colorType) {
-    switch (colorType) {
-      case PersonalColorType.spring:
-        return const Color(0xFFFF9800); // 鮮やかなオレンジ
-      case PersonalColorType.summer:
-        return const Color(0xFF9C27B0); // エレガントな紫
-      case PersonalColorType.autumn:
-        return const Color(0xFFFF5722); // 深いオレンジ
-      case PersonalColorType.winter:
-        return const Color(0xFF2E7D32); // 深い緑
-    }
-  }
 
 
   void _navigateToMakeupRecommendation(BuildContext context, {bool forceRefresh = false}) {

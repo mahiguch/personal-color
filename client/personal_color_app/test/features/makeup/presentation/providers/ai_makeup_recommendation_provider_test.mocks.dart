@@ -11,7 +11,7 @@ import 'dart:typed_data' as _i11;
 import 'package:dartz/dartz.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i9;
-import 'package:personal_color_app/core/errors/failures.dart' as _i7;
+import 'package:personal_color_app/core/error/failures.dart' as _i7;
 import 'package:personal_color_app/features/makeup/domain/entities/makeup_recommendation.dart'
     as _i8;
 import 'package:personal_color_app/features/makeup/domain/repositories/makeup_repository.dart'

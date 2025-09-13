@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 
-import '../../../../core/errors/failures.dart';
+import '../../../../core/error/failures.dart';
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
 import '../../domain/entities/clothing_recommendation.dart';
 import '../../domain/entities/clothing_product.dart';
@@ -33,16 +33,16 @@ class ClothingRepositoryImpl implements ClothingRepository {
 
       return Right(clothingRecommendation);
     } on NetworkException catch (e) {
-      return Left(NetworkFailure(e.message));
+      return Left(NetworkFailure(message: e.message));
     } on ServerException catch (e) {
-      return Left(ServerFailure(e.message));
+      return Left(ServerFailure(message: e.message));
     } on DataException catch (e) {
-      return Left(DataFailure(e.message));
+      return Left(DataFailure(message: e.message));
     } on ValidationException catch (e) {
-      return Left(ValidationFailure(e.message));
+      return Left(ValidationFailure(message: e.message));
     } catch (e) {
       // 予期しないエラーをキャッチ
-      return Left(DataFailure(
+      return Left(DataFailure(message: 
           'Unexpected error occurred: ${e.toString()}'));
     }
   }
@@ -82,7 +82,7 @@ class ClothingRepositoryImpl implements ClothingRepository {
         },
       );
     } catch (e) {
-      return Left(DataFailure('Failed to get products by category: ${e.toString()}'));
+      return Left(DataFailure(message: 'Failed to get products by category: ${e.toString()}'));
     }
   }
 
@@ -107,7 +107,7 @@ class ClothingRepositoryImpl implements ClothingRepository {
         },
       );
     } catch (e) {
-      return Left(DataFailure('Failed to get recommendation stats: ${e.toString()}'));
+      return Left(DataFailure(message: 'Failed to get recommendation stats: ${e.toString()}'));
     }
   }
 }

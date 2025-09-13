@@ -22,8 +22,11 @@ import '../../features/diagnosis/data/datasources/diagnosis_remote_data_source.d
 import '../../features/diagnosis/data/repositories/diagnosis_repository_impl.dart';
 import '../../features/diagnosis/domain/repositories/diagnosis_repository.dart';
 import '../../features/diagnosis/domain/usecases/diagnose_personal_color.dart';
+import '../../features/diagnosis/domain/usecases/diagnose_personal_color_enhanced.dart';
 import '../../features/diagnosis/domain/usecases/check_api_health.dart';
 import '../../features/diagnosis/presentation/providers/diagnosis_provider.dart';
+import '../../features/diagnosis/presentation/services/content_adaptation_service.dart';
+import '../../features/settings/data/services/privacy_settings_service.dart';
 
 // Makeup feature
 import '../../features/makeup/data/datasources/makeup_local_data_source.dart';
@@ -100,12 +103,20 @@ Future<void> init() async {
   sl.registerFactory(
     () => DiagnosisProvider(
       diagnosePersonalColor: sl(),
+      diagnosePersonalColorEnhanced: sl(),
       checkApiHealth: sl(),
+      contentAdaptationService: sl(),
+      privacySettingsService: sl(),
     ),
   );
 
+  // Services  
+  sl.registerLazySingleton(() => ContentAdaptationService());
+  sl.registerLazySingleton(() => PrivacySettingsService());
+
   // Use cases
   sl.registerLazySingleton(() => DiagnosePersonalColor(sl()));
+  sl.registerLazySingleton(() => DiagnosePersonalColorEnhanced(sl()));
   sl.registerLazySingleton(() => CheckApiHealth(sl()));
 
   // Repository

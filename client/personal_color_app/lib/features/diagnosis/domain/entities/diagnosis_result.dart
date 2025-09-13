@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'person_analysis.dart';
 
 /// 診断結果エンティティ
 class DiagnosisResult extends Equatable {
@@ -9,6 +10,7 @@ class DiagnosisResult extends Equatable {
     required this.recommendedColors,
     required this.avoidColors,
     required this.tips,
+    this.personAnalysis,
     this.requestId,
     this.processingTimeMs,
   });
@@ -31,6 +33,9 @@ class DiagnosisResult extends Equatable {
   /// アドバイス
   final String tips;
 
+  /// 人物分析結果（年齢・性別推定）
+  final PersonAnalysis? personAnalysis;
+
   /// リクエストID
   final String? requestId;
 
@@ -45,6 +50,7 @@ class DiagnosisResult extends Equatable {
         recommendedColors,
         avoidColors,
         tips,
+        personAnalysis,
         requestId,
         processingTimeMs,
       ];
@@ -57,6 +63,12 @@ class DiagnosisResult extends Equatable {
 
   /// 低い信頼度かどうか（60%未満）
   bool get isLowConfidence => confidence < 60;
+
+  /// 年代・性別情報が利用可能かどうか
+  bool get hasPersonAnalysis => personAnalysis != null;
+
+  /// 適応化された説明文かどうか
+  bool get isAdaptiveContent => hasPersonAnalysis && explanation.isNotEmpty;
 }
 
 /// パーソナルカラータイプ
@@ -151,6 +163,19 @@ class ColorRecommendation extends Equatable {
 
   @override
   List<Object?> get props => [colorName, reason, hexColor];
+
+  /// コピーして新しいインスタンスを作成
+  ColorRecommendation copyWith({
+    String? colorName,
+    String? reason,
+    String? hexColor,
+  }) {
+    return ColorRecommendation(
+      colorName: colorName ?? this.colorName,
+      reason: reason ?? this.reason,
+      hexColor: hexColor ?? this.hexColor,
+    );
+  }
 
   /// JSONから作成
   factory ColorRecommendation.fromJson(Map<String, dynamic> json) {

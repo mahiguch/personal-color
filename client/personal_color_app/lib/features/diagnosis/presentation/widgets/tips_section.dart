@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import '../services/content_adaptation_service.dart';
 
 class TipsSection extends StatelessWidget {
   final String tips;
+  final AdaptiveUiTheme? adaptiveTheme;
 
   const TipsSection({
     super.key,
     required this.tips,
+    this.adaptiveTheme,
   });
 
   @override

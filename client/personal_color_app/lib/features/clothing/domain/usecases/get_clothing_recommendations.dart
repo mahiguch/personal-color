@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../../core/usecases/usecase.dart';
-import '../../../../core/errors/failures.dart';
+import '../../../../core/error/failures.dart';
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
 import '../entities/clothing_recommendation.dart';
 import '../repositories/clothing_repository.dart';
@@ -34,17 +34,17 @@ class GetClothingRecommendations implements UseCase<ClothingRecommendation, GetC
         (recommendation) {
           // データの妥当性チェック
           if (recommendation.isEmpty) {
-            return const Left(DataFailure('No clothing recommendations found'));
+            return const Left(DataFailure(message: 'No clothing recommendations found'));
           }
 
           // 必須カテゴリのチェック
           if (!recommendation.isComplete) {
-            return const Left(DataFailure('Incomplete clothing recommendation data'));
+            return const Left(DataFailure(message: 'Incomplete clothing recommendation data'));
           }
 
           // 多様性スコアのチェック
           if (recommendation.diversityScore < 30) {
-            return const Left(DataFailure('Low diversity clothing recommendations'));
+            return const Left(DataFailure(message: 'Low diversity clothing recommendations'));
           }
 
           return Right(recommendation);
@@ -52,7 +52,7 @@ class GetClothingRecommendations implements UseCase<ClothingRecommendation, GetC
       );
     } catch (e) {
       // 予期せぬエラーの場合
-      return Left(UnexpectedFailure(e.toString()));
+      return Left(UnexpectedFailure(message: e.toString()));
     }
   }
 }

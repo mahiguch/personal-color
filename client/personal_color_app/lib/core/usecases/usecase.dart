@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import '../errors/failures.dart';
+import '../error/failures.dart';
 
 /// ユースケースの抽象クラス
 abstract class UseCase<ReturnType, Params> {

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/diagnosis_result.dart';
+import '../services/content_adaptation_service.dart';
 
 class ColorPaletteWidget extends StatelessWidget {
   final List<ColorRecommendation> colors;
   final String title;
+  final AdaptiveUiTheme? adaptiveTheme;
 
   const ColorPaletteWidget({
     super.key,
     required this.colors,
     required this.title,
+    this.adaptiveTheme,
   });
 
   @override

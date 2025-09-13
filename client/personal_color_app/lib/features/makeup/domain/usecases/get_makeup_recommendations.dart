@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../../core/usecases/usecase.dart';
-import '../../../../core/errors/failures.dart';
+import '../../../../core/error/failures.dart';
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
 import '../entities/makeup_product.dart';
 import '../entities/makeup_recommendation.dart';
@@ -55,7 +55,7 @@ class GetMakeupRecommendations implements UseCase<MakeupRecommendation, GetMakeu
           // データの妥当性チェック
           if (recommendation.isEmpty) {
             debugPrint('❌ 妥当性チェック失敗: 推奨データが空');
-            return const Left(DataFailure('No makeup recommendations found'));
+            return const Left(DataFailure(message: 'No makeup recommendations found'));
           }
 
           // 必須カテゴリのチェック - 商品データのみをチェック（AI説明は必須ではない）
@@ -88,7 +88,7 @@ class GetMakeupRecommendations implements UseCase<MakeupRecommendation, GetMakeu
           
           if (!hasAllProducts) {
             debugPrint('❌ 完全性チェック失敗: 必要な商品データが不足');
-            return const Left(DataFailure('Incomplete makeup recommendation data'));
+            return const Left(DataFailure(message: 'Incomplete makeup recommendation data'));
           }
           
           if (totalExplanations == 0) {
@@ -103,7 +103,7 @@ class GetMakeupRecommendations implements UseCase<MakeupRecommendation, GetMakeu
       );
     } catch (e) {
       // 予期せぬエラーの場合
-      return Left(UnexpectedFailure(e.toString()));
+      return Left(UnexpectedFailure(message: e.toString()));
     }
   }
 }

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import '../../domain/entities/diagnosis_result.dart';
+import '../services/content_adaptation_service.dart';
 
 class ResultCard extends StatelessWidget {
   final DiagnosisResult result;
   final String originalImagePath;
+  final AdaptiveUiTheme? adaptiveTheme;
 
   const ResultCard({
     super.key,
     required this.result,
     required this.originalImagePath,
+    this.adaptiveTheme,
   });
 
   @override
@@ -59,12 +62,15 @@ class ResultCard extends StatelessWidget {
   }
 
   Widget _buildResultHeader() {
+    final theme = adaptiveTheme ?? const AdaptiveUiTheme.defaultTheme();
+    final typeColor = Color(theme.primaryColor);
+    
     return Column(
       children: [
         Text(
           'あなたは...',
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 16 * theme.fontScale,
             color: Colors.grey[600],
             fontWeight: FontWeight.w500,
           ),
@@ -73,19 +79,19 @@ class ResultCard extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           decoration: BoxDecoration(
-            color: _getTypeColor(result.diagnosisType).withValues(alpha: 0.1),
+            color: typeColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(25),
             border: Border.all(
-              color: _getTypeColor(result.diagnosisType),
+              color: typeColor,
               width: 2,
             ),
           ),
           child: Text(
             result.diagnosisType.displayName,
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 24 * theme.fontScale,
               fontWeight: FontWeight.bold,
-              color: _getTypeColor(result.diagnosisType),
+              color: typeColor,
             ),
           ),
         ),
@@ -93,7 +99,7 @@ class ResultCard extends StatelessWidget {
         Text(
           result.diagnosisType.description,
           style: TextStyle(
-            fontSize: 14,
+            fontSize: 14 * theme.fontScale,
             color: Colors.grey[600],
             fontStyle: FontStyle.italic,
           ),
@@ -136,16 +142,19 @@ class ResultCard extends StatelessWidget {
   }
 
   Widget _buildResultDetails(BuildContext context) {
+    final theme = adaptiveTheme ?? const AdaptiveUiTheme.defaultTheme();
+    final typeColor = Color(theme.primaryColor);
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: _getTypeColor(result.diagnosisType).withValues(alpha: 0.05),
+            color: typeColor.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: _getTypeColor(result.diagnosisType).withValues(alpha: 0.3),
+              color: typeColor.withValues(alpha: 0.3),
             ),
           ),
           child: Column(
@@ -155,16 +164,16 @@ class ResultCard extends StatelessWidget {
                 children: [
                   Icon(
                     _getTypeIcon(result.diagnosisType),
-                    color: _getTypeColor(result.diagnosisType),
-                    size: 20,
+                    color: typeColor,
+                    size: 20 * theme.fontScale,
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'あなたのタイプ',
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 14 * theme.fontScale,
                       fontWeight: FontWeight.w600,
-                      color: _getTypeColor(result.diagnosisType),
+                      color: typeColor,
                     ),
                   ),
                 ],
@@ -173,7 +182,7 @@ class ResultCard extends StatelessWidget {
               Text(
                 result.explanation,
                 style: TextStyle(
-                  fontSize: 13,
+                  fontSize: 13 * theme.fontScale,
                   color: Colors.grey[700],
                   height: 1.4,
                 ),
@@ -186,6 +195,9 @@ class ResultCard extends StatelessWidget {
   }
 
   Widget _buildConfidenceIndicator() {
+    final theme = adaptiveTheme ?? const AdaptiveUiTheme.defaultTheme();
+    final typeColor = Color(theme.primaryColor);
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -195,7 +207,7 @@ class ResultCard extends StatelessWidget {
             Text(
               '診断の確信度',
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 14 * theme.fontScale,
                 fontWeight: FontWeight.w600,
                 color: Colors.grey[700],
               ),
@@ -203,9 +215,9 @@ class ResultCard extends StatelessWidget {
             Text(
               '${result.confidence}%',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 16 * theme.fontScale,
                 fontWeight: FontWeight.bold,
-                color: _getTypeColor(result.diagnosisType),
+                color: typeColor,
               ),
             ),
           ],
@@ -225,8 +237,8 @@ class ResultCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4),
                 gradient: LinearGradient(
                   colors: [
-                    _getTypeColor(result.diagnosisType).withValues(alpha: 0.7),
-                    _getTypeColor(result.diagnosisType),
+                    typeColor.withValues(alpha: 0.7),
+                    typeColor,
                   ],
                 ),
               ),
@@ -237,7 +249,7 @@ class ResultCard extends StatelessWidget {
         Text(
           _getConfidenceText(result.confidence),
           style: TextStyle(
-            fontSize: 12,
+            fontSize: 12 * theme.fontScale,
             color: Colors.grey[600],
           ),
         ),
@@ -245,18 +257,6 @@ class ResultCard extends StatelessWidget {
     );
   }
 
-  Color _getTypeColor(PersonalColorType type) {
-    switch (type) {
-      case PersonalColorType.spring:
-        return const Color(0xFFFF9800); // 明るいオレンジ
-      case PersonalColorType.summer:
-        return const Color(0xFF9C27B0); // エレガントな紫
-      case PersonalColorType.autumn:
-        return const Color(0xFFFF5722); // 深いオレンジ
-      case PersonalColorType.winter:
-        return const Color(0xFF2E7D32); // 深い緑
-    }
-  }
 
   IconData _getTypeIcon(PersonalColorType type) {
     switch (type) {

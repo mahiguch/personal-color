@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
-import '../../../../core/errors/failures.dart';
+import '../../../../core/error/failures.dart';
 import '../entities/clothing_recommendation.dart';
 import '../entities/clothing_product.dart';
 

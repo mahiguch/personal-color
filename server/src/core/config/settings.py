@@ -55,6 +55,11 @@ class Settings(BaseSettings):
     request_timeout_seconds: int = Field(default=30, description="リクエストタイムアウト(秒)")
     max_retry_attempts: int = Field(default=3, description="最大リトライ回数")
     
+    # 機能フラグ
+    enhanced_diagnosis_enabled: bool = Field(
+        default=True, description="拡張診断（年代・性別推定）の有効化"
+    )
+    
     # AI画像生成設定
     ai_image_generation_enabled: bool = Field(default=True, description="AI画像生成機能の有効化")
     ai_image_max_retries: int = Field(default=3, description="AI画像生成の最大リトライ回数")

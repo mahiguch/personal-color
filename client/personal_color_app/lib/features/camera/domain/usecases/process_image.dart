@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import '../../../../core/errors/failures.dart';
+import '../../../../core/error/failures.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../entities/processed_image.dart';
 import '../entities/image_processing_config.dart';
@@ -16,7 +16,7 @@ class ProcessImage implements UseCase<ProcessedImage, ProcessImageParams> {
   Future<Either<Failure, ProcessedImage>> call(ProcessImageParams params) async {
     // 1. 入力検証
     if (params.imagePath.isEmpty) {
-      return const Left(ValidationFailure('画像パスが指定されていません'));
+      return const Left(ValidationFailure(message: '画像パスが指定されていません'));
     }
 
     // 2. 処理開始時間を記録
@@ -46,11 +46,11 @@ class ProcessImage implements UseCase<ProcessedImage, ProcessImageParams> {
       
       // 要件チェック
       if (!processedImage.isWithinSizeLimit) {
-        return const Left(ValidationFailure('画像サイズが1MBを超えています'));
+        return const Left(ValidationFailure(message: '画像サイズが1MBを超えています'));
       }
 
       if (processingTime > 3000) {
-        return const Left(ValidationFailure('処理時間が3秒を超えました'));
+        return const Left(ValidationFailure(message: '処理時間が3秒を超えました'));
       }
 
       // 6. メモリ最適化
@@ -58,7 +58,7 @@ class ProcessImage implements UseCase<ProcessedImage, ProcessImageParams> {
 
       return Right(processedImage);
     } catch (e) {
-      return Left(UnknownFailure('画像処理中にエラーが発生しました: $e'));
+      return Left(UnknownFailure(message: '画像処理中にエラーが発生しました: $e'));
     }
   }
 }

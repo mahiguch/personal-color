@@ -24,6 +24,7 @@ from .endpoints.makeup import router as makeup_router
 from .endpoints.clothing import router as clothing_router
 from ..core.config.settings import get_settings
 from ..middleware.rate_limiter import RateLimitMiddleware
+from .middleware.security_headers import SecurityHeadersMiddleware
 
 # from ..middleware.app_check_middleware import AppCheckMiddleware  # 依存関係問題により一時無効化
 from ..core.monitoring import metrics_collector, health_checker
@@ -71,6 +72,7 @@ app = FastAPI(
 )
 
 # ミドルウェア設定
+app.add_middleware(SecurityHeadersMiddleware)
 
 # Firebase App Check ミドルウェア（最初に追加）
 # 依存関係問題により一時無効化
