@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../camera/presentation/providers/camera_provider.dart';
 import '../../../camera/presentation/pages/camera_page.dart';
 import '../../../../core/di/injection_container.dart' as di;
@@ -72,6 +73,11 @@ class AndroidHomePage extends StatelessWidget {
 
             // サブ情報
             _buildSubInfo(theme),
+
+            const SizedBox(height: 32),
+
+            // プライバシーポリシーリンク
+            _buildPrivacyPolicyLink(theme),
               ],
             ),
           ),
@@ -195,6 +201,31 @@ class AndroidHomePage extends StatelessWidget {
     );
   }
 
+
+  /// プライバシーポリシーリンク
+  Widget _buildPrivacyPolicyLink(ThemeData theme) {
+    return Center(
+      child: TextButton(
+        onPressed: () => _openPrivacyPolicy(),
+        style: TextButton.styleFrom(
+          foregroundColor: theme.colorScheme.primary,
+          textStyle: theme.textTheme.bodyMedium?.copyWith(
+            decoration: TextDecoration.underline,
+            decorationColor: theme.colorScheme.primary,
+          ),
+        ),
+        child: const Text('プライバシーポリシー'),
+      ),
+    );
+  }
+
+  /// プライバシーポリシーを外部ブラウザで開く
+  Future<void> _openPrivacyPolicy() async {
+    final uri = Uri.parse('https://personal-color-469007.web.app/privacy');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
 
   /// サブ情報セクション
   Widget _buildSubInfo(ThemeData theme) {

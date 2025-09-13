@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../camera/presentation/providers/camera_provider.dart';
 import '../../../camera/presentation/pages/camera_page.dart';
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
@@ -25,50 +26,70 @@ class IosHomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'パーソナルカラー診断アプリ',
-              style: TextStyle(fontSize: 24),
+      body: Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Text(
+                    'パーソナルカラー診断アプリ',
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'あなたに似合う色を見つけましょう！',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 40),
+                  ElevatedButton(
+                    onPressed: () => _navigateToDiagnosis(context),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 16,
+                      ),
+                    ),
+                    child: const Text(
+                      '診断を始める',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // AI画像生成メイクボタン（仕様変更によりホームに設置）
+                  OutlinedButton.icon(
+                    onPressed: () => _navigateToAIMakeup(context),
+                    icon: const Icon(Icons.auto_awesome),
+                    label: const Text(
+                      'AI画像生成メイク',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 20),
-            const Text(
-              'あなたに似合う色を見つけましょう！',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: () => _navigateToDiagnosis(context),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 16,
+          ),
+          // プライバシーポリシーリンク
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextButton(
+              onPressed: () => _openPrivacyPolicy(),
+              child: const Text(
+                'プライバシーポリシー',
+                style: TextStyle(
+                  fontSize: 14,
+                  decoration: TextDecoration.underline,
                 ),
               ),
-              child: const Text(
-                '診断を始める',
-                style: TextStyle(fontSize: 18),
-              ),
             ),
-
-            const SizedBox(height: 12),
-
-            // AI画像生成メイクボタン（仕様変更によりホームに設置）
-            OutlinedButton.icon(
-              onPressed: () => _navigateToAIMakeup(context),
-              icon: const Icon(Icons.auto_awesome),
-              label: const Text(
-                'AI画像生成メイク',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -83,6 +104,14 @@ class IosHomePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// プライバシーポリシーを外部ブラウザで開く
+  Future<void> _openPrivacyPolicy() async {
+    final uri = Uri.parse('https://personal-color-469007.web.app/privacy');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 
   Future<void> _navigateToAIMakeup(BuildContext context) async {
