@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../../../../core/errors/failures.dart';
+import '../../../../core/error/failures.dart';
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
 import '../../domain/entities/makeup_recommendation.dart';
 import '../../domain/usecases/get_ai_makeup_recommendations.dart';
@@ -170,14 +170,13 @@ class AIMakeupRecommendationProvider extends ChangeNotifier {
       case const (NetworkFailure):
         return 'ネットワーク接続を確認してください';
       case const (ValidationFailure):
-        return failure.message ?? 'バリデーションエラーが発生しました';
+        return 'バリデーションエラーが発生しました';
       case const (DataFailure):
         return 'データの取得に失敗しました';
       case const (ServerFailure):
         return 'サーバーエラーが発生しました。しばらく時間をおいてから再試行してください';
       default:
-        final message = failure.message;
-        return (message != null && message.isNotEmpty) ? message : '不明なエラーが発生しました';
+        return failure.message.isNotEmpty ? failure.message : '不明なエラーが発生しました';
     }
   }
 }

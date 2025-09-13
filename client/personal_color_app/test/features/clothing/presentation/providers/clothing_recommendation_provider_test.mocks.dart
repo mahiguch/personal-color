@@ -7,7 +7,7 @@ import 'dart:async' as _i5;
 
 import 'package:dartz/dartz.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:personal_color_app/core/errors/failures.dart' as _i6;
+import 'package:personal_color_app/core/error/failures.dart' as _i6;
 import 'package:personal_color_app/features/clothing/domain/entities/clothing_recommendation.dart'
     as _i7;
 import 'package:personal_color_app/features/clothing/domain/repositories/clothing_repository.dart'

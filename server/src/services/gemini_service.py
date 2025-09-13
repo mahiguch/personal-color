@@ -640,6 +640,208 @@ class GeminiService:
         # フォールバック応答を生成
         return await self._generate_personal_color_fallback()
 
+    # ----------------------
+    # Basic helpers
+    # ----------------------
+    def _parse_basic_response(self, response_text: str) -> Dict[str, Any]:
+        """
+        Parse and validate basic diagnosis response JSON.
+
+        Uses PersonalColorPrompt.validate_response_format and returns parsed dict.
+        """
+        try:
+            if not self.personal_color_prompt.validate_response_format(response_text):
+                raise ValueError("Basic response failed validation")
+
+            json_start = response_text.find("{")
+            json_end = response_text.rfind("}") + 1
+            json_text = response_text[json_start:json_end]
+            data = json.loads(json_text)
+            return data
+        except Exception as e:
+            raise ValueError(f"Failed to parse basic response: {e}")
+
+    async def analyze_personal_color_with_demographics(
+        self, image_base64: str, metadata: Optional[Dict[str, Any]] = None
+    ) -> GenerationResult:
+        """
+        画像からパーソナルカラーと年齢・性別を統合診断
+
+        Args:
+            image_base64: Base64エンコードされた画像データ
+            metadata: 追加のメタデータ
+
+        Returns:
+            GenerationResult: 統合診断結果（年齢・性別推定含む）
+        """
+        if not self.client:
+            logger.warning("Gemini client not available, using fallback")
+            return await self._generate_enhanced_fallback()
+
+        # 拡張プロンプト生成
+        prompt = self.personal_color_prompt.create_enhanced_analysis_prompt(metadata)
+
+        logger.info("Starting enhanced personal color analysis with demographics")
+
+        # リトライ処理
+        last_error = None
+        for retry in range(self._max_retries):
+            try:
+                # 指数バックオフによる遅延
+                if retry > 0:
+                    delay = min(self._base_delay * (2 ** (retry - 1)), self._max_delay)
+                    logger.info(f"Retrying enhanced analysis after {delay:.1f}s")
+                    await asyncio.sleep(delay)
+
+                start_time = time.time()
+
+                # Gemini Vision APIを呼び出し
+                response = await asyncio.to_thread(
+                    self._call_gemini_vision_sync_enhanced, prompt, image_base64
+                )
+
+                response_time_ms = int((time.time() - start_time) * 1000)
+
+                # レスポンス品質チェック
+                if not response or not response.text:
+                    raise GeminiServiceError("Empty response from Gemini Vision Enhanced")
+
+                # 拡張JSON形式の検証
+                if not self.personal_color_prompt.validate_enhanced_response_format(response.text):
+                    logger.warning(f"Enhanced response failed validation: {response.text[:100]}...")
+                    raise GeminiServiceError("Enhanced response failed validation")
+
+                # 成功
+                gemini_response = GeminiResponse(
+                    content=response.text.strip(),
+                    generated_at=datetime.utcnow(),
+                    response_time_ms=response_time_ms,
+                    model_used=self.model_name,
+                    is_fallback=False,
+                )
+
+                logger.info(f"Enhanced personal color analysis successful (attempt {retry + 1})")
+                return GenerationResult(
+                    success=True,
+                    response=gemini_response,
+                    error_message=None,
+                    retry_count=retry,
+                )
+
+            except Exception as e:
+                last_error = e
+                logger.warning(f"Enhanced analysis failed (attempt {retry + 1}): {e}")
+
+                # 最後のリトライでない場合は続行
+                if retry < self._max_retries - 1:
+                    continue
+
+        # すべてのリトライが失敗
+        logger.error(
+            f"Enhanced analysis failed after {self._max_retries} attempts: {last_error}"
+        )
+
+        # フォールバック応答を生成
+        return await self._generate_enhanced_fallback()
+
+    # ----------------------
+    # Enhanced helpers
+    # ----------------------
+    def _parse_enhanced_response(self, response_text: str) -> Dict[str, Any]:
+        """
+        Parse and validate enhanced response JSON.
+
+        Extracts the first JSON object from response_text, validates it
+        via PersonalColorPrompt.validate_enhanced_response_format, and
+        returns the parsed dict. Raises ValueError on invalid content.
+        """
+        try:
+            # quick validation first
+            if not self.personal_color_prompt.validate_enhanced_response_format(response_text):
+                raise ValueError("Enhanced response failed validation")
+
+            json_start = response_text.find("{")
+            json_end = response_text.rfind("}") + 1
+            json_text = response_text[json_start:json_end]
+            data = json.loads(json_text)
+            return data
+        except Exception as e:
+            raise ValueError(f"Failed to parse enhanced response: {e}")
+
+    def _get_adaptive_tips(self, age_group: str, gender: str) -> List[str]:
+        """Return additional adaptive tips based on age_group/gender buckets."""
+        extra: List[str] = []
+        # Age-based suggestion
+        if age_group == "child":
+            extra.append("お家の人と一緒に色選びを楽しんでね")
+        elif age_group == "student":
+            extra.append("学校や友達とのコーデで試してみよう")
+        elif age_group == "adult":
+            extra.append("ビジネスや日常シーンで実用的に取り入れましょう")
+        elif age_group == "middleAge":
+            extra.append("落ち着いた上品さを活かす配色がおすすめです")
+        elif age_group == "senior":
+            extra.append("健康的で明るい印象を意識しましょう")
+
+        # Gender-based nuance
+        if gender == "male":
+            extra.append("シンプルで実用的な配色を意識してみてください")
+        elif gender == "female":
+            extra.append("メイクや小物でも色を上手に取り入れてみましょう")
+        else:
+            extra.append("誰にでも合う中性的なカラーもおすすめです")
+
+        return extra
+
+    def _enhance_with_adaptive_content(self, parsed: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Enrich parsed enhanced result with adaptive tips. Returns a new dict.
+        """
+        person = parsed.get("person_analysis", {})
+        age_group = str(person.get("age_group", "unknown"))
+        gender = str(person.get("gender", "unknown"))
+        tips = parsed.get("tips") or []
+        if not isinstance(tips, list):
+            tips = [str(tips)]
+        tips = tips + self._get_adaptive_tips(age_group, gender)
+
+        enriched = dict(parsed)
+        enriched["tips"] = tips
+        return enriched
+
+    def _call_gemini_vision_sync_enhanced(self, prompt: str, image_base64: str):
+        """拡張分析用の同期的なGemini Vision API呼び出し"""
+        try:
+            # Base64画像データを準備
+            image_data = base64.b64decode(image_base64)
+
+            # 拡張分析用の生成設定（より多くのトークンが必要）
+            config = types.GenerateContentConfig(
+                temperature=0.3,  # 診断の一貫性を重視
+                top_p=0.8,
+                top_k=20,
+                max_output_tokens=800,  # 年齢・性別情報も含むため増加
+            )
+
+            if not self.client:
+                raise GeminiServiceError("Client is not initialized")
+
+            # 画像とテキストを含むコンテンツを作成
+            contents = [
+                types.Part(text=prompt),
+                types.Part(inline_data=types.Blob(mime_type="image/jpeg", data=image_data))
+            ]
+
+            response = self.client.models.generate_content(
+                model=self.model_name,
+                contents=contents,
+                config=config,
+            )
+            return response
+
+        except Exception as e:
+            raise GeminiServiceError(f"Enhanced Gemini Vision API call failed: {e}")
+
     def _call_gemini_vision_sync(self, prompt: str, image_base64: str):
         """同期的なGemini Vision API呼び出し"""
         try:
@@ -692,6 +894,37 @@ class GeminiService:
         )
 
         logger.info("Generated personal color fallback response")
+        return GenerationResult(
+            success=True,
+            response=fallback_response,
+            error_message=None,
+            retry_count=0,
+        )
+
+    async def _generate_enhanced_fallback(self) -> GenerationResult:
+        """拡張パーソナルカラー診断用フォールバック応答（年齢・性別推定含む）"""
+        fallback_content = """{
+  "personal_color_type": "Spring",
+  "confidence": 75,
+  "explanation": "現在、AI診断機能は一時的に利用できません。Spring（春）タイプの特徴として、明るく温かい色が似合う可能性があります。正確な診断のためには、後ほど再度お試しください。",
+  "recommended_colors": ["コーラルピンク", "ピーチ", "アイボリー", "ライトキャメル", "フレッシュグリーン"],
+  "tips": ["明るい色を選んで、顔色を明るく見せましょう", "暖かみのある色で親しみやすい印象に", "透明感のある色で若々しさをアピール"],
+  "person_analysis": {
+    "age_group": "adult",
+    "gender": "unknown",
+    "confidence": 50
+  }
+}"""
+
+        fallback_response = GeminiResponse(
+            content=fallback_content,
+            generated_at=datetime.utcnow(),
+            response_time_ms=0,
+            model_used="fallback-enhanced",
+            is_fallback=True,
+        )
+
+        logger.info("Generated enhanced personal color fallback response")
         return GenerationResult(
             success=True,
             response=fallback_response,

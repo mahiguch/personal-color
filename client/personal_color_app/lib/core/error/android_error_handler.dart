@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../failure/failures.dart';
+import './failures.dart';
 
 /// Android固有のエラーハンドリングサービス
 class AndroidErrorHandler {
@@ -9,38 +9,38 @@ class AndroidErrorHandler {
     switch (exception.code) {
       // カメラ関連エラー
       case 'camera_access_denied':
-        return const CameraFailure('カメラのアクセスが拒否されました');
+        return const CameraFailure(message: 'カメラのアクセスが拒否されました');
       case 'camera_not_available':
-        return const CameraFailure('カメラが利用できません');
+        return const CameraFailure(message: 'カメラが利用できません');
       case 'camera_in_use':
-        return const CameraFailure('カメラが他のアプリケーションで使用中です');
+        return const CameraFailure(message: 'カメラが他のアプリケーションで使用中です');
       
       // ストレージ関連エラー
       case 'storage_access_denied':
-        return const StorageFailure('ストレージのアクセスが拒否されました');
+        return const StorageFailure(message: 'ストレージのアクセスが拒否されました');
       case 'storage_full':
-        return const StorageFailure('ストレージの容量が不足しています');
+        return const StorageFailure(message: 'ストレージの容量が不足しています');
       case 'write_external_storage_denied':
-        return const StorageFailure('外部ストレージへの書き込み権限がありません');
+        return const StorageFailure(message: '外部ストレージへの書き込み権限がありません');
       
       // ネットワーク関連エラー
       case 'network_error':
-        return const NetworkFailure('ネットワークに接続できません');
+        return const NetworkFailure(message: 'ネットワークに接続できません');
       case 'timeout':
-        return const NetworkFailure('通信がタイムアウトしました');
+        return const NetworkFailure(message: '通信がタイムアウトしました');
       case 'ssl_error':
-        return const NetworkFailure('セキュリティエラーが発生しました');
+        return const NetworkFailure(message: 'セキュリティエラーが発生しました');
       
       // Android固有のシステムエラー
       case 'activity_not_found':
-        return const SystemFailure('必要なアプリケーションが見つかりません');
+        return const SystemFailure(message: '必要なアプリケーションが見つかりません');
       case 'security_exception':
-        return const SystemFailure('セキュリティエラーが発生しました');
+        return const SystemFailure(message: 'セキュリティエラーが発生しました');
       case 'illegal_state':
-        return const SystemFailure('アプリケーションの状態が不正です');
+        return const SystemFailure(message: 'アプリケーションの状態が不正です');
       
       default:
-        return SystemFailure('予期しないエラーが発生しました: ${exception.message}');
+        return SystemFailure(message: '予期しないエラーが発生しました: ${exception.message}');
     }
   }
 

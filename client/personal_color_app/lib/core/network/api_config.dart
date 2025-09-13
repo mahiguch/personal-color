@@ -5,6 +5,7 @@ class ApiConfig {
   
   // エンドポイント
   static const String diagnosisEndpoint = '/api/v1/diagnose';
+  static const String diagnosisEnhancedEndpoint = '/api/v1/diagnose-enhanced';
   static const String healthCheckEndpoint = '/api/v1/diagnose/test';
   static const String privacyPolicyEndpoint = '/api/v1/privacy/policy';
   

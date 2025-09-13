@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import '../../../../core/errors/failures.dart';
+import '../../../../core/error/failures.dart';
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
 import '../../domain/entities/clothing_product.dart';
 import '../../domain/entities/clothing_recommendation.dart';
@@ -193,7 +193,7 @@ class ClothingRecommendationProvider extends ChangeNotifier {
       DataFailure() => 'データの読み込みに失敗しました。もう一度お試しください',
       ValidationFailure() => 'データに問題があります。もう一度お試しください',
       CacheFailure() => 'データの保存に問題があります。もう一度お試しください',
-      _ => failure.message ?? '問題が発生しました。もう一度お試しください',
+      _ => '問題が発生しました。もう一度お試しください',
     };
   }
 

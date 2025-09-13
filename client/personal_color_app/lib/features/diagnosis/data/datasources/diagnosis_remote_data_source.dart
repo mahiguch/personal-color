@@ -6,6 +6,7 @@ import '../models/diagnosis_result_model.dart';
 /// 診断APIのリモートデータソース抽象クラス
 abstract class DiagnosisRemoteDataSource {
   Future<DiagnosisResultModel> diagnosePerson(DiagnosisRequestModel request);
+  Future<DiagnosisResultModel> diagnosePersonalColorEnhanced(DiagnosisRequestModel request);
   Future<bool> checkApiHealth();
   Future<Map<String, dynamic>> testConnection();
 }
@@ -36,6 +37,29 @@ class DiagnosisRemoteDataSourceImpl implements DiagnosisRemoteDataSource {
       return DiagnosisResultModel.fromJson(response.data!);
     } catch (e) {
       throw Exception('診断リクエストに失敗しました: $e');
+    }
+  }
+
+  @override
+  Future<DiagnosisResultModel> diagnosePersonalColorEnhanced(
+    DiagnosisRequestModel request,
+  ) async {
+    try {
+      final response = await _apiClient.post(
+        ApiConfig.diagnosisEnhancedEndpoint,
+        data: request.toApiJson(),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.data == null) {
+        throw Exception('レスポンスデータが空です');
+      }
+
+      return DiagnosisResultModel.fromJson(response.data!);
+    } catch (e) {
+      throw Exception('拡張診断リクエストに失敗しました: $e');
     }
   }
 

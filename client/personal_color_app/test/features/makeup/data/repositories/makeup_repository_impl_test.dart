@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'package:personal_color_app/core/errors/failures.dart';
+import 'package:personal_color_app/core/error/failures.dart';
 import 'package:personal_color_app/features/diagnosis/domain/entities/diagnosis_result.dart';
 import 'package:personal_color_app/features/makeup/data/datasources/makeup_local_data_source.dart';
 import 'package:personal_color_app/features/makeup/data/datasources/makeup_remote_data_source.dart';

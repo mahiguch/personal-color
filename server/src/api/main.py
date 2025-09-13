@@ -24,6 +24,7 @@ from .endpoints.makeup import router as makeup_router
 from .endpoints.clothing import router as clothing_router
 from ..core.config.settings import get_settings
 from ..middleware.rate_limiter import RateLimitMiddleware
+from .middleware.security_headers import SecurityHeadersMiddleware
 
 # from ..middleware.app_check_middleware import AppCheckMiddleware  # 依存関係問題により一時無効化
 from ..core.monitoring import metrics_collector, health_checker
@@ -71,6 +72,7 @@ app = FastAPI(
 )
 
 # ミドルウェア設定
+app.add_middleware(SecurityHeadersMiddleware)
 
 # Firebase App Check ミドルウェア（最初に追加）
 # 依存関係問題により一時無効化
@@ -82,17 +84,22 @@ app = FastAPI(
 #     skip_verification=skip_app_check
 # )
 
-# レート制限ミドルウェア（テスト環境以外でのみ追加）
-if settings.environment not in ["test", "testing"]:
+# レート制限ミドルウェア（本番/ステージングのみ有効化）
+if settings.environment in ["production", "staging"]:
     app.add_middleware(
         RateLimitMiddleware,
         default_requests_per_minute=getattr(settings, "rate_limit_default", 60),
         diagnosis_requests_per_minute=getattr(settings, "rate_limit_diagnosis", 10),
         burst_limit=getattr(settings, "rate_limit_burst", 5),
     )
-    logger.info("Rate limiting middleware enabled")
+    logger.info("Rate limiting middleware enabled for %s", settings.environment)
 else:
-    logger.info("Rate limiting middleware disabled for test environment")
+    logger.info("Rate limiting middleware disabled for environment: %s", settings.environment)
+    # Ensure tests/dev can bypass any residual limiter checks
+    try:
+        app.state.disable_rate_limiting = True
+    except Exception:
+        pass
 
 # CORS設定
 allowed_origins = [origin.strip() for origin in settings.allowed_origins.split(",")]

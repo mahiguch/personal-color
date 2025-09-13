@@ -3,7 +3,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:dartz/dartz.dart';
 
-import 'package:personal_color_app/core/errors/failures.dart';
+import 'package:personal_color_app/core/error/failures.dart';
 import 'package:personal_color_app/features/diagnosis/domain/entities/diagnosis_result.dart';
 import 'package:personal_color_app/features/clothing/domain/entities/clothing_product.dart';
 import 'package:personal_color_app/features/clothing/domain/entities/clothing_recommendation.dart';
@@ -109,7 +109,7 @@ void main() {
       final result = await useCase(params);
 
       // Assert
-      expect(result, const Left(DataFailure('No clothing recommendations found')));
+      expect(result, const Left(DataFailure(message: 'No clothing recommendations found')));
       verify(mockRepository.getClothingRecommendations(personalColorType));
     });
 
@@ -146,13 +146,13 @@ void main() {
       final result = await useCase(params);
 
       // Assert
-      expect(result, const Left(DataFailure('Incomplete clothing recommendation data')));
+      expect(result, const Left(DataFailure(message: 'Incomplete clothing recommendation data')));
       verify(mockRepository.getClothingRecommendations(personalColorType));
     });
 
     test('should return failure from repository when call fails', () async {
       // Arrange
-      const failure = NetworkFailure('Network connection failed');
+      const failure = NetworkFailure(message: 'Network connection failed');
       when(mockRepository.getClothingRecommendations(personalColorType))
           .thenAnswer((_) async => const Left(failure));
 

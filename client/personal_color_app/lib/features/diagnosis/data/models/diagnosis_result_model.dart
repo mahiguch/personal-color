@@ -1,4 +1,6 @@
 import '../../domain/entities/diagnosis_result.dart';
+import '../../domain/entities/person_analysis.dart';
+import 'person_analysis_model.dart';
 
 /// 診断結果のデータモデル
 class DiagnosisResultModel extends DiagnosisResult {
@@ -9,6 +11,7 @@ class DiagnosisResultModel extends DiagnosisResult {
     required super.recommendedColors,
     required super.avoidColors,
     required super.tips,
+    super.personAnalysis,
     super.requestId,
     super.processingTimeMs,
   });
@@ -22,6 +25,7 @@ class DiagnosisResultModel extends DiagnosisResult {
       recommendedColors: entity.recommendedColors,
       avoidColors: entity.avoidColors,
       tips: entity.tips,
+      personAnalysis: entity.personAnalysis,
       requestId: entity.requestId,
       processingTimeMs: entity.processingTimeMs,
     );
@@ -31,6 +35,13 @@ class DiagnosisResultModel extends DiagnosisResult {
   factory DiagnosisResultModel.fromJson(Map<String, dynamic> json) {
     // 本番API仕様に合わせてレスポンスをパース
     final result = json['result'] as Map<String, dynamic>? ?? {};
+    
+    // 拡張診断の人物分析結果をパース（オプショナル）
+    PersonAnalysis? personAnalysis;
+    final personAnalysisJson = result['person_analysis'] as Map<String, dynamic>?;
+    if (personAnalysisJson != null) {
+      personAnalysis = PersonAnalysisModel.fromJson(personAnalysisJson);
+    }
     
     return DiagnosisResultModel(
       diagnosisType: PersonalColorTypeExtension.fromApiValue(
@@ -45,6 +56,7 @@ class DiagnosisResultModel extends DiagnosisResult {
       tips: _parseTipsList(
         result['tips'] as List<dynamic>? ?? [],
       ),
+      personAnalysis: personAnalysis,
       requestId: json['request_id'] as String?,
       processingTimeMs: json['processing_time_ms'] as int?,
     );
@@ -81,8 +93,14 @@ class DiagnosisResultModel extends DiagnosisResult {
           .map((color) => color.toJson())
           .toList(),
       'tips': tips,
+      if (personAnalysis != null) 'person_analysis': personAnalysis!.toJson(),
       if (requestId != null) 'request_id': requestId,
       if (processingTimeMs != null) 'processing_time_ms': processingTimeMs,
     };
+  }
+
+  /// 拡張診断用のファクトリメソッド
+  factory DiagnosisResultModel.fromEnhancedJson(Map<String, dynamic> json) {
+    return DiagnosisResultModel.fromJson(json);
   }
 }

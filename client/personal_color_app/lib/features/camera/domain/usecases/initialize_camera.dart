@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../../../../core/errors/failures.dart';
+import '../../../../core/error/failures.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../repositories/camera_repository.dart';
 
@@ -19,7 +19,7 @@ class InitializeCamera implements UseCase<void, NoParams> {
 
     final isAvailable = cameraAvailable.getOrElse(() => false);
     if (!isAvailable) {
-      return Left(DeviceFailure('カメラが利用できません'));
+      return Left(DeviceFailure(message: 'カメラが利用できません'));
     }
 
     // 2. 権限チェック
@@ -39,10 +39,10 @@ class InitializeCamera implements UseCase<void, NoParams> {
 
         final requestedPermission = requestResult.getOrElse(() => throw Exception());
         if (!requestedPermission.isGranted) {
-          return Left(PermissionFailure('カメラ権限が拒否されました'));
+          return Left(PermissionFailure(message: 'カメラ権限が拒否されました'));
         }
       } else {
-        return Left(PermissionFailure('カメラ権限が必要です'));
+        return Left(PermissionFailure(message: 'カメラ権限が必要です'));
       }
     }
 

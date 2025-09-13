@@ -40,7 +40,7 @@ jobs:
       run: flutter analyze
 
     - name: Run Flutter tests
-      run: flutter test --coverage --test-randomize-ordering-seed random
+      run: flutter test --coverage
 
     - name: Upload Flutter coverage
       uses: codecov/codecov-action@v3

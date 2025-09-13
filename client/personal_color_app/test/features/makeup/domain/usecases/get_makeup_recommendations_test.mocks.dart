@@ -8,7 +8,7 @@ import 'dart:io' as _i8;
 
 import 'package:dartz/dartz.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:personal_color_app/core/errors/failures.dart' as _i5;
+import 'package:personal_color_app/core/error/failures.dart' as _i5;
 import 'package:personal_color_app/features/diagnosis/domain/entities/diagnosis_result.dart'
     as _i7;
 import 'package:personal_color_app/features/makeup/domain/entities/makeup_recommendation.dart'

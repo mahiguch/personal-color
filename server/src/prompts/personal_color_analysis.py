@@ -37,6 +37,82 @@ class PersonalColorPrompt:
 
         return prompt
 
+    def create_enhanced_analysis_prompt(self, metadata: Optional[Dict[str, Any]] = None) -> str:
+        """
+        年齢・性別推定を含む統合分析プロンプトを生成
+
+        Args:
+            metadata: 追加のメタデータ
+
+        Returns:
+            str: 生成されたプロンプト
+        """
+        prompt = """あなたはパーソナルカラー診断と年齢・性別推定の専門家です。
+
+以下の画像を分析して、その人に最も似合うパーソナルカラーと、年代・性別を推定してください。
+
+【分析ポイント】
+1. パーソナルカラー分析
+   - 肌の色合い（イエローベース・ブルーベース）
+   - 髪の色と質感
+   - 瞳の色
+   - 全体的な印象と調和
+
+2. 年代推定（年代区分のみ）
+   - child (8-12歳): 子供らしい特徴
+   - student (13-22歳): 若々しい特徴
+   - adult (23-39歳): 成人の特徴
+   - middleAge (40-59歳): 中高年の特徴
+   - senior (60歳以上): シニアの特徴
+
+3. 性別推定
+   - male: 男性的特徴
+   - female: 女性的特徴
+   - unknown: 判断困難な場合
+
+【診断結果の4つのタイプ】
+- Spring（春）: 明るく華やかな色が似合う、イエローベース
+- Summer（夏）: 上品で涼しげな色が似合う、ブルーベース
+- Autumn（秋）: 深みのある暖かい色が似合う、イエローベース
+- Winter（冬）: はっきりした鮮やかな色が似合う、ブルーベース
+
+【適応的説明文の生成ルール】
+年代と性別の組み合わせに応じて、以下の方針で説明文を生成してください：
+
+- child: 楽しく分かりやすい表現、カラフルな例
+- student: トレンド感、ポップな表現
+- adult: 実用的、ビジネスシーン対応
+- middleAge: 上品で落ち着いた表現
+- senior: 気品のある健康的な表現
+
+- male: ファッション実用性重視、シンプルな表現
+- female: 詳細な色彩理論、メイク・ファッション両方
+- unknown: 中性的でどちらにも適用可能な表現
+
+【回答形式】
+必ず以下のJSON形式で回答してください：
+
+{
+  "personal_color_type": "Spring",
+  "confidence": 85,
+  "explanation": "年代・性別に適応した説明文",
+  "recommended_colors": ["色名1", "色名2", ...],
+  "tips": ["アドバイス1", "アドバイス2", ...],
+  "person_analysis": {
+    "age_group": "adult",
+    "gender": "female", 
+    "confidence": 78
+  }
+}"""
+
+        # メタデータがある場合は追加情報として含める
+        if metadata:
+            additional_info = self._format_metadata_info(metadata)
+            if additional_info:
+                prompt += f"\n\n【追加情報】\n{additional_info}"
+
+        return prompt
+
     def _get_base_analysis_prompt(self) -> str:
         """基本の診断プロンプトを取得"""
         return """あなたは小学5年生にもわかりやすく説明できる、パーソナルカラー診断の専門家です。
@@ -182,4 +258,84 @@ class PersonalColorPrompt:
 
         except (json.JSONDecodeError, KeyError, TypeError) as e:
             logger.error(f"Response format validation failed: {e}")
+            return False
+
+    def validate_enhanced_response_format(self, response_text: str) -> bool:
+        """
+        拡張レスポンス形式の検証（年齢・性別推定含む）
+
+        Args:
+            response_text: Geminiからのレスポンステキスト
+
+        Returns:
+            bool: 正しい形式かどうか
+        """
+        try:
+            # JSONの抽出と解析
+            json_start = response_text.find("{")
+            json_end = response_text.rfind("}") + 1
+
+            if json_start == -1 or json_end <= json_start:
+                return False
+
+            json_text = response_text[json_start:json_end]
+            result_data = json.loads(json_text)
+
+            # 必須フィールドのチェック
+            required_fields = [
+                "personal_color_type",
+                "confidence",
+                "explanation",
+                "recommended_colors",
+                "tips",
+                "person_analysis",
+            ]
+
+            for field in required_fields:
+                if field not in result_data:
+                    logger.warning(f"Missing required field: {field}")
+                    return False
+
+            # パーソナルカラー部分の検証（既存ロジックを再利用）
+            if not self.validate_response_format(response_text):
+                return False
+
+            # person_analysis部分の検証
+            person_analysis = result_data["person_analysis"]
+            if not isinstance(person_analysis, dict):
+                logger.warning("person_analysis is not a dictionary")
+                return False
+
+            # person_analysis必須フィールド
+            person_required_fields = ["age_group", "gender", "confidence"]
+            for field in person_required_fields:
+                if field not in person_analysis:
+                    logger.warning(f"Missing required person_analysis field: {field}")
+                    return False
+
+            # age_group検証
+            valid_age_groups = ["child", "student", "adult", "middleAge", "senior"]
+            if person_analysis["age_group"] not in valid_age_groups:
+                logger.warning(f"Invalid age_group: {person_analysis['age_group']}")
+                return False
+
+            # gender検証
+            valid_genders = ["male", "female", "unknown"]
+            if person_analysis["gender"] not in valid_genders:
+                logger.warning(f"Invalid gender: {person_analysis['gender']}")
+                return False
+
+            # confidence検証（0-100の範囲）
+            if not isinstance(person_analysis["confidence"], (int, float)):
+                logger.warning("person_analysis confidence is not numeric")
+                return False
+
+            if not (0 <= person_analysis["confidence"] <= 100):
+                logger.warning(f"person_analysis confidence out of range: {person_analysis['confidence']}")
+                return False
+
+            return True
+
+        except (json.JSONDecodeError, KeyError, TypeError) as e:
+            logger.error(f"Enhanced response format validation failed: {e}")
             return False

@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import '../../../../core/errors/failures.dart';
+import '../../../../core/error/failures.dart';
 import '../../domain/entities/diagnosis_request.dart';
 import '../../domain/entities/diagnosis_result.dart';
 import '../../domain/repositories/diagnosis_repository.dart';
@@ -29,12 +29,38 @@ class DiagnosisRepositoryImpl implements DiagnosisRepository {
       if (e.toString().contains('接続') || 
           e.toString().contains('タイムアウト') ||
           e.toString().contains('ネットワーク')) {
-        return Left(NetworkFailure(e.toString()));
+        return Left(NetworkFailure(message: e.toString()));
       } else {
-        return Left(ServerFailure(e.toString()));
+        return Left(ServerFailure(message: e.toString()));
       }
     } catch (e) {
-      return Left(UnknownFailure('診断処理中に予期しないエラーが発生しました: $e'));
+      return Left(UnknownFailure(message: '診断処理中に予期しないエラーが発生しました: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, DiagnosisResult>> diagnosePersonalColorEnhanced(
+    DiagnosisRequest request,
+  ) async {
+    try {
+      // エンティティをモデルに変換
+      final requestModel = DiagnosisRequestModel.fromEntity(request);
+      
+      // リモートデータソースから拡張診断実行
+      final result = await _remoteDataSource.diagnosePersonalColorEnhanced(requestModel);
+      
+      return Right(result);
+    } on Exception catch (e) {
+      // ネットワークエラーかサーバーエラーかを判定
+      if (e.toString().contains('接続') || 
+          e.toString().contains('タイムアウト') ||
+          e.toString().contains('ネットワーク')) {
+        return Left(NetworkFailure(message: e.toString()));
+      } else {
+        return Left(ServerFailure(message: e.toString()));
+      }
+    } catch (e) {
+      return Left(UnknownFailure(message: '拡張診断処理中に予期しないエラーが発生しました: $e'));
     }
   }
 
@@ -44,7 +70,7 @@ class DiagnosisRepositoryImpl implements DiagnosisRepository {
       final isHealthy = await _remoteDataSource.checkApiHealth();
       return Right(isHealthy);
     } catch (e) {
-      return Left(NetworkFailure('APIヘルスチェックに失敗しました: $e'));
+      return Left(NetworkFailure(message: 'APIヘルスチェックに失敗しました: $e'));
     }
   }
 
@@ -54,7 +80,7 @@ class DiagnosisRepositoryImpl implements DiagnosisRepository {
       final result = await _remoteDataSource.testConnection();
       return Right(result);
     } catch (e) {
-      return Left(NetworkFailure('接続テストに失敗しました: $e'));
+      return Left(NetworkFailure(message: '接続テストに失敗しました: $e'));
     }
   }
 }

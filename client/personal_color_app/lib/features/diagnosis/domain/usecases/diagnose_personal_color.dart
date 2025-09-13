@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import '../../../../core/errors/failures.dart';
+import '../../../../core/error/failures.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../entities/diagnosis_request.dart';
 import '../entities/diagnosis_result.dart';
@@ -18,12 +18,12 @@ class DiagnosePersonalColor implements UseCase<DiagnosisResult, DiagnosePersonal
   ) async {
     // 1. 入力検証
     if (params.imageBase64.isEmpty) {
-      return const Left(ValidationFailure('画像データが空です'));
+      return const Left(ValidationFailure(message: '画像データが空です'));
     }
 
     // Base64データの形式チェック（簡易）
     if (!_isValidBase64(params.imageBase64)) {
-      return const Left(ValidationFailure('画像データの形式が正しくありません'));
+      return const Left(ValidationFailure(message: '画像データの形式が正しくありません'));
     }
 
     // 2. リクエスト作成
@@ -40,7 +40,7 @@ class DiagnosePersonalColor implements UseCase<DiagnosisResult, DiagnosePersonal
       (diagnosisResult) {
         // 4. 結果検証
         if (!_isValidResult(diagnosisResult)) {
-          return const Left(ValidationFailure('診断結果が不正です'));
+          return const Left(ValidationFailure(message: '診断結果が不正です'));
         }
         
         return Right(diagnosisResult);

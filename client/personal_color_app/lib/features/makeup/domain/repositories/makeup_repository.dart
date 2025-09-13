@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:dartz/dartz.dart';
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
-import '../../../../core/errors/failures.dart';
+import '../../../../core/error/failures.dart';
 import '../entities/makeup_recommendation.dart';
 
 /// メイクアップ推奨データのリポジトリ抽象インターフェース

@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/widgets.dart';
-import '../../../../core/errors/failures.dart';
+import '../../../../core/error/failures.dart';
 import '../../domain/entities/camera_image.dart';
 import '../../domain/entities/camera_permission.dart';
 import '../../domain/repositories/camera_repository.dart';
@@ -18,7 +18,7 @@ class CameraRepositoryImpl implements CameraRepository {
       final permission = await _dataSource.getCameraPermission();
       return Right(permission);
     } catch (e) {
-      return Left(DeviceFailure('権限確認に失敗しました: $e'));
+      return Left(DeviceFailure(message: '権限確認に失敗しました: $e'));
     }
   }
 
@@ -28,7 +28,7 @@ class CameraRepositoryImpl implements CameraRepository {
       final permission = await _dataSource.requestCameraPermission();
       return Right(permission);
     } catch (e) {
-      return Left(PermissionFailure('権限リクエストに失敗しました: $e'));
+      return Left(PermissionFailure(message: '権限リクエストに失敗しました: $e'));
     }
   }
 
@@ -38,7 +38,7 @@ class CameraRepositoryImpl implements CameraRepository {
       final isAvailable = await _dataSource.isCameraAvailable();
       return Right(isAvailable);
     } catch (e) {
-      return Left(DeviceFailure('カメラ確認に失敗しました: $e'));
+      return Left(DeviceFailure(message: 'カメラ確認に失敗しました: $e'));
     }
   }
 
@@ -48,7 +48,7 @@ class CameraRepositoryImpl implements CameraRepository {
       await _dataSource.initializeCamera();
       return const Right(null);
     } catch (e) {
-      return Left(DeviceFailure('カメラ初期化に失敗しました: $e'));
+      return Left(DeviceFailure(message: 'カメラ初期化に失敗しました: $e'));
     }
   }
 
@@ -58,7 +58,7 @@ class CameraRepositoryImpl implements CameraRepository {
       final image = await _dataSource.takePicture();
       return Right(image);
     } catch (e) {
-      return Left(DeviceFailure('撮影に失敗しました: $e'));
+      return Left(DeviceFailure(message: '撮影に失敗しました: $e'));
     }
   }
 
@@ -68,7 +68,7 @@ class CameraRepositoryImpl implements CameraRepository {
       await _dataSource.disposeCamera();
       return const Right(null);
     } catch (e) {
-      return Left(DeviceFailure('カメラの解放に失敗しました: $e'));
+      return Left(DeviceFailure(message: 'カメラの解放に失敗しました: $e'));
     }
   }
 
@@ -85,7 +85,7 @@ class CameraRepositoryImpl implements CameraRepository {
       // Rightを直接返す
       return const Right(null);
     } catch (e) {
-      return Left(DeviceFailure('メモリ最適化に失敗しました: $e'));
+      return Left(DeviceFailure(message: 'メモリ最適化に失敗しました: $e'));
     }
   }
 

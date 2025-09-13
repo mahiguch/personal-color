@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
-import '../../../../core/errors/failures.dart';
+import '../../../../core/error/failures.dart';
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
 import '../../domain/entities/makeup_recommendation.dart';
 import '../../domain/repositories/makeup_repository.dart';
@@ -76,7 +76,7 @@ class MakeupRepositoryImpl implements MakeupRepository {
       return Left(_mapDioExceptionToFailure(e));
     } catch (e) {
       // その他の予期しない例外
-      return Left(UnexpectedFailure('Unexpected error: $e'));
+      return Left(UnexpectedFailure(message: 'Unexpected error: $e'));
     }
   }
 
@@ -116,12 +116,12 @@ class MakeupRepositoryImpl implements MakeupRepository {
     try {
       // 1. 画像ファイルの事前検証
       if (!await imageFile.exists()) {
-        return const Left(ValidationFailure('Image file does not exist'));
+        return const Left(ValidationFailure(message: 'Image file does not exist'));
       }
 
       final fileSize = await imageFile.length();
       if (fileSize > 10 * 1024 * 1024) { // 10MB制限
-        return const Left(ValidationFailure('Image file is too large (max 10MB)'));
+        return const Left(ValidationFailure(message: 'Image file is too large (max 10MB)'));
       }
 
       // 2. リモートAPIからAI画像生成付きデータ取得
@@ -155,7 +155,7 @@ class MakeupRepositoryImpl implements MakeupRepository {
       return Left(_mapAIDioExceptionToFailure(e));
     } catch (e) {
       // その他の予期しない例外
-      return Left(UnexpectedFailure('Unexpected error during AI makeup generation: $e'));
+      return Left(UnexpectedFailure(message: 'Unexpected error during AI makeup generation: $e'));
     }
   }
 
@@ -167,7 +167,7 @@ class MakeupRepositoryImpl implements MakeupRepository {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return const NetworkFailure('AI makeup generation timeout: Please try again or use a smaller image');
+        return const NetworkFailure(message: 'AI makeup generation timeout: Please try again or use a smaller image');
         
       case DioExceptionType.badResponse:
         final statusCode = e.response?.statusCode;
@@ -177,39 +177,39 @@ class MakeupRepositoryImpl implements MakeupRepository {
             final errorDetail = e.response?.data?['detail'] as String?;
             if (errorDetail != null) {
               if (errorDetail.contains('画像サイズ') || errorDetail.contains('image size')) {
-                return const ValidationFailure('Image is too large. Please use an image smaller than 10MB');
+                return const ValidationFailure(message: 'Image is too large. Please use an image smaller than 10MB');
               } else if (errorDetail.contains('画像形式') || errorDetail.contains('format')) {
-                return const ValidationFailure('Unsupported image format. Please use JPEG, PNG, or WebP');
+                return const ValidationFailure(message: 'Unsupported image format. Please use JPEG, PNG, or WebP');
               } else if (errorDetail.contains('顔が検出') || errorDetail.contains('face')) {
-                return const ValidationFailure('No face detected in the image. Please use a clear photo with a visible face');
+                return const ValidationFailure(message: 'No face detected in the image. Please use a clear photo with a visible face');
               } else {
-                return ValidationFailure('Invalid request: $errorDetail');
+                return ValidationFailure(message: 'Invalid request: $errorDetail');
               }
             }
-            return const ValidationFailure('Invalid personal color type or image format');
+            return const ValidationFailure(message: 'Invalid personal color type or image format');
           case 404:
-            return const DataFailure('AI makeup service not available for the specified type');
+            return const DataFailure(message: 'AI makeup service not available for the specified type');
           case 429:
-            return const NetworkFailure('AI generation limit reached. Please try again later');
+            return const NetworkFailure(message: 'AI generation limit reached. Please try again later');
           case 500:
           case 502:
           case 503:
-            return const ServerFailure('AI service temporarily unavailable. Please try again later');
+            return const ServerFailure(message: 'AI service temporarily unavailable. Please try again later');
           default:
-            return ServerFailure('AI service error: $statusCode');
+            return ServerFailure(message: 'AI service error: $statusCode');
         }
         
       case DioExceptionType.connectionError:
-        return const NetworkFailure('Network connection error: Please check your internet connection');
+        return const NetworkFailure(message: 'Network connection error: Please check your internet connection');
         
       case DioExceptionType.cancel:
-        return const NetworkFailure('AI makeup generation was cancelled');
+        return const NetworkFailure(message: 'AI makeup generation was cancelled');
         
       case DioExceptionType.badCertificate:
-        return const NetworkFailure('SSL certificate error: Unable to verify server identity');
+        return const NetworkFailure(message: 'SSL certificate error: Unable to verify server identity');
         
       case DioExceptionType.unknown:
-        return NetworkFailure('Network error: ${e.message ?? 'Unknown error occurred'}');
+        return NetworkFailure(message: 'Network error: ${e.message ?? 'Unknown error occurred'}');
     }
   }
 
@@ -222,36 +222,36 @@ class MakeupRepositoryImpl implements MakeupRepository {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return const NetworkFailure('Request timeout: Please check your internet connection');
+        return const NetworkFailure(message: 'Request timeout: Please check your internet connection');
         
       case DioExceptionType.badResponse:
         final statusCode = e.response?.statusCode;
         switch (statusCode) {
           case 400:
-            return const ValidationFailure('Invalid request: Please check the personal color type');
+            return const ValidationFailure(message: 'Invalid request: Please check the personal color type');
           case 404:
-            return const DataFailure('No makeup recommendations found for the specified type');
+            return const DataFailure(message: 'No makeup recommendations found for the specified type');
           case 429:
-            return const NetworkFailure('Rate limit exceeded: Too many requests. Please try again later');
+            return const NetworkFailure(message: 'Rate limit exceeded: Too many requests. Please try again later');
           case 500:
           case 502:
           case 503:
-            return const ServerFailure('Server error: Please try again later');
+            return const ServerFailure(message: 'Server error: Please try again later');
           default:
-            return ServerFailure('Server returned error code: $statusCode');
+            return ServerFailure(message: 'Server returned error code: $statusCode');
         }
         
       case DioExceptionType.connectionError:
-        return const NetworkFailure('Network connection error: Please check your internet connection');
+        return const NetworkFailure(message: 'Network connection error: Please check your internet connection');
         
       case DioExceptionType.cancel:
-        return const NetworkFailure('Request was cancelled');
+        return const NetworkFailure(message: 'Request was cancelled');
         
       case DioExceptionType.badCertificate:
-        return const NetworkFailure('SSL certificate error: Unable to verify server identity');
+        return const NetworkFailure(message: 'SSL certificate error: Unable to verify server identity');
         
       case DioExceptionType.unknown:
-        return NetworkFailure('Network error: ${e.message ?? 'Unknown network error occurred'}');
+        return NetworkFailure(message: 'Network error: ${e.message ?? 'Unknown network error occurred'}');
     }
   }
 }

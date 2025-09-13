@@ -11,7 +11,7 @@ import 'package:personal_color_app/core/usecases/usecase.dart';
 import 'package:dartz/dartz.dart';
 import 'package:personal_color_app/features/camera/domain/entities/camera_image.dart';
 import 'package:personal_color_app/features/camera/domain/entities/camera_permission.dart';
-import 'package:personal_color_app/core/errors/failures.dart';
+import 'package:personal_color_app/core/error/failures.dart';
 
 // Mock classes
 class MockInitializeCamera extends Mock implements InitializeCamera {}

@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../../core/usecases/usecase.dart';
-import '../../../../core/errors/failures.dart';
+import '../../../../core/error/failures.dart';
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
 import '../entities/makeup_product.dart';
 import '../entities/makeup_recommendation.dart';
@@ -54,7 +54,7 @@ class GetAIMakeupRecommendations implements UseCase<MakeupRecommendation, GetAIM
       );
     } catch (e) {
       debugPrint('❌ [GetAIMakeupRecommendations] 予期しないエラー: $e');
-      return Left(UnexpectedFailure(e.toString()));
+      return Left(UnexpectedFailure(message: e.toString()));
     }
   }
 
@@ -77,7 +77,7 @@ class GetAIMakeupRecommendations implements UseCase<MakeupRecommendation, GetAIM
     // 基本データの妥当性チェック
     if (recommendation.isEmpty) {
       debugPrint('❌ 妥当性チェック失敗: 推奨データが空');
-      return const Left(DataFailure('No AI makeup recommendations found'));
+      return const Left(DataFailure(message: 'No AI makeup recommendations found'));
     }
 
     // 必須カテゴリのチェック
@@ -108,7 +108,7 @@ class GetAIMakeupRecommendations implements UseCase<MakeupRecommendation, GetAIM
     
     if (!hasAllProducts) {
       debugPrint('❌ 完全性チェック失敗: 必要な商品データが不足');
-      return const Left(DataFailure('Incomplete AI makeup recommendation data'));
+      return const Left(DataFailure(message: 'Incomplete AI makeup recommendation data'));
     }
 
     // AI生成画像の状態をログ出力
