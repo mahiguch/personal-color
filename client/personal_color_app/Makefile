@@ -28,7 +28,7 @@ ios-debug-device:
 
 ios-release:
 	@echo "🔨 iOS リリースビルド中..."
-	flutter build ios --release
+	flutter build ipa --release
 	@echo "✅ iOS リリースビルド完了: build/ios/iphoneos/"
 
 # =============================================================================
