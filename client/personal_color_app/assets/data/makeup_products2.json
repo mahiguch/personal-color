@@ -1,0 +1,613 @@
+{
+  "spring": {
+    "child": {
+      "eyeshadow": [
+        {
+          "id": "spring_child_eye_001",
+          "name": "キャンメイク パーフェクトスタイリストアイズ 14 アンティークルビー",
+          "brand": "キャンメイク",
+          "category": "eyeshadow",
+          "price": 858,
+          "image_url": "https://m.media-amazon.com/images/I/61iyJRens0L._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/3HAHRI7",
+          "description": "お子様にも使いやすい優しい発色。透明感のあるピンク系で、自然な仕上がりです。",
+          "colors": ["淡いピンク", "コーラルピンク", "ライトベージュ", "クリーム"],
+          "age_group": "child",
+          "difficulty_level": "easy"
+        },
+        {
+          "id": "spring_child_eye_002",
+          "name": "CEZANNE トーンアップアイシャドウ 06 オレンジカシス",
+          "brand": "CEZANNE",
+          "category": "eyeshadow",
+          "price": 638,
+          "image_url": "https://m.media-amazon.com/images/I/41fGOzR2DvL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/45XUmpg",
+          "description": "子供らしい明るさを演出する、やわらかなオレンジ系パレット。",
+          "colors": ["オレンジ", "ピーチ", "ゴールド", "クリーム"],
+          "age_group": "child",
+          "difficulty_level": "easy"
+        }
+      ],
+      "cheek": [
+        {
+          "id": "spring_child_cheek_001",
+          "name": "キャンメイク パウダーチークス PW23 シェルピンク",
+          "brand": "キャンメイク",
+          "category": "cheek",
+          "price": 605,
+          "image_url": "https://m.media-amazon.com/images/I/71hSHbud+iL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/4p5qcJu",
+          "description": "子供らしい自然な血色感。優しく発色するシェルピンクです。",
+          "colors": ["シェルピンク"],
+          "age_group": "child",
+          "difficulty_level": "easy"
+        }
+      ],
+      "lip": [
+        {
+          "id": "spring_child_lip_001",
+          "name": "ettusais(エテュセ) リップエディション 03 ピュアコーラル",
+          "brand": "ettusais",
+          "category": "lip",
+          "price": 528,
+          "image_url": "https://m.media-amazon.com/images/I/51a0syI5ERL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/3UT9PSo",
+          "description": "子供にも安心の自然な発色。唇を保護しながら血色感をプラス。",
+          "colors": ["ピュアコーラル"],
+          "age_group": "child",
+          "difficulty_level": "easy"
+        }
+      ]
+    },
+    "student": {
+      "eyeshadow": [
+        {
+          "id": "spring_student_eye_001",
+          "name": "リンメル ショコラスウィートアイズ 015 ストロベリーショコラ",
+          "brand": "リンメル",
+          "category": "eyeshadow",
+          "price": 1760,
+          "image_url": "https://m.media-amazon.com/images/I/713XgmLDvCL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/466GVDA",
+          "description": "学生にぴったりの甘く可愛らしいストロベリーカラー。上品なラメで華やかに。",
+          "colors": ["ストロベリーピンク", "コーラル", "ゴールド", "ライトベージュ"],
+          "age_group": "student",
+          "difficulty_level": "medium"
+        },
+        {
+          "id": "spring_student_eye_002",
+          "name": "キャンメイク パーフェクトスタイリストアイズ 14 アンティークルビー",
+          "brand": "キャンメイク",
+          "category": "eyeshadow",
+          "price": 858,
+          "image_url": "https://m.media-amazon.com/images/I/61iyJRens0L._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/3HAHRI7",
+          "description": "学生に人気のアンティークルビー。プチプラで試しやすく、失敗しにくい配色。",
+          "colors": ["アンティークルビー", "コーラルピンク", "ゴールドベージュ", "ライトブラウン"],
+          "age_group": "student",
+          "difficulty_level": "medium"
+        }
+      ],
+      "cheek": [
+        {
+          "id": "spring_student_cheek_001",
+          "name": "キャンメイク クリームチーク14 アップルクリームレッド",
+          "brand": "キャンメイク",
+          "category": "cheek",
+          "price": 920,
+          "image_url": "https://m.media-amazon.com/images/I/71ixfbFW2yL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/4g3516v",
+          "description": "学生に人気のクリームチーク。自然な血色感で青春らしい印象に。",
+          "colors": ["アップルレッド"],
+          "age_group": "student",
+          "difficulty_level": "medium"
+        }
+      ],
+      "lip": [
+        {
+          "id": "spring_student_lip_001",
+          "name": "オペラ リップティント N 05 コーラルピンク",
+          "brand": "オペラ",
+          "category": "lip",
+          "price": 1650,
+          "image_url": "https://m.media-amazon.com/images/I/21FEFdeVOkL._AC_.jpg",
+          "amazon_url": "https://amzn.to/45WPu3p",
+          "description": "学生に大人気のオペラティント。華やかなコーラルピンクで学校でも使いやすい。",
+          "colors": ["コーラルピンク"],
+          "age_group": "student",
+          "difficulty_level": "medium"
+        }
+      ]
+    },
+    "adult": {
+      "eyeshadow": [
+        {
+          "id": "spring_adult_eye_001",
+          "name": "SUQQU デザイニング カラー アイズ 01 優芍薬 -YUUSHAKUYAKU",
+          "brand": "SUQQU",
+          "category": "eyeshadow",
+          "price": 7480,
+          "image_url": "https://m.media-amazon.com/images/I/51QMklEcHyL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/4adult001",
+          "description": "大人の女性にふさわしい上質な発色。洗練されたSpringカラーで品格のある仕上がり。",
+          "colors": ["ローズベージュ", "コーラルピンク", "ゴールドブラウン", "シャンパンゴールド"],
+          "age_group": "adult",
+          "difficulty_level": "hard"
+        },
+        {
+          "id": "spring_adult_eye_002",
+          "name": "ADDICTION ザ アイシャドウ 099 Miss You More",
+          "brand": "ADDICTION",
+          "category": "eyeshadow",
+          "price": 2200,
+          "image_url": "https://m.media-amazon.com/images/I/41fGOzR2DvL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/4adult002",
+          "description": "大人女性の魅力を引き出す、深みのあるコーラルブラウン。オフィスでも使える上品さ。",
+          "colors": ["コーラルブラウン"],
+          "age_group": "adult",
+          "difficulty_level": "hard"
+        }
+      ],
+      "cheek": [
+        {
+          "id": "spring_adult_cheek_001",
+          "name": "NARS ブラッシュ 4013 Orgasm",
+          "brand": "NARS",
+          "category": "cheek",
+          "price": 4180,
+          "image_url": "https://m.media-amazon.com/images/I/71hSHbud+iL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/4adult003",
+          "description": "大人の女性に愛され続ける名品。自然な血色感と上品な艶感を演出。",
+          "colors": ["ピーチピンク"],
+          "age_group": "adult",
+          "difficulty_level": "medium"
+        }
+      ],
+      "lip": [
+        {
+          "id": "spring_adult_lip_001",
+          "name": "シャネル ルージュ ココ 402 Adrienne",
+          "brand": "CHANEL",
+          "category": "lip",
+          "price": 6380,
+          "image_url": "https://m.media-amazon.com/images/I/21FEFdeVOkL._AC_.jpg",
+          "amazon_url": "https://amzn.to/4adult004",
+          "description": "大人の女性にふさわしい格式高いコーラル。洗練された印象を与える逸品。",
+          "colors": ["エレガントコーラル"],
+          "age_group": "adult",
+          "difficulty_level": "medium"
+        }
+      ]
+    }
+  },
+  "summer": {
+    "child": {
+      "eyeshadow": [
+        {
+          "id": "summer_child_eye_001",
+          "name": "キャンメイク パーフェクトスタイリストアイズ 24 メロウミルクティー",
+          "brand": "キャンメイク",
+          "category": "eyeshadow",
+          "price": 858,
+          "image_url": "https://m.media-amazon.com/images/I/615KNb6AYIL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/3JIfyYG",
+          "description": "子供らしい透明感のあるパステルカラー。優しい発色で失敗知らず。",
+          "colors": ["ミルクティー", "パステルピンク", "ラベンダー", "パールベージュ"],
+          "age_group": "child",
+          "difficulty_level": "easy"
+        }
+      ],
+      "cheek": [
+        {
+          "id": "summer_child_cheek_001",
+          "name": "キャンメイク パウダーチークス PW20 ロリポップピンク",
+          "brand": "キャンメイク",
+          "category": "cheek",
+          "price": 605,
+          "image_url": "https://m.media-amazon.com/images/I/71i-Xl2hicL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/460386b",
+          "description": "子供らしい可愛らしさを演出する、優しいローズピンク。",
+          "colors": ["ロリポップピンク"],
+          "age_group": "child",
+          "difficulty_level": "easy"
+        }
+      ],
+      "lip": [
+        {
+          "id": "summer_child_lip_001",
+          "name": "CEZANNE ラスティンググロスリップ 01 ベリー",
+          "brand": "CEZANNE",
+          "category": "lip",
+          "price": 528,
+          "image_url": "https://m.media-amazon.com/images/I/518ZQTG1MgL._AC_SX522_.jpg",
+          "amazon_url": "https://amzn.to/4fYUTf0",
+          "description": "子供にも安心のベリーカラー。自然な血色感で健康的な印象に。",
+          "colors": ["ベリー"],
+          "age_group": "child",
+          "difficulty_level": "easy"
+        }
+      ]
+    },
+    "student": {
+      "eyeshadow": [
+        {
+          "id": "summer_student_eye_001",
+          "name": "リンメル ショコラスウィートアイズ 019 ブルーベリーショコラ",
+          "brand": "リンメル",
+          "category": "eyeshadow",
+          "price": 1760,
+          "image_url": "https://m.media-amazon.com/images/I/71eRc8akXwL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/47SBrOY",
+          "description": "学生に人気のブルーベリーカラー。涼しげで上品な印象を演出。",
+          "colors": ["ブルーベリー", "ローズピンク", "パール", "ソフトブラウン"],
+          "age_group": "student",
+          "difficulty_level": "medium"
+        }
+      ],
+      "cheek": [
+        {
+          "id": "summer_student_cheek_001",
+          "name": "CEZANNE ナチュラルチークN 20 ジンジャー",
+          "brand": "CEZANNE",
+          "category": "cheek",
+          "price": 396,
+          "image_url": "https://m.media-amazon.com/images/I/61Yt2sTGGkL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/3JDR4ju",
+          "description": "学生にも使いやすいジンジャーカラー。上品で自然な血色感。",
+          "colors": ["ジンジャー"],
+          "age_group": "student",
+          "difficulty_level": "medium"
+        }
+      ],
+      "lip": [
+        {
+          "id": "summer_student_lip_001",
+          "name": "オペラ リップティント N 01 レッド",
+          "brand": "オペラ",
+          "category": "lip",
+          "price": 1650,
+          "image_url": "https://m.media-amazon.com/images/I/510xnR7P2wL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/3JCRwyl",
+          "description": "学生に人気の上品なレッド。Summer タイプの涼しげな魅力を演出。",
+          "colors": ["レッド"],
+          "age_group": "student",
+          "difficulty_level": "medium"
+        }
+      ]
+    },
+    "adult": {
+      "eyeshadow": [
+        {
+          "id": "summer_adult_eye_001",
+          "name": "TOM FORD アイ カラー クォード 03A Violets",
+          "brand": "TOM FORD",
+          "category": "eyeshadow",
+          "price": 12100,
+          "image_url": "https://m.media-amazon.com/images/I/51xU57MMX1L._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/4adult101",
+          "description": "大人の女性のためのラグジュアリーアイシャドウ。洗練されたバイオレット系。",
+          "colors": ["ネイビー", "バイオレット", "シルバー", "クールグレー"],
+          "age_group": "adult",
+          "difficulty_level": "hard"
+        }
+      ],
+      "cheek": [
+        {
+          "id": "summer_adult_cheek_001",
+          "name": "Dior ディオールスキン ルージュ ブラッシュ 601 ホロスコープ",
+          "brand": "Dior",
+          "category": "cheek",
+          "price": 6050,
+          "image_url": "https://m.media-amazon.com/images/I/71i-Xl2hicL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/4adult102",
+          "description": "大人の女性にふさわしい上質なローズピンク。エレガントな仕上がり。",
+          "colors": ["ローズピンク"],
+          "age_group": "adult",
+          "difficulty_level": "medium"
+        }
+      ],
+      "lip": [
+        {
+          "id": "summer_adult_lip_001",
+          "name": "YSL ルージュ ヴォリュプテ シャイン 49 Rose Saint-Germain",
+          "brand": "YSL",
+          "category": "lip",
+          "price": 5280,
+          "image_url": "https://m.media-amazon.com/images/I/510xnR7P2wL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/4adult103",
+          "description": "大人の女性の魅力を引き出す上品なローズ。洗練された印象を演出。",
+          "colors": ["ローズ"],
+          "age_group": "adult",
+          "difficulty_level": "medium"
+        }
+      ]
+    }
+  },
+  "autumn": {
+    "child": {
+      "eyeshadow": [
+        {
+          "id": "autumn_child_eye_001",
+          "name": "キャンメイク パーフェクトスタイリストアイズ 17 プリンセスブーケ",
+          "brand": "キャンメイク",
+          "category": "eyeshadow",
+          "price": 858,
+          "image_url": "https://m.media-amazon.com/images/I/71vNjZpqg9L._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/4lWZ64q",
+          "description": "子供らしい温かみのあるブラウン系。優しい発色で失敗しにくい配色。",
+          "colors": ["ライトブラウン", "ベージュ", "オレンジ", "クリーム"],
+          "age_group": "child",
+          "difficulty_level": "easy"
+        }
+      ],
+      "cheek": [
+        {
+          "id": "autumn_child_cheek_001",
+          "name": "CEZANNE ナチュラルチークN 14 ブラウン",
+          "brand": "CEZANNE",
+          "category": "cheek",
+          "price": 396,
+          "image_url": "https://m.media-amazon.com/images/I/51p6q3MHWsL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/45FCFf8",
+          "description": "子供にも使いやすい温かみのあるブラウン。自然な血色感をプラス。",
+          "colors": ["ブラウン"],
+          "age_group": "child",
+          "difficulty_level": "easy"
+        }
+      ],
+      "lip": [
+        {
+          "id": "autumn_child_lip_001",
+          "name": "ettusais(エテュセ) リップエディション 09 ココアブラウン",
+          "brand": "ettusais",
+          "category": "lip",
+          "price": 528,
+          "image_url": "https://m.media-amazon.com/images/I/511LbpOOAFL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/3I239OR",
+          "description": "子供でも使いやすい優しいココアブラウン。自然な仕上がりで安心。",
+          "colors": ["ココアブラウン"],
+          "age_group": "child",
+          "difficulty_level": "easy"
+        }
+      ]
+    },
+    "student": {
+      "eyeshadow": [
+        {
+          "id": "autumn_student_eye_001",
+          "name": "リンメル ショコラスウィートアイズ 009 ショコラブラウン",
+          "brand": "リンメル",
+          "category": "eyeshadow",
+          "price": 1760,
+          "image_url": "https://m.media-amazon.com/images/I/61vJQ16RniL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/3HM8Joz",
+          "description": "学生に人気のショコラブラウン。深みのある色合いで大人っぽい印象に。",
+          "colors": ["ショコラブラウン", "ブロンズ", "オレンジ", "マスタード"],
+          "age_group": "student",
+          "difficulty_level": "medium"
+        }
+      ],
+      "cheek": [
+        {
+          "id": "autumn_student_cheek_001",
+          "name": "キャンメイク クリームチーク CL07 コーラルオレンジ",
+          "brand": "キャンメイク",
+          "category": "cheek",
+          "price": 660,
+          "image_url": "https://m.media-amazon.com/images/I/61gPEImhjsL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/45JWjqk",
+          "description": "学生にも人気のコーラルオレンジ。温かい印象で親しみやすさをプラス。",
+          "colors": ["コーラルオレンジ"],
+          "age_group": "student",
+          "difficulty_level": "medium"
+        }
+      ],
+      "lip": [
+        {
+          "id": "autumn_student_lip_001",
+          "name": "オペラ リップティント N 06 ピンクレッド",
+          "brand": "オペラ",
+          "category": "lip",
+          "price": 1650,
+          "image_url": "https://m.media-amazon.com/images/I/31vg04eBClL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/462TfEF",
+          "description": "学生に人気の深みのあるピンクレッド。Autumn タイプの温かい魅力を演出。",
+          "colors": ["ピンクレッド"],
+          "age_group": "student",
+          "difficulty_level": "medium"
+        }
+      ]
+    },
+    "adult": {
+      "eyeshadow": [
+        {
+          "id": "autumn_adult_eye_001",
+          "name": "MAC アイシャドウ A61 Amber Lights",
+          "brand": "MAC",
+          "category": "eyeshadow",
+          "price": 3080,
+          "image_url": "https://m.media-amazon.com/images/I/41Rmkt4PuxL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/4adult201",
+          "description": "大人の女性にふさわしい深みのあるアンバー。洗練されたAutumnカラー。",
+          "colors": ["アンバー"],
+          "age_group": "adult",
+          "difficulty_level": "hard"
+        }
+      ],
+      "cheek": [
+        {
+          "id": "autumn_adult_cheek_001",
+          "name": "CHANEL ジュ コントゥラスト 350 Corail Secret",
+          "brand": "CHANEL",
+          "category": "cheek",
+          "price": 6820,
+          "image_url": "https://m.media-amazon.com/images/I/71i-Xl2hicL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/4adult202",
+          "description": "大人の女性のための上質なコーラル。エレガントで洗練された仕上がり。",
+          "colors": ["コーラル"],
+          "age_group": "adult",
+          "difficulty_level": "medium"
+        }
+      ],
+      "lip": [
+        {
+          "id": "autumn_adult_lip_001",
+          "name": "Charlotte Tilbury Matte Revolution K.I.S.S.I.N.G",
+          "brand": "Charlotte Tilbury",
+          "category": "lip",
+          "price": 4840,
+          "image_url": "https://m.media-amazon.com/images/I/31vg04eBClL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/4adult203",
+          "description": "大人の女性の魅力を最大限に引き出す、深みのあるブラウンレッド。",
+          "colors": ["ブラウンレッド"],
+          "age_group": "adult",
+          "difficulty_level": "medium"
+        }
+      ]
+    }
+  },
+  "winter": {
+    "child": {
+      "eyeshadow": [
+        {
+          "id": "winter_child_eye_001",
+          "name": "キャンメイク パーフェクトスタイリストアイズ 10 スウィートフラミンゴ",
+          "brand": "キャンメイク",
+          "category": "eyeshadow",
+          "price": 858,
+          "image_url": "https://m.media-amazon.com/images/I/61k0+mKE8YL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/3Vx2yHX",
+          "description": "子供らしい可愛らしさのあるフラミンゴピンク。鮮やかで印象的な仕上がり。",
+          "colors": ["フラミンゴピンク", "ライトピンク", "グレー", "ホワイト"],
+          "age_group": "child",
+          "difficulty_level": "easy"
+        }
+      ],
+      "cheek": [
+        {
+          "id": "winter_child_cheek_001",
+          "name": "CEZANNE ナチュラルチークN 05 スウィートピンク",
+          "brand": "CEZANNE",
+          "category": "cheek",
+          "price": 396,
+          "image_url": "https://m.media-amazon.com/images/I/419uQ900FyL._AC_.jpg",
+          "amazon_url": "https://amzn.to/4n1fIZA",
+          "description": "子供でも使いやすい鮮やかなスウィートピンク。元気で明るい印象に。",
+          "colors": ["スウィートピンク"],
+          "age_group": "child",
+          "difficulty_level": "easy"
+        }
+      ],
+      "lip": [
+        {
+          "id": "winter_child_lip_001",
+          "name": "CEZANNE ラスティンググロスリップ 06 レッド",
+          "brand": "CEZANNE",
+          "category": "lip",
+          "price": 528,
+          "image_url": "https://m.media-amazon.com/images/I/41rpNGJDjBS._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/4p0R5xS",
+          "description": "子供らしい鮮やかなレッド。元気で健康的な印象を演出。",
+          "colors": ["レッド"],
+          "age_group": "child",
+          "difficulty_level": "easy"
+        }
+      ]
+    },
+    "student": {
+      "eyeshadow": [
+        {
+          "id": "winter_student_eye_001",
+          "name": "BLEND BERRY オールユーニード クリエイション 002 トワイライトグルーム",
+          "brand": "BLEND BERRY",
+          "category": "eyeshadow",
+          "price": 1760,
+          "image_url": "https://m.media-amazon.com/images/I/71dWhBxNWtL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/4n5pIAW",
+          "description": "学生に人気の鮮やかなベリーカラー。個性的で印象的な仕上がり。",
+          "colors": ["トワイライトベリー", "ロイヤルブルー", "アメジスト", "シルバー"],
+          "age_group": "student",
+          "difficulty_level": "medium"
+        }
+      ],
+      "cheek": [
+        {
+          "id": "winter_student_cheek_001",
+          "name": "Visee リシェ リップ&チーククリーム RO-6 ローズレッド",
+          "brand": "Visee",
+          "category": "cheek",
+          "price": 605,
+          "image_url": "https://m.media-amazon.com/images/I/61D5nqPHWxL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/3JErhYf",
+          "description": "学生にも使いやすい鮮やかなローズレッド。個性的で印象的な仕上がり。",
+          "colors": ["ローズレッド"],
+          "age_group": "student",
+          "difficulty_level": "medium"
+        }
+      ],
+      "lip": [
+        {
+          "id": "winter_student_lip_001",
+          "name": "オペラ リップティント 107 オレンジリリー",
+          "brand": "オペラ",
+          "category": "lip",
+          "price": 1650,
+          "image_url": "https://images.unsplash.com/photo-1583241800975-4b8b3bcea1dc?w=300&h=300&fit=crop",
+          "amazon_url": "https://amzn.to/4mJyqW2",
+          "description": "学生に人気の鮮烈なオレンジ。Winter タイプの鮮やかな魅力を演出。",
+          "colors": ["オレンジ"],
+          "age_group": "student",
+          "difficulty_level": "medium"
+        }
+      ]
+    },
+    "adult": {
+      "eyeshadow": [
+        {
+          "id": "winter_adult_eye_001",
+          "name": "Pat McGrath Labs MTHRSHP Subliminal Platinum Bronze",
+          "brand": "Pat McGrath Labs",
+          "category": "eyeshadow",
+          "price": 14300,
+          "image_url": "https://m.media-amazon.com/images/I/51QMklEcHyL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/4adult301",
+          "description": "大人の女性のためのラグジュアリーアイシャドウ。ドラマティックで印象的な仕上がり。",
+          "colors": ["プラチナ", "ブロンズ", "ディープネイビー", "シルバー"],
+          "age_group": "adult",
+          "difficulty_level": "hard"
+        }
+      ],
+      "cheek": [
+        {
+          "id": "winter_adult_cheek_001",
+          "name": "NARS ブラッシュ 4016 Deep Throat",
+          "brand": "NARS",
+          "category": "cheek",
+          "price": 4180,
+          "image_url": "https://m.media-amazon.com/images/I/61D5nqPHWxL._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/4adult302",
+          "description": "大人の女性にふさわしい鮮やかなベリーピンク。洗練された印象を演出。",
+          "colors": ["ベリーピンク"],
+          "age_group": "adult",
+          "difficulty_level": "medium"
+        }
+      ],
+      "lip": [
+        {
+          "id": "winter_adult_lip_001",
+          "name": "Giorgio Armani ルージュ デクスタシー 400",
+          "brand": "Giorgio Armani",
+          "category": "lip",
+          "price": 5830,
+          "image_url": "https://m.media-amazon.com/images/I/41rpNGJDjBS._AC_SX679_.jpg",
+          "amazon_url": "https://amzn.to/4adult303",
+          "description": "大人の女性の魅力を最大限に引き出す、鮮やかで洗練されたレッド。",
+          "colors": ["クラシックレッド"],
+          "age_group": "adult",
+          "difficulty_level": "medium"
+        }
+      ]
+    }
+  }
+}

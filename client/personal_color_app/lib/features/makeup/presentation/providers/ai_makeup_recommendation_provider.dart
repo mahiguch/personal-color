@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../../core/error/failures.dart';
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
 import '../../domain/entities/makeup_recommendation.dart';
+import '../../domain/entities/makeup_step.dart';
+import '../../domain/entities/highlight_area.dart';
 import '../../domain/usecases/get_ai_makeup_recommendations.dart';
 
 /// AI画像生成付きメイクアップ推奨データの状態管理プロバイダー
@@ -40,6 +42,85 @@ class AIMakeupRecommendationProvider extends ChangeNotifier {
   /// 進行状況メッセージ
   String? _progressMessage;
   String? get progressMessage => _progressMessage;
+
+  /// ハイライト表示状態（UI制御用）
+  bool _showHighlights = true;
+  bool get showHighlights => _showHighlights;
+  void toggleHighlights() {
+    _showHighlights = !_showHighlights;
+    debugPrint('✨ [AIMakeupRecommendationProvider] showHighlights=$_showHighlights');
+    if (!_disposed) notifyListeners();
+  }
+
+  /// 選択中のステップ（UI連動用）
+  int? _selectedStepIndex;
+  int? get selectedStepIndex => _selectedStepIndex;
+  void setSelectedStepIndex(int? index) {
+    _selectedStepIndex = index;
+    if (!_disposed) notifyListeners();
+  }
+
+  /// ステップに応じたハイライトフォーカス
+  HighlightType? _focusedHighlightType;
+  DateTime? _focusUntil;
+
+  /// フォーカス中のハイライトのみを表示
+  List<HighlightArea> get highlightAreasForDisplay {
+    final areas = _recommendation?.highlightAreas ?? const [];
+    if (_focusedHighlightType == null) return areas;
+    return areas.where((a) => a.type == _focusedHighlightType).toList();
+  }
+
+  /// ステップに応じてハイライトをフォーカス表示（一定時間）
+  void focusHighlightForStep(MakeupStep step, {Duration duration = const Duration(seconds: 3)}) {
+    final type = _mapStepCategoryToHighlight(step.category);
+    if (type == null) return;
+    _focusedHighlightType = type;
+    _focusUntil = DateTime.now().add(duration);
+    if (!_disposed) notifyListeners();
+
+    Future.delayed(duration).then((_) {
+      if (_disposed) return;
+      if (_focusUntil != null && DateTime.now().isAfter(_focusUntil!)) {
+        _focusedHighlightType = null;
+        if (!_disposed) notifyListeners();
+      }
+    });
+  }
+
+  void clearHighlightFocus() {
+    _focusedHighlightType = null;
+    _focusUntil = null;
+    if (!_disposed) notifyListeners();
+  }
+
+  HighlightType? _mapStepCategoryToHighlight(StepCategory cat) {
+    switch (cat) {
+      case StepCategory.eyeshadow:
+      case StepCategory.eyeliner:
+      case StepCategory.mascara:
+        return HighlightType.eye;
+      case StepCategory.eyebrow:
+        return HighlightType.eyebrow;
+      case StepCategory.cheek:
+        return HighlightType.cheek;
+      case StepCategory.lip:
+        return HighlightType.lip;
+      case StepCategory.highlight:
+        return HighlightType.highlight;
+      case StepCategory.contour:
+        return HighlightType.contour;
+      case StepCategory.base:
+      case StepCategory.setting:
+        return null;
+    }
+  }
+
+  /// 推定年齢（APIから提供される場合）
+  int? get estimatedAge => _recommendation?.estimatedAge;
+  
+  /// 推定年齢グループ（エンティティ計算をラップ）
+  AgeGroup get ageGroup => _recommendation?.ageGroup ?? AgeGroup.adult;
 
   /// AI画像生成付きメイクアップ推奨データを取得
   /// 
@@ -178,5 +259,13 @@ class AIMakeupRecommendationProvider extends ChangeNotifier {
       default:
         return failure.message.isNotEmpty ? failure.message : '不明なエラーが発生しました';
     }
+  }
+
+  /// テスト用ヘルパー（Widgetテスト向け）
+  void setRecommendationForTest(MakeupRecommendation rec) {
+    _recommendation = rec;
+    _isLoading = false;
+    _errorMessage = null;
+    if (!_disposed) notifyListeners();
   }
 }

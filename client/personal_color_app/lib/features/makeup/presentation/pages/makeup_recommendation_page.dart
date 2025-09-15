@@ -3,8 +3,10 @@ import 'package:provider/provider.dart';
 
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
 import '../../domain/entities/makeup_product.dart';
+import '../../domain/entities/product_recommendation.dart';
 import '../providers/makeup_recommendation_provider.dart';
 import '../widgets/product_card_widget.dart';
+import '../../../diagnosis/domain/entities/age_group.dart';
 
 /// メイクアップ推奨ページ
 /// 
@@ -377,7 +379,14 @@ class _MakeupRecommendationPageState extends State<MakeupRecommendationPage>
           if (products.isNotEmpty) ...[
             ...products.map((product) => Padding(
               padding: const EdgeInsets.only(bottom: 16),
-              child: ProductCardWidget(product: product),
+              child: ProductCardWidget(
+                product: RecommendedProduct(
+                  product: product,
+                  recommendationScore: 0.6,
+                  recommendationReason: 'おすすめ',
+                ),
+                ageGroup: AgeGroup.adult,
+              ),
             )),
           ] else ...[
             _buildNoCategoryProducts(category),

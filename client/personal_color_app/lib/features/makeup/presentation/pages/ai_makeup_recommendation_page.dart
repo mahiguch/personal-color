@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
 import '../../domain/entities/makeup_recommendation.dart';
+import '../../domain/entities/makeup_step.dart';
+import '../../domain/entities/makeup_product.dart';
 import '../providers/ai_makeup_recommendation_provider.dart';
+import '../widgets/before_after_comparison_widget.dart';
+import '../widgets/makeup_steps_widget.dart';
 
 /// AI画像生成付きメイクアップ推奨ページ
 /// 
@@ -25,6 +29,8 @@ class AIMakeupRecommendationPage extends StatefulWidget {
 }
 
 class _AIMakeupRecommendationPageState extends State<AIMakeupRecommendationPage> {
+  bool _showHighlights = true;
+
   @override
   void initState() {
     super.initState();
@@ -235,6 +241,9 @@ class _AIMakeupRecommendationPageState extends State<AIMakeupRecommendationPage>
   }
 
   Widget _buildRecommendationScreen(AIMakeupRecommendationProvider provider) {
+    final recommendation = provider.recommendation!;
+    final originalImageData = _getOriginalImageBase64();
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -247,17 +256,41 @@ class _AIMakeupRecommendationPageState extends State<AIMakeupRecommendationPage>
         ),
       ),
       child: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // AI生成画像のみ表示（中央配置・強調）
-            if (provider.hasGeneratedImage) 
-              _buildAIGeneratedImage(provider.recommendation!),
-            
-            // AI生成画像がない場合のプレースホルダー
-            if (!provider.hasGeneratedImage)
-              _buildNoImagePlaceholder(),
-          ],
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Phase 1: Before/After比較
+              if (recommendation.canShowBeforeAfter ||
+                  (originalImageData != null && recommendation.hasGeneratedImage))
+                _buildBeforeAfterSection(recommendation, originalImageData),
+
+              // 生成画像のみの場合（従来の表示）
+              if (!recommendation.canShowBeforeAfter &&
+                  originalImageData == null &&
+                  recommendation.hasGeneratedImage)
+                _buildLegacyImageSection(recommendation),
+
+              const SizedBox(height: 24),
+
+              // Phase 1: ステップバイステップ手順
+              if (recommendation.stepByStepInstructions.isNotEmpty)
+                _buildStepsSection(recommendation),
+
+              const SizedBox(height: 24),
+
+              // Phase 1: パーソナルカラー説明
+              if (recommendation.personalColorExplanation != null)
+                _buildPersonalColorExplanationSection(recommendation),
+
+              const SizedBox(height: 24),
+
+              // 従来のAI説明（後方互換）
+              if (recommendation.aiExplanations.isNotEmpty)
+                _buildLegacyExplanationSection(recommendation),
+            ],
+          ),
         ),
       ),
     );
@@ -399,5 +432,229 @@ class _AIMakeupRecommendationPageState extends State<AIMakeupRecommendationPage>
       case PersonalColorType.winter:
         return const Color(0xFF2E7D32);
     }
+  }
+
+  // ===================
+  // Phase 1 新規セクション
+  // ===================
+
+  Widget _buildBeforeAfterSection(MakeupRecommendation recommendation, String? originalImageData) {
+    final originalData = originalImageData ?? recommendation.originalImageData;
+    if (originalData == null || !recommendation.hasGeneratedImage) {
+      return const SizedBox.shrink();
+    }
+
+    return BeforeAfterComparisonWidget(
+      originalImageData: originalData,
+      generatedImageData: recommendation.generatedImageData!,
+      highlightAreas: recommendation.highlightAreas,
+      showHighlights: _showHighlights,
+      onHighlightToggle: () {
+        setState(() {
+          _showHighlights = !_showHighlights;
+        });
+      },
+      imageHeight: 250,
+    );
+  }
+
+  Widget _buildStepsSection(MakeupRecommendation recommendation) {
+    return MakeupStepsWidget(
+      steps: recommendation.stepByStepInstructions,
+      ageGroup: recommendation.ageGroup,
+      onStepTap: (step) {
+        _showStepDetail(step);
+      },
+      showEstimatedTime: true,
+      showDifficulty: recommendation.ageGroup != AgeGroup.child,
+    );
+  }
+
+  Widget _buildPersonalColorExplanationSection(MakeupRecommendation recommendation) {
+    return Card(
+      elevation: 3,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.palette,
+                  color: _getThemeColor(widget.personalColorType),
+                  size: 24,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'パーソナルカラー解説',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              recommendation.getAgeAdaptedExplanation(),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                height: 1.5,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLegacyImageSection(MakeupRecommendation recommendation) {
+    return Center(
+      child: _buildAIGeneratedImage(recommendation),
+    );
+  }
+
+  Widget _buildLegacyExplanationSection(MakeupRecommendation recommendation) {
+    if (recommendation.aiExplanations.isEmpty) return const SizedBox.shrink();
+
+    return Card(
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.auto_awesome,
+                  color: _getThemeColor(widget.personalColorType),
+                  size: 24,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'AI解説',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            ...recommendation.aiExplanations.entries.map((entry) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Text(
+                  '${entry.key.displayName}: ${entry.value}',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    height: 1.4,
+                  ),
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ===================
+  // ヘルパーメソッド
+  // ===================
+
+  String? _getOriginalImageBase64() {
+    try {
+      final bytes = widget.imageFile.readAsBytesSync();
+      return base64Encode(bytes);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  void _showStepDetail(MakeupStep step) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(step.category.displayName),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                step.instruction,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              if (step.tips != null) ...[
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.lightbulb_outline,
+                            size: 16,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'コツ',
+                            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        step.getAgeAdaptedTips(AgeGroup.adult),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              if (step.requiredTools.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Text(
+                  '必要な道具:',
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 4,
+                  children: step.requiredTools.map((tool) {
+                    return Chip(
+                      label: Text(
+                        tool,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    );
+                  }).toList(),
+                ),
+              ],
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('閉じる'),
+          ),
+        ],
+      ),
+    );
   }
 }

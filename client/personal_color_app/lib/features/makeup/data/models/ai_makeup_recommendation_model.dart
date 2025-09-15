@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
 import '../../domain/entities/makeup_product.dart';
 import '../../domain/entities/makeup_recommendation.dart';
+import '../../domain/entities/makeup_step.dart';
+import '../../domain/entities/highlight_area.dart';
 import 'generated_image_data_model.dart';
 import 'makeup_product_model.dart';
 import 'makeup_recommendation_model.dart';
@@ -25,6 +27,13 @@ class AIMakeupRecommendationModel extends MakeupRecommendationModel {
     super.generatedImageData,
     super.generatedImageSize,
     super.generatedImageDateTime,
+    // 拡張フィールド（親に委譲）
+    super.originalImageData,
+    super.estimatedAge,
+    super.makeupExperienceLevel,
+    super.stepByStepInstructions = const [],
+    super.highlightAreas = const [],
+    super.personalColorExplanation,
   });
 
   /// JSON から AIMakeupRecommendationModel を作成
@@ -66,8 +75,7 @@ class AIMakeupRecommendationModel extends MakeupRecommendationModel {
       final category = MakeupCategoryExtension.fromApiValue(entry.key);
       final productsJson = entry.value as List<dynamic>;
       final products = productsJson
-          .map((productJson) => MakeupProductModel.fromJson(productJson as Map<String, dynamic>))
-          .cast<MakeupProduct>()
+          .map((productJson) => MakeupProductModel.fromJson(productJson as Map<String, dynamic>).toDomain())
           .toList();
       categories[category] = products;
     }
@@ -115,6 +123,36 @@ class AIMakeupRecommendationModel extends MakeupRecommendationModel {
       timestamp = DateTime.tryParse(timestampStr);
     }
 
+    // Phase 1/2 拡張フィールドの変換
+    final originalImageData = json['original_image_data'] as String? ?? json['originalImageData'] as String?;
+    final estimatedAge = (json['estimated_age'] ?? json['estimatedAge']) as int?;
+    final experienceLevelStr = (json['makeup_experience_level'] ?? json['makeupExperienceLevel']) as String?;
+    final makeupExperienceLevel = experienceLevelStr != null
+        ? MakeupExperienceLevel.fromString(experienceLevelStr)
+        : null;
+
+    // ステップ配列
+    final stepsJson = (json['step_by_step_instructions'] ?? json['stepByStepInstructions']) as List<dynamic>?;
+    final List<MakeupStep> steps = stepsJson == null
+        ? <MakeupStep>[]
+        : stepsJson
+            .whereType<Map<String, dynamic>>()
+            .map(MakeupStep.fromJson)
+            .toList();
+
+    // ハイライト領域
+    final highlightsJson = (json['highlight_areas'] ?? json['highlightAreas']) as List<dynamic>?;
+    final List<HighlightArea> highlights = highlightsJson == null
+        ? <HighlightArea>[]
+        : highlightsJson
+            .whereType<Map<String, dynamic>>()
+            .map(HighlightArea.fromJson)
+            .toList();
+
+    // パーソナルカラー説明
+    final personalColorExplanation = json['personal_color_explanation'] as String?
+        ?? json['personalColorExplanation'] as String?;
+
     return AIMakeupRecommendationModel(
       personalColorType: personalColorType,
       categories: categories,
@@ -125,6 +163,13 @@ class AIMakeupRecommendationModel extends MakeupRecommendationModel {
       generatedImageData: generatedImage?.imageData,
       generatedImageSize: generatedImage?.readableSize,
       generatedImageDateTime: generatedImage?.generatedAtDateTime,
+      // 拡張
+      originalImageData: originalImageData,
+      estimatedAge: estimatedAge,
+      makeupExperienceLevel: makeupExperienceLevel,
+      stepByStepInstructions: steps,
+      highlightAreas: highlights,
+      personalColorExplanation: personalColorExplanation,
     );
   }
 
@@ -161,6 +206,13 @@ class AIMakeupRecommendationModel extends MakeupRecommendationModel {
       generatedImageData: entity.generatedImageData,
       generatedImageSize: entity.generatedImageSize,
       generatedImageDateTime: entity.generatedImageDateTime,
+      // 拡張
+      originalImageData: entity.originalImageData,
+      estimatedAge: entity.estimatedAge,
+      makeupExperienceLevel: entity.makeupExperienceLevel,
+      stepByStepInstructions: entity.stepByStepInstructions,
+      highlightAreas: entity.highlightAreas,
+      personalColorExplanation: entity.personalColorExplanation,
     );
   }
 
@@ -182,6 +234,13 @@ class AIMakeupRecommendationModel extends MakeupRecommendationModel {
       generatedImageData: model.generatedImageData,
       generatedImageSize: model.generatedImageSize,
       generatedImageDateTime: model.generatedImageDateTime,
+      // 拡張
+      originalImageData: model.originalImageData,
+      estimatedAge: model.estimatedAge,
+      makeupExperienceLevel: model.makeupExperienceLevel,
+      stepByStepInstructions: model.stepByStepInstructions,
+      highlightAreas: model.highlightAreas,
+      personalColorExplanation: model.personalColorExplanation,
     );
   }
 

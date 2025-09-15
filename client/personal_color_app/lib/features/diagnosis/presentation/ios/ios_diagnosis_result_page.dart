@@ -12,6 +12,11 @@ import '../../../makeup/presentation/pages/makeup_recommendation_page.dart';
 import '../../../makeup/presentation/providers/makeup_recommendation_provider.dart';
 import '../../../clothing/presentation/pages/clothing_recommendation_page.dart';
 import '../../../clothing/presentation/providers/clothing_recommendation_provider.dart';
+import '../../../makeup/presentation/pages/product_recommendation_page.dart';
+import '../../domain/entities/age_group.dart' as dx;
+import '../../domain/entities/gender.dart' as dx;
+import '../../../makeup/domain/entities/product_recommendation.dart' as mk;
+import '../../../makeup/presentation/providers/product_recommendation_provider.dart';
 import '../../../../core/di/injection_container.dart' as di;
 
 class IOSDiagnosisResultPage extends StatelessWidget {
@@ -242,6 +247,47 @@ class IOSDiagnosisResultPage extends StatelessWidget {
             ),
           ),
         ),
+
+        const SizedBox(height: 12),
+
+        // おすすめ商品ボタン（メイク）
+        SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: GestureDetector(
+            onTap: () => _navigateToProductRecommendations(context),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Color(uiTheme.primaryColor).withValues(alpha: 0.8),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.2),
+                    offset: const Offset(0, 2),
+                    blurRadius: 4,
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.shopping_bag, color: Colors.white, size: 24 * uiTheme.fontScale),
+                    const SizedBox(width: 8),
+                    Text(
+                      'おすすめ商品を見る',
+                      style: TextStyle(
+                        fontSize: 16 * uiTheme.fontScale,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
         
         const SizedBox(height: 12),
         
@@ -369,6 +415,37 @@ class IOSDiagnosisResultPage extends StatelessWidget {
     
     // カメラ画面に戻る
     Navigator.of(context).popUntil((route) => route.isFirst);
+  }
+
+  void _navigateToProductRecommendations(BuildContext context) {
+    final pa = result.personAnalysis;
+    final dx.AgeGroup ageGroupDx = pa?.ageGroup ?? dx.AgeGroup.adult;
+    // Map diagnosis AgeGroup to makeup AgeGroup (3-group UI expects adult/student/child)
+    final ageGroup = switch (ageGroupDx) {
+      dx.AgeGroup.child => dx.AgeGroup.child,
+      dx.AgeGroup.student => dx.AgeGroup.student,
+      _ => dx.AgeGroup.adult,
+    };
+
+    final dx.Gender gdx = pa?.gender ?? dx.Gender.unknown;
+    final mk.Gender gender = switch (gdx) {
+      dx.Gender.male => mk.Gender.male,
+      dx.Gender.female => mk.Gender.female,
+      dx.Gender.unknown => mk.Gender.nonBinary,
+    };
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ChangeNotifierProvider(
+          create: (_) => di.sl<ProductRecommendationProvider>(),
+          child: ProductRecommendationPage(
+            personalColorType: result.diagnosisType,
+            ageGroup: ageGroup,
+            gender: gender,
+          ),
+        ),
+      ),
+    );
   }
 
 }

@@ -37,6 +37,11 @@ import '../../features/makeup/domain/usecases/get_makeup_recommendations.dart';
 import '../../features/makeup/domain/usecases/get_ai_makeup_recommendations.dart';
 import '../../features/makeup/presentation/providers/makeup_recommendation_provider.dart';
 import '../../features/makeup/presentation/providers/ai_makeup_recommendation_provider.dart';
+import '../../features/makeup/domain/usecases/get_product_recommendations.dart';
+import '../../features/makeup/domain/repositories/product_recommendation_repository.dart';
+import '../../features/makeup/data/repositories/product_recommendation_repository_impl.dart';
+import '../../features/makeup/data/datasources/product_recommendation_remote_data_source.dart';
+import '../../features/makeup/presentation/providers/product_recommendation_provider.dart';
 
 // Clothing feature
 import '../../features/clothing/data/datasources/clothing_remote_data_source.dart';
@@ -166,6 +171,27 @@ Future<void> init() async {
     () => MakeupLocalDataSourceImpl(
       sharedPreferences: sl(),
     ),
+  );
+
+  //! Features - Product Recommendations (Makeup)
+  // Provider
+  sl.registerFactory(
+    () => ProductRecommendationProvider(
+      getProductRecommendations: sl(),
+    ),
+  );
+
+  // Use case
+  sl.registerLazySingleton(() => GetProductRecommendations(repository: sl()));
+
+  // Repository
+  sl.registerLazySingleton<ProductRecommendationRepository>(
+    () => ProductRecommendationRepositoryImpl(remoteDataSource: sl()),
+  );
+
+  // Data source
+  sl.registerLazySingleton<ProductRecommendationRemoteDataSource>(
+    () => ProductRecommendationRemoteDataSourceImpl(),
   );
 
   //! Features - Clothing
