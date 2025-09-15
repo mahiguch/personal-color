@@ -738,3 +738,233 @@ async def get_ai_makeup_recommendation(
         raise HTTPException(
             status_code=500, detail="Error processing AI makeup recommendation"
         )
+
+
+@router.post(
+    "/makeup-recommendation-with-context",
+    response_model=AIMakeupRecommendationResponse,
+)
+async def get_ai_makeup_recommendation_with_context(
+    request: Request,
+    personal_color_type: str = Form(...),
+    image: UploadFile = File(...),
+    diagnosis_confidence: Optional[float] = Form(None),
+    diagnosis_explanation: Optional[str] = Form(None),
+    recommended_colors: Optional[str] = Form(None),
+    avoid_colors: Optional[str] = Form(None),
+    diagnosis_tips: Optional[str] = Form(None),
+    age_group: Optional[str] = Form(None),
+    gender: Optional[str] = Form(None),
+):
+    """Context-aware AI-generated makeup recommendations with generated image
+
+    Accepts optional diagnosis context fields. For now, context is logged and
+    safely sanitized; core generation logic matches the standard endpoint to keep
+    behavior consistent. This enables the client to call the dedicated
+    with-context endpoint without receiving 404.
+    """
+
+    # Request logging
+    client_ip = request.client.host if request.client else "unknown"
+    request_id = generate_request_id()
+    logger.info(
+        f"[AI_MAKEUP_CTX_REQUEST] request_id={request_id}, "
+        f"personal_color_type={personal_color_type}, "
+        f"client_ip={client_ip}, "
+        f"user_agent={request.headers.get('user-agent', 'unknown')}, "
+        f"image_filename={image.filename}, "
+        f"image_content_type={image.content_type}"
+    )
+
+    # Best-effort parse helpers for optional JSON strings
+    def _parse_json_list(name: str, raw: Optional[str]) -> Optional[list]:
+        if not raw:
+            return None
+        try:
+            import json as _json
+
+            parsed = _json.loads(raw)
+            if isinstance(parsed, list):
+                return parsed
+            return None
+        except Exception as e:
+            logger.warning(
+                f"[AI_MAKEUP_CTX_REQUEST] request_id={request_id}, failed to parse {name}: {e}"
+            )
+            return None
+
+    try:
+        # Validate personal color type
+        validated_type = validate_personal_color_type(personal_color_type)
+        logger.info(
+            f"[AI_MAKEUP_CTX] request_id={request_id}, validated_type={validated_type}"
+        )
+
+        # Read and validate image
+        logger.info(
+            f"[AI_MAKEUP_CTX] request_id={request_id}, reading image file"
+        )
+        image_bytes = await image.read()
+        mime_type = image.content_type or "image/jpeg"
+        validate_image_input(image_bytes, mime_type)
+        logger.info(
+            f"[AI_MAKEUP_CTX] request_id={request_id}, image validation passed, size={len(image_bytes)} bytes"
+        )
+
+        # Sanitize optional text inputs
+        safe_explanation = (
+            SecurityValidator.validate_ai_explanation(diagnosis_explanation)
+            if diagnosis_explanation
+            else None
+        )
+        safe_age_group = (
+            SecurityValidator.sanitize_string(age_group) if age_group else None
+        )
+        safe_gender = (
+            SecurityValidator.sanitize_string(gender) if gender else None
+        )
+
+        # Parse optional list-like fields (JSON expected)
+        rec_colors = _parse_json_list("recommended_colors", recommended_colors)
+        avoid_cols = _parse_json_list("avoid_colors", avoid_colors)
+        tips_list = _parse_json_list("diagnosis_tips", diagnosis_tips)
+
+        logger.info(
+            f"[AI_MAKEUP_CTX] request_id={request_id}, context: "
+            f"confidence={diagnosis_confidence}, age_group={safe_age_group}, gender={safe_gender}, "
+            f"rec_colors_count={(len(rec_colors) if rec_colors else 0)}, "
+            f"avoid_colors_count={(len(avoid_cols) if avoid_cols else 0)}, "
+            f"tips_count={(len(tips_list) if tips_list else 0)}"
+        )
+
+        # Load makeup products data
+        products_data = get_makeup_products()
+        if validated_type not in products_data:
+            logger.warning(
+                f"[AI_MAKEUP_CTX] request_id={request_id}, no data found for type: {validated_type}"
+            )
+            raise HTTPException(
+                status_code=404,
+                detail=f"No makeup recommendations found for personal color type: {validated_type}",
+            )
+
+        type_data = products_data[validated_type]
+
+        # Validate data structure
+        required_categories = {"eyeshadow", "cheek", "lip"}
+        missing_categories = required_categories - set(type_data.keys())
+        if missing_categories:
+            logger.error(
+                f"[AI_MAKEUP_CTX] request_id={request_id}, missing categories: {missing_categories}"
+            )
+            raise HTTPException(
+                status_code=500,
+                detail=f"Missing categories in data: {', '.join(missing_categories)}",
+            )
+
+        # Convert data to response models
+        categories = {}
+        total_products = 0
+        for category in required_categories:
+            category_products = type_data[category]
+            if not isinstance(category_products, list):
+                raise ValueError(f"Category {category} should be a list")
+            products = []
+            for product_data in category_products:
+                try:
+                    product = MakeupProduct(**product_data)
+                    products.append(product)
+                except Exception as e:
+                    logger.warning(
+                        f"[AI_MAKEUP_CTX] request_id={request_id}, error converting product {product_data.get('id', 'unknown')}: {e}"
+                    )
+                    continue
+            categories[category] = products
+            total_products += len(products)
+
+        # Get AI explanations (context currently not injected into prompt)
+        ai_explanations = await get_ai_explanations(validated_type, products_data)
+        explanations_count = len([v for v in ai_explanations.values() if v])
+
+        # Optionally override personal color explanation with user-provided context
+        personal_color_expl = (
+            safe_explanation
+            if safe_explanation
+            else _generate_personal_color_explanation(validated_type)
+        )
+
+        # Generate AI makeup image (same flow as standard endpoint)
+        generated_image = None
+        try:
+            settings = get_settings()
+            if not settings.ai_image_generation_enabled:
+                logger.warning(
+                    f"[AI_MAKEUP_CTX] request_id={request_id}, AI image generation is disabled"
+                )
+            else:
+                imagen_service = get_imagen_service()
+                image_result = await imagen_service.generate_makeup_image(
+                    image_bytes, mime_type, validated_type
+                )
+                generated_image = GeneratedImageData(
+                    image_data=image_result["image_data"],
+                    mime_type=image_result["mime_type"],
+                    generated_at=image_result["generated_at"],
+                    model_used=image_result["model_used"],
+                )
+        except FaceDetectionError as e:
+            logger.warning(
+                f"[AI_MAKEUP_CTX] request_id={request_id}, face detection failed: {e}"
+            )
+            raise HTTPException(status_code=400, detail=str(e))
+        except APILimitError as e:
+            logger.warning(
+                f"[AI_MAKEUP_CTX] request_id={request_id}, API limit reached: {e}"
+            )
+            raise HTTPException(status_code=429, detail=str(e))
+        except ImageGenerationError as e:
+            logger.error(
+                f"[AI_MAKEUP_CTX] request_id={request_id}, image generation failed: {e}"
+            )
+            logger.info(
+                f"[AI_MAKEUP_CTX] request_id={request_id}, continuing without generated image"
+            )
+
+        # Build response
+        response = AIMakeupRecommendationResponse(
+            personal_color_type=validated_type,
+            categories=categories,
+            ai_explanations=ai_explanations,
+            generated_image=generated_image,
+            highlight_areas=_generate_default_highlight_areas(),
+            estimated_age=24,
+            makeup_experience_level="beginner",
+            step_by_step_instructions=_generate_default_steps(validated_type),
+            personal_color_explanation=personal_color_expl,
+            request_id=request_id,
+            timestamp=datetime.utcnow().isoformat() + "Z",
+        )
+
+        # Clean up sensitive data
+        del image_bytes
+
+        logger.info(
+            f"[AI_MAKEUP_CTX_RESPONSE] request_id={request_id}, "
+            f"personal_color_type={validated_type}, "
+            f"total_products={total_products}, "
+            f"ai_explanations={explanations_count}, "
+            f"generated_image={generated_image is not None}, "
+            f"status=success"
+        )
+        return response
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(
+            f"[AI_MAKEUP_CTX_ERROR] request_id={request_id}, unexpected_error={str(e)}",
+            exc_info=True,
+        )
+        raise HTTPException(
+            status_code=500, detail="Error processing context-aware AI makeup recommendation"
+        )

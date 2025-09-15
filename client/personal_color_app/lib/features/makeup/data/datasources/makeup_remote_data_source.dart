@@ -352,10 +352,8 @@ class MakeupRemoteDataSourceImpl implements MakeupRemoteDataSource {
       // パーソナルカラータイプを小文字の文字列に変換
       final colorTypeString = personalColorType.name.toLowerCase();
       
-      // APIエンドポイントURL構築（短期対処: 通常エンドポイントへ送信）
-      // サーバ側に with-context エンドポイントが未実装のため、
-      // 追加フォーム項目は無視されるが互換動作する通常版へフォールバックする。
-      final url = '${ApiConfig.currentBaseUrl}/api/v1/makeup-recommendation';
+      // APIエンドポイントURL構築（恒久対応: with-context エンドポイント）
+      final url = '${ApiConfig.currentBaseUrl}/api/v1/makeup-recommendation-with-context';
       
       // 画像ファイルの検証
       if (!await imageFile.exists()) {
