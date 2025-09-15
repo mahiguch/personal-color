@@ -63,10 +63,9 @@ class MakeupRecommendationModel extends MakeupRecommendation {
 
     for (final entry in categoriesJson.entries) {
       final category = MakeupCategoryExtension.fromApiValue(entry.key);
-      final productsJson = entry.value as List<dynamic>;
+      final productsJson = entry.value as List<dynamic>? ?? [];
       final products = productsJson
-          .map((productJson) => MakeupProductModel.fromJson(productJson as Map<String, dynamic>))
-          .cast<MakeupProduct>()
+          .map((productJson) => MakeupProductModel.fromJson(productJson as Map<String, dynamic>).toDomain())
           .toList();
       categories[category] = products;
     }

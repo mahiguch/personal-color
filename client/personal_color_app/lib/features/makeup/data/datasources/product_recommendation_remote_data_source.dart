@@ -93,7 +93,7 @@ class ProductRecommendationRemoteDataSourceImpl implements ProductRecommendation
     try {
       final jsonString = await rootBundle.loadString(_productsAssetPath);
       final jsonData = json.decode(jsonString) as Map<String, dynamic>;
-      final productsJson = jsonData['products'] as List<dynamic>;
+      final productsJson = jsonData['products'] as List<dynamic>? ?? [];
 
       return productsJson
           .map((json) => MakeupProductModel.fromJson(json as Map<String, dynamic>).toDomain())
