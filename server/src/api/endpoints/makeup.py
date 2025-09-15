@@ -1,7 +1,7 @@
 import json
 import os
 import logging
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from datetime import datetime
 from fastapi import APIRouter, HTTPException, Request, File, UploadFile, Form
 from pydantic import BaseModel
@@ -30,6 +30,22 @@ router = APIRouter(prefix="/api/v1", tags=["makeup"])
 
 
 # Response models
+# Highlight models (relative coordinates: 0.0 - 1.0)
+class HighlightCoordinates(BaseModel):
+    x: float
+    y: float
+    width: float
+    height: float
+
+
+class HighlightArea(BaseModel):
+    type: str  # eye, cheek, lip, etc.
+    coordinates: HighlightCoordinates
+    description: Optional[str] = None
+    shape: str = "rectangle"  # rectangle | circle | oval
+    animation_type: str = "fade"  # none | fade | pulse
+    animationDuration: Optional[int] = 1500  # ms
+    isVisible: bool = True
 class MakeupProduct(BaseModel):
     id: str
     name: str
@@ -46,6 +62,12 @@ class MakeupRecommendationResponse(BaseModel):
     personal_color_type: str
     categories: Dict[str, list[MakeupProduct]]
     ai_explanations: Dict[str, str]
+    highlight_areas: Optional[List[HighlightArea]] = None
+    # Phase 2 fields
+    estimated_age: Optional[int] = None
+    makeup_experience_level: Optional[str] = None
+    step_by_step_instructions: Optional[List[Dict[str, Any]]] = None
+    personal_color_explanation: Optional[str] = None
     request_id: str
     timestamp: str
 
@@ -62,6 +84,12 @@ class AIMakeupRecommendationResponse(BaseModel):
     categories: Dict[str, list[MakeupProduct]]
     ai_explanations: Dict[str, str]
     generated_image: Optional[GeneratedImageData]
+    highlight_areas: Optional[List[HighlightArea]] = None
+    # Phase 2 fields
+    estimated_age: Optional[int] = None
+    makeup_experience_level: Optional[str] = None
+    step_by_step_instructions: Optional[List[Dict[str, Any]]] = None
+    personal_color_explanation: Optional[str] = None
     request_id: str
     timestamp: str
 
@@ -108,6 +136,122 @@ def get_makeup_products() -> Dict[str, Any]:
             )
 
     return _makeup_products_cache
+
+
+def _generate_default_highlight_areas() -> List[HighlightArea]:
+    """Generate default highlight areas with reasonable relative positions.
+
+    Note: These are generic placeholders intended for client-side visualization.
+    """
+    areas: List[HighlightArea] = [
+        # Eyes
+        HighlightArea(
+            type="eye",
+            coordinates=HighlightCoordinates(x=0.28, y=0.33, width=0.15, height=0.10),
+            shape="oval",
+            animation_type="pulse",
+            description="Left eye area",
+        ),
+        HighlightArea(
+            type="eye",
+            coordinates=HighlightCoordinates(x=0.57, y=0.33, width=0.15, height=0.10),
+            shape="oval",
+            animation_type="pulse",
+            description="Right eye area",
+        ),
+        # Cheeks
+        HighlightArea(
+            type="cheek",
+            coordinates=HighlightCoordinates(x=0.22, y=0.55, width=0.18, height=0.12),
+            shape="rectangle",
+            animation_type="fade",
+            description="Left cheek",
+        ),
+        HighlightArea(
+            type="cheek",
+            coordinates=HighlightCoordinates(x=0.60, y=0.55, width=0.18, height=0.12),
+            shape="rectangle",
+            animation_type="fade",
+            description="Right cheek",
+        ),
+        # Lips
+        HighlightArea(
+            type="lip",
+            coordinates=HighlightCoordinates(x=0.40, y=0.70, width=0.20, height=0.08),
+            shape="oval",
+            animation_type="pulse",
+            description="Lips",
+        ),
+    ]
+    return areas
+
+
+def _generate_default_steps(personal_color_type: str) -> List[Dict[str, Any]]:
+    """Generate simple, safe, age-neutral step-by-step instructions.
+
+    Keys are aligned with the client model naming.
+    """
+    color_tips = {
+        "spring": "明るい色を少量ずつ重ねると失敗しにくいよ",
+        "summer": "涼しげな色をやさしくぼかそう",
+        "autumn": "温かみのある色で自然な陰影を作ろう",
+        "winter": "コントラストを意識して引き締めよう",
+    }
+    ct = color_tips.get(personal_color_type, "似合う色を少しずつ重ねて自然に仕上げよう")
+
+    steps: List[Dict[str, Any]] = [
+        {
+            "step": 1,
+            "category": "base",
+            "instruction": "スキンケアの後、薄く下地を塗って肌の凹凸を整える",
+            "tips": "少量をムラなくのばすと崩れにくい",
+            "estimatedTime": 2,
+            "difficultyLevel": "beginner",
+            "requiredTools": ["下地", "スポンジ"],
+            "productRecommendations": [],
+        },
+        {
+            "step": 2,
+            "category": "eyeshadow",
+            "instruction": "まぶたに薄い色を広く、濃い色を目のキワに少し重ねる",
+            "tips": ct,
+            "estimatedTime": 3,
+            "difficultyLevel": "beginner",
+            "requiredTools": ["アイシャドウ", "ブラシ"],
+            "productRecommendations": [],
+        },
+        {
+            "step": 3,
+            "category": "cheek",
+            "instruction": "頬骨の少し上に、笑ったときに高くなる位置へふんわり入れる",
+            "tips": "入れすぎたらスポンジで軽く馴染ませる",
+            "estimatedTime": 2,
+            "difficultyLevel": "beginner",
+            "requiredTools": ["チーク", "ブラシ"],
+            "productRecommendations": [],
+        },
+        {
+            "step": 4,
+            "category": "lip",
+            "instruction": "保湿後、中心から外側へやさしく色をのせる",
+            "tips": "輪郭をとりすぎないと自然に見える",
+            "estimatedTime": 2,
+            "difficultyLevel": "beginner",
+            "requiredTools": ["リップ"],
+            "productRecommendations": [],
+        },
+    ]
+    return steps
+
+
+def _generate_personal_color_explanation(personal_color_type: str) -> str:
+    mapping = {
+        "spring": "明るく華やかな色が似合います。透明感を意識すると魅力が引き立ちます。",
+        "summer": "上品で涼しげな色が似合います。柔らかいグラデーションを意識しましょう。",
+        "autumn": "深みのある暖かい色が似合います。自然な陰影で大人っぽく見せられます。",
+        "winter": "はっきりした鮮やかな色が似合います。コントラストを活かすと洗練されます。",
+    }
+    return mapping.get(personal_color_type, "あなたに似合う色味を活かして、自然で魅力的な印象に仕上げましょう。")
 
 
 def generate_request_id() -> str:
@@ -345,6 +489,11 @@ async def get_makeup_recommendations(personal_color_type: str, request: Request)
             personal_color_type=validated_type,
             categories=categories,
             ai_explanations=ai_explanations,
+            highlight_areas=_generate_default_highlight_areas(),
+            estimated_age=24,  # simple placeholder
+            makeup_experience_level="beginner",
+            step_by_step_instructions=_generate_default_steps(validated_type),
+            personal_color_explanation=_generate_personal_color_explanation(validated_type),
             request_id=request_id,
             timestamp=datetime.utcnow().isoformat() + "Z",
         )
@@ -547,6 +696,11 @@ async def get_ai_makeup_recommendation(
             categories=categories,
             ai_explanations=ai_explanations,
             generated_image=generated_image,
+            highlight_areas=_generate_default_highlight_areas(),
+            estimated_age=24,
+            makeup_experience_level="beginner",
+            step_by_step_instructions=_generate_default_steps(validated_type),
+            personal_color_explanation=_generate_personal_color_explanation(validated_type),
             request_id=request_id,
             timestamp=datetime.utcnow().isoformat() + "Z",
         )

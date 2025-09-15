@@ -9,7 +9,7 @@ import '../../../camera/presentation/pages/camera_page.dart';
 import '../../../../core/di/injection_container.dart' as di;
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
 import '../../../makeup/presentation/providers/ai_makeup_recommendation_provider.dart';
-import '../../../makeup/presentation/pages/ai_makeup_recommendation_page.dart';
+import '../../../makeup/presentation/pages/ai_makeup_recommendation_page_v3.dart';
 
 /// Android版ホーム画面 - Material Design 3準拠
 class AndroidHomePage extends StatelessWidget {
@@ -335,7 +335,7 @@ class AndroidHomePage extends StatelessWidget {
       _createMaterialPageRoute(
         ChangeNotifierProvider(
           create: (_) => di.sl<AIMakeupRecommendationProvider>(),
-          child: AIMakeupRecommendationPage(
+          child: AIMakeupRecommendationPageV3(
             personalColorType: type,
             imageFile: File(xfile.path),
           ),

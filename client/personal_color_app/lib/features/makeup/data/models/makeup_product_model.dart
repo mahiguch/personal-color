@@ -1,138 +1,226 @@
 import '../../domain/entities/makeup_product.dart';
+import '../../domain/entities/makeup_step.dart';
+import '../../../diagnosis/domain/entities/diagnosis_result.dart';
 
-/// MakeupProduct エンティティのデータモデル
-/// 
-/// JSON との相互変換を担当し、API レスポンスや
-/// ローカルキャッシュとの連携を行います。
-class MakeupProductModel extends MakeupProduct {
+/// MakeupProduct データモデル
+/// JSONとドメインエンティティ間の変換を担当
+class MakeupProductModel {
   const MakeupProductModel({
-    required super.id,
-    required super.name,
-    required super.brand,
-    required super.category,
-    required super.price,
-    required super.imageUrl,
-    required super.amazonUrl,
-    required super.description,
-    required super.colors,
+    required this.id,
+    required this.name,
+    required this.brand,
+    required this.category,
+    required this.price,
+    required this.imageUrl,
+    required this.amazonUrl,
+    required this.description,
+    required this.colors,
+    this.ageGroup,
+    this.difficultyLevel,
+    this.personalColorTypes = const [],
   });
 
-  /// JSON から MakeupProductModel を作成
-  /// 
-  /// [json] APIレスポンスやキャッシュから取得したJSONデータ
-  /// 
-  /// Example:
-  /// ```dart
-  /// final json = {
-  ///   "id": "spring_eye_001",
-  ///   "name": "明るいアイシャドウパレット",
-  ///   "brand": "ナチュラルコスメ",
-  ///   "category": "eyeshadow",
-  ///   "price": 1800,
-  ///   "image_url": "https://example.com/image.jpg",
-  ///   "amazon_url": "https://amazon.co.jp/dp/B08SPRING01",
-  ///   "description": "Springタイプ向けの明るく温かい色合いのパレット",
-  ///   "colors": ["コーラルピンク", "ピーチオレンジ", "ゴールドブラウン", "クリーム"]
-  /// };
-  /// final model = MakeupProductModel.fromJson(json);
-  /// ```
+  final String id;
+  final String name;
+  final String brand;
+  final String category;
+  final int price;
+  final String imageUrl;
+  final String amazonUrl;
+  final String description;
+  final List<String> colors;
+  final String? ageGroup;
+  final String? difficultyLevel;
+  final List<String> personalColorTypes;
+
+  /// JSONからモデルを作成
   factory MakeupProductModel.fromJson(Map<String, dynamic> json) {
     return MakeupProductModel(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      brand: json['brand'] as String,
-      category: MakeupCategoryExtension.fromApiValue(json['category'] as String),
-      price: json['price'] as int,
-      imageUrl: json['image_url'] as String,
-      amazonUrl: json['amazon_url'] as String,
-      description: json['description'] as String,
-      colors: (json['colors'] as List<dynamic>).cast<String>(),
+      id: json['id'] as String? ?? '',
+      name: json['name'] as String? ?? '',
+      brand: json['brand'] as String? ?? '',
+      category: json['category'] as String? ?? 'lip',
+      price: json['price'] as int? ?? 0,
+      imageUrl: json['imageUrl'] as String? ?? json['image_url'] as String? ?? '',
+      amazonUrl: json['amazonUrl'] as String? ?? json['amazon_url'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      colors: (json['colors'] as List<dynamic>?)?.cast<String>() ?? [],
+      ageGroup: json['ageGroup'] as String? ?? json['age_group'] as String?,
+      difficultyLevel: json['difficultyLevel'] as String? ?? json['difficulty_level'] as String?,
+      personalColorTypes: (json['personalColorTypes'] as List<dynamic>?)?.cast<String>() ??
+                         (json['personal_color_types'] as List<dynamic>?)?.cast<String>() ?? [],
     );
   }
 
-  /// MakeupProductModel を JSON に変換
-  /// 
-  /// キャッシュ保存時などに使用します。
-  /// 
-  /// Example:
-  /// ```dart
-  /// final model = MakeupProductModel(...);
-  /// final json = model.toJson();
-  /// // JSON形式でローカル保存
-  /// await saveToCache(json);
-  /// ```
+  /// モデルをJSONに変換
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
       'brand': brand,
-      'category': category.apiValue,
+      'category': category,
       'price': price,
-      'image_url': imageUrl,
-      'amazon_url': amazonUrl,
+      'imageUrl': imageUrl,
+      'amazonUrl': amazonUrl,
       'description': description,
       'colors': colors,
+      'ageGroup': ageGroup,
+      'difficultyLevel': difficultyLevel,
+      'personalColorTypes': personalColorTypes,
     };
   }
 
-  /// エンティティから MakeupProductModel を作成
-  /// 
-  /// [entity] 変換元のMakeupProductエンティティ
-  factory MakeupProductModel.fromEntity(MakeupProduct entity) {
-    return MakeupProductModel(
-      id: entity.id,
-      name: entity.name,
-      brand: entity.brand,
-      category: entity.category,
-      price: entity.price,
-      imageUrl: entity.imageUrl,
-      amazonUrl: entity.amazonUrl,
-      description: entity.description,
-      colors: entity.colors,
-    );
-  }
-
-  /// MakeupProduct エンティティに変換
-  /// 
-  /// ドメイン層で使用するためのエンティティに変換します。
-  MakeupProduct toEntity() {
+  /// ドメインエンティティに変換
+  MakeupProduct toDomain() {
     return MakeupProduct(
       id: id,
       name: name,
       brand: brand,
-      category: category,
+      category: _parseMakeupCategory(category),
       price: price,
       imageUrl: imageUrl,
       amazonUrl: amazonUrl,
       description: description,
       colors: colors,
+      ageGroup: _parseAgeGroup(ageGroup),
+      difficultyLevel: _parseDifficultyLevel(difficultyLevel),
+      personalColorTypes: _parsePersonalColorTypes(personalColorTypes),
     );
   }
 
-  /// コピーを作成（一部プロパティを変更可能）
-  /// 
-  /// テストや一部プロパティの更新時に使用します。
-  MakeupProductModel copyWith({
-    String? id,
-    String? name,
-    String? brand,
-    MakeupCategory? category,
-    int? price,
-    String? imageUrl,
-    String? amazonUrl,
-    String? description,
-    List<String>? colors,
-  }) {
+  /// ドメインエンティティからモデルを作成
+  factory MakeupProductModel.fromDomain(MakeupProduct product) {
     return MakeupProductModel(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      brand: brand ?? this.brand,
-      category: category ?? this.category,
-      price: price ?? this.price,
-      imageUrl: imageUrl ?? this.imageUrl,
-      amazonUrl: amazonUrl ?? this.amazonUrl,
-      description: description ?? this.description,
-      colors: colors ?? this.colors,
+      id: product.id,
+      name: product.name,
+      brand: product.brand,
+      category: product.category.apiValue,
+      price: product.price,
+      imageUrl: product.imageUrl,
+      amazonUrl: product.amazonUrl,
+      description: product.description,
+      colors: product.colors,
+      ageGroup: product.ageGroup?.apiValue,
+      difficultyLevel: product.difficultyLevel?.apiValue,
+      personalColorTypes: product.personalColorTypes.map((type) => _personalColorTypeToApiValue(type)).toList(),
     );
+  }
+
+  // ===================
+  // プライベートメソッド
+  // ===================
+
+  MakeupCategory _parseMakeupCategory(String category) {
+    try {
+      return MakeupCategoryApiExtension.fromApiValue(category);
+    } catch (e) {
+      // デフォルトはlip
+      return MakeupCategory.lip;
+    }
+  }
+
+  AgeGroup? _parseAgeGroup(String? ageGroup) {
+    if (ageGroup == null) return null;
+    try {
+      return AgeGroupExtension.fromApiValue(ageGroup);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  DifficultyLevel? _parseDifficultyLevel(String? difficultyLevel) {
+    if (difficultyLevel == null) return null;
+    try {
+      return DifficultyLevelApiExtension.fromApiValue(difficultyLevel);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  List<PersonalColorType> _parsePersonalColorTypes(List<String> types) {
+    return types
+        .map((type) {
+          try {
+            return _personalColorTypeFromApiValue(type);
+          } catch (e) {
+            return null;
+          }
+        })
+        .where((type) => type != null)
+        .cast<PersonalColorType>()
+        .toList();
+  }
+
+  static String _personalColorTypeToApiValue(PersonalColorType type) {
+    switch (type) {
+      case PersonalColorType.spring:
+        return 'spring';
+      case PersonalColorType.summer:
+        return 'summer';
+      case PersonalColorType.autumn:
+        return 'autumn';
+      case PersonalColorType.winter:
+        return 'winter';
+    }
+  }
+
+  PersonalColorType _personalColorTypeFromApiValue(String value) {
+    switch (value) {
+      case 'spring':
+        return PersonalColorType.spring;
+      case 'summer':
+        return PersonalColorType.summer;
+      case 'autumn':
+        return PersonalColorType.autumn;
+      case 'winter':
+        return PersonalColorType.winter;
+      default:
+        throw ArgumentError('Unknown personal color type: $value');
+    }
+  }
+}
+
+/// MakeupCategory拡張メソッド
+extension MakeupCategoryApiExtension on MakeupCategory {
+  static MakeupCategory fromApiValue(String value) {
+    switch (value) {
+      case 'eyeshadow':
+        return MakeupCategory.eyeshadow;
+      case 'cheek':
+        return MakeupCategory.cheek;
+      case 'lip':
+        return MakeupCategory.lip;
+      default:
+        throw ArgumentError('Unknown makeup category: $value');
+    }
+  }
+}
+
+// AgeGroupのAPI変換は診断ドメインの拡張(AgeGroupExtension)を使用
+
+/// DifficultyLevel拡張メソッド
+extension DifficultyLevelApiExtension on DifficultyLevel {
+  String get apiValue {
+    switch (this) {
+      case DifficultyLevel.beginner:
+        return 'beginner';
+      case DifficultyLevel.intermediate:
+        return 'intermediate';
+      case DifficultyLevel.advanced:
+        return 'advanced';
+    }
+  }
+
+  static DifficultyLevel fromApiValue(String value) {
+    switch (value) {
+      case 'beginner':
+        return DifficultyLevel.beginner;
+      case 'intermediate':
+        return DifficultyLevel.intermediate;
+      case 'advanced':
+        return DifficultyLevel.advanced;
+      default:
+        throw ArgumentError('Unknown difficulty level: $value');
+    }
   }
 }

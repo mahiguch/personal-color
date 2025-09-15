@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
 import '../../domain/entities/makeup_product.dart';
 import '../../domain/entities/makeup_recommendation.dart';
+import '../../domain/entities/makeup_step.dart';
+import '../../domain/entities/highlight_area.dart';
 import 'makeup_product_model.dart';
 
 /// MakeupRecommendation エンティティのデータモデル
@@ -19,6 +21,13 @@ class MakeupRecommendationModel extends MakeupRecommendation {
     super.generatedImageData,
     super.generatedImageSize,
     super.generatedImageDateTime,
+    // Phase 1/2 拡張フィールド
+    super.originalImageData,
+    super.estimatedAge,
+    super.makeupExperienceLevel,
+    super.stepByStepInstructions = const [],
+    super.highlightAreas = const [],
+    super.personalColorExplanation,
   });
 
   /// JSON から MakeupRecommendationModel を作成
@@ -90,12 +99,49 @@ class MakeupRecommendationModel extends MakeupRecommendation {
       timestamp = DateTime.tryParse(timestampStr);
     }
 
+    // Phase 1/2 拡張フィールドの変換（あれば）
+    final originalImageData = json['original_image_data'] as String? ?? json['originalImageData'] as String?;
+    final estimatedAge = (json['estimated_age'] ?? json['estimatedAge']) as int?;
+    final experienceLevelStr = (json['makeup_experience_level'] ?? json['makeupExperienceLevel']) as String?;
+    final makeupExperienceLevel = experienceLevelStr != null
+        ? MakeupExperienceLevel.fromString(experienceLevelStr)
+        : null;
+
+    // ステップ配列
+    final stepsJson = (json['step_by_step_instructions'] ?? json['stepByStepInstructions']) as List<dynamic>?;
+    final List<MakeupStep> steps = stepsJson == null
+        ? <MakeupStep>[]
+        : stepsJson
+            .whereType<Map<String, dynamic>>()
+            .map(MakeupStep.fromJson)
+            .toList();
+
+    // ハイライト領域
+    final highlightsJson = (json['highlight_areas'] ?? json['highlightAreas']) as List<dynamic>?;
+    final List<HighlightArea> highlights = highlightsJson == null
+        ? <HighlightArea>[]
+        : highlightsJson
+            .whereType<Map<String, dynamic>>()
+            .map(HighlightArea.fromJson)
+            .toList();
+
+    // パーソナルカラー説明
+    final personalColorExplanation = json['personal_color_explanation'] as String?
+        ?? json['personalColorExplanation'] as String?;
+
     return MakeupRecommendationModel(
       personalColorType: personalColorType,
       categories: categories,
       aiExplanations: aiExplanations,
       requestId: json['request_id'] as String?,
       timestamp: timestamp,
+      // Phase 1/2 拡張
+      originalImageData: originalImageData,
+      estimatedAge: estimatedAge,
+      makeupExperienceLevel: makeupExperienceLevel,
+      stepByStepInstructions: steps,
+      highlightAreas: highlights,
+      personalColorExplanation: personalColorExplanation,
     );
   }
 
@@ -108,7 +154,7 @@ class MakeupRecommendationModel extends MakeupRecommendation {
     for (final entry in categories.entries) {
       final categoryKey = entry.key.apiValue;
       final productsJson = entry.value
-          .map((product) => MakeupProductModel.fromEntity(product).toJson())
+          .map((product) => MakeupProductModel.fromDomain(product).toJson())
           .toList();
       categoriesJson[categoryKey] = productsJson;
     }
@@ -120,13 +166,29 @@ class MakeupRecommendationModel extends MakeupRecommendation {
       aiExplanationsJson[categoryKey] = entry.value;
     }
 
-    return {
+    final base = {
       'personal_color_type': personalColorType.name.toLowerCase(),
       'categories': categoriesJson,
       'ai_explanations': aiExplanationsJson,
       if (requestId != null) 'request_id': requestId,
       if (timestamp != null) 'timestamp': timestamp!.toIso8601String(),
     };
+    // 拡張フィールド
+    if (originalImageData != null) base['original_image_data'] = originalImageData;
+    if (estimatedAge != null) base['estimated_age'] = estimatedAge;
+    if (makeupExperienceLevel != null) {
+      base['makeup_experience_level'] = makeupExperienceLevel!.value;
+    }
+    if (stepByStepInstructions.isNotEmpty) {
+      base['step_by_step_instructions'] = stepByStepInstructions.map((e) => e.toJson()).toList();
+    }
+    if (highlightAreas.isNotEmpty) {
+      base['highlight_areas'] = highlightAreas.map((e) => e.toJson()).toList();
+    }
+    if (personalColorExplanation != null) {
+      base['personal_color_explanation'] = personalColorExplanation;
+    }
+    return base;
   }
 
   /// エンティティから MakeupRecommendationModel を作成

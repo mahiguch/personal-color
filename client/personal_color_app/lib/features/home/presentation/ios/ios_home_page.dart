@@ -6,7 +6,7 @@ import '../../../camera/presentation/providers/camera_provider.dart';
 import '../../../camera/presentation/pages/camera_page.dart';
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
 import '../../../makeup/presentation/providers/ai_makeup_recommendation_provider.dart';
-import '../../../makeup/presentation/pages/ai_makeup_recommendation_page.dart';
+import '../../../makeup/presentation/pages/ai_makeup_recommendation_page_v3.dart';
 import 'dart:io';
 import '../../../../core/di/injection_container.dart' as di;
 
@@ -175,7 +175,7 @@ class IosHomePage extends StatelessWidget {
       MaterialPageRoute(
         builder: (context) => ChangeNotifierProvider(
           create: (_) => di.sl<AIMakeupRecommendationProvider>(),
-          child: AIMakeupRecommendationPage(
+          child: AIMakeupRecommendationPageV3(
             personalColorType: type,
             imageFile: File(xfile.path),
           ),
