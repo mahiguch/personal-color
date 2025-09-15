@@ -159,6 +159,64 @@ class MakeupRepositoryImpl implements MakeupRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, MakeupRecommendation>> getAIMakeupRecommendationsWithContext(
+    PersonalColorType personalColorType,
+    File imageFile,
+    DiagnosisResult diagnosisResult,
+  ) async {
+    try {
+      // 1. 画像ファイルの事前検証
+      if (!await imageFile.exists()) {
+        return const Left(ValidationFailure(message: 'Image file does not exist'));
+      }
+
+      final fileSize = await imageFile.length();
+      if (fileSize > 10 * 1024 * 1024) { // 10MB制限
+        return const Left(ValidationFailure(message: 'Image file is too large (max 10MB)'));
+      }
+
+      // 2. 診断結果の妥当性検証
+      if (diagnosisResult.diagnosisType != personalColorType) {
+        return const Left(ValidationFailure(message: 'Diagnosis result does not match personal color type'));
+      }
+
+      // 3. リモートAPIから診断コンテキスト付きAI画像生成付きデータ取得
+      final remoteData = await remoteDataSource.getAIMakeupRecommendationsWithContext(
+        personalColorType: personalColorType,
+        imageFile: imageFile,
+        diagnosisResult: diagnosisResult,
+      );
+
+      // 4. AI画像生成が成功した場合はキャッシュに保存しない
+      // (生成画像は一意で再利用性が低いため)
+      // 通常のメイクアップ推奨データのみキャッシュ
+      if (!remoteData.hasGeneratedImage) {
+        try {
+          // AIMakeupRecommendationModelをMakeupRecommendationModelに変換してキャッシュ
+          final baseModel = remoteData.copyWith(clearGeneratedImage: true);
+          await localDataSource.cacheMakeupRecommendations(
+            personalColorType,
+            baseModel,
+          );
+        } catch (e) {
+          // キャッシュ保存の失敗は致命的ではないため、警告のみ
+          // print('Warning: Failed to cache context-aware AI makeup recommendations: $e');
+        }
+      }
+
+      // 5. エンティティに変換して返す
+      return Right(remoteData.toEntity());
+
+    } on DioException catch (e) {
+      // Dioの例外をFailureに変換
+      return Left(_mapAIDioExceptionToFailure(e));
+    } catch (e) {
+      // その他の予期しない例外
+      return Left(UnexpectedFailure(message: 'Unexpected error during context-aware AI makeup generation: $e'));
+    }
+  }
+
   /// AI画像生成向けのDioException を適切な Failure に変換
   /// 
   /// AI画像生成特有のエラーコードやメッセージに対応

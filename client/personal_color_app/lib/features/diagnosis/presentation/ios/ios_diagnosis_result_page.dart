@@ -10,6 +10,8 @@ import '../widgets/tips_section.dart';
 import '../widgets/person_info_display.dart';
 import '../../../makeup/presentation/pages/makeup_recommendation_page.dart';
 import '../../../makeup/presentation/providers/makeup_recommendation_provider.dart';
+import '../../../makeup/presentation/pages/ai_makeup_recommendation_page_v3.dart';
+import '../../../makeup/presentation/providers/ai_makeup_recommendation_provider.dart';
 import '../../../clothing/presentation/pages/clothing_recommendation_page.dart';
 import '../../../clothing/presentation/providers/clothing_recommendation_provider.dart';
 import '../../../makeup/presentation/pages/product_recommendation_page.dart';
@@ -18,6 +20,7 @@ import '../../domain/entities/gender.dart' as dx;
 import '../../../makeup/domain/entities/product_recommendation.dart' as mk;
 import '../../../makeup/presentation/providers/product_recommendation_provider.dart';
 import '../../../../core/di/injection_container.dart' as di;
+import 'dart:io';
 
 class IOSDiagnosisResultPage extends StatelessWidget {
   final DiagnosisResult result;
@@ -190,6 +193,47 @@ class IOSDiagnosisResultPage extends StatelessWidget {
                     const SizedBox(width: 8),
                     Text(
                       'おすすめのメイク',
+                      style: TextStyle(
+                        fontSize: 16 * uiTheme.fontScale,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        
+        const SizedBox(height: 12),
+        
+        // AI生成メイクボタン
+        SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: GestureDetector(
+            onTap: () => _navigateToAIMakeup(context),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Color(uiTheme.primaryColor).withValues(alpha: 0.6),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.2),
+                    offset: const Offset(0, 2),
+                    blurRadius: 4,
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.auto_awesome, color: Colors.white, size: 24 * uiTheme.fontScale),
+                    const SizedBox(width: 8),
+                    Text(
+                      'AI生成メイク',
                       style: TextStyle(
                         fontSize: 16 * uiTheme.fontScale,
                         fontWeight: FontWeight.bold,
@@ -406,7 +450,45 @@ class IOSDiagnosisResultPage extends StatelessWidget {
     );
   }
 
-  // AI画像生成メイクはホーム画面から起動に変更（本画面からは削除）
+  /// AI生成メイクページに移動する
+  void _navigateToAIMakeup(BuildContext context) {
+    try {
+      debugPrint('🤖 [iOS] AI生成メイクボタン押下: ${result.diagnosisType}');
+      
+      // 包括的な事前検証
+      final validationError = _validateAIMakeupPrerequisites();
+      if (validationError != null) {
+        debugPrint('❌ [iOS] AI生成メイク事前検証エラー: $validationError');
+        _showValidationErrorDialog(context, validationError);
+        return;
+      }
+      
+      debugPrint('🔧 [iOS] AIMakeupRecommendationProvider作成開始');
+      final provider = di.sl<AIMakeupRecommendationProvider>();
+      debugPrint('✅ [iOS] AIMakeupRecommendationProvider作成成功');
+      
+      debugPrint('🚀 [iOS] AIMakeupRecommendationPageV3へナビゲーション開始');
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider.value(
+            value: provider,
+            child: AIMakeupRecommendationPageV3.fromDiagnosisContext(
+              diagnosisResult: result,
+              imagePath: originalImagePath,
+            ),
+          ),
+        ),
+      );
+      debugPrint('✅ [iOS] AIMakeupRecommendationPageV3ナビゲーション成功');
+      
+    } catch (e, stackTrace) {
+      debugPrint('❌ [iOS] AI生成メイクナビゲーションエラー: $e');
+      debugPrint('スタックトレース: $stackTrace');
+      
+      // 包括的なエラーハンドリング
+      _handleAIMakeupNavigationError(context, e);
+    }
+  }
 
   void _retakeDiagnosis(BuildContext context) {
     // 診断プロバイダーをリセット
@@ -444,6 +526,311 @@ class IOSDiagnosisResultPage extends StatelessWidget {
             gender: gender,
           ),
         ),
+      ),
+    );
+  }
+
+  /// AI生成メイクの事前要件を検証
+  String? _validateAIMakeupPrerequisites() {
+    // 1. 画像ファイルの存在確認
+    final imageFile = File(originalImagePath);
+    if (!imageFile.existsSync()) {
+      return 'IMAGE_NOT_FOUND';
+    }
+
+    // 2. 画像ファイルサイズの確認
+    try {
+      final fileSize = imageFile.lengthSync();
+      if (fileSize > 10 * 1024 * 1024) { // 10MB制限
+        return 'IMAGE_TOO_LARGE';
+      }
+      if (fileSize < 1024) { // 1KB未満は無効
+        return 'IMAGE_TOO_SMALL';
+      }
+    } catch (e) {
+      debugPrint('❌ [iOS] 画像ファイルサイズ取得エラー: $e');
+      return 'IMAGE_ACCESS_ERROR';
+    }
+
+    // 3. 診断結果の妥当性確認
+    if (result.confidence < 30) {
+      return 'LOW_CONFIDENCE_DIAGNOSIS';
+    }
+
+    return null; // 検証成功
+  }
+
+  /// 検証エラーに応じた適切なダイアログを表示
+  void _showValidationErrorDialog(BuildContext context, String errorType) {
+    switch (errorType) {
+      case 'IMAGE_NOT_FOUND':
+        _showImageNotFoundDialog(context);
+        break;
+      case 'IMAGE_TOO_LARGE':
+        _showImageTooLargeDialog(context);
+        break;
+      case 'IMAGE_TOO_SMALL':
+        _showImageTooSmallDialog(context);
+        break;
+      case 'IMAGE_ACCESS_ERROR':
+        _showImageAccessErrorDialog(context);
+        break;
+      case 'LOW_CONFIDENCE_DIAGNOSIS':
+        _showLowConfidenceDiagnosisDialog(context);
+        break;
+      default:
+        _showGenericValidationErrorDialog(context, errorType);
+    }
+  }
+
+  /// AI生成メイクナビゲーションエラーを処理
+  void _handleAIMakeupNavigationError(BuildContext context, dynamic error) {
+    String errorMessage;
+    List<Widget> actions;
+
+    if (error.toString().contains('NetworkException') || 
+        error.toString().contains('SocketException')) {
+      // ネットワークエラー
+      errorMessage = 'インターネット接続を確認してください。';
+      actions = [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('キャンセル'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            _navigateToAIMakeup(context); // 再試行
+          },
+          child: const Text('再試行'),
+        ),
+      ];
+    } else if (error.toString().contains('ServiceUnavailable')) {
+      // サービス利用不可
+      errorMessage = 'AI生成メイク機能が一時的に利用できません。通常のメイク推奨をご利用ください。';
+      actions = [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('キャンセル'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            _navigateToMakeupRecommendation(context, forceRefresh: false); // 通常のメイク推奨へ
+          },
+          child: const Text('通常のメイク推奨を見る'),
+        ),
+      ];
+    } else {
+      // その他のエラー
+      errorMessage = 'AI生成メイク機能でエラーが発生しました。通常のメイク推奨をお試しください。';
+      actions = [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('キャンセル'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            _navigateToMakeupRecommendation(context, forceRefresh: false); // 通常のメイク推奨へ
+          },
+          child: const Text('通常のメイク推奨を見る'),
+        ),
+      ];
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('エラー'),
+        content: Text(errorMessage),
+        actions: actions,
+      ),
+    );
+  }
+
+  /// 画像が見つからない場合のダイアログを表示
+  void _showImageNotFoundDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('画像が見つかりません'),
+        content: const Text('診断に使用した画像が見つかりません。もう一度診断を行ってからAI生成メイクをお試しください。'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('キャンセル'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _navigateToMakeupRecommendation(context, forceRefresh: false); // 通常のメイク推奨へ
+            },
+            child: const Text('通常のメイク推奨を見る'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _retakeDiagnosis(context);
+            },
+            child: const Text('診断をやり直す'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 画像サイズが大きすぎる場合のダイアログを表示
+  void _showImageTooLargeDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('画像サイズが大きすぎます'),
+        content: const Text('診断に使用した画像が大きすぎます（10MB以上）。新しい画像で診断をやり直してください。'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('キャンセル'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _navigateToMakeupRecommendation(context, forceRefresh: false); // 通常のメイク推奨へ
+            },
+            child: const Text('通常のメイク推奨を見る'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _retakeDiagnosis(context);
+            },
+            child: const Text('診断をやり直す'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 画像サイズが小さすぎる場合のダイアログを表示
+  void _showImageTooSmallDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('画像が無効です'),
+        content: const Text('診断に使用した画像が無効または破損している可能性があります。新しい画像で診断をやり直してください。'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('キャンセル'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _navigateToMakeupRecommendation(context, forceRefresh: false); // 通常のメイク推奨へ
+            },
+            child: const Text('通常のメイク推奨を見る'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _retakeDiagnosis(context);
+            },
+            child: const Text('診断をやり直す'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 画像アクセスエラーの場合のダイアログを表示
+  void _showImageAccessErrorDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('画像にアクセスできません'),
+        content: const Text('診断に使用した画像にアクセスできません。アプリを再起動するか、新しい診断を実行してください。'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('キャンセル'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _navigateToMakeupRecommendation(context, forceRefresh: false); // 通常のメイク推奨へ
+            },
+            child: const Text('通常のメイク推奨を見る'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _retakeDiagnosis(context);
+            },
+            child: const Text('診断をやり直す'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 診断信頼度が低い場合のダイアログを表示
+  void _showLowConfidenceDiagnosisDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('診断結果の信頼度が低いです'),
+        content: const Text('診断結果の信頼度が低いため、AI生成メイクの精度が低下する可能性があります。より良い結果を得るために、明るい場所で顔がはっきり写った写真で再診断することをお勧めします。'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('キャンセル'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _navigateToMakeupRecommendation(context, forceRefresh: false); // 通常のメイク推奨へ
+            },
+            child: const Text('通常のメイク推奨を見る'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _retakeDiagnosis(context);
+            },
+            child: const Text('診断をやり直す'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _navigateToAIMakeup(context); // それでも続行
+            },
+            child: const Text('それでも続行'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 汎用的な検証エラーダイアログを表示
+  void _showGenericValidationErrorDialog(BuildContext context, String errorType) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('エラー'),
+        content: Text('AI生成メイク機能を利用できません（エラー: $errorType）。通常のメイク推奨をお試しください。'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('キャンセル'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _navigateToMakeupRecommendation(context, forceRefresh: false); // 通常のメイク推奨へ
+            },
+            child: const Text('通常のメイク推奨を見る'),
+          ),
+        ],
       ),
     );
   }

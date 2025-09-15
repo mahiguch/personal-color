@@ -3,6 +3,8 @@ import '../../../diagnosis/domain/entities/diagnosis_result.dart';
 import 'makeup_product.dart';
 import 'highlight_area.dart';
 import 'makeup_step.dart';
+import 'detailed_makeup_step.dart';
+import 'diagnosis_context.dart';
 
 /// メイクアップ推奨エンティティ
 class MakeupRecommendation extends Equatable {
@@ -24,6 +26,10 @@ class MakeupRecommendation extends Equatable {
     this.personalColorExplanation,
     // Phase 3 将来フィールド
     this.veo3VideoUrl,
+    // Enhanced AI makeup functionality fields
+    this.reasoningExplanation,
+    this.detailedSteps = const [],
+    this.diagnosisContext,
   });
 
   /// 対象のパーソナルカラータイプ
@@ -79,6 +85,19 @@ class MakeupRecommendation extends Equatable {
   /// Veo3生成動画URL（将来用）
   final String? veo3VideoUrl;
 
+  // ===================
+  // Enhanced AI makeup functionality fields
+  // ===================
+
+  /// AI推奨の理由・根拠説明
+  final String? reasoningExplanation;
+
+  /// 詳細なメイクアップステップ
+  final List<DetailedMakeupStep> detailedSteps;
+
+  /// 診断コンテキスト情報
+  final DiagnosisContext? diagnosisContext;
+
   @override
   List<Object?> get props => [
         personalColorType,
@@ -98,6 +117,10 @@ class MakeupRecommendation extends Equatable {
         personalColorExplanation,
         // Phase 3 将来フィールド
         veo3VideoUrl,
+        // Enhanced AI makeup functionality fields
+        reasoningExplanation,
+        detailedSteps,
+        diagnosisContext,
       ];
 
   /// 特定カテゴリの商品を取得
@@ -259,6 +282,95 @@ class MakeupRecommendation extends Equatable {
     return canShowBeforeAfter &&
            stepByStepInstructions.isNotEmpty &&
            highlightAreas.isNotEmpty;
+  }
+
+  // ===================
+  // Enhanced AI makeup functionality methods
+  // ===================
+
+  /// AI推奨の理由説明が利用可能かどうか
+  bool get hasReasoningExplanation {
+    return reasoningExplanation != null && reasoningExplanation!.isNotEmpty;
+  }
+
+  /// 詳細ステップが利用可能かどうか
+  bool get hasDetailedSteps {
+    return detailedSteps.isNotEmpty;
+  }
+
+  /// 診断コンテキストが利用可能かどうか
+  bool get hasDiagnosisContext {
+    return diagnosisContext != null;
+  }
+
+  /// 拡張AI機能が完全に利用可能かどうか
+  bool get isEnhancedAIComplete {
+    return hasReasoningExplanation && 
+           hasDetailedSteps && 
+           hasDiagnosisContext;
+  }
+
+  /// 詳細ステップの総数を取得
+  int get totalDetailedSteps {
+    return detailedSteps.length;
+  }
+
+  /// 詳細ステップの推定総所要時間を計算
+  int get detailedStepsEstimatedTime {
+    return detailedSteps
+        .where((step) => step.estimatedTime != null)
+        .fold(0, (sum, step) => sum + step.estimatedTotalTime);
+  }
+
+  /// カテゴリ別の詳細ステップを取得
+  List<DetailedMakeupStep> getDetailedStepsByCategory(StepCategory category) {
+    return detailedSteps.where((step) => step.category == category).toList();
+  }
+
+  /// 診断コンテキストからパーソナルカラータイプを取得
+  PersonalColorType? get contextualPersonalColorType {
+    return diagnosisContext?.colorType ?? personalColorType;
+  }
+
+  /// 診断コンテキストから信頼度を取得
+  int? get contextualConfidence {
+    return diagnosisContext?.confidence;
+  }
+
+  /// パーソナルカラーに基づく推奨理由を生成
+  String generatePersonalColorReasoning() {
+    if (!hasReasoningExplanation) return '';
+    
+    final colorType = contextualPersonalColorType;
+    final baseReasoning = reasoningExplanation!;
+    
+    if (colorType == null) return baseReasoning;
+    
+    final colorDescription = colorType.description;
+    return '$baseReasoning\n\n${colorType.displayName}タイプの特徴である「$colorDescription」を活かすため、これらの色味とテクニックを推奨しています。';
+  }
+
+  /// 年齢適応型の詳細ステップを取得
+  List<DetailedMakeupStep> getAgeAdaptedDetailedSteps() {
+    if (!hasDiagnosisContext || diagnosisContext!.ageGroup == null) {
+      return detailedSteps;
+    }
+    
+    final ageGroup = diagnosisContext!.ageGroup!;
+    return detailedSteps.map((step) {
+      final adaptedTips = step.getAgeAdaptedDetailedTips(ageGroup);
+      return step.copyWith(detailedTips: adaptedTips);
+    }).toList();
+  }
+
+  /// 診断からの経過時間を取得（分）
+  int? get minutesSinceDiagnosis {
+    return diagnosisContext?.minutesSinceDiagnosis;
+  }
+
+  /// 診断が新しいかどうか
+  bool get isRecentDiagnosis {
+    return diagnosisContext?.isRecentDiagnosis ?? false;
   }
 }
 

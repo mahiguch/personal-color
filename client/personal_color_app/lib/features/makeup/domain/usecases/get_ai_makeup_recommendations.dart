@@ -33,12 +33,19 @@ class GetAIMakeupRecommendations implements UseCase<MakeupRecommendation, GetAIM
       debugPrint('🚀 [GetAIMakeupRecommendations] AI画像生成リクエスト開始');
       debugPrint('   パーソナルカラータイプ: ${params.personalColorType}');
       debugPrint('   画像ファイル: ${params.imageFile.path}');
+      debugPrint('   診断コンテキスト: ${params.diagnosisResult != null ? '有り' : '無し'}');
 
       // 2. リポジトリからAI画像生成付きメイクアップ推奨データを取得
-      final result = await repository.getAIMakeupRecommendations(
-        params.personalColorType,
-        params.imageFile,
-      );
+      final result = params.diagnosisResult != null
+          ? await repository.getAIMakeupRecommendationsWithContext(
+              params.personalColorType,
+              params.imageFile,
+              params.diagnosisResult!,
+            )
+          : await repository.getAIMakeupRecommendations(
+              params.personalColorType,
+              params.imageFile,
+            );
 
       return result.fold(
         // エラーの場合はそのまま返す
@@ -132,6 +139,7 @@ class GetAIMakeupRecommendationsParams extends Equatable {
   const GetAIMakeupRecommendationsParams({
     required this.personalColorType,
     required this.imageFile,
+    this.diagnosisResult,
   });
 
   /// 対象のパーソナルカラータイプ
@@ -140,13 +148,17 @@ class GetAIMakeupRecommendationsParams extends Equatable {
   /// AI画像生成に使用する画像ファイル
   final File imageFile;
 
+  /// 診断結果（コンテキスト情報として使用）
+  final DiagnosisResult? diagnosisResult;
+
   @override
-  List<Object?> get props => [personalColorType, imageFile.path];
+  List<Object?> get props => [personalColorType, imageFile.path, diagnosisResult];
 
   @override
   String toString() {
     return 'GetAIMakeupRecommendationsParams('
         'personalColorType: $personalColorType, '
-        'imageFile: ${imageFile.path})';
+        'imageFile: ${imageFile.path}, '
+        'diagnosisResult: ${diagnosisResult != null ? 'provided' : 'null'})';
   }
 }

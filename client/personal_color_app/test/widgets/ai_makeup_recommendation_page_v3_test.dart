@@ -72,6 +72,8 @@ class _DummyRepo implements MakeupRepository {
   @override
   Future<Either<Failure, MakeupRecommendation>> getAIMakeupRecommendations(PersonalColorType personalColorType, File imageFile) async => Left(UnexpectedFailure(message: 'dummy'));
   @override
+  Future<Either<Failure, MakeupRecommendation>> getAIMakeupRecommendationsWithContext(PersonalColorType personalColorType, File imageFile, DiagnosisResult diagnosisResult) async => Left(UnexpectedFailure(message: 'dummy'));
+  @override
   Future<Either<Failure, MakeupRecommendation>> getMakeupRecommendations(PersonalColorType personalColorType, {bool forceRefresh = false}) async => Left(UnexpectedFailure(message: 'dummy'));
   @override
   Future<bool> hasCachedData(PersonalColorType personalColorType) async => false;
