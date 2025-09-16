@@ -5,6 +5,8 @@ import '../../domain/entities/makeup_product.dart';
 import '../../domain/entities/makeup_recommendation.dart';
 import '../../domain/entities/makeup_step.dart';
 import '../../domain/entities/highlight_area.dart';
+import '../../domain/entities/detailed_makeup_step.dart';
+import '../../domain/entities/diagnosis_context.dart';
 import 'makeup_product_model.dart';
 
 /// MakeupRecommendation エンティティのデータモデル
@@ -28,6 +30,10 @@ class MakeupRecommendationModel extends MakeupRecommendation {
     super.stepByStepInstructions = const [],
     super.highlightAreas = const [],
     super.personalColorExplanation,
+    // Enhanced AI makeup functionality fields
+    super.reasoningExplanation,
+    super.detailedSteps = const [],
+    super.diagnosisContext,
   });
 
   /// JSON から MakeupRecommendationModel を作成
@@ -128,6 +134,26 @@ class MakeupRecommendationModel extends MakeupRecommendation {
     final personalColorExplanation = json['personal_color_explanation'] as String?
         ?? json['personalColorExplanation'] as String?;
 
+    // Enhanced AI makeup functionality fields
+    final reasoningExplanation = json['reasoning_explanation'] as String?
+        ?? json['reasoningExplanation'] as String?;
+
+    // 詳細ステップ配列
+    final detailedStepsJson = (json['detailed_steps'] ?? json['detailedSteps']) as List<dynamic>?;
+    final List<DetailedMakeupStep> detailedSteps = detailedStepsJson == null
+        ? <DetailedMakeupStep>[]
+        : detailedStepsJson
+            .whereType<Map<String, dynamic>>()
+            .map(DetailedMakeupStep.fromJson)
+            .toList();
+
+    // 診断コンテキスト
+    final diagnosisContextJson = json['diagnosis_context'] as Map<String, dynamic>?
+        ?? json['diagnosisContext'] as Map<String, dynamic>?;
+    final DiagnosisContext? diagnosisContext = diagnosisContextJson != null
+        ? DiagnosisContext.fromJson(diagnosisContextJson)
+        : null;
+
     return MakeupRecommendationModel(
       personalColorType: personalColorType,
       categories: categories,
@@ -141,6 +167,10 @@ class MakeupRecommendationModel extends MakeupRecommendation {
       stepByStepInstructions: steps,
       highlightAreas: highlights,
       personalColorExplanation: personalColorExplanation,
+      // Enhanced AI makeup functionality fields
+      reasoningExplanation: reasoningExplanation,
+      detailedSteps: detailedSteps,
+      diagnosisContext: diagnosisContext,
     );
   }
 
@@ -187,6 +217,16 @@ class MakeupRecommendationModel extends MakeupRecommendation {
     if (personalColorExplanation != null) {
       base['personal_color_explanation'] = personalColorExplanation;
     }
+    // Enhanced AI makeup functionality fields
+    if (reasoningExplanation != null) {
+      base['reasoning_explanation'] = reasoningExplanation;
+    }
+    if (detailedSteps.isNotEmpty) {
+      base['detailed_steps'] = detailedSteps.map((e) => e.toJson()).toList();
+    }
+    if (diagnosisContext != null) {
+      base['diagnosis_context'] = diagnosisContext!.toJson();
+    }
     return base;
   }
 
@@ -203,6 +243,10 @@ class MakeupRecommendationModel extends MakeupRecommendation {
       generatedImageData: entity.generatedImageData,
       generatedImageSize: entity.generatedImageSize,
       generatedImageDateTime: entity.generatedImageDateTime,
+      // Enhanced AI makeup functionality fields
+      reasoningExplanation: entity.reasoningExplanation,
+      detailedSteps: entity.detailedSteps,
+      diagnosisContext: entity.diagnosisContext,
     );
   }
 
@@ -219,6 +263,10 @@ class MakeupRecommendationModel extends MakeupRecommendation {
       generatedImageData: generatedImageData, // 画像データを含む
       generatedImageSize: generatedImageSize, // 基本モデルでは画像生成なし
       generatedImageDateTime: generatedImageDateTime, // 基本モデルでは画像生成なし
+      // Enhanced AI makeup functionality fields
+      reasoningExplanation: reasoningExplanation,
+      detailedSteps: detailedSteps,
+      diagnosisContext: diagnosisContext,
     );
   }
 

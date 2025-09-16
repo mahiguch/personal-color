@@ -9,14 +9,14 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'パーソナルカラー診断アプリ - AI診断で子どもから大人まで',
-    template: '%s | パーソナルカラー診断アプリ'
+    default: 'AIスタイリスト - AI診断で子どもから大人まで',
+    template: '%s | AIスタイリスト'
   },
-  description: 'AI技術を使用した安全で楽しいパーソナルカラー診断アプリ。小学生から大人まで、家族みんなで楽しめます。プライバシー完全保護、撮影画像は即座に削除されます。',
+  description: 'AI技術を使用した安全で楽しいスタイリング・カラー診断アプリ。小学生から大人まで、家族みんなで楽しめます。プライバシー完全保護、撮影画像は即座に削除されます。',
   keywords: ['パーソナルカラー', '診断', '子ども', 'AI', '安全', 'プライバシー', '家族', '教育', 'カラー分析', 'スマホアプリ'],
-  authors: [{ name: 'パーソナルカラー診断アプリ開発チーム' }],
-  creator: 'パーソナルカラー診断アプリ開発チーム',
-  publisher: 'パーソナルカラー診断アプリ',
+  authors: [{ name: 'AIスタイリスト開発チーム' }],
+  creator: 'AIスタイリスト開発チーム',
+  publisher: 'AIスタイリスト',
   formatDetection: {
     email: false,
     address: false,
@@ -30,22 +30,22 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'ja_JP',
     url: 'https://personal-color-app.web.app',
-    siteName: 'パーソナルカラー診断アプリ',
-    title: 'パーソナルカラー診断アプリ - AI診断で子どもから大人まで',
-    description: 'AI技術を使用した安全で楽しいパーソナルカラー診断アプリ。小学生から大人まで、家族みんなで楽しめます。',
+    siteName: 'AIスタイリスト',
+    title: 'AIスタイリスト - AI診断で子どもから大人まで',
+    description: 'AI技術を使用した安全で楽しいスタイリング・カラー診断アプリ。小学生から大人まで、家族みんなで楽しめます。',
     images: [
       {
         url: '/app_icon.svg',
         width: 1200,
         height: 630,
-        alt: 'パーソナルカラー診断アプリ',
+        alt: 'AIスタイリスト',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'パーソナルカラー診断アプリ - AI診断で子どもから大人まで',
-    description: 'AI技術を使用した安全で楽しいパーソナルカラー診断アプリ。家族みんなで楽しめます。',
+    title: 'AIスタイリスト - AI診断で子どもから大人まで',
+    description: 'AI技術を使用した安全で楽しいスタイリング・カラー診断アプリ。家族みんなで楽しめます。',
     images: ['/app_icon.svg'],
   },
   robots: {

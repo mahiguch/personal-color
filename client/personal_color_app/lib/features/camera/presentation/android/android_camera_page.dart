@@ -129,7 +129,7 @@ class _AndroidCameraPageState extends State<AndroidCameraPage> with WidgetsBindi
         // Material Design 3準拠のAppBar
       appBar: AppBar(
         title: Text(
-          'パーソナルカラー診断',
+          'AIスタイリスト',
           style: theme.appBarTheme.titleTextStyle,
         ),
         leading: IconButton(

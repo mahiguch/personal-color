@@ -72,9 +72,9 @@ void main() {
         ],
         child: MaterialApp(
           home: Scaffold(
-            appBar: AppBar(title: const Text('パーソナルカラー診断')),
+            appBar: AppBar(title: const Text('AIスタイリスト')),
             body: const Center(
-              child: Text('Welcome to Personal Color Diagnosis App'),
+              child: Text('Welcome to AI Stylist'),
             ),
           ),
         ),
@@ -82,7 +82,7 @@ void main() {
     );
 
     // Verify that our app loads with the expected elements
-    expect(find.text('パーソナルカラー診断'), findsOneWidget);
-    expect(find.text('Welcome to Personal Color Diagnosis App'), findsOneWidget);
+    expect(find.text('AIスタイリスト'), findsOneWidget);
+    expect(find.text('Welcome to AI Stylist'), findsOneWidget);
   });
 }

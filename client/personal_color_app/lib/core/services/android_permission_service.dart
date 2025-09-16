@@ -156,7 +156,7 @@ class AndroidPermissionService {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'パーソナルカラー診断アプリは、あなたの顔を撮影して最適な色を提案します。',
+                'AIスタイリストは、あなたの顔を撮影して最適な色を提案します。',
                 style: theme.dialogTheme.contentTextStyle,
               ),
               const SizedBox(height: 16),

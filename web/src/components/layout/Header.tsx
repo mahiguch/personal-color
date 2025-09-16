@@ -30,13 +30,13 @@ export function Header({ transparent = false }: HeaderProps) {
           <Link href="/" className="flex items-center space-x-2">
             <Image
               src="/app_icon.svg"
-              alt="パーソナルカラー診断アプリ"
+              alt="AIスタイリスト"
               width={32}
               height={32}
               className="object-contain"
             />
             <span className="font-semibold text-lg text-gray-900 hidden sm:block">
-              パーソナルカラー診断
+              AIスタイリスト
             </span>
           </Link>
 
@@ -60,6 +60,13 @@ export function Header({ transparent = false }: HeaderProps) {
                 className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-2 rounded-lg font-medium shadow-sm hover:shadow-md transition-all duration-200"
               >
                 App Storeでダウンロード
+              </Button>
+            </a>
+            <a href={APP_STORE_URLS.android} target="_blank" rel="noopener noreferrer" className="inline-block">
+              <Button 
+                className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-2 rounded-lg font-medium shadow-sm hover:shadow-md transition-all duration-200"
+              >
+                Google Playでダウンロード
               </Button>
             </a>
           </div>
@@ -104,6 +111,13 @@ export function Header({ transparent = false }: HeaderProps) {
                     className="w-full bg-gray-900 hover:bg-gray-800 text-white rounded-lg font-medium"
                   >
                     App Storeでダウンロード
+                  </Button>
+                </a>
+                <a href={APP_STORE_URLS.android} target="_blank" rel="noopener noreferrer" className="block">
+                  <Button 
+                    className="w-full bg-gray-900 hover:bg-gray-800 text-white rounded-lg font-medium"
+                  >
+                    Google Playでダウンロード
                   </Button>
                 </a>
               </div>

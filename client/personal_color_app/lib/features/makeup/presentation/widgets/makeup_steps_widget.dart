@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../domain/entities/makeup_step.dart';
+import '../../domain/entities/detailed_makeup_step.dart';
 import '../config/age_adaptive_ui_config.dart';
 
 /// メイクアップステップ表示ウィジェット
 /// ステップバイステップのメイク手順を年齢適応型で表示
+/// DetailedMakeupStepに対応し、詳細な説明と理由を表示
 class MakeupStepsWidget extends StatelessWidget {
   const MakeupStepsWidget({
     super.key,
@@ -12,6 +14,11 @@ class MakeupStepsWidget extends StatelessWidget {
     this.onStepTap,
     this.showEstimatedTime = true,
     this.showDifficulty = true,
+    this.showReasoning = true,
+    this.showPersonalColorConnection = true,
+    this.showDetailedTips = true,
+    this.showCommonMistakes = false,
+    this.expandedByDefault = false,
   });
 
   /// メイクステップリスト
@@ -28,6 +35,21 @@ class MakeupStepsWidget extends StatelessWidget {
 
   /// 難易度表示フラグ
   final bool showDifficulty;
+
+  /// 理由・根拠表示フラグ
+  final bool showReasoning;
+
+  /// パーソナルカラー関連説明表示フラグ
+  final bool showPersonalColorConnection;
+
+  /// 詳細ヒント表示フラグ
+  final bool showDetailedTips;
+
+  /// よくある間違い表示フラグ
+  final bool showCommonMistakes;
+
+  /// デフォルトで展開表示するかどうか
+  final bool expandedByDefault;
 
   @override
   Widget build(BuildContext context) {
@@ -54,38 +76,74 @@ class MakeupStepsWidget extends StatelessWidget {
 
   Widget _buildHeader(ThemeData theme) {
     final ui = AgeAdaptiveUiPresets.of(ageGroup);
-    return Row(
+    final hasDetailedSteps = steps.any((step) => step is DetailedMakeupStep);
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(
-          Icons.format_list_numbered,
-          color: theme.colorScheme.primary,
-          size: 24 * ui.iconScale,
-        ),
-        const SizedBox(width: 8),
-        Text(
-          _getAgeAdaptedTitle(),
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onSurface,
-          ),
-        ),
-        const Spacer(),
-        if (steps.isNotEmpty)
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
+        Row(
+          children: [
+            Icon(
+              hasDetailedSteps ? Icons.auto_awesome : Icons.format_list_numbered,
               color: theme.colorScheme.primary,
-              borderRadius: BorderRadius.circular(12),
+              size: 24 * ui.iconScale,
             ),
-            child: Text(
-              '${steps.length}ステップ',
-              style: TextStyle(
-                color: theme.colorScheme.onPrimary,
-                fontSize: 12,
+            const SizedBox(width: 8),
+            Text(
+              _getAgeAdaptedTitle(),
+              style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
+                color: theme.colorScheme.onSurface,
               ),
             ),
+            const Spacer(),
+            if (steps.isNotEmpty)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  '${steps.length}ステップ',
+                  style: TextStyle(
+                    color: theme.colorScheme.onPrimary,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+          ],
+        ),
+        if (hasDetailedSteps) ...[
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.info_outline,
+                  size: 16,
+                  color: theme.colorScheme.primary,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'あなたのパーソナルカラーに基づいた詳細な説明付きです',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
+        ],
       ],
     );
   }
@@ -104,6 +162,9 @@ class MakeupStepsWidget extends StatelessWidget {
   }
 
   Widget _buildStepCard(ThemeData theme, MakeupStep step) {
+    final isDetailed = step is DetailedMakeupStep;
+    final detailedStep = isDetailed ? step : null;
+    
     return Card(
       elevation: 2,
       child: InkWell(
@@ -117,13 +178,47 @@ class MakeupStepsWidget extends StatelessWidget {
               _buildStepHeader(theme, step),
               const SizedBox(height: 8),
               _buildStepInstruction(theme, step),
+              
+              // 理由・根拠の表示（DetailedMakeupStepの場合）
+              if (isDetailed && showReasoning && detailedStep!.reasoning.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                _buildReasoning(theme, detailedStep),
+              ],
+              
+              // パーソナルカラー関連説明
+              if (isDetailed && showPersonalColorConnection && detailedStep!.hasPersonalColorConnection) ...[
+                const SizedBox(height: 12),
+                _buildPersonalColorConnection(theme, detailedStep),
+              ],
+              
+              // 基本のヒント
               if (step.tips != null) ...[
                 const SizedBox(height: 8),
                 _buildStepTips(theme, step),
               ],
+              
+              // 詳細ヒント（DetailedMakeupStepの場合）
+              if (isDetailed && showDetailedTips && detailedStep!.detailedTips.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                _buildDetailedTips(theme, detailedStep),
+              ],
+              
+              // よくある間違い
+              if (isDetailed && showCommonMistakes && detailedStep!.commonMistakes.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                _buildCommonMistakes(theme, detailedStep),
+              ],
+              
+              // 必要な道具
               if (step.requiredTools.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 _buildRequiredTools(theme, step),
+              ],
+              
+              // 代替商品（DetailedMakeupStepの場合）
+              if (isDetailed && detailedStep!.alternativeProducts.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                _buildAlternativeProducts(theme, detailedStep),
               ],
             ],
           ),
@@ -341,6 +436,292 @@ class MakeupStepsWidget extends StatelessWidget {
     );
   }
 
+  Widget _buildReasoning(ThemeData theme, DetailedMakeupStep step) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.primaryContainer.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: theme.colorScheme.primary.withValues(alpha: 0.3),
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.psychology_outlined,
+            size: 16,
+            color: theme.colorScheme.primary,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'なぜこのステップが重要？',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  step.reasoning,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    height: 1.3,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPersonalColorConnection(ThemeData theme, DetailedMakeupStep step) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.tertiaryContainer.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: theme.colorScheme.tertiary.withValues(alpha: 0.3),
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.palette_outlined,
+            size: 16,
+            color: theme.colorScheme.tertiary,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'あなたのパーソナルカラーとの関係',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.tertiary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  step.personalColorConnection!,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    height: 1.3,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailedTips(ThemeData theme, DetailedMakeupStep step) {
+    final adaptedTips = step.getAgeAdaptedDetailedTips(ageGroup);
+    if (adaptedTips.isEmpty) return const SizedBox.shrink();
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.secondaryContainer.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: theme.colorScheme.secondary.withValues(alpha: 0.3),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.tips_and_updates_outlined,
+                size: 16,
+                color: theme.colorScheme.secondary,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '詳細なコツ',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.secondary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          ...adaptedTips.asMap().entries.map((entry) {
+            final index = entry.key;
+            final tip = entry.value;
+            return Padding(
+              padding: EdgeInsets.only(bottom: index < adaptedTips.length - 1 ? 6 : 0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 4,
+                    height: 4,
+                    margin: const EdgeInsets.only(top: 8, right: 8),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.secondary,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      tip,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                        height: 1.3,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCommonMistakes(ThemeData theme, DetailedMakeupStep step) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.errorContainer.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: theme.colorScheme.error.withValues(alpha: 0.3),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.warning_amber_outlined,
+                size: 16,
+                color: theme.colorScheme.error,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'よくある間違い',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.error,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          ...step.commonMistakes.asMap().entries.map((entry) {
+            final index = entry.key;
+            final mistake = entry.value;
+            return Padding(
+              padding: EdgeInsets.only(bottom: index < step.commonMistakes.length - 1 ? 6 : 0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.close,
+                    size: 12,
+                    color: theme.colorScheme.error,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      mistake,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onErrorContainer,
+                        height: 1.3,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAlternativeProducts(ThemeData theme, DetailedMakeupStep step) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: theme.colorScheme.outline.withValues(alpha: 0.3),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.swap_horiz_outlined,
+                size: 16,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '代替商品',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children: step.alternativeProducts.map((product) {
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.outline.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  product,
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: theme.colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildEmptyState(ThemeData theme) {
     return Container(
       width: double.infinity,
@@ -382,17 +763,19 @@ class MakeupStepsWidget extends StatelessWidget {
   }
 
   String _getAgeAdaptedTitle() {
+    final hasDetailedSteps = steps.any((step) => step is DetailedMakeupStep);
+    
     switch (ageGroup) {
       case AgeGroup.child:
-        return 'メイクの手順';
+        return hasDetailedSteps ? 'くわしいメイクの手順' : 'メイクの手順';
       case AgeGroup.student:
-        return 'メイクの手順';
+        return hasDetailedSteps ? '詳しいメイクの手順' : 'メイクの手順';
       case AgeGroup.adult:
-        return 'ステップバイステップ手順';
+        return hasDetailedSteps ? '詳細ステップバイステップ手順' : 'ステップバイステップ手順';
       case AgeGroup.middleAge:
-        return 'ステップバイステップ手順';
+        return hasDetailedSteps ? '詳細ステップバイステップ手順' : 'ステップバイステップ手順';
       case AgeGroup.senior:
-        return 'ステップバイステップ手順';
+        return hasDetailedSteps ? '詳細ステップバイステップ手順' : 'ステップバイステップ手順';
     }
   }
 
@@ -410,6 +793,12 @@ class MakeupStepsWidget extends StatelessWidget {
   int _getTotalTime() {
     return steps
         .where((step) => step.estimatedTime != null)
-        .fold(0, (sum, step) => sum + step.estimatedTime!);
+        .fold(0, (sum, step) {
+          // DetailedMakeupStepの場合は詳細時間を使用
+          if (step is DetailedMakeupStep) {
+            return sum + step.estimatedTotalTime;
+          }
+          return sum + step.estimatedTime!;
+        });
   }
 }

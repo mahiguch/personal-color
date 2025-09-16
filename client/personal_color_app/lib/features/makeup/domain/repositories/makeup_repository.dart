@@ -79,4 +79,32 @@ abstract class MakeupRepository {
     PersonalColorType personalColorType,
     File imageFile,
   );
+
+  /// 診断コンテキスト付きでAI画像生成機能付きメイクアップ推奨データを取得
+  /// 
+  /// [personalColorType] 対象のパーソナルカラータイプ
+  /// [imageFile] アップロードする画像ファイル
+  /// [diagnosisResult] 診断結果（コンテキスト情報として使用）
+  /// 
+  /// 成功時は[MakeupRecommendation]を、失敗時は[Failure]を返します。
+  /// 診断結果を含めることで、より精度の高いメイクアップ推奨が可能になります。
+  /// 
+  /// Example:
+  /// ```dart
+  /// final imageFile = File('/path/to/image.jpg');
+  /// final result = await repository.getAIMakeupRecommendationsWithContext(
+  ///   PersonalColorType.spring,
+  ///   imageFile,
+  ///   diagnosisResult,
+  /// );
+  /// result.fold(
+  ///   (failure) => print('Error: ${failure.message}'),
+  ///   (recommendation) => print('Success: Context-aware AI recommendation generated')
+  /// );
+  /// ```
+  Future<Either<Failure, MakeupRecommendation>> getAIMakeupRecommendationsWithContext(
+    PersonalColorType personalColorType,
+    File imageFile,
+    DiagnosisResult diagnosisResult,
+  );
 }

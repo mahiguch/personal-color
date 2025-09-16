@@ -22,7 +22,7 @@ export default function PrivacyPage() {
                 プライバシーポリシー
               </h1>
               <p className="text-lg text-gray-600 mb-4">
-                パーソナルカラー診断アプリ
+                AIスタイリスト
               </p>
               <p className="text-sm text-gray-500">
                 最終更新日：{lastUpdated}
@@ -46,7 +46,7 @@ export default function PrivacyPage() {
                     <div>
                       <h2 className="text-xl font-semibold text-gray-900 mb-4">基本方針</h2>
                       <p className="text-gray-700 leading-relaxed">
-                        パーソナルカラー診断アプリ（以下「当アプリ」）は、ユーザーのプライバシー保護を最重要事項として取り組みます。特に、小学生を含む子どもたちが安心して利用できるよう、厳格なプライバシー保護措置を講じています。
+                        AIスタイリスト（以下「当アプリ」）は、ユーザーのプライバシー保護を最重要事項として取り組みます。特に、小学生を含む子どもたちが安心して利用できるよう、厳格なプライバシー保護措置を講じています。
                       </p>
                     </div>
                   </div>

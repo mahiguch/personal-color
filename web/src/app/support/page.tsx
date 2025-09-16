@@ -7,7 +7,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'サポート・よくある質問',
-  description: 'パーソナルカラー診断アプリに関するよくある質問と回答。安全性、プライバシー、使用方法についてご案内します。',
+  description: 'AIスタイリストに関するよくある質問と回答。安全性、プライバシー、使用方法についてご案内します。',
   alternates: {
     canonical: '/support',
   },
@@ -33,9 +33,20 @@ export default function SupportPage() {
                 サポート
               </h1>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                パーソナルカラー診断アプリに関するよくある質問と回答をご覧いただけます。
+                AIスタイリストに関するよくある質問と回答をご覧いただけます。
                 お困りのことがございましたら、こちらをご確認ください。
               </p>
+              <div className="mt-8">
+                <a
+                  href="https://forms.gle/yuEPGmGxEgYpAA448"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center px-6 py-3 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 transition-colors"
+                >
+                  お問い合わせフォームを開く
+                  <span className="ml-2">↗</span>
+                </a>
+              </div>
             </div>
           </div>
         </section>
@@ -52,21 +63,20 @@ export default function SupportPage() {
                   </h2>
                   <p className="text-gray-600 leading-relaxed">
                     アプリに関するご質問やご不明な点がございましたら、
-                    App Storeのレビュー機能を通してお気軽にお問い合わせください。
+                    下記のお問い合わせフォームからお気軽にご連絡ください。
                   </p>
-                  
+
                   <div className="space-y-4">
                     <div className="flex items-start space-x-3">
                       <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center mt-1">
-                        <span className="text-primary-600 text-sm">📱</span>
+                        <span className="text-primary-600 text-sm">📝</span>
                       </div>
                       <div>
-                        <h3 className="font-medium text-gray-900">App Storeレビュー</h3>
-                        <p className="text-gray-600">アプリ内またはApp Storeからレビューを投稿してください</p>
-                        <p className="text-sm text-gray-500">皆様のフィードバックをお待ちしております</p>
+                        <h3 className="font-medium text-gray-900">お問い合わせフォーム</h3>
+                        <p className="text-gray-600">ご質問やご不明な点がございましたら上記のお問い合わせフォームからご連絡ください</p>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-start space-x-3">
                       <div className="w-8 h-8 bg-warm-100 rounded-full flex items-center justify-center mt-1">
                         <span className="text-warm-600 text-sm">💡</span>

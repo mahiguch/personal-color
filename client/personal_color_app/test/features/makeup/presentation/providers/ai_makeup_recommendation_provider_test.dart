@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -27,6 +28,9 @@ void main() {
     );
 
     when(mockImageFile.path).thenReturn('/test/path/test_image.jpg');
+    when(mockImageFile.existsSync()).thenReturn(true);
+    when(mockImageFile.lengthSync()).thenReturn(1024); // 1KB
+    when(mockImageFile.readAsBytesSync()).thenReturn(Uint8List.fromList(List.filled(1024, 0)));
   });
 
   group('AIMakeupRecommendationProvider', () {
@@ -155,7 +159,7 @@ void main() {
         expect(provider.hasError, true);
         expect(provider.hasRecommendation, false);
         expect(provider.recommendation, null);
-        expect(provider.errorMessage, 'バリデーションエラーが発生しました');
+        expect(provider.errorMessage, '画像ファイルが大きすぎます。10MB以下の画像を使用してください');
         expect(provider.hasGeneratedImage, false);
       });
 
@@ -186,7 +190,7 @@ void main() {
         // Assert
         expect(provider.isLoading, false);
         expect(provider.hasError, true);
-        expect(provider.errorMessage, 'サーバーエラーが発生しました。しばらく時間をおいてから再試行してください');
+        expect(provider.errorMessage, 'AI画像生成サービスが一時的に利用できません。しばらく時間をおいてから再試行してください');
       });
 
       test('should set error state when use case returns DataFailure', () async {

@@ -1,6 +1,6 @@
 // サイト基本設定
 export const SITE_CONFIG = {
-  name: 'パーソナルカラー診断アプリ',
+  name: 'AIスタイリスト',
   title: 'AIが教える、あなたに似合う色を発見しよう！',
   description: '簡単撮影で、パーソナルカラー診断が数秒で完了。小学5年生でも安全に使える教育的なアプリです。',
   url: 'https://personal-color.web.app',
@@ -10,7 +10,7 @@ export const SITE_CONFIG = {
 // アプリストアURL
 export const APP_STORE_URLS = {
   ios: 'https://apps.apple.com/jp/app/id6751162051',
-  android: '', // 今後リリース予定
+  android: 'https://play.google.com/store/apps/details?id=com.personalcolor.personal_color_app&hl=ja',
 } as const;
 
 // メッセージ定数
@@ -76,11 +76,11 @@ export const MESSAGES = {
   },
   launch: {
     title: 'アプリをダウンロード',
-    subtitle: '安全で楽しいパーソナルカラー診断体験を今すぐ始めよう',
+    subtitle: '安全で楽しいAIスタイリスト体験を今すぐ始めよう',
   },
   footer: {
-    description: '安全で楽しいAIパーソナルカラー診断アプリ',
-    copyright: '© 2025 パーソナルカラー診断アプリ. All rights reserved.',
+    description: '安全で楽しいAIスタイリング・カラー診断アプリ',
+    copyright: '© 2025 AIスタイリスト. All rights reserved.',
     links: {
       about: 'アプリについて',
       support: 'サポート',
