@@ -8,7 +8,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         const MaterialApp(
-          home: AndroidHomePage(title: 'パーソナルカラー診断'),
+          home: AndroidHomePage(title: 'AIスタイリスト'),
         ),
       );
 
@@ -27,28 +27,28 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         const MaterialApp(
-          home: AndroidHomePage(title: 'パーソナルカラー診断'),
+          home: AndroidHomePage(title: 'AIスタイリスト'),
         ),
       );
 
       // Act & Assert
       // Verify main elements are present (title appears in both AppBar and body)
-      expect(find.text('パーソナルカラー診断'), findsWidgets);
+      expect(find.text('AIスタイリスト'), findsWidgets);
       expect(find.text('あなたに似合う色を見つけましょう！'), findsOneWidget);
       expect(find.text('診断を始める'), findsOneWidget);
       expect(find.text('プライバシーポリシー'), findsOneWidget);
       
-      // Verify AI makeup related elements are not present
-      expect(find.textContaining('AI'), findsNothing);
-      expect(find.textContaining('メイク'), findsNothing);
-      expect(find.textContaining('生成'), findsNothing);
+      // Verify AI makeup related elements are not present (specific labels/icons)
+      expect(find.text('AI画像生成メイク'), findsNothing);
+      expect(find.text('AI生成メイク'), findsNothing);
+      expect(find.byIcon(Icons.auto_awesome), findsNothing);
     });
 
     testWidgets('Main diagnosis button should be properly styled', (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         const MaterialApp(
-          home: AndroidHomePage(title: 'パーソナルカラー診断'),
+          home: AndroidHomePage(title: 'AIスタイリスト'),
         ),
       );
 
@@ -73,7 +73,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         const MaterialApp(
-          home: AndroidHomePage(title: 'パーソナルカラー診断'),
+          home: AndroidHomePage(title: 'AIスタイリスト'),
         ),
       );
 

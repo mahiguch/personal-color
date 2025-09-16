@@ -22,7 +22,7 @@ export default function PrivacyPage() {
                 アフィリエイトプログラム
               </h1>
               <p className="text-lg text-gray-600 mb-4">
-                パーソナルカラー診断アプリ
+                AIスタイリスト
               </p>
               <p className="text-sm text-gray-500">
                 最終更新日：{lastUpdated}

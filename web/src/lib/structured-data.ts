@@ -4,7 +4,7 @@ import { WithContext, Organization, WebApplication, FAQPage, WebSite } from 'sch
 export const organizationSchema: WithContext<Organization> = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "name": "パーソナルカラー診断アプリ",
+  "name": "AIスタイリスト",
   "description": "AI技術を使用した子ども向けパーソナルカラー診断アプリの開発・提供",
   "url": "https://personal-color-app.web.app",
   "logo": "https://personal-color-app.web.app/app_icon.svg",
@@ -29,18 +29,18 @@ export const organizationSchema: WithContext<Organization> = {
 export const websiteSchema: WithContext<WebSite> = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "name": "パーソナルカラー診断アプリ - 公式サイト",
+  "name": "AIスタイリスト - 公式サイト",
   "description": "AI技術を使用した安全で楽しい子ども向けパーソナルカラー診断アプリ - App Store配信中",
   "url": "https://personal-color-app.web.app",
   "inLanguage": "ja-JP",
   "copyrightYear": 2025,
   "creator": {
     "@type": "Organization",
-    "name": "パーソナルカラー診断アプリ開発チーム"
+    "name": "AIスタイリスト開発チーム"
   },
   "about": {
     "@type": "SoftwareApplication",
-    "name": "パーソナルカラー診断アプリ",
+    "name": "AIスタイリスト",
     "applicationCategory": "EducationalApplication",
     "operatingSystem": ["iOS"],
     "downloadUrl": "https://apps.apple.com/jp/app/id6751162051"
@@ -51,7 +51,7 @@ export const websiteSchema: WithContext<WebSite> = {
 export const mobileAppSchema: WithContext<WebApplication> = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "パーソナルカラー診断アプリ",
+  "name": "AIスタイリスト",
   "description": "AI技術を使用して、お子様に最適なパーソナルカラーを安全に診断できるアプリです。小学生から大人まで、家族みんなで楽しめます。",
   "url": "https://personal-color-app.web.app",
   "applicationCategory": [
@@ -61,7 +61,7 @@ export const mobileAppSchema: WithContext<WebApplication> = {
   "operatingSystem": ["iOS"],
   "author": {
     "@type": "Organization",
-    "name": "パーソナルカラー診断アプリ開発チーム"
+    "name": "AIスタイリスト開発チーム"
   },
   "offers": {
     "@type": "Offer",
@@ -85,8 +85,8 @@ export const mobileAppSchema: WithContext<WebApplication> = {
 export const faqPageSchema: WithContext<FAQPage> = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  "name": "パーソナルカラー診断アプリ - よくある質問",
-  "description": "パーソナルカラー診断アプリに関するよくある質問と回答",
+  "name": "AIスタイリスト - よくある質問",
+  "description": "AIスタイリストに関するよくある質問と回答",
   "url": "https://personal-color-app.web.app/support",
   "mainEntity": [
     {
@@ -94,7 +94,7 @@ export const faqPageSchema: WithContext<FAQPage> = {
       "name": "アプリは無料で使用できますか？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "はい、パーソナルカラー診断アプリは完全無料でご利用いただけます。診断機能、結果表示、すべての機能が無料でお使いいただけます。"
+        "text": "はい、AIスタイリストは完全無料でご利用いただけます。診断機能、結果表示、すべての機能が無料でお使いいただけます。"
       }
     },
     {
@@ -142,7 +142,7 @@ export const faqPageSchema: WithContext<FAQPage> = {
       "name": "アプリはどこでダウンロードできますか？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "現在、App Storeでダウンロード可能です。Google Play版は準備中で、今後リリース予定です。App Storeで「パーソナルカラー診断アプリ」で検索してください。"
+        "text": "現在、App Storeでダウンロード可能です。Google Play版は準備中で、今後リリース予定です。App Storeで「AIスタイリスト」で検索してください。"
       }
     }
   ],
@@ -150,7 +150,7 @@ export const faqPageSchema: WithContext<FAQPage> = {
   "dateModified": "2025-08-27",
   "author": {
     "@type": "Organization",
-    "name": "パーソナルカラー診断アプリ開発チーム"
+    "name": "AIスタイリスト開発チーム"
   }
 };
 

@@ -1,6 +1,6 @@
 {
-  "name": "パーソナルカラー診断アプリ",
-  "short_name": "パーソナルカラー診断",
+  "name": "AIスタイリスト",
+  "short_name": "AIスタイリスト",
   "description": "AI技術を使用した安全で楽しい子ども向けパーソナルカラー診断アプリ",
   "start_url": "/",
   "display": "standalone",
@@ -34,7 +34,7 @@
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "メイン画面 - パーソナルカラー診断"
+      "label": "メイン画面 - AIスタイリスト"
     },
     {
       "src": "/screenshots/ScreenShot2.png",

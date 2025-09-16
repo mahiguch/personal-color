@@ -1,3 +1,7 @@
+AIスタイリスト 公式サイト（プライバシーポリシー/サポート）
+
+このディレクトリは、アプリ「AIスタイリスト」の公式Webサイトです。プライバシーポリシー、サポート（FAQ）、アプリ紹介ページをNext.jsで提供します。
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

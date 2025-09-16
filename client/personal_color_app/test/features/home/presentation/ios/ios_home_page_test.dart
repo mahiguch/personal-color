@@ -38,7 +38,7 @@ void main() {
       expect(find.text('診断を始める'), findsOneWidget);
       
       // Verify the main content is still there
-      expect(find.text('パーソナルカラー診断アプリ'), findsOneWidget);
+      expect(find.text('AIスタイリスト'), findsOneWidget);
       expect(find.text('あなたに似合う色を見つけましょう！'), findsOneWidget);
       expect(find.text('プライバシーポリシー'), findsOneWidget);
     });

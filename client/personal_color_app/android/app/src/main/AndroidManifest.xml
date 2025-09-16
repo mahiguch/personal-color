@@ -9,7 +9,7 @@
     <uses-feature android:name="android.hardware.camera.front" android:required="true" />
     
     <application
-        android:label="パーソナルカラー診断"
+        android:label="AIスタイリスト"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:allowBackup="false"

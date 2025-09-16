@@ -132,7 +132,7 @@ class AndroidHomePage extends StatelessWidget {
         
         // アプリタイトル
         Text(
-          'パーソナルカラー診断',
+          'AIスタイリスト',
           style: theme.textTheme.displaySmall?.copyWith(
             fontWeight: FontWeight.bold,
             color: theme.colorScheme.onSurface,

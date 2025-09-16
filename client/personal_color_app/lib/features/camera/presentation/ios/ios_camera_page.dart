@@ -53,7 +53,7 @@ class _IOSCameraPageState extends State<IOSCameraPage> with WidgetsBindingObserv
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('パーソナルカラー診断'),
+        title: const Text('AIスタイリスト'),
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
         leading: IconButton(

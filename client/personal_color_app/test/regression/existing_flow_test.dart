@@ -49,7 +49,8 @@ void main() {
       await tester.pumpWidget(const MyApp());
       await tester.pumpAndSettle();
 
-      expect(find.text('パーソナルカラー診断'), findsOneWidget);
+      // タイトルはAppBarと本文で表示されるため2箇所以上のケースを許容
+      expect(find.text('AIスタイリスト'), findsWidgets);
       expect(find.text('診断を始める'), findsOneWidget);
       // AI画像生成メイクボタンは診断結果画面に移動されたため、ホームページには存在しない
     });

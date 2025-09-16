@@ -15,14 +15,14 @@ export function Footer() {
             <div className="flex items-center space-x-3 mb-4">
               <Image
                 src="/app_icon.svg"
-                alt="パーソナルカラー診断アプリ"
+                alt="AIスタイリスト"
                 width={40}
                 height={40}
                 className="object-contain"
               />
               <div>
                 <h3 className="font-semibold text-lg text-gray-900">
-                  パーソナルカラー診断アプリ
+                  AIスタイリスト
                 </h3>
                 <p className="text-sm text-gray-600">
                   {MESSAGES.footer.description}

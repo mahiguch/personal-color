@@ -33,14 +33,19 @@ export function LaunchSection() {
                 🍎 App Storeからアプリ取得
               </Button>
             </a>
-            <Button 
-              size="lg" 
-              variant="outline"
-              className="border-gray-300 text-gray-900 hover:bg-gray-50 font-medium px-8 py-4 rounded-lg transition-all duration-200"
-              disabled
+            <a 
+              href={APP_STORE_URLS.android} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-block"
             >
-              📱 Google Play（準備中）
-            </Button>
+              <Button 
+                size="lg" 
+                className="bg-gray-900 text-white hover:bg-gray-800 font-medium px-8 py-4 rounded-lg shadow-sm transition-all duration-200"
+              >
+                Google Playからアプリ取得
+              </Button>
+            </a>
           </div>
 
           {/* 詳細情報セクション */}

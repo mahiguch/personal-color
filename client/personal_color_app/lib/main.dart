@@ -30,11 +30,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'パーソナルカラー診断アプリ',
+      title: 'AIスタイリスト',
       theme: ThemeSelector.getLightTheme(),
       darkTheme: ThemeSelector.getDarkTheme(),
       themeMode: ThemeSelector.getThemeMode(),
-      home: const MyHomePage(title: 'パーソナルカラー診断'),
+      home: const MyHomePage(title: 'AIスタイリスト'),
     );
   }
 }

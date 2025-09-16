@@ -29,7 +29,7 @@ class IosHomePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const Text(
-                    'パーソナルカラー診断アプリ',
+                    'AIスタイリスト',
                     style: TextStyle(fontSize: 24),
                   ),
                   const SizedBox(height: 20),
