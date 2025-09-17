@@ -1,4 +1,5 @@
 {
+  "_comment": "This is a template file. Copy this to google-services.json and replace with your actual Firebase project values",
   "project_info": {
     "project_number": "YOUR_PROJECT_NUMBER",
     "project_id": "your-firebase-project-id",
