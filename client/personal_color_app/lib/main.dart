@@ -13,10 +13,20 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
   
-  // Firebase初期化
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // Firebase初期化（重複初期化を防ぐ）
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    if (e.toString().contains('duplicate-app')) {
+      // 既に初期化済みの場合は何もしない
+      debugPrint('Firebase app already initialized');
+    } else {
+      // その他のエラーは再スロー
+      rethrow;
+    }
+  }
   
   // Firebase App Check初期化
   await FirebaseAppCheckService.initialize();
