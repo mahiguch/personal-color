@@ -6,3 +6,41 @@ __pycache__/
 .serena/cache/
 .serena/memories/
 .playwright-mcp/
+
+# 機密情報・環境設定
+.env
+.env.*
+server/.env
+server/.env.local
+server/.env.production
+server/.env.development
+
+# Firebase設定ファイル
+google-services.json
+GoogleService-Info.plist
+client/personal_color_app/android/app/google-services.json
+client/personal_color_app/ios/Runner/GoogleService-Info.plist
+
+# GCP サービスアカウントキー
+service-account*.json
+*.json
+
+# API キー・認証情報
+api-keys.txt
+credentials/
+
+# iOS証明書・プロビジョニングプロファイル
+*.p12
+*.mobileprovision
+*.certSigningRequest
+
+# Android キーストア
+*.keystore
+*.jks
+
+# ログファイル
+*.log
+logs/
+
+# OS生成ファイル
+Thumbs.db
