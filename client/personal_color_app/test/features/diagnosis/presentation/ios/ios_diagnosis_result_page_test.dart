@@ -125,7 +125,7 @@ void main() {
       expect(container, findsOneWidget);
     });
 
-    testWidgets('should display all expected action buttons in correct order', (WidgetTester tester) async {
+    testWidgets('should display remaining action buttons in correct order', (WidgetTester tester) async {
       // Create a mock diagnosis provider
       final mockProvider = DiagnosisProvider(
         diagnosePersonalColor: MockDiagnosePersonalColor(),
@@ -151,18 +151,14 @@ void main() {
       // Wait for the widget to settle
       await tester.pumpAndSettle();
 
-      // Verify all expected buttons are present
-      expect(find.text('おすすめのメイク'), findsOneWidget);
+      // Verify remaining buttons are present
       expect(find.text('AI生成メイク'), findsOneWidget);
       expect(find.text('おすすめのファッション'), findsOneWidget);
-      expect(find.text('おすすめ商品を見る'), findsOneWidget);
       expect(find.text('もう一度診断する'), findsOneWidget);
 
-      // Verify icons are present (some may appear multiple times)
-      expect(find.byIcon(Icons.palette), findsAtLeastNWidgets(1));
+      // Verify icons are present for remaining actions
       expect(find.byIcon(Icons.auto_awesome), findsOneWidget);
       expect(find.byIcon(Icons.checkroom), findsOneWidget);
-      expect(find.byIcon(Icons.shopping_bag), findsOneWidget);
       expect(find.byIcon(Icons.camera_alt), findsOneWidget);
     });
   });

@@ -55,7 +55,7 @@ void main() {
       // AI画像生成メイクボタンは診断結果画面に移動されたため、ホームページには存在しない
     });
 
-    testWidgets('IOSDiagnosisResultPage has no AI makeup button', (tester) async {
+    testWidgets('IOSDiagnosisResultPage shows AI makeup and hides removed buttons', (tester) async {
       // Create a minimal valid DiagnosisResult
       final result = DiagnosisResult(
         diagnosisType: PersonalColorType.spring,
@@ -91,13 +91,14 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      // Ensure expected existing buttons still present
-      expect(find.text('おすすめのメイク'), findsOneWidget);
+      // Ensure remaining buttons are present
+      expect(find.text('AI生成メイク'), findsOneWidget);
       expect(find.text('おすすめのファッション'), findsOneWidget);
       expect(find.text('もう一度診断する'), findsOneWidget);
 
-      // Ensure AI makeup button is NOT present anymore
-      expect(find.text('AI画像生成メイク'), findsNothing);
+      // Ensure removed buttons are not present
+      expect(find.text('おすすめのメイク'), findsNothing);
+      expect(find.text('おすすめ商品を見る'), findsNothing);
     });
   });
 }

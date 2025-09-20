@@ -193,7 +193,7 @@ void main() {
         reason: 'Icon and text should be on the same horizontal line');
     });
 
-    testWidgets('All action buttons should be present in correct order', (WidgetTester tester) async {
+    testWidgets('Remaining action buttons should be present in correct order', (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         MaterialApp(
@@ -208,20 +208,16 @@ void main() {
       );
 
       // Act & Assert
-      // Verify all expected buttons are present
-      expect(find.text('おすすめのメイク'), findsOneWidget);
+      // Verify remaining buttons are present
       expect(find.text('AI生成メイク'), findsOneWidget);
       expect(find.text('おすすめのファッション'), findsOneWidget);
       expect(find.text('もう一度診断する'), findsOneWidget);
       
       // Verify button order by checking their positions
-      final makeupButton = tester.getCenter(find.text('おすすめのメイク'));
       final aiMakeupButton = tester.getCenter(find.text('AI生成メイク'));
       final fashionButton = tester.getCenter(find.text('おすすめのファッション'));
       final retakeButton = tester.getCenter(find.text('もう一度診断する'));
       
-      // AI makeup button should be after regular makeup button
-      expect(aiMakeupButton.dy, greaterThan(makeupButton.dy));
       // Fashion button should be after AI makeup button
       expect(fashionButton.dy, greaterThan(aiMakeupButton.dy));
       // Retake button should be last

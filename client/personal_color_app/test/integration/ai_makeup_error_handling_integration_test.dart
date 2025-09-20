@@ -335,7 +335,6 @@ void main() {
       // Verify the page loads correctly
       expect(find.text('診断結果'), findsOneWidget);
       expect(find.text('AI生成メイク'), findsOneWidget);
-      expect(find.text('おすすめのメイク'), findsOneWidget);
       expect(find.text('おすすめのファッション'), findsOneWidget);
       expect(find.text('もう一度診断する'), findsOneWidget);
     });
