@@ -10,7 +10,7 @@ import math
 
 def create_app_icon(size):
     """
-    パーソナルカラー診断アプリのアイコンを生成
+    AIスタイリストのアイコンを生成
     """
     # 背景作成（グラデーション風）
     img = Image.new('RGBA', (size, size), (255, 255, 255, 255))

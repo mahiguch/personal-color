@@ -1,9 +1,9 @@
-# パーソナルカラー診断アプリ Web サイト デプロイ用 Makefile
+# AIスタイリスト Web サイト デプロイ用 Makefile
 .PHONY: help install build deploy preview clean dev lint
 
 # デフォルトコマンド
 help:
-	@echo "パーソナルカラー診断アプリ Web サイト デプロイ用コマンド"
+	@echo "AIスタイリスト Web サイト デプロイ用コマンド"
 	@echo ""
 	@echo "利用可能なコマンド:"
 	@echo "  make install   - 依存関係をインストール"
@@ -61,7 +61,7 @@ deploy: build
 	@read -p "デプロイを続行しますか？ (y/N): " confirm && [ "$$confirm" = "y" ] || exit 1
 	firebase deploy --only hosting
 	@echo "✅ デプロイ完了！"
-	@echo "🌐 サイトURL: https://personal-color-app.web.app"
+	@echo "🌐 サイトURL: https://personal-color-app-public.web.app"
 
 # キャッシュとビルドファイルの削除
 clean:

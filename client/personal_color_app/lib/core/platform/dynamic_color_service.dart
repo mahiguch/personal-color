@@ -33,7 +33,7 @@ class DynamicColorService {
     }
   }
   
-  /// パーソナルカラー診断アプリ用にDynamic Colorを調整
+  /// AIスタイリスト用にDynamic Colorを調整
   static ColorScheme? adjustForPersonalColor(
     ColorScheme? dynamicColorScheme,
     Color seedColor,
@@ -41,7 +41,7 @@ class DynamicColorService {
     if (dynamicColorScheme == null) return null;
     
     // システムのDynamic Colorを基調としつつ、
-    // パーソナルカラー診断アプリに適したアクセントカラーに調整
+    // AIスタイリストに適したアクセントカラーに調整
     return dynamicColorScheme.copyWith(
       // プライマリーカラーは診断結果で重要なので、
       // アプリ固有のseedColorを部分的に反映

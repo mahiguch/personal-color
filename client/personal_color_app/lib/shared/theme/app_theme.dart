@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// パーソナルカラー診断アプリのテーマ設定
+/// AIスタイリストのテーマ設定
 /// 小学5年生向けの親しみやすいデザインを重視
 class AppTheme {
   // カラーパレット
