@@ -1,4 +1,4 @@
-# パーソナルカラー診断アプリ - スクリーンショット変換Makefile
+# AIスタイリスト - スクリーンショット変換Makefile
 # 使用方法:
 #   make all     - すべてのサイズの画像を生成
 #   make 6.5inch - 6.5インチ用画像を生成  
@@ -23,7 +23,7 @@ all: setup 6.5inch 6.9inch
 	@$(MAKE) check
 
 help:
-	@echo "📱 パーソナルカラー診断アプリ - スクリーンショット変換"
+	@echo "📱 AIスタイリスト - スクリーンショット変換"
 	@echo ""
 	@echo "使用可能なコマンド:"
 	@echo "  make all     - すべてのサイズの画像を生成"

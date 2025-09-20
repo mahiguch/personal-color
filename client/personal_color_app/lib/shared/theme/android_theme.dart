@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Android版パーソナルカラー診断アプリのMaterial Design 3テーマ
+/// Android版AIスタイリストのMaterial Design 3テーマ
 /// Google Material Design Guidelines準拠
 class AndroidTheme {
   // Personal Color Pink をシードカラーとしたカラーパレット

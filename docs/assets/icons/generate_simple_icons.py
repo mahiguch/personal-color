@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-パーソナルカラー診断アプリ - シンプルアイコン生成スクリプト
+AIスタイリスト - シンプルアイコン生成スクリプト
 Pillowのみを使用してアイコンを生成
 """
 
@@ -26,7 +26,7 @@ ICON_SIZES = {
 
 def create_app_icon(size):
     """
-    パーソナルカラー診断アプリのアイコンを生成
+    AIスタイリストのアイコンを生成
     """
     # 背景作成（グラデーション風）
     img = Image.new('RGBA', (size, size), (255, 255, 255, 255))
@@ -158,7 +158,7 @@ def create_app_icon(size):
 
 def main():
     """メイン処理"""
-    print("🎨 パーソナルカラー診断アプリ - アイコン生成開始")
+    print("🎨 AIスタイリスト - アイコン生成開始")
     
     script_dir = Path(__file__).parent
     success_count = 0

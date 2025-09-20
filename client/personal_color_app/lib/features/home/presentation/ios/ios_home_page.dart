@@ -88,7 +88,7 @@ class IosHomePage extends StatelessWidget {
 
   /// プライバシーポリシーを外部ブラウザで開く
   Future<void> _openPrivacyPolicy() async {
-    final uri = Uri.parse('https://personal-color-469007.web.app/privacy');
+    final uri = Uri.parse('https://personal-color-app-public.web.app/privacy/');
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     }

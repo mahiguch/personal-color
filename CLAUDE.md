@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## プロジェクト概要
 
-パーソナルカラー診断アプリのリポジトリです。小学5年生向けエンターテイメントアプリとして設計されています。
+AIスタイリストのリポジトリです。小学5年生向けエンターテイメントアプリとして設計されています。
 
 ## ディレクトリ構成
 

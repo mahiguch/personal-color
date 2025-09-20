@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Shield, Eye, Users, Lock, Mail, FileText, AlertTriangle, Check } from 'lucide-react';
 
 export default function PrivacyPage() {
-  const lastUpdated = "2025年8月22日";
+  const lastUpdated = "2025年9月20日";
 
   return (
     <div className="min-h-screen bg-white">
@@ -53,42 +53,166 @@ export default function PrivacyPage() {
                 </CardContent>
               </Card>
 
-              {/* 収集する情報 */}
+              {/* 顔データの取り扱いについて（App Store Review対応） */}
               <div className="mb-12">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-8 flex items-center">
                   <Eye className="w-6 h-6 mr-3 text-primary-600" />
-                  収集する情報
+                  顔データの取り扱いについて
                 </h2>
-                
+
                 <div className="space-y-8">
-                  {/* 撮影画像 */}
-                  <Card className="border-2 border-warm-200 bg-warm-25">
+                  {/* 顔データの詳細説明セクション */}
+                  <Card className="border-2 border-red-200 bg-red-25">
                     <CardContent className="p-6">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">撮影画像</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-6">顔データに関する重要な情報</h3>
+
+                      <div className="space-y-6">
+                        {/* Q1: 収集する顔データ */}
                         <div>
-                          <h4 className="font-medium text-gray-800 mb-2">収集目的・方法</h4>
-                          <ul className="text-gray-700 space-y-1 text-sm">
-                            <li>• パーソナルカラー診断のためのAI画像解析</li>
-                            <li>• アプリ内のカメラ機能による顔写真の撮影</li>
+                          <h4 className="font-semibold text-gray-800 mb-3 text-base">1. 収集する顔データの種類</h4>
+                          <ul className="text-gray-700 space-y-2 text-sm pl-4">
+                            <li>• <strong>顔写真データ</strong>：ユーザーがアプリ内カメラで撮影した顔の静止画像</li>
+                            <li>• <strong>画像解析データ</strong>：肌の色調、明度、彩度を分析するためのカラー情報</li>
+                            <li>• <strong>撮影メタデータ</strong>：撮影日時、画像サイズ（個人識別情報は含まれません）</li>
                           </ul>
                         </div>
+
+                        {/* Q2: 使用方法 */}
                         <div>
-                          <h4 className="font-medium text-gray-800 mb-2">重要な保護措置</h4>
-                          <div className="space-y-2">
-                            <div className="flex items-center space-x-2">
-                              <Check className="w-4 h-4 text-green-600" />
-                              <span className="text-sm text-gray-700">診断完了後に即座に削除</span>
+                          <h4 className="font-semibold text-gray-800 mb-3 text-base">2. 顔データの使用方法</h4>
+                          <ul className="text-gray-700 space-y-2 text-sm pl-4">
+                            <li>• <strong>パーソナルカラー診断</strong>：肌の色調分析によるイエローベース・ブルーベースの判定</li>
+                            <li>• <strong>AI画像解析</strong>：Google Cloud Vision APIを使用した色彩分析処理</li>
+                            <li>• <strong>診断結果生成</strong>：分析結果に基づく適合カラー提案の生成</li>
+                            <li>• <strong>その他の用途では一切使用されません</strong></li>
+                          </ul>
+                        </div>
+
+                        {/* Q3: 第三者共有と保存場所 */}
+                        <div>
+                          <h4 className="font-semibold text-gray-800 mb-3 text-base">3. 第三者との共有・保存場所</h4>
+                          <div className="bg-white p-4 rounded-lg border border-gray-200">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                <p className="font-medium text-red-600 mb-2">❌ 第三者共有</p>
+                                <ul className="text-gray-700 space-y-1 text-sm">
+                                  <li>• 第三者への提供は一切行いません</li>
+                                  <li>• マーケティング会社への提供なし</li>
+                                  <li>• 広告配信事業者への提供なし</li>
+                                  <li>• データブローカーへの販売なし</li>
+                                </ul>
+                              </div>
+                              <div>
+                                <p className="font-medium text-blue-600 mb-2">📍 保存場所</p>
+                                <ul className="text-gray-700 space-y-1 text-sm">
+                                  <li>• 日本国内のGoogle Cloudサーバー</li>
+                                  <li>• 処理中のみ一時的にメモリ内に保存</li>
+                                  <li>• ディスクへの永続保存は行いません</li>
+                                  <li>• バックアップ作成は行いません</li>
+                                </ul>
+                              </div>
                             </div>
-                            <div className="flex items-center space-x-2">
-                              <Check className="w-4 h-4 text-green-600" />
-                              <span className="text-sm text-gray-700">第三者提供は一切行いません</span>
+                          </div>
+                        </div>
+
+                        {/* Q4: 保持期間 */}
+                        <div>
+                          <h4 className="font-semibold text-gray-800 mb-3 text-base">4. 顔データの保持期間</h4>
+                          <div className="bg-green-50 p-4 rounded-lg border-2 border-green-200">
+                            <div className="flex items-center space-x-3 mb-3">
+                              <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
+                                <Check className="w-5 h-5 text-white" />
+                              </div>
+                              <span className="font-semibold text-green-800">即座削除ポリシー</span>
                             </div>
+                            <ul className="text-gray-700 space-y-2 text-sm pl-4">
+                              <li>• <strong>処理時間</strong>：通常3-5秒で診断完了</li>
+                              <li>• <strong>削除タイミング</strong>：診断結果をアプリに返却した直後</li>
+                              <li>• <strong>最長保持時間</strong>：撮影から10秒以内（技術的上限）</li>
+                              <li>• <strong>キャッシュ</strong>：一切のキャッシュ保存は行いません</li>
+                              <li>• <strong>ログ記録</strong>：画像内容のログ記録は行いません</li>
+                            </ul>
                           </div>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
+
+                  {/* プライバシーポリシー内の関連項目 */}
+                  <Card className="border-2 border-blue-200 bg-blue-25">
+                    <CardContent className="p-6">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">5. 本プライバシーポリシー内の関連項目</h3>
+                      <div className="space-y-3">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs">§</span>
+                          </div>
+                          <span className="text-gray-700">
+                            <strong>「収集する情報」セクション</strong> - 撮影画像の収集目的と方法
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-3">
+                          <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs">§</span>
+                          </div>
+                          <span className="text-gray-700">
+                            <strong>「データの管理・セキュリティ」セクション</strong> - 画像処理フローとセキュリティ対策
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-3">
+                          <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs">§</span>
+                          </div>
+                          <span className="text-gray-700">
+                            <strong>「子どものプライバシー保護」セクション</strong> - 13歳未満の特別な配慮
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-3">
+                          <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs">§</span>
+                          </div>
+                          <span className="text-gray-700">
+                            <strong>「適用法令と国際基準」セクション</strong> - 日本国内でのデータ処理
+                          </span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* 具体的な文章の引用 */}
+                  <Card className="border-2 border-gray-200 bg-gray-25">
+                    <CardContent className="p-6">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4">6. プライバシーポリシーからの具体的引用</h3>
+                      <div className="space-y-4">
+                        <blockquote className="border-l-4 border-primary-600 pl-4 bg-white p-3 rounded">
+                          <p className="text-gray-700 text-sm italic">
+                            「パーソナルカラー診断のためのAI画像解析を目的として、アプリ内のカメラ機能による顔写真を撮影します。撮影された画像は診断完了後に即座に削除され、第三者提供は一切行いません。」
+                          </p>
+                        </blockquote>
+                        <blockquote className="border-l-4 border-green-600 pl-4 bg-white p-3 rounded">
+                          <p className="text-gray-700 text-sm italic">
+                            「すべてのデータ処理は日本国内で実施し、海外へのデータ移転は行いません。撮影画像はサーバー上での一時的な処理のみで、画像のバックアップは作成されません。」
+                          </p>
+                        </blockquote>
+                        <blockquote className="border-l-4 border-red-600 pl-4 bg-white p-3 rounded">
+                          <p className="text-gray-700 text-sm italic">
+                            「13歳未満の子どもに対してはより厳格なプライバシー保護措置を講じ、顔写真の撮影から診断結果の返却、画像の削除まで全工程で特別な配慮を実施します。」
+                          </p>
+                        </blockquote>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+
+              {/* 収集する情報（その他） */}
+              <div className="mb-12">
+                <h2 className="text-2xl font-semibold text-gray-900 mb-8 flex items-center">
+                  <Eye className="w-6 h-6 mr-3 text-primary-600" />
+                  その他の収集情報
+                </h2>
+
+                <div className="space-y-8">
 
                   {/* 技術的情報 */}
                   <Card className="border-2 border-cool-200 bg-cool-25">

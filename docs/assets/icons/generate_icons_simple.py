@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-パーソナルカラー診断アプリのアイコン生成スクリプト（PIL版）
+AIスタイリストのアイコン生成スクリプト（PIL版）
 フォールバック用の高品質アイコンを生成
 """
 
@@ -103,7 +103,7 @@ def draw_star(draw, center, size, color, fill=True):
 
 def create_high_quality_icon(size):
     """
-    高品質なパーソナルカラー診断アプリアイコンを生成
+    高品質なAIスタイリストアイコンを生成
     """
     # 背景グラデーション
     img = create_radial_gradient(size, ['#FFB6C1', '#FFFFFF', '#87CEEB'])
@@ -233,7 +233,7 @@ def generate_all_icons():
     全サイズのアイコンを生成
     """
     script_dir = Path(__file__).parent
-    print("🎨 パーソナルカラー診断アプリ アイコン生成開始")
+    print("🎨 AIスタイリスト アイコン生成開始")
     print("=" * 60)
     
     success_count = 0
@@ -324,7 +324,7 @@ def main():
     """
     メイン実行
     """
-    print("🚀 パーソナルカラー診断アプリ")
+    print("🚀 AIスタイリスト")
     print("🎨 高品質アイコン生成システム")
     print("=" * 60)
     
