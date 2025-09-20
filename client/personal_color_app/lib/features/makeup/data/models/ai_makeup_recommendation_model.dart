@@ -4,6 +4,8 @@ import '../../../diagnosis/domain/entities/diagnosis_result.dart';
 import '../../domain/entities/makeup_product.dart';
 import '../../domain/entities/makeup_recommendation.dart';
 import '../../domain/entities/makeup_step.dart';
+import '../../domain/entities/detailed_makeup_step.dart';
+import '../../domain/entities/diagnosis_context.dart';
 import '../../domain/entities/highlight_area.dart';
 import 'generated_image_data_model.dart';
 import 'makeup_product_model.dart';
@@ -34,6 +36,10 @@ class AIMakeupRecommendationModel extends MakeupRecommendationModel {
     super.stepByStepInstructions = const [],
     super.highlightAreas = const [],
     super.personalColorExplanation,
+    // Enhanced AI makeup functionality fields
+    super.reasoningExplanation,
+    super.detailedSteps = const [],
+    super.diagnosisContext,
   });
 
   /// JSON から AIMakeupRecommendationModel を作成
@@ -153,7 +159,34 @@ class AIMakeupRecommendationModel extends MakeupRecommendationModel {
     final personalColorExplanation = json['personal_color_explanation'] as String?
         ?? json['personalColorExplanation'] as String?;
 
-    return AIMakeupRecommendationModel(
+    // Enhanced AI makeup functionality fields
+    final reasoningExplanation = json['reasoning_explanation'] as String?
+        ?? json['reasoningExplanation'] as String?;
+
+    // 詳細ステップ配列
+    final detailedStepsJson = (json['detailed_steps'] ?? json['detailedSteps']) as List<dynamic>?;
+    final List<DetailedMakeupStep> detailedSteps = detailedStepsJson == null
+        ? <DetailedMakeupStep>[]
+        : detailedStepsJson
+            .whereType<Map<String, dynamic>>()
+            .map(DetailedMakeupStep.fromJson)
+            .toList();
+
+    // 診断コンテキスト
+    final diagnosisContextJson = json['diagnosis_context'] as Map<String, dynamic>?
+        ?? json['diagnosisContext'] as Map<String, dynamic>?;
+    final DiagnosisContext? diagnosisContext = diagnosisContextJson != null
+        ? DiagnosisContext.fromJson(diagnosisContextJson)
+        : null;
+
+    // デバッグ: 構築前の値確認
+    debugPrint('🔧 [AIMakeupRecommendationModel] コンストラクター渡し値:');
+    debugPrint('   reasoningExplanation: ${reasoningExplanation != null ? '${reasoningExplanation.substring(0, reasoningExplanation.length.clamp(0, 50))}...' : 'null'}');
+    debugPrint('   detailedSteps.length: ${detailedSteps.length}');
+    debugPrint('   personalColorExplanation: ${personalColorExplanation != null ? '${personalColorExplanation.substring(0, personalColorExplanation.length.clamp(0, 50))}...' : 'null'}');
+    debugPrint('   diagnosisContext: ${diagnosisContext != null ? 'present' : 'null'}');
+
+    final model = AIMakeupRecommendationModel(
       personalColorType: personalColorType,
       categories: categories,
       aiExplanations: aiExplanations,
@@ -170,7 +203,22 @@ class AIMakeupRecommendationModel extends MakeupRecommendationModel {
       stepByStepInstructions: steps,
       highlightAreas: highlights,
       personalColorExplanation: personalColorExplanation,
+      // Enhanced AI makeup functionality fields
+      reasoningExplanation: reasoningExplanation,
+      detailedSteps: detailedSteps,
+      diagnosisContext: diagnosisContext,
     );
+
+    // デバッグ: 構築後の値確認
+    debugPrint('🔧 [AIMakeupRecommendationModel] コンストラクター完了後:');
+    debugPrint('   model.hasReasoningExplanation: ${model.hasReasoningExplanation}');
+    debugPrint('   model.reasoningExplanation: ${model.reasoningExplanation != null ? '${model.reasoningExplanation!.substring(0, model.reasoningExplanation!.length.clamp(0, 50))}...' : 'null'}');
+    debugPrint('   model.hasDetailedSteps: ${model.hasDetailedSteps}');
+    debugPrint('   model.detailedSteps.length: ${model.detailedSteps.length}');
+    debugPrint('   model.personalColorExplanation: ${model.personalColorExplanation != null ? '${model.personalColorExplanation!.substring(0, model.personalColorExplanation!.length.clamp(0, 50))}...' : 'null'}');
+    debugPrint('   model.hasDiagnosisContext: ${model.hasDiagnosisContext}');
+
+    return model;
   }
 
   /// AIMakeupRecommendationModel を JSON に変換
@@ -213,6 +261,10 @@ class AIMakeupRecommendationModel extends MakeupRecommendationModel {
       stepByStepInstructions: entity.stepByStepInstructions,
       highlightAreas: entity.highlightAreas,
       personalColorExplanation: entity.personalColorExplanation,
+      // Enhanced AI makeup functionality fields
+      reasoningExplanation: entity.reasoningExplanation,
+      detailedSteps: entity.detailedSteps,
+      diagnosisContext: entity.diagnosisContext,
     );
   }
 
@@ -241,6 +293,10 @@ class AIMakeupRecommendationModel extends MakeupRecommendationModel {
       stepByStepInstructions: model.stepByStepInstructions,
       highlightAreas: model.highlightAreas,
       personalColorExplanation: model.personalColorExplanation,
+      // Enhanced AI makeup functionality fields
+      reasoningExplanation: model.reasoningExplanation,
+      detailedSteps: model.detailedSteps,
+      diagnosisContext: model.diagnosisContext,
     );
   }
 
@@ -273,34 +329,66 @@ class AIMakeupRecommendationModel extends MakeupRecommendationModel {
   /// AI生成画像の情報を含むエンティティに変換します。
   @override
   MakeupRecommendation toEntity() {
+    // Note: The original implementation returned only image-related fields,
+    // which dropped enhanced AI fields parsed from the API (reasoning,
+    // detailed steps, diagnosis context, etc.). This caused V3 UI to miss
+    // those values. We now map all available fields into the domain entity.
     return MakeupRecommendation(
       personalColorType: personalColorType,
       categories: categories,
       aiExplanations: aiExplanations,
       requestId: requestId,
       timestamp: timestamp,
-      generatedImageData: generatedImage?.imageData, // AI生成画像のBase64データを含む
-      generatedImageSize: generatedImageSize, // AI生成画像のサイズ情報を含む
-      generatedImageDateTime: generatedImageDateTime, // AI生成画像の生成日時を含む
+      // AI生成画像
+      generatedImageData: generatedImage?.imageData,
+      generatedImageSize: generatedImageSize,
+      generatedImageDateTime: generatedImageDateTime,
+      // Phase 1/2 拡張
+      originalImageData: originalImageData,
+      estimatedAge: estimatedAge,
+      makeupExperienceLevel: makeupExperienceLevel,
+      stepByStepInstructions: stepByStepInstructions,
+      highlightAreas: highlightAreas,
+      personalColorExplanation: personalColorExplanation,
+      // Enhanced AI makeup functionality fields
+      reasoningExplanation: reasoningExplanation,
+      detailedSteps: detailedSteps,
+      diagnosisContext: diagnosisContext,
     );
   }
 
   /// パーソナルカラータイプを文字列から変換
-  /// 
+  ///
   /// APIレスポンスの文字列値を PersonalColorType enum に変換します。
   /// 大文字・小文字を問わず変換可能です。
   static PersonalColorType _parsePersonalColorType(String value) {
-    switch (value.toLowerCase()) {
-      case 'spring':
-        return PersonalColorType.spring;
-      case 'summer':
-        return PersonalColorType.summer;
-      case 'autumn':
-        return PersonalColorType.autumn;
-      case 'winter':
-        return PersonalColorType.winter;
-      default:
-        throw ArgumentError('Unknown personal color type: $value');
+    try {
+      // 既存の拡張メソッドを使用（大文字版）
+      return PersonalColorTypeExtension.fromApiValue(value);
+    } catch (e) {
+      // 小文字の場合は最初の文字を大文字にして再試行
+      final capitalizedValue = value.isNotEmpty
+          ? '${value[0].toUpperCase()}${value.substring(1).toLowerCase()}'
+          : value;
+      try {
+        return PersonalColorTypeExtension.fromApiValue(capitalizedValue);
+      } catch (e2) {
+        // どちらも失敗した場合のフォールバック
+        switch (value.toLowerCase()) {
+          case 'spring':
+            return PersonalColorType.spring;
+          case 'summer':
+            return PersonalColorType.summer;
+          case 'autumn':
+            return PersonalColorType.autumn;
+          case 'winter':
+            return PersonalColorType.winter;
+          default:
+            // デフォルト値を返してエラーを回避
+            debugPrint('❌ [AIMakeupRecommendationModel] Unknown personal color type: $value, defaulting to spring');
+            return PersonalColorType.spring;
+        }
+      }
     }
   }
 

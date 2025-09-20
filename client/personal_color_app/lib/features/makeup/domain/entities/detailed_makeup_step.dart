@@ -97,10 +97,10 @@ class DetailedMakeupStep extends MakeupStep {
   /// JSONからの生成
   factory DetailedMakeupStep.fromJson(Map<String, dynamic> json) {
     return DetailedMakeupStep(
-      step: json['step'] as int,
-      category: StepCategory.fromString(json['category'] as String),
-      instruction: json['instruction'] as String,
-      reasoning: json['reasoning'] as String,
+      step: json['step'] as int? ?? 1,
+      category: StepCategory.fromString(json['category'] as String? ?? 'base'),
+      instruction: json['instruction'] as String? ?? '',
+      reasoning: json['reasoning'] as String? ?? '',
       tips: json['tips'] as String?,
       estimatedTime: json['estimatedTime'] as int?,
       difficultyLevel: DifficultyLevel.fromString(
