@@ -132,6 +132,18 @@ class _AIMakeupRecommendationPageV3State extends State<AIMakeupRecommendationPag
     String? originalImageData,
     AIMakeupRecommendationProvider provider,
   ) {
+    // デバッグログ: 表示条件の確認
+    debugPrint('🖼️ [AIMakeupRecommendationPageV3] 表示条件チェック:');
+    debugPrint('   hasGeneratedImage: ${rec.hasGeneratedImage}');
+    debugPrint('   hasReasoningExplanation: ${rec.hasReasoningExplanation}');
+    debugPrint('   reasoningExplanation: ${rec.reasoningExplanation != null ? '${rec.reasoningExplanation!.substring(0, rec.reasoningExplanation!.length.clamp(0, 50))}...' : 'null'}');
+    debugPrint('   hasDetailedSteps: ${rec.hasDetailedSteps}');
+    debugPrint('   detailedSteps.length: ${rec.detailedSteps.length}');
+    debugPrint('   stepByStepInstructions.length: ${rec.stepByStepInstructions.length}');
+    debugPrint('   personalColorExplanation != null: ${rec.personalColorExplanation != null}');
+    debugPrint('   personalColorExplanation: ${rec.personalColorExplanation != null ? '${rec.personalColorExplanation!.substring(0, rec.personalColorExplanation!.length.clamp(0, 50))}...' : 'null'}');
+    debugPrint('   hasDiagnosisContext: ${rec.hasDiagnosisContext}');
+
     final ui = AgeAdaptiveUiPresets.of(rec.ageGroup);
     final mq = MediaQuery.of(context);
     return MediaQuery(

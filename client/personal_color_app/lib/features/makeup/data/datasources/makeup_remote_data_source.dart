@@ -422,20 +422,58 @@ class MakeupRemoteDataSourceImpl implements MakeupRemoteDataSource {
         debugPrint('   Response keys: ${jsonData.keys.toList()}');
         debugPrint('   ai_explanations type: ${jsonData['ai_explanations'].runtimeType}');
         debugPrint('   generated_image present: ${jsonData.containsKey('generated_image')}');
-        
+
+        // 拡張フィールドの詳細ログ
+        debugPrint('🔍 [AI_MAKEUP_CONTEXT_ENHANCED_FIELDS] Enhanced AI functionality fields:');
+        debugPrint('   reasoning_explanation present: ${jsonData.containsKey('reasoning_explanation')}');
+        debugPrint('   reasoning_explanation value: ${jsonData['reasoning_explanation']}');
+        debugPrint('   detailed_steps present: ${jsonData.containsKey('detailed_steps')}');
+        if (jsonData['detailed_steps'] != null) {
+          final detailedSteps = jsonData['detailed_steps'] as List<dynamic>?;
+          debugPrint('   detailed_steps count: ${detailedSteps?.length ?? 0}');
+          if (detailedSteps != null && detailedSteps.isNotEmpty) {
+            for (int i = 0; i < detailedSteps.length; i++) {
+              final step = detailedSteps[i] as Map<String, dynamic>;
+              debugPrint('   detailed_steps[$i] keys: ${step.keys.toList()}');
+              debugPrint('   detailed_steps[$i] step: ${step['step']}');
+              debugPrint('   detailed_steps[$i] category: ${step['category']}');
+              debugPrint('   detailed_steps[$i] reasoning: ${step['reasoning']}');
+            }
+          }
+        }
+        debugPrint('   diagnosis_context present: ${jsonData.containsKey('diagnosis_context')}');
+        if (jsonData['diagnosis_context'] != null) {
+          final diagnosisContext = jsonData['diagnosis_context'] as Map<String, dynamic>;
+          debugPrint('   diagnosis_context keys: ${diagnosisContext.keys.toList()}');
+          debugPrint('   diagnosis_context color_type: ${diagnosisContext['color_type']}');
+          debugPrint('   diagnosis_context confidence: ${diagnosisContext['confidence']}');
+        }
+
         if (jsonData.containsKey('generated_image') && jsonData['generated_image'] != null) {
           final generatedImage = jsonData['generated_image'] as Map<String, dynamic>;
           debugPrint('   generated_image keys: ${generatedImage.keys.toList()}');
           debugPrint('   generated_image model: ${generatedImage['model_used']}');
-          
+
           // 画像データサイズを概算
           final imageDataLength = (generatedImage['image_data'] as String?)?.length ?? 0;
           final estimatedSize = (imageDataLength * 3) ~/ 4; // Base64デコード後のサイズ概算
           debugPrint('   estimated image size: ${(estimatedSize / 1024).toStringAsFixed(1)}KB');
         }
-        
-        final recommendation = AIMakeupRecommendationModel.fromJson(jsonData);
-        
+
+        // JSON パース処理（エラーハンドリング付き）
+        AIMakeupRecommendationModel recommendation;
+        try {
+          recommendation = AIMakeupRecommendationModel.fromJson(jsonData);
+          debugPrint('✅ [AI_MAKEUP_CONTEXT_JSON_PARSE] Successfully parsed response to AIMakeupRecommendationModel');
+        } catch (parseError) {
+          debugPrint('❌ [AI_MAKEUP_CONTEXT_JSON_PARSE] Failed to parse response: $parseError');
+          debugPrint('📋 [AI_MAKEUP_CONTEXT_JSON_DUMP] Raw JSON data:');
+          for (final entry in jsonData.entries) {
+            debugPrint('   "${entry.key}": ${entry.value}');
+          }
+          rethrow; // 元のエラーを再スロー
+        }
+
         // Success logging with detailed info
         final totalProducts = _countTotalProducts(jsonData);
         final aiExplanations = jsonData['ai_explanations'] as Map<String, dynamic>? ?? {};

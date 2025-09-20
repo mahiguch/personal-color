@@ -8,8 +8,8 @@ class FirebaseAppCheckService {
     await FirebaseAppCheck.instance.activate(
       // iOS用: DeviceCheckプロバイダーを使用
       // デバッグ環境では自動的にデバッグプロバイダーが使用される
-      appleProvider: kDebugMode 
-          ? AppleProvider.debug 
+      appleProvider: kDebugMode
+          ? AppleProvider.debug
           : AppleProvider.deviceCheck,
     );
   }
@@ -20,7 +20,10 @@ class FirebaseAppCheckService {
       final token = await FirebaseAppCheck.instance.getToken(forceRefresh);
       return token;
     } catch (e) {
-      debugPrint('App Check token取得エラー: $e');
+      // デバッグ時のみログ出力
+      if (kDebugMode) {
+        debugPrint('App Check token取得エラー: $e');
+      }
       return null;
     }
   }

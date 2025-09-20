@@ -102,9 +102,6 @@ class ApiClient {
             final token = await FirebaseAppCheckService.getToken();
             if (token != null) {
               options.headers['X-Firebase-AppCheck'] = token;
-              debugPrint('🔐 App Check token added to request');
-            } else {
-              debugPrint('⚠️ App Check token not available');
             }
           } catch (e) {
             debugPrint('⚠️ Failed to get App Check token: $e');

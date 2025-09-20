@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import '../../../diagnosis/domain/entities/diagnosis_result.dart';
 import '../../../diagnosis/data/models/diagnosis_result_model.dart';
 import '../../../diagnosis/domain/entities/person_analysis.dart';
@@ -109,11 +110,25 @@ class DiagnosisContext extends Equatable {
 
   /// JSONから作成
   factory DiagnosisContext.fromJson(Map<String, dynamic> json) {
+    // デフォルトの診断結果を作成
+    final defaultDiagnosisResult = DiagnosisResultModel(
+      diagnosisType: PersonalColorType.spring,
+      confidence: 0,
+      explanation: '',
+      recommendedColors: const [],
+      avoidColors: const [],
+      tips: '',
+    );
+
     return DiagnosisContext(
-      colorType: PersonalColorTypeExtension.fromApiValue(json['color_type'] as String),
-      originalImagePath: json['original_image_path'] as String,
-      diagnosisResult: DiagnosisResultModel.fromJson(json['diagnosis_result'] as Map<String, dynamic>),
-      diagnosisTimestamp: DateTime.parse(json['diagnosis_timestamp'] as String),
+      colorType: _parsePersonalColorType(json['color_type'] as String? ?? 'spring'),
+      originalImagePath: json['original_image_path'] as String? ?? '',
+      diagnosisResult: json['diagnosis_result'] != null
+          ? DiagnosisResultModel.fromJson(json['diagnosis_result'] as Map<String, dynamic>)
+          : defaultDiagnosisResult,
+      diagnosisTimestamp: json['diagnosis_timestamp'] != null
+          ? DateTime.parse(json['diagnosis_timestamp'] as String)
+          : DateTime.now(),
       confidence: json['confidence'] as int?,
       personAnalysis: json['person_analysis'] != null
           ? PersonAnalysis.fromJson(json['person_analysis'] as Map<String, dynamic>)
@@ -139,6 +154,41 @@ class DiagnosisContext extends Equatable {
   bool get isValid {
     return originalImagePath.isNotEmpty && 
            diagnosisTimestamp.isBefore(DateTime.now());
+  }
+
+  /// パーソナルカラータイプを文字列から変換
+  ///
+  /// APIレスポンスの文字列値を PersonalColorType enum に変換します。
+  /// 大文字・小文字を問わず変換可能です。
+  static PersonalColorType _parsePersonalColorType(String value) {
+    try {
+      // 既存の拡張メソッドを使用（大文字版）
+      return PersonalColorTypeExtension.fromApiValue(value);
+    } catch (e) {
+      // 小文字の場合は最初の文字を大文字にして再試行
+      final capitalizedValue = value.isNotEmpty
+          ? '${value[0].toUpperCase()}${value.substring(1).toLowerCase()}'
+          : value;
+      try {
+        return PersonalColorTypeExtension.fromApiValue(capitalizedValue);
+      } catch (e2) {
+        // どちらも失敗した場合のフォールバック
+        switch (value.toLowerCase()) {
+          case 'spring':
+            return PersonalColorType.spring;
+          case 'summer':
+            return PersonalColorType.summer;
+          case 'autumn':
+            return PersonalColorType.autumn;
+          case 'winter':
+            return PersonalColorType.winter;
+          default:
+            // デフォルト値を返してエラーを回避
+            debugPrint('❌ [DiagnosisContext] Unknown personal color type: $value, defaulting to spring');
+            return PersonalColorType.spring;
+        }
+      }
+    }
   }
 
   /// デバッグ用の文字列表現
