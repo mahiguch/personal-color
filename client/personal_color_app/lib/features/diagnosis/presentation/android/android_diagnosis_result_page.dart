@@ -150,23 +150,6 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
   Widget _buildMaterialActionButtons(BuildContext context, ThemeData theme) {
     return Column(
       children: [
-        // おすすめのメイクボタン - FilledButton使用
-        SizedBox(
-          width: double.infinity,
-          height: 56,
-          child: FilledButton.icon(
-            onPressed: () => _navigateToMakeupRecommendation(context),
-            icon: const Icon(Icons.palette),
-            label: const Text('おすすめのメイク'),
-            style: FilledButton.styleFrom(
-              backgroundColor: _getMaterialThemeColor(theme, result.diagnosisType),
-              foregroundColor: _getMaterialOnThemeColor(theme, result.diagnosisType),
-            ),
-          ),
-        ),
-        
-        const SizedBox(height: 12),
-        
         // AI生成メイクボタン - FilledButton.tonal使用
         SizedBox(
           width: double.infinity,
@@ -181,7 +164,7 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
             ),
           ),
         ),
-        
+
         const SizedBox(height: 12),
         
         // おすすめのファッションボタン - FilledButton.tonal使用
@@ -272,21 +255,6 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
         return theme.colorScheme.primary;
     }
   }
-
-  /// Material Design 3準拠のテーマ色上の文字色を取得
-  Color _getMaterialOnThemeColor(ThemeData theme, PersonalColorType colorType) {
-    switch (colorType) {
-      case PersonalColorType.spring:
-        return theme.colorScheme.onPrimary;
-      case PersonalColorType.summer:
-        return theme.colorScheme.onSecondary;
-      case PersonalColorType.autumn:
-        return theme.colorScheme.onTertiary;
-      case PersonalColorType.winter:
-        return theme.colorScheme.onPrimary;
-    }
-  }
-
 
   /// メイクアップ推奨ページに移動する
   void _navigateToMakeupRecommendation(BuildContext context) {
