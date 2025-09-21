@@ -1,0 +1,88 @@
+import pytest
+from fastapi.testclient import TestClient
+from unittest.mock import Mock, patch
+import io
+from PIL import Image
+
+# この段階ではモックテストを実装
+# 実際のサーバー起動にはimport問題があるため
+
+
+class TestCoordinateAPI:
+    """コーディネートAPI のテストクラス"""
+    
+    def create_test_image(self):
+        """テスト用画像データを作成"""
+        # PIL画像を作成してバイトストリームに変換
+        img = Image.new('RGB', (512, 512), color='red')
+        img_byte_arr = io.BytesIO()
+        img.save(img_byte_arr, format='JPEG')
+        img_byte_arr.seek(0)
+        return img_byte_arr
+    
+    @pytest.fixture
+    def mock_client(self):
+        """モックテストクライアントのフィクスチャ"""
+        # 実際のAPIテストは依存関係解決後に実装
+        return Mock()
+    
+    def test_coordinate_endpoint_structure(self):
+        """API エンドポイント構造のテスト"""
+        # エンドポイントの基本構造をテスト
+        from src.api.endpoints.coordinate import router
+        
+        # ルーターが正しく設定されているかチェック
+        assert router.prefix == "/api/v1"
+        assert "coordinate" in router.tags
+    
+    def test_request_validation_structure(self):
+        """リクエストバリデーション構造のテスト"""
+        from src.api.endpoints.coordinate import CoordinateGenerationRequest
+        
+        # リクエストモデルの構造をテスト
+        request = CoordinateGenerationRequest(
+            personal_color_type="SPRING",
+            style_preference="CASUAL",
+            season="spring",
+            include_accessories=True,
+            generate_image=True
+        )
+        
+        assert request.personal_color_type == "SPRING"
+        assert request.style_preference == "CASUAL"
+        assert request.include_accessories is True
+        assert request.generate_image is True
+    
+    def test_response_model_structure(self):
+        """レスポンスモデル構造のテスト"""
+        from src.api.endpoints.coordinate import AICoordinateRecommendationResponse
+        from datetime import datetime
+        
+        # レスポンスモデルの構造をテスト
+        response = AICoordinateRecommendationResponse(
+            personal_color_type="SPRING",
+            style_preference="CASUAL",
+            fashion_items=[],
+            recommendation_reason="テスト理由",
+            styling_points=[],
+            generated_image=None,
+            request_id="test_123",
+            timestamp=datetime.now().isoformat()
+        )
+        
+        assert response.personal_color_type == "SPRING"
+        assert response.style_preference == "CASUAL"
+        assert response.recommendation_reason == "テスト理由"
+        assert response.request_id == "test_123"
+
+
+class TestHealthEndpoint:
+    """ヘルスチェックエンドポイントのテスト"""
+    
+    def test_health_endpoint_structure(self):
+        """ヘルスチェックエンドポイント構造のテスト"""
+        from src.api.endpoints.coordinate import router
+        
+        # ヘルスチェックエンドポイントの存在確認
+        routes = [route.path for route in router.routes]
+        assert "/coordinate/health" in routes
