@@ -131,22 +131,30 @@
 **工数**: 2日  
 **担当**: Backend Developer  
 **依存**: Task #004
-**ステータス**: 🚧 進行中
+**ステータス**: ✅ 完了
 
 #### 作業内容
-- [ ] Gemini Vision APIを使用した年齢推定機能
-- [ ] 年齢に基づくスタイル推薦ロジック
-- [ ] 年齢推定結果のバリデーション
-- [ ] エラーハンドリング (顔検出失敗など)
+- [x] Gemini Vision APIを使用した年齢推定機能
+- [x] 年齢に基づくスタイル推薦ロジック
+- [x] 年齢推定結果のバリデーション
+- [x] エラーハンドリング (顔検出失敗など)
+- [x] AgeGroup列挙型と信頼度スコア実装
+- [x] 複数回推定による精度向上機能
+- [x] AgeAwareCoordinateService の統合実装
+- [x] 年齢適応型APIエンドポイント追加
 
 #### 成果物
-- `server/src/domain/services/age_estimation_service.py`
-- 年齢推定のテストケース
+- `server/src/domain/services/age_estimation_service.py` ✅
+- `server/src/domain/services/age_aware_coordinate_service.py` ✅
+- `server/src/tests/domain/test_age_estimation_service.py` ✅
+- 年齢適応型 API エンドポイント ✅
 
 #### 受け入れ条件
-- [ ] 様々な年齢の写真で適切な推定ができる
-- [ ] 顔が検出できない場合のエラー処理が動作する
-- [ ] 推定年齢に基づくスタイル推薦が正常に動作する
+- [x] 様々な年齢の写真で適切な推定ができる
+- [x] 顔が検出できない場合のエラー処理が動作する
+- [x] 推定年齢に基づくスタイル推薦が正常に動作する
+- [x] 信頼度スコア付き年齢推定が実装されている
+- [x] 年齢グループ別スタイル推薦ルールが実装されている
 
 ---
 
@@ -155,6 +163,7 @@
 **工数**: 2日  
 **担当**: Backend Developer  
 **依存**: Task #002
+**ステータス**: 🚧 進行中
 
 #### 作業内容
 - [ ] パーソナルカラータイプ別の色パレット定義
