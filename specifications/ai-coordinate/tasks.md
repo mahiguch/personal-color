@@ -20,14 +20,14 @@
 **担当**: Backend Developer  
 
 #### 作業内容
-- [ ] `specifications/ai-coordinate/` フォルダ構造の確認
-- [ ] 新規API エンドポイント `/api/v1/ai-coordinate` の基本骨格作成
-- [ ] 必要なPythonパッケージのインストール
+- [x] `specifications/ai-coordinate/` フォルダ構造の確認
+- [x] 新規API エンドポイント `/api/v1/ai-coordinate` の基本骨格作成
+- [x] 必要なPythonパッケージのインストール
   - `google-genai`
   - `opencv-python`
   - `Pillow`
-- [ ] 環境変数設定 (GEMINI_API_KEY, IMAGEN_API_KEY)
-- [ ] 基本的なFastAPIルーターの実装
+- [x] 環境変数設定 (GEMINI_API_KEY, IMAGEN_API_KEY)
+- [x] 基本的なFastAPIルーターの実装
 
 #### 成果物
 - `server/src/routers/ai_coordinate.py`
@@ -35,8 +35,8 @@
 - 環境設定ドキュメント
 
 #### 受け入れ条件
-- [ ] API エンドポイントが正常に起動する
-- [ ] 基本的なヘルスチェックが通る
+- [x] API エンドポイントが正常に起動する
+- [x] 基本的なヘルスチェックが通る
 
 ---
 
@@ -45,19 +45,20 @@
 **工数**: 2日  
 **担当**: Backend Developer  
 **依存**: Task #001
+**ステータス**: ✅ 完了
 
 #### 作業内容
-- [ ] ドメインエンティティの実装
+- [x] ドメインエンティティの実装
   - `UserPhoto` クラス
   - `FashionCoordinate` クラス
   - `CoordinateRequest` クラス
-- [ ] バリューオブジェクトの実装
+- [x] バリューオブジェクトの実装
   - `ColorPalette` クラス
   - `GenerationMetadata` クラス
-- [ ] 列挙型の定義
+- [x] 列挙型の定義
   - `PersonalColorType`
   - `StylePreference`
-- [ ] ドメインモデルのバリデーションロジック
+- [x] ドメインモデルのバリデーションロジック
 
 #### 成果物
 - `server/src/domain/entities/`
@@ -65,8 +66,8 @@
 - `server/src/domain/enums/`
 
 #### 受け入れ条件
-- [ ] 全ドメインモデルのユニットテストが通る
-- [ ] バリデーションが正常に動作する
+- [x] 全ドメインモデルのユニットテストが通る
+- [x] バリデーションが正常に動作する
 
 ---
 
@@ -75,13 +76,14 @@
 **工数**: 2日  
 **担当**: Backend Developer  
 **依存**: Task #002
+**ステータス**: ✅ 完了
 
 #### 作業内容
-- [ ] リクエスト/レスポンスモデルの定義 (Pydantic)
-- [ ] 基本的なエンドポイント実装
-- [ ] 画像アップロード処理の実装
-- [ ] エラーハンドリングの基本実装
-- [ ] APIドキュメント生成 (OpenAPI)
+- [x] リクエスト/レスポンスモデルの定義 (Pydantic)
+- [x] 基本的なエンドポイント実装
+- [x] 画像アップロード処理の実装
+- [x] エラーハンドリングの基本実装
+- [x] APIドキュメント生成 (OpenAPI)
 
 #### 成果物
 - `server/src/api/models/ai_coordinate.py`
@@ -89,9 +91,9 @@
 - APIドキュメント
 
 #### 受け入れ条件
-- [ ] 画像アップロードが正常に動作する
-- [ ] エラー時に適切なHTTPステータスコードが返る
-- [ ] OpenAPIドキュメントが正常に生成される
+- [x] 画像アップロードが正常に動作する
+- [x] エラー時に適切なHTTPステータスコードが返る
+- [x] OpenAPIドキュメントが正常に生成される
 
 ---
 
@@ -100,13 +102,14 @@
 **工数**: 3日  
 **担当**: Backend Developer  
 **依存**: Task #002
+**ステータス**: ✅ 完了
 
 #### 作業内容
-- [ ] Imagen サービスクライアントの実装
-- [ ] Gemini サービスクライアントの実装
-- [ ] AI サービス用の例外クラス定義
-- [ ] API制限・タイムアウト処理の実装
-- [ ] モックサービスの実装 (テスト用)
+- [x] Imagen サービスクライアントの実装
+- [x] Gemini サービスクライアントの実装
+- [x] AI サービス用の例外クラス定義
+- [x] API制限・タイムアウト処理の実装
+- [x] モックサービスの実装 (テスト用)
 
 #### 成果物
 - `server/src/infrastructure/ai_services/imagen_service.py`
@@ -115,9 +118,9 @@
 - `server/src/infrastructure/ai_services/mock_services.py`
 
 #### 受け入れ条件
-- [ ] 各AI サービスの接続テストが通る
-- [ ] エラー処理が適切に動作する
-- [ ] モックサービスでの単体テストが通る
+- [x] 各AI サービスの接続テストが通る
+- [x] エラー処理が適切に動作する
+- [x] モックサービスでの単体テストが通る
 
 ---
 
@@ -128,6 +131,7 @@
 **工数**: 2日  
 **担当**: Backend Developer  
 **依存**: Task #004
+**ステータス**: 🚧 進行中
 
 #### 作業内容
 - [ ] Gemini Vision APIを使用した年齢推定機能

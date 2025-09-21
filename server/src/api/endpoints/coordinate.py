@@ -14,7 +14,12 @@ from ...core.config.settings import get_settings
 from ...core.security.input_validation import SecurityValidator, InputValidationError
 from ...domain.entities import UserPhoto, FashionCoordinate, CoordinateRequest
 from ...domain.enums import PersonalColorType, StylePreference, Season
-from ...application.services import CoordinateApplicationService
+from src.domain.services.age_aware_coordinate_service import (
+    AgeAwareCoordinateService,
+    AgeAwareCoordinateRequest,
+    create_age_aware_coordinate_service
+)
+from src.application.services.coordinate_application_service import CoordinateApplicationService
 from ...infrastructure.services.coordinate_ai_services import (
     CoordinateImageAnalysisService,
     CoordinateImageGenerationService, 
@@ -23,10 +28,12 @@ from ...infrastructure.services.coordinate_ai_services import (
 from ...infrastructure.services import FashionCoordinateService
 from ...infrastructure.repositories import InMemoryCoordinateRepository, InMemoryAnalyticsRepository
 from ...infrastructure.validators import CoordinateValidator
-from ...infrastructure.exceptions import (
+from src.infrastructure.exceptions import (
     CoordinateGenerationError,
     ValidationError,
-    InvalidCoordinateRequestError
+    InputValidationError,
+    InvalidCoordinateRequestError,
+    AgeEstimationError
 )
 
 router = APIRouter(prefix="/api/v1", tags=["coordinate"])
@@ -297,6 +304,190 @@ async def ai_coordinate_recommendation(
         raise HTTPException(
             status_code=500, 
             detail="Internal server error occurred during coordinate generation"
+        )
+
+
+@router.post("/coordinate/ai-recommendation-age-aware", response_model=AICoordinateRecommendationResponse)
+async def ai_coordinate_recommendation_age_aware(
+    request: Request,
+    image: UploadFile = File(...),
+    personal_color_type: str = Form(...),
+    style_preference: Optional[str] = Form(None),
+    season: Optional[str] = Form(None),
+    use_age_estimation: bool = Form(True),
+    confidence_threshold: float = Form(0.6),
+    include_accessories: bool = Form(True),
+    generate_image: bool = Form(True),
+) -> AICoordinateRecommendationResponse:
+    """
+    Age-aware AI-powered fashion coordinate recommendation endpoint.
+    
+    Analyzes user photo, estimates age, and generates age-appropriate fashion coordination.
+    """
+    
+    request_id = f"age_coord_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{hash(str(datetime.now().timestamp()))}"
+    
+    try:
+        # Enhanced input validation
+        if not personal_color_type:
+            raise HTTPException(status_code=400, detail="personal_color_type is required")
+        
+        # Validate and process uploaded image
+        if not image.filename:
+            raise HTTPException(status_code=400, detail="No image file provided")
+        
+        # Read image data
+        image_data = await image.read()
+        
+        # Use enhanced validation
+        try:
+            # Validate personal color type
+            color_type = CoordinateValidator.validate_personal_color_type(personal_color_type)
+            
+            # Validate style preference
+            style_pref = CoordinateValidator.validate_style_preference(style_preference)
+            
+            # Create validated UserPhoto
+            user_photo = CoordinateValidator.create_user_photo(
+                image_data=image_data,
+                filename=image.filename,
+                content_type=image.content_type or "image/jpeg"
+            )
+            
+        except ValidationError as ve:
+            logger.error(f"Validation error: {ve.message}")
+            raise HTTPException(
+                status_code=400, 
+                detail={
+                    "error": "Validation failed",
+                    "details": ve.details,
+                    "message": ve.message
+                }
+            )
+        
+        # Security validation
+        try:
+            await security_validator.validate_image_upload(image_data, image.filename)
+        except InputValidationError as e:
+            raise HTTPException(status_code=400, detail=str(e))
+        
+        # Create age-aware coordinate request
+        age_aware_request = AgeAwareCoordinateRequest(
+            user_photo=user_photo,
+            personal_color=color_type,
+            preferred_style=style_pref,
+            use_age_estimation=use_age_estimation,
+            confidence_threshold=confidence_threshold
+        )
+        
+        # Generate age-aware coordinate using the new service
+        try:
+            start_time = time.time()
+            
+            # Initialize age-aware service
+            age_aware_service = create_age_aware_coordinate_service(
+                gemini_service=None,  # 実際の実装では適切なサービスを注入
+                imagen_service=None   # 実際の実装では適切なサービスを注入
+            )
+            
+            # Generate age-aware coordinate
+            result = await age_aware_service.generate_age_aware_coordinate(age_aware_request)
+            
+            generation_time = time.time() - start_time
+            
+            # Record success metrics
+            await analytics_repository.record_generation_success(request_id, generation_time)
+            
+            # Convert result to response model
+            response = AICoordinateRecommendationResponse(
+                personal_color_type=personal_color_type,
+                style_preference=style_preference or result.coordinate.style_preference.value,
+                fashion_items=[
+                    FashionItem(
+                        id="age_aware_item_001",
+                        category="age_appropriate_coordinate",
+                        name="年齢を考慮したAIコーディネート",
+                        color=result.coordinate.color_analysis,
+                        style=result.coordinate.style_preference.value,
+                        season_appropriate=True,
+                        age_appropriate=True
+                    )
+                ],
+                recommendation_reason=f"{result.coordinate.recommendation_text}\n\n{result.adjustment_reason}",
+                styling_points=[
+                    StylingPoint(
+                        category="年齢適切スタイリング",
+                        point=point,
+                        reason=f"推定年齢{result.age_estimation.estimated_age}歳に基づく提案"
+                    )
+                    for point in result.coordinate.coordinate_points
+                ],
+                generated_image=GeneratedImageData(
+                    image_url="data:image/jpeg;base64," + base64.b64encode(result.coordinate.generated_image).decode() if result.coordinate.generated_image else "",
+                    generation_time=generation_time,
+                    model_version="age-aware-v1.0",
+                    prompt_used="Age-aware coordinate generation"
+                ) if result.coordinate.generated_image and generate_image else None,
+                estimated_age=result.age_estimation.estimated_age,
+                season_context=season,
+                color_analysis={
+                    "main_colors": result.style_recommendation.age_appropriate_colors,
+                    "personal_color_type": personal_color_type,
+                    "age_group": result.age_estimation.age_group.value,
+                    "confidence_score": result.confidence_score
+                },
+                request_id=request_id,
+                timestamp=datetime.now().isoformat()
+            )
+            
+            logger.info(
+                f"Successfully generated age-aware coordinate recommendation: {request_id}, "
+                f"estimated_age: {result.age_estimation.estimated_age}, "
+                f"confidence: {result.confidence_score}"
+            )
+            return response
+            
+        except Exception as service_error:
+            logger.error(f"Service error in age-aware coordinate generation: {str(service_error)}")
+            # Record error metrics
+            await analytics_repository.record_generation_error(
+                error_type=type(service_error).__name__,
+                error_message=str(service_error)
+            )
+            
+            # Handle specific error types
+            if isinstance(service_error, (CoordinateGenerationError, AgeEstimationError)):
+                raise HTTPException(
+                    status_code=500,
+                    detail={
+                        "error": "Age-aware coordinate generation failed",
+                        "message": str(service_error)
+                    }
+                )
+            else:
+                raise HTTPException(
+                    status_code=500, 
+                    detail="Failed to generate age-aware coordinate recommendation"
+                )
+        
+    except HTTPException:
+        # Re-raise HTTP exceptions
+        raise
+    except ValidationError as ve:
+        logger.error(f"Validation error: {ve.message}")
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "Validation failed",
+                "message": ve.message,
+                "details": ve.details
+            }
+        )
+    except Exception as e:
+        logger.error(f"Unexpected error in age-aware AI coordinate recommendation: {str(e)}")
+        raise HTTPException(
+            status_code=500, 
+            detail="Internal server error occurred during age-aware coordinate generation"
         )
 
 
