@@ -143,32 +143,32 @@ class EnhancedRecommendationPromptTemplate:
 以下のJSON形式で回答してください：
 
 ```json
-{
+{{
   "main_recommendation": "メインの推奨文章",
   "reasoning": "推奨理由の詳細説明",
   "styling_tips": [
-    {
+    {{
       "category": "カテゴリ",
       "title": "ティップタイトル",
       "content": "ティップ内容",
       "importance": "high/medium/low",
       "applicability": ["適用場面1", "適用場面2"]
-    }
+    }}
   ],
-  "color_guidance": {
+  "color_guidance": {{
     "primary_colors": ["主要色1", "主要色2"],
     "accent_colors": ["アクセント色1", "アクセント色2"],
     "avoid_colors": ["避けるべき色1", "避けるべき色2"],
     "color_theory_explanation": "色彩理論の説明",
     "seasonal_adjustments": "季節調整のアドバイス"
-  },
+  }},
   "age_specific_advice": "年齢に特化したアドバイス",
   "seasonal_considerations": "季節的考慮事項",
   "outfit_description": "コーディネート詳細説明",
   "coordination_points": ["コーディネートポイント1", "コーディネートポイント2"],
   "shopping_suggestions": ["ショッピング提案1", "ショッピング提案2"],
   "confidence_boosters": ["自信向上ポイント1", "自信向上ポイント2"]
-}
+}}
 ```
 
 ## 重要な指針
@@ -223,10 +223,15 @@ class EnhancedRecommendationPromptTemplate:
                 "avoid": "若作りや流行に振り回される提案",
                 "emphasize": "品格と個性を両立した大人のスタイル"
             },
-            AgeGroup.MIDDLE_AGED: {
+            AgeGroup.MIDDLE_AGE: {
                 "focus": "年齢を重ねた美しさと知性の表現",
                 "avoid": "老けて見える色やシルエット",
                 "emphasize": "経験値を活かした洗練された着こなし"
+            },
+            AgeGroup.MATURE: {
+                "focus": "品位と快適性を両立した成熟した美しさ",
+                "avoid": "過度にトレンドを追う提案や若すぎるスタイル",
+                "emphasize": "上質感と実用性、洗練された大人の魅力"
             },
             AgeGroup.SENIOR: {
                 "focus": "上品で快適、健康的な印象の重視",
@@ -276,7 +281,7 @@ class EnhancedRecommendationGenerationService:
         
         self.prompt_template = EnhancedRecommendationPromptTemplate()
         self.recommendation_cache = {} if cache_enabled else None
-        self.logger = logging.getLogger(self.__name__)
+        self.logger = logging.getLogger(__name__)
         
         # コンテンツ品質チェッカー
         self.quality_patterns = [

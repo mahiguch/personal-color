@@ -668,7 +668,10 @@ High-quality fashion photography with professional lighting and composition.
             StylePreference.FORMAL: "professional, structured, polished styling with sharp tailoring",
             StylePreference.CUTE: "charming, sweet, playful styling with feminine touches",
             StylePreference.NATURAL: "organic, earthy, unpretentious styling with natural materials",
-            StylePreference.CLASSIC: "timeless, traditional, well-tailored styling with enduring appeal"
+            StylePreference.CLASSIC: "timeless, traditional, well-tailored styling with enduring appeal",
+            StylePreference.SPORTY: "active, athletic, functional styling with performance elements",
+            StylePreference.COOL: "edgy, modern, minimalist styling with contemporary flair",
+            StylePreference.FEMININE: "graceful, delicate, romantic styling with soft and flowing elements"
         }
         
         season_modifiers = {

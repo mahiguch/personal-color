@@ -86,3 +86,17 @@ class ValidationError(CoordinateGenerationError):
         if value is not None:
             details["value"] = str(value)
         super().__init__(f"Validation error for {field_name}: {message}", details)
+
+
+class InputValidationError(ValidationError):
+    """入力値バリデーションエラー"""
+    
+    def __init__(self, field_name: str, message: str, value: Optional[Any] = None):
+        super().__init__(field_name, message, value)
+
+
+class PersonalColorAnalysisError(ImageAnalysisError):
+    """パーソナルカラー分析エラー"""
+    
+    def __init__(self, message: str = "Failed to analyze personal color", details: Optional[Dict[str, Any]] = None):
+        super().__init__(message, details)

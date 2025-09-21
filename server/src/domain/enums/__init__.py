@@ -14,6 +14,12 @@ class StylePreference(Enum):
     CASUAL = "casual"
     FORMAL = "formal"
     SPORTY = "sporty"
+    ELEGANT = "elegant"
+    CUTE = "cute"
+    COOL = "cool"
+    NATURAL = "natural"
+    CLASSIC = "classic"
+    FEMININE = "feminine"
 
 
 class Season(Enum):

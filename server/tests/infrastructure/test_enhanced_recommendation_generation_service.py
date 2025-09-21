@@ -351,8 +351,8 @@ class TestEnhancedRecommendationGenerationService:
         )
         
         assert isinstance(result, RecommendationContent)
-        assert result.metadata["parameters"]["recommendation_type"] == "professional"
-        assert result.metadata["parameters"]["content_tone"] == "elegant"
+        assert result.metadata["parameters"]["recommendation_type"] == RecommendationType.PROFESSIONAL
+        assert result.metadata["parameters"]["content_tone"] == ContentTone.ELEGANT
         assert result.metadata["parameters"]["include_shopping_guide"] is True
     
     @pytest.mark.asyncio
@@ -431,9 +431,9 @@ class TestEnhancedRecommendationGenerationService:
         
         assert isinstance(summary, str)
         assert "28歳" in summary
-        assert "YOUNG_ADULT" in summary
-        assert "SPRING" in summary
-        assert "ELEGANT" in summary
+        assert "young_adult" in summary
+        assert "spring" in summary
+        assert "elegant" in summary
         assert "business" in summary
         assert "confidence" in summary
     
@@ -708,9 +708,9 @@ class TestEnhancedRecommendationGenerationService:
         )
         
         assert isinstance(prompt, str)
-        assert "SPRING" in prompt
+        assert "spring" in prompt
         assert "28歳" in prompt
-        assert "ELEGANT" in prompt
+        assert "elegant" in prompt
         assert "business" in prompt
         assert "main_recommendation、key_points" in prompt
     
@@ -747,9 +747,9 @@ class TestEnhancedRecommendationGenerationService:
         
         assert isinstance(summary, str)
         assert "Age: 28" in summary
-        assert "Color: SPRING" in summary
-        assert "Style: ELEGANT" in summary
-        assert "Season: SPRING" in summary
+        assert "Color: spring" in summary
+        assert "Style: elegant" in summary
+        assert "Season: spring" in summary
         assert "Occasion: business" in summary
     
     @pytest.mark.asyncio
