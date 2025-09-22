@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import '../blocs/ai_fashion_barrel.dart';
 
 /// AI ファッションコーディネート画面
 /// 
@@ -14,19 +16,30 @@ import 'package:image_picker/image_picker.dart';
 /// - 推薦理由・スタイリングポイントの表示
 /// - エラーハンドリング
 /// - ローディング状態の管理
-class AIFashionCoordinateScreen extends StatefulWidget {
+/// 
+/// BLoCパターンを使用した状態管理を実装
+class AIFashionCoordinateScreen extends StatelessWidget {
   const AIFashionCoordinateScreen({super.key});
 
   @override
-  State<AIFashionCoordinateScreen> createState() => _AIFashionCoordinateScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => AIFashionCoordinateBloc(),
+      child: const _AIFashionCoordinateView(),
+    );
+  }
 }
 
-class _AIFashionCoordinateScreenState extends State<AIFashionCoordinateScreen> {
+/// AIファッションコーディネート画面のメインビュー
+class _AIFashionCoordinateView extends StatefulWidget {
+  const _AIFashionCoordinateView();
+
+  @override
+  State<_AIFashionCoordinateView> createState() => _AIFashionCoordinateViewState();
+}
+
+class _AIFashionCoordinateViewState extends State<_AIFashionCoordinateView> {
   final ImagePicker _imagePicker = ImagePicker();
-  File? _selectedImage;
-  bool _isLoading = false;
-  String? _errorMessage;
-  Map<String, dynamic>? _coordinateResult;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +53,28 @@ class _AIFashionCoordinateScreenState extends State<AIFashionCoordinateScreen> {
         centerTitle: true,
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: BlocListener<AIFashionCoordinateBloc, AIFashionState>(
+          listener: (context, state) {
+            // 状態変化時のサイドエフェクト処理
+            if (state is AIFashionSharingSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('${state.shareType}で共有しました'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            } else if (state is AIFashionSavingSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('${state.saveLocation}に保存しました'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            }
+          },
+          child: BlocBuilder<AIFashionCoordinateBloc, AIFashionState>(
+            builder: (context, state) {
+              return SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
