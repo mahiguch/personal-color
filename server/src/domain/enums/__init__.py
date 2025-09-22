@@ -13,6 +13,7 @@ class StylePreference(Enum):
     """スタイル傾向の列挙型"""
     CASUAL = "casual"
     FORMAL = "formal"
+    BUSINESS = "business"
     SPORTY = "sporty"
     ELEGANT = "elegant"
     CUTE = "cute"

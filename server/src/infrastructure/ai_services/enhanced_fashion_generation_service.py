@@ -666,6 +666,7 @@ High-quality fashion photography with professional lighting and composition.
             StylePreference.ELEGANT: "sophisticated, refined, graceful styling with clean lines",
             StylePreference.CASUAL: "relaxed, comfortable, effortless styling with natural flow",
             StylePreference.FORMAL: "professional, structured, polished styling with sharp tailoring",
+            StylePreference.BUSINESS: "professional business attire with smart, office-appropriate styling",
             StylePreference.CUTE: "charming, sweet, playful styling with feminine touches",
             StylePreference.NATURAL: "organic, earthy, unpretentious styling with natural materials",
             StylePreference.CLASSIC: "timeless, traditional, well-tailored styling with enduring appeal",

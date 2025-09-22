@@ -31,74 +31,78 @@ from src.services.image_optimization_service import AdaptiveImageOptimizer
 from src.infrastructure.ai_services.enhanced_fashion_generation_service import ImageQuality
 
 
+@pytest.fixture
+def sample_image_data():
+    """サンプル画像データ（1MB程度）"""
+    return b"sample_image_data" * 80000  # 約1MB
+
+
+@pytest.fixture
+def mock_user_photo(sample_image_data):
+    """モックユーザー写真"""
+    return UserPhoto(
+        image_data=sample_image_data,
+        format="JPEG",
+        width=1024,
+        height=1024
+    )
+
+
+@pytest.fixture
+def mock_services():
+    """モックサービス群"""
+    age_service = AsyncMock()
+    age_service.estimate_age.return_value = MagicMock(
+        estimated_age_group=MagicMock(value="young_adult"),
+        confidence_score=0.9
+    )
+
+    color_service = AsyncMock()
+    color_service.analyze_personal_color.return_value = MagicMock(
+        primary_type=PersonalColorType.SPRING,
+        confidence_score=0.85
+    )
+
+    fashion_service = AsyncMock()
+    fashion_service.generate_fashion_image.return_value = MagicMock(
+        generated_image_url="http://example.com/image.jpg",
+        confidence_score=0.8,
+        generation_time=2.5
+    )
+
+    recommendation_service = AsyncMock()
+    recommendation_service.generate_recommendation.return_value = MagicMock(
+        recommendation_text="Great style recommendation",
+        confidence_score=0.9
+    )
+
+    return {
+        "age": age_service,
+        "color": color_service,
+        "fashion": fashion_service,
+        "recommendation": recommendation_service
+    }
+
+
+@pytest.fixture
+def enhanced_service(mock_services):
+    """拡張サービス（パフォーマンス最適化付き）"""
+    perf_service = PerformanceOptimizationService()
+    image_optimizer = AsyncMock()
+
+    return EnhancedAIFashionCoordinateService(
+        age_estimation_service=mock_services["age"],
+        personal_color_service=mock_services["color"],
+        fashion_generation_service=mock_services["fashion"],
+        recommendation_service=mock_services["recommendation"],
+        performance_service=perf_service,
+        image_optimizer=image_optimizer,
+        max_workers=4
+    )
+
+
 class TestPerformanceOptimization:
     """パフォーマンス最適化テスト"""
-    
-    @pytest.fixture
-    def sample_image_data(self):
-        """サンプル画像データ（1MB程度）"""
-        return b"sample_image_data" * 80000  # 約1MB
-    
-    @pytest.fixture
-    def mock_user_photo(self, sample_image_data):
-        """モックユーザー写真"""
-        return UserPhoto(
-            image_data=sample_image_data,
-            format="JPEG",
-            width=1024,
-            height=1024
-        )
-    
-    @pytest.fixture
-    def mock_services(self):
-        """モックサービス群"""
-        age_service = AsyncMock()
-        age_service.estimate_age.return_value = MagicMock(
-            estimated_age_group=MagicMock(value="young_adult"),
-            confidence_score=0.9
-        )
-        
-        color_service = AsyncMock()
-        color_service.analyze_personal_color.return_value = MagicMock(
-            primary_type=PersonalColorType.SPRING,
-            confidence_score=0.85
-        )
-        
-        fashion_service = AsyncMock()
-        fashion_service.generate_fashion_image.return_value = MagicMock(
-            generated_image_url="http://example.com/image.jpg",
-            confidence_score=0.8,
-            generation_time=2.5
-        )
-        
-        recommendation_service = AsyncMock()
-        recommendation_service.generate_recommendation.return_value = MagicMock(
-            recommendation_text="Great style recommendation",
-            confidence_score=0.9
-        )
-        
-        return {
-            "age": age_service,
-            "color": color_service,
-            "fashion": fashion_service,
-            "recommendation": recommendation_service
-        }
-    
-    @pytest.fixture
-    def enhanced_service(self, mock_services):
-        """拡張サービス（パフォーマンス最適化付き）"""
-        perf_service = PerformanceOptimizationService()
-        image_optimizer = AsyncMock()
-        
-        return EnhancedAIFashionCoordinateService(
-            age_estimation_service=mock_services["age"],
-            personal_color_service=mock_services["color"],
-            fashion_generation_service=mock_services["fashion"],
-            recommendation_service=mock_services["recommendation"],
-            performance_service=perf_service,
-            image_optimizer=image_optimizer,
-            max_workers=4
-        )
     
     @pytest.mark.asyncio
     async def test_performance_optimization_integration(

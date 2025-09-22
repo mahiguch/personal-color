@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 
 
 @dataclass(frozen=True)
@@ -17,8 +17,17 @@ class ColorPalette:
 
 @dataclass(frozen=True)
 class GenerationMetadata:
-    """生成メタデータのバリューオブジェクト"""
-    generation_time: float
+    """生成メタデータのバリューオブジェクト
+
+    互換性のために追加フィールドをオプショナルで保持する。
+    - prompt_used: プロンプト文字列（任意）
+    - quality_score: 生成品質スコア（任意）
+    - estimated_age: 推定年齢（任意）
+    - confidence_score: 信頼度（任意、デフォルト0.0）
+    """
     model_version: str
-    confidence_score: float
-    estimated_age: int
+    generation_time: float
+    confidence_score: float = 0.0
+    estimated_age: Optional[int] = None
+    prompt_used: str = ""
+    quality_score: float = 0.0

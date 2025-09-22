@@ -28,13 +28,13 @@ from ..middleware.rate_limiter import RateLimitMiddleware
 from .middleware.security_headers import SecurityHeadersMiddleware
 
 # from ..middleware.app_check_middleware import AppCheckMiddleware  # 依存関係問題により一時無効化
-from ..core.monitoring import metrics_collector, health_checker
+from ..core.monitoring import metrics_collector, health_checker, performance_monitor
+from ..core.monitoring.logging_config import configure_structured_logging
+from .middleware.request_logging import RequestLoggingMiddleware
+from .middleware.metrics_middleware import MetricsMiddleware
 
-# ログ設定
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+# 構造化ログ設定（本番ではJSON。LOG_FORMAT=text でテキスト）
+configure_structured_logging(force_json=(getattr(get_settings(), 'environment', 'development') in ["production", "staging"]))
 logger = logging.getLogger(__name__)
 
 # 不要なログレベルを調整
@@ -74,6 +74,8 @@ app = FastAPI(
 
 # ミドルウェア設定
 app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(MetricsMiddleware)
+app.add_middleware(RequestLoggingMiddleware)
 
 # Firebase App Check ミドルウェア（最初に追加）
 # 依存関係問題により一時無効化
@@ -178,6 +180,12 @@ async def global_exception_handler(request, exc: Exception):
 async def get_metrics() -> Dict[str, Any]:
     """メトリクス情報を取得"""
     return await metrics_collector.get_metrics()
+
+
+@app.get("/monitoring/summary")
+async def get_performance_summary() -> Dict[str, Any]:
+    """High-level performance summary for dashboards."""
+    return await performance_monitor.get_performance_summary()
 
 
 # 詳細ヘルスチェックエンドポイント
