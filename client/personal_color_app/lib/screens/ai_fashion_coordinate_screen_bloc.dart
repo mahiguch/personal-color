@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import '../blocs/ai_fashion_barrel.dart';
+import '../config/service_locator.dart';
+import '../repositories/ai_fashion_repository.dart';
 
 /// AI ファッションコーディネート画面
 /// 
@@ -24,7 +26,9 @@ class AIFashionCoordinateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AIFashionCoordinateBloc(),
+      create: (context) => AIFashionCoordinateBloc(
+        repository: serviceLocator<AIFashionRepository>(),
+      ),
       child: const _AIFashionCoordinateView(),
     );
   }

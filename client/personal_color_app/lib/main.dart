@@ -8,10 +8,14 @@ import 'firebase_options.dart';
 import 'core/services/firebase_app_check_service.dart';
 import 'core/platform/theme_selector.dart';
 import 'core/navigation/android_navigation_service.dart';
+import 'config/service_locator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
+  
+  // AI Fashion機能の依存性注入を初期化
+  await initializeDependencies();
   
   // Firebase初期化（重複初期化を防ぐ）
   try {

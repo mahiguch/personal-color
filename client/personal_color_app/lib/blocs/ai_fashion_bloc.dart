@@ -5,13 +5,16 @@ import 'package:flutter/foundation.dart';
 
 import 'ai_fashion_event.dart';
 import 'ai_fashion_state.dart';
+import '../repositories/ai_fashion_repository.dart';
 
 /// AI ファッションコーディネート機能のBLoC
 class AIFashionCoordinateBloc extends Bloc<AIFashionEvent, AIFashionState> {
-  // TODO: Task #013でRepositoryを注入する予定
-  // final AIFashionRepository _repository;
+  final AIFashionRepository _repository;
 
-  AIFashionCoordinateBloc() : super(const AIFashionInitial()) {
+  AIFashionCoordinateBloc({
+    required AIFashionRepository repository,
+  }) : _repository = repository,
+       super(const AIFashionInitial()) {
     // イベントハンドラーの登録
     on<AIFashionImageSelected>(_onImageSelected);
     on<AIFashionCoordinateGenerationStarted>(_onGenerationStarted);
@@ -96,8 +99,8 @@ class AIFashionCoordinateBloc extends Bloc<AIFashionEvent, AIFashionState> {
         completedSteps: [],
       ));
 
-      // TODO: Task #013でRepositoryを使用した実際のAPI呼び出し実装
-      await _simulateGenerationProcess(event, emit);
+      // API呼び出しで実際のファッションコーディネート生成
+      await _generateCoordinateWithAPI(event, emit);
 
     } catch (e, stackTrace) {
       debugPrint('AIFashionBloc: Error starting generation - $e');
@@ -364,59 +367,71 @@ class AIFashionCoordinateBloc extends Bloc<AIFashionEvent, AIFashionState> {
     return !nonRetryableErrors.contains(errorCode);
   }
 
-  /// 生成プロセスのシミュレーション（開発用）
-  Future<void> _simulateGenerationProcess(
+  /// API を使用した実際のコーディネート生成
+  Future<void> _generateCoordinateWithAPI(
     AIFashionCoordinateGenerationStarted event,
     Emitter<AIFashionState> emit,
   ) async {
-    final steps = [
-      ('画像解析中...', 0.2),
-      ('年齢推定中...', 0.4),
-      ('パーソナルカラー分析中...', 0.6),
-      ('ファッション生成中...', 0.8),
-      ('推薦理由生成中...', 0.9),
-      ('結果の最終調整中...', 1.0),
-    ];
+    try {
+      // 進捗の更新
+      final steps = [
+        ('画像解析中...', 0.2),
+        ('年齢推定中...', 0.4),
+        ('パーソナルカラー分析中...', 0.6),
+        ('ファッション生成中...', 0.8),
+        ('推薦理由生成中...', 0.9),
+      ];
 
-    for (int i = 0; i < steps.length; i++) {
-      final (stepName, progress) = steps[i];
-      
-      add(AIFashionGenerationProgressUpdated(
-        currentStep: stepName,
-        progress: progress,
-        stepData: {'step': i + 1, 'total': steps.length},
-      ));
-      
-      await Future.delayed(const Duration(seconds: 2));
+      // 各ステップで進捗を更新しながらAPI呼び出し
+      for (int i = 0; i < steps.length; i++) {
+        final (stepName, progress) = steps[i];
+        
+        add(AIFashionGenerationProgressUpdated(
+          currentStep: stepName,
+          progress: progress,
+          stepData: {'step': i + 1, 'total': steps.length},
+        ));
+        
+        // 初回以外は少し待機
+        if (i > 0) {
+          await Future.delayed(const Duration(milliseconds: 500));
+        }
+      }
+
+      // 実際のAPI呼び出し
+      final result = await _repository.generateCoordinateRecommendation(
+        imageFile: event.imageFile,
+        personalColorType: event.preferences?['personalColorType'] ?? 'Spring',
+        stylePreference: event.preferences?['stylePreference'],
+        season: event.preferences?['season'],
+        includeAccessories: event.preferences?['includeAccessories'] ?? true,
+        generateImage: event.preferences?['generateImage'] ?? true,
+      );
+
+      // 成功イベントを発行
+      add(AIFashionCoordinateGenerationSucceeded({
+        'personal_color_info': {
+          'type': result.personalColorType,
+          'confidence': 0.85, // API側で実装されたら使用
+          'description': result.recommendationReason,
+        },
+        'recommendations': result.stylingPoints.map((point) => point.point).toList(),
+        'styling_points': result.stylingPoints.map((point) => point.reason).toList(),
+        'generated_image_url': result.generatedImage?.imageUrl ?? '',
+        'generation_metadata': {
+          'model_version': result.generatedImage?.modelVersion ?? 'unknown',
+          'generation_time': '${result.generatedImage?.generationTime ?? 0.0}s',
+          'prompt_used': result.generatedImage?.promptUsed ?? '',
+          'style_preferences': event.preferences ?? {},
+          'request_id': result.requestId,
+          'timestamp': result.timestamp,
+        },
+      }));
+
+    } catch (e) {
+      debugPrint('AIFashionBloc: API generation error - $e');
+      rethrow; // エラーを上位のcatchブロックに渡す
     }
-
-    // モックの結果データを生成
-    final mockResult = {
-      'personal_color_info': {
-        'type': 'Spring',
-        'confidence': 0.85,
-        'description': '明るく鮮やかな色が似合うスプリングタイプです',
-      },
-      'recommendations': [
-        'パステルカラーのアイテムを選びましょう',
-        'クリアで鮮やかな色を基調にしたコーディネートがおすすめです',
-        'アクセサリーはゴールド系が良く似合います',
-      ],
-      'styling_points': [
-        '明るいトーンの色を選ぶことで、肌の透明感が引き立ちます',
-        'コントラストをつけた配色で、メリハリのあるスタイルに',
-        '軽やかな素材感のアイテムでフレッシュな印象を演出',
-      ],
-      'generated_image_url': 'https://example.com/generated_coordinate.jpg',
-      'generation_metadata': {
-        'model_version': 'v2.1',
-        'generation_time': '28.5s',
-        'quality_score': 0.92,
-        'style_preferences': event.preferences ?? {},
-      },
-    };
-
-    add(AIFashionCoordinateGenerationSucceeded(mockResult));
   }
 
   /// 共有プロセスのシミュレーション（開発用）
