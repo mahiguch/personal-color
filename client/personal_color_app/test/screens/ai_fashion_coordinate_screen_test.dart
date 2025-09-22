@@ -21,7 +21,7 @@ void main() {
       expect(find.text('AI ファッションコーディネート'), findsOneWidget);
       expect(find.text('使い方'), findsOneWidget);
       expect(find.text('写真を選択してください'), findsOneWidget);
-      expect(find.text('カメラで撮影'), findsOneWidget);
+      expect(find.text('カメラ'), findsOneWidget);
       expect(find.text('ギャラリー'), findsOneWidget);
       expect(find.text('コーディネートを生成'), findsOneWidget);
     });
@@ -54,7 +54,7 @@ void main() {
       
       // Then: 空の状態が表示されることを確認
       expect(find.text('写真を選択して\nコーディネートを生成しましょう'), findsOneWidget);
-      expect(find.byIcon(Icons.photo_camera_outlined), findsOneWidget);
+      expect(find.byIcon(Icons.auto_awesome_outlined), findsOneWidget);
     });
 
     testWidgets('should show camera and gallery buttons', (WidgetTester tester) async {
@@ -68,7 +68,7 @@ void main() {
       );
       
       // Then: カメラとギャラリーボタンが表示されることを確認
-      expect(find.text('カメラで撮影'), findsOneWidget);
+      expect(find.text('カメラ'), findsOneWidget);
       expect(find.text('ギャラリー'), findsOneWidget);
       expect(find.byIcon(Icons.camera_alt), findsOneWidget);
       expect(find.byIcon(Icons.photo_library), findsOneWidget);
@@ -86,7 +86,7 @@ void main() {
       
       // Then: 画像プレースホルダーが表示されることを確認
       expect(find.byIcon(Icons.add_photo_alternate_outlined), findsOneWidget);
-      expect(find.text('タップして画像を選択'), findsOneWidget);
+      expect(find.text('写真を選択してください'), findsOneWidget);
     });
   });
 }
