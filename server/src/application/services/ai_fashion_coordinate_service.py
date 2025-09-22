@@ -1,10 +1,13 @@
 """
-AI Fashion Coordinate Service
-Task #009: Application service integration for AI fashion coordination
+AI Fashion Coordinate Service  
+Task #015: Performance Optimization Integration
 
-完全統合されたAIファッションコーディネートサービス
+パフォーマンス最適化統合版AIファッションコーディネートサービス
 - 拡張AI画像生成サービスとGemini推奨サービスの統合
-- 並列処理による高速化(60秒以内の完了目標)
+- キャッシュ機能による高速化
+- 画像最適化による効率化
+- 並列処理による高速化(30秒以内の完了目標)
+- メモリ使用量最適化
 - エラーハンドリングとリトライロジック
 - 詳細なメタデータ収集と監視
 """
@@ -42,6 +45,16 @@ from src.infrastructure.exceptions import (
     PersonalColorAnalysisError,
     AgeEstimationError
 )
+
+# Task #015: パフォーマンス最適化統合
+from src.application.services.enhanced_ai_fashion_coordinate_service import (
+    EnhancedAIFashionCoordinateService,
+    EnhancedCoordinateRequest,
+    EnhancedCoordinateResponse,
+    EnhancedProcessingMetrics
+)
+from src.services.performance_optimization_service import PerformanceOptimizationService
+from src.services.image_optimization_service import AdaptiveImageOptimizer
 
 
 logger = logging.getLogger(__name__)
@@ -501,3 +514,122 @@ class AIFashionCoordinateService:
         """リソースクリーンアップ"""
         if hasattr(self, 'executor'):
             self.executor.shutdown(wait=True)
+
+
+# Task #015: パフォーマンス最適化統合ファクトリ関数
+def create_enhanced_ai_fashion_coordinate_service(
+    age_estimation_service: EnhancedAgeEstimationService,
+    personal_color_service: EnhancedPersonalColorService,
+    fashion_generation_service: EnhancedFashionGenerationService,
+    recommendation_service: EnhancedRecommendationGenerationService,
+    enable_performance_optimization: bool = True,
+    enable_image_optimization: bool = True,
+    max_workers: int = 6
+) -> EnhancedAIFashionCoordinateService:
+    """
+    拡張AIファッションコーディネートサービスの作成
+    
+    Task #015で追加されたパフォーマンス最適化機能付きサービスを作成
+    
+    Args:
+        age_estimation_service: 年齢推定サービス
+        personal_color_service: パーソナルカラー分析サービス  
+        fashion_generation_service: ファッション画像生成サービス
+        recommendation_service: 推奨生成サービス
+        enable_performance_optimization: パフォーマンス最適化有効化
+        enable_image_optimization: 画像最適化有効化
+        max_workers: 最大並列ワーカー数
+    
+    Returns:
+        EnhancedAIFashionCoordinateService: 最適化済みサービス
+    """
+    
+    # パフォーマンス最適化サービス
+    performance_service = None
+    if enable_performance_optimization:
+        performance_service = PerformanceOptimizationService(
+            cache_size=1000,
+            cleanup_interval_hours=1.0,
+            memory_threshold_mb=512.0
+        )
+    
+    # 画像最適化サービス
+    image_optimizer = None
+    if enable_image_optimization:
+        from src.services.image_optimization_service import ImageOptimizationService, ImageOptimizationConfig
+        
+        base_service = ImageOptimizationService(
+            config=ImageOptimizationConfig(
+                max_width=1024,
+                max_height=1024,
+                quality_jpeg=85,
+                quality_webp=80,
+                target_file_size_mb=1.0
+            )
+        )
+        image_optimizer = AdaptiveImageOptimizer(base_service)
+    
+    # 拡張サービス作成
+    enhanced_service = EnhancedAIFashionCoordinateService(
+        age_estimation_service=age_estimation_service,
+        personal_color_service=personal_color_service,
+        fashion_generation_service=fashion_generation_service,
+        recommendation_service=recommendation_service,
+        performance_service=performance_service,
+        image_optimizer=image_optimizer,
+        max_workers=max_workers
+    )
+    
+    logger.info(
+        f"Enhanced AI Fashion Coordinate Service created with "
+        f"performance_optimization={enable_performance_optimization}, "
+        f"image_optimization={enable_image_optimization}, "
+        f"max_workers={max_workers}"
+    )
+    
+    return enhanced_service
+
+
+# 後方互換性のための従来サービス使用関数
+def create_standard_ai_fashion_coordinate_service(
+    age_estimation_service: EnhancedAgeEstimationService,
+    personal_color_service: EnhancedPersonalColorService,
+    fashion_generation_service: EnhancedFashionGenerationService,
+    recommendation_service: EnhancedRecommendationGenerationService,
+    max_workers: int = 4
+) -> AIFashionCoordinateService:
+    """
+    標準AIファッションコーディネートサービスの作成（後方互換性）
+    
+    Args:
+        age_estimation_service: 年齢推定サービス
+        personal_color_service: パーソナルカラー分析サービス
+        fashion_generation_service: ファッション画像生成サービス
+        recommendation_service: 推奨生成サービス
+        max_workers: 最大並列ワーカー数
+    
+    Returns:
+        AIFashionCoordinateService: 標準サービス
+    """
+    
+    return AIFashionCoordinateService(
+        age_estimation_service=age_estimation_service,
+        personal_color_service=personal_color_service,
+        fashion_generation_service=fashion_generation_service,
+        recommendation_service=recommendation_service,
+        max_workers=max_workers
+    )
+
+
+# デフォルトサービス作成（最適化有効版）
+def create_default_enhanced_service() -> EnhancedAIFashionCoordinateService:
+    """
+    デフォルト設定でパフォーマンス最適化済みサービスを作成
+    実際の実装では、適切なサービスインスタンスを注入する
+    """
+    # 注意: 実際の実装では、DIコンテナやファクトリから適切なサービスを取得
+    # ここではプレースホルダーとして None を返す
+    raise NotImplementedError(
+        "create_default_enhanced_service requires proper service injection. "
+        "Use create_enhanced_ai_fashion_coordinate_service with actual service instances."
+    )
