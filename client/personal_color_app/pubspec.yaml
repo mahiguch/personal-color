@@ -34,6 +34,7 @@ dependencies:
   # UI/State Management
   cupertino_icons: ^1.0.8
   provider: ^6.0.5
+  flutter_bloc: ^8.1.3
   
   # Camera & Image Processing
   camera: ^0.10.5+5
