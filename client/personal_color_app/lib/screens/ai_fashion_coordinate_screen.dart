@@ -379,44 +379,6 @@ class _AIFashionCoordinateViewState extends State<_AIFashionCoordinateView> {
             padding: const EdgeInsets.symmetric(vertical: 16),
           ),
         ),
-
-        const SizedBox(height: 12),
-
-        // デモボタン（テスト用）
-        OutlinedButton.icon(
-          onPressed: !isLoading ? _generateDemoCoordinate : null,
-          icon: const Icon(Icons.science),
-          label: const Text('デモデータで表示テスト'),
-          style: OutlinedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            side: BorderSide(color: theme.colorScheme.secondary, width: 1.5),
-          ),
-        ),
-
-        // 結果がある場合の追加アクション
-        if (state is AIFashionGenerationSuccess) ...[
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () => _shareResult(state),
-                  icon: const Icon(Icons.share),
-                  label: const Text('共有'),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () => _saveResult(state),
-                  icon: const Icon(Icons.save),
-                  label: const Text('保存'),
-                ),
-              ),
-            ],
-          ),
-        ],
-
         // エラーがある場合のリトライボタン
         if (state is AIFashionGenerationFailure) ...[
           const SizedBox(height: 12),
@@ -499,129 +461,537 @@ class _AIFashionCoordinateViewState extends State<_AIFashionCoordinateView> {
     ThemeData theme,
     AIFashionGenerationSuccess state,
   ) {
+    final result = state.result;
+    final generatedImage = result['generated_image'] as Map<String, dynamic>?;
+    final fashionItems = _extractMapList(result['fashion_items']);
+    final stylingPoints = _extractMapList(result['styling_points']);
+    final colorAnalysis = result['color_analysis'] as Map<String, dynamic>?;
+    final recommendationReason = result['recommendation_reason']?.toString();
+    final personalColorType = result['personal_color_type']?.toString();
+    final stylePreference = result['style_preference']?.toString();
+    final estimatedAge = result['estimated_age'] as int?;
+    final seasonContext = result['season_context']?.toString();
+    final generationMetadata =
+        result['generation_metadata'] as Map<String, dynamic>?;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildCoordinateHero(
+          theme: theme,
+          generatedImage: generatedImage,
+          personalColorType: personalColorType,
+          stylePreference: stylePreference,
+          estimatedAge: estimatedAge,
+          seasonContext: seasonContext,
+          highlights: state.recommendations,
+        ),
+        if (recommendationReason != null &&
+            recommendationReason.trim().isNotEmpty) ...[
+          const SizedBox(height: 16),
+          _buildRecommendationReasonCard(theme, recommendationReason),
+        ],
+        if (fashionItems.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          _buildFashionItemsSection(theme, fashionItems),
+        ],
+        if (stylingPoints.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          _buildStylingPointsSection(theme, stylingPoints),
+        ],
+        if (colorAnalysis != null && colorAnalysis.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          _buildColorAnalysisSection(theme, colorAnalysis),
+        ],
+        const SizedBox(height: 16),
+        _buildAdvancedDetails(
+          theme: theme,
+          result: result,
+          generatedImage: generatedImage,
+          generationMetadata: generationMetadata,
+        ),
+      ],
+    );
+  }
+
+  /// 成功時のヒーローカードを構築
+  Widget _buildCoordinateHero({
+    required ThemeData theme,
+    required Map<String, dynamic>? generatedImage,
+    required String? personalColorType,
+    required String? stylePreference,
+    required int? estimatedAge,
+    required String? seasonContext,
+    required List<dynamic>? highlights,
+  }) {
+    final imageUrl = generatedImage?['image_url']?.toString();
+    final chips = <Widget>[
+      if (_formatPersonalColorLabel(personalColorType) != null)
+        _buildInfoChip(
+          theme,
+          icon: Icons.palette_outlined,
+          label: _formatPersonalColorLabel(personalColorType)!,
+        ),
+      if (_formatStyleLabel(stylePreference) != null)
+        _buildInfoChip(
+          theme,
+          icon: Icons.auto_awesome,
+          label: _formatStyleLabel(stylePreference)!,
+        ),
+      if (estimatedAge != null)
+        _buildInfoChip(
+          theme,
+          icon: Icons.cake_outlined,
+          label: '推定年齢 $estimatedAge 歳',
+        ),
+      if (_formatSeasonLabel(seasonContext) != null)
+        _buildInfoChip(
+          theme,
+          icon: Icons.calendar_today_outlined,
+          label: _formatSeasonLabel(seasonContext)!,
+        ),
+    ];
+
     return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      clipBehavior: Clip.antiAlias,
+      elevation: 3,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (imageUrl != null && imageUrl.isNotEmpty)
+            _buildHeroImage(theme, imageUrl)
+          else
+            _buildHeroPlaceholder(theme),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.check_circle_outline,
+                      color: Colors.green,
+                      size: 22,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        _composeHeroTitle(personalColorType, stylePreference),
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                if (chips.isNotEmpty) ...[
+                  const SizedBox(height: 12),
+                  Wrap(spacing: 8, runSpacing: 8, children: chips),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 推薦理由カードを構築
+  Widget _buildRecommendationReasonCard(ThemeData theme, String reason) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 1,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ヘッダー
             Row(
               children: [
-                Icon(Icons.check_circle_outline, color: Colors.green, size: 20),
+                Icon(
+                  Icons.chat_bubble_outline,
+                  color: theme.colorScheme.primary,
+                  size: 20,
+                ),
                 const SizedBox(width: 8),
                 Text(
-                  'コーディネート完成！',
-                  style: theme.textTheme.titleMedium?.copyWith(
+                  'コーディネートのポイント',
+                  style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Colors.green,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-
-            // API レスポンス詳細情報
-            _buildAPIResponseDetails(theme, state),
-            const SizedBox(height: 16),
-
-            // パーソナルカラー情報
-            if (state.personalColorInfo != null)
-              _buildPersonalColorInfo(theme, state.personalColorInfo!),
-
-            const SizedBox(height: 16),
-
-            // 推薦事項
-            if (state.recommendations != null &&
-                state.recommendations!.isNotEmpty)
-              _buildRecommendations(theme, state.recommendations!),
-
-            const SizedBox(height: 16),
-
-            // スタイリングポイント
-            if (state.stylingPoints != null && state.stylingPoints!.isNotEmpty)
-              _buildStylingPoints(theme, state.stylingPoints!),
+            const SizedBox(height: 12),
+            SelectableText(
+              reason.trim(),
+              style: theme.textTheme.bodyMedium?.copyWith(height: 1.6),
+            ),
           ],
         ),
       ),
     );
   }
 
-  /// パーソナルカラー情報を構築
-  Widget _buildPersonalColorInfo(ThemeData theme, Map<String, dynamic> info) {
+  /// 推薦アイテムセクションを構築
+  Widget _buildFashionItemsSection(
+    ThemeData theme,
+    List<Map<String, dynamic>> items,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'パーソナルカラー診断',
-          style: theme.textTheme.titleSmall?.copyWith(
+          'おすすめアイテム',
+          style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 8),
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primaryContainer,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                Icons.palette,
-                color: theme.colorScheme.onPrimaryContainer,
-                size: 16,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                info['type'] ?? 'Unknown',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onPrimaryContainer,
-                  fontWeight: FontWeight.w500,
+        const SizedBox(height: 12),
+        ...items.map((item) => _buildFashionItemCard(theme, item)),
+      ],
+    );
+  }
+
+  /// 推薦アイテムカードを構築
+  Widget _buildFashionItemCard(ThemeData theme, Map<String, dynamic> item) {
+    final name = item['name']?.toString() ?? 'アイテム';
+    final categoryLabel = _formatItemCategory(item['category']?.toString());
+    final styleLabel = _formatStyleLabel(item['style']?.toString());
+    final colorDescription = item['color']?.toString();
+    final seasonAppropriate = item['season_appropriate'] as bool?;
+    final ageAppropriate = item['age_appropriate'] as bool?;
+
+    final colorTokens = colorDescription != null
+        ? colorDescription.split(RegExp(r',\s*')).where((c) => c.isNotEmpty)
+        : <String>[];
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 1,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.secondaryContainer,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.all(10),
+                  child: Icon(
+                    _iconForCategory(item['category']?.toString()),
+                    color: theme.colorScheme.onSecondaryContainer,
+                    size: 20,
+                  ),
                 ),
-              ),
-              if (info['confidence'] != null) ...[
-                const Spacer(),
-                Text(
-                  '確信度: ${(info['confidence'] * 100).toInt()}%',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onPrimaryContainer,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        categoryLabel ?? 'カテゴリ情報なし',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
+            ),
+            if (colorTokens.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: colorTokens
+                    .map((color) => _buildColorChip(theme, color.trim()))
+                    .toList(),
+              ),
             ],
-          ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                if (styleLabel != null)
+                  _buildInfoChip(
+                    theme,
+                    icon: Icons.style_outlined,
+                    label: styleLabel,
+                  ),
+                if (seasonAppropriate != null)
+                  _buildInfoChip(
+                    theme,
+                    icon: Icons.wb_sunny_outlined,
+                    label: seasonAppropriate ? '季節に適した選択' : '季節外の提案',
+                  ),
+                if (ageAppropriate != null)
+                  _buildInfoChip(
+                    theme,
+                    icon: Icons.favorite_outline,
+                    label: ageAppropriate ? '年齢にマッチ' : '年齢配慮なし',
+                  ),
+              ],
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
-  /// 推薦事項を構築
-  Widget _buildRecommendations(ThemeData theme, List<dynamic> recommendations) {
+  /// スタイリングポイントセクションを構築
+  Widget _buildStylingPointsSection(
+    ThemeData theme,
+    List<Map<String, dynamic>> points,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'おすすめポイント',
-          style: theme.textTheme.titleSmall?.copyWith(
+          'スタイリングのヒント',
+          style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 8),
-        ...recommendations.map(
-          (rec) => Padding(
-            padding: const EdgeInsets.only(bottom: 4),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        const SizedBox(height: 12),
+        ...points.map((point) => _buildStylingPointCard(theme, point)),
+      ],
+    );
+  }
+
+  /// スタイリングポイントカードを構築
+  Widget _buildStylingPointCard(ThemeData theme, Map<String, dynamic> point) {
+    final category = point['category']?.toString();
+    final description = point['point']?.toString();
+    final reason = point['reason']?.toString();
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 1,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                Icon(Icons.star, color: Colors.amber, size: 16),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    rec.toString(),
-                    style: theme.textTheme.bodyMedium,
+                Container(
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primaryContainer,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.all(10),
+                  child: Icon(
+                    Icons.lightbulb_outline,
+                    color: theme.colorScheme.onPrimaryContainer,
+                    size: 20,
                   ),
                 ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    category ?? 'スタイリングポイント',
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            if (description != null && description.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text(
+                description,
+                style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+              ),
+            ],
+            if (reason != null && reason.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text(
+                reason,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// カラー分析セクションを構築
+  Widget _buildColorAnalysisSection(
+    ThemeData theme,
+    Map<String, dynamic> colorAnalysis,
+  ) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 1,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.palette, color: theme.colorScheme.primary, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  'カラー分析',
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            if (colorAnalysis['main_colors'] != null)
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: (colorAnalysis['main_colors'] as List)
+                    .map((color) => _buildColorChip(theme, color.toString()))
+                    .toList(),
+              ),
+            if (colorAnalysis['personal_color_type'] != null) ...[
+              const SizedBox(height: 12),
+              Text(
+                'パーソナルカラー: '
+                '${_formatPersonalColorLabel(colorAnalysis['personal_color_type']?.toString()) ?? colorAnalysis['personal_color_type']}',
+                style: theme.textTheme.bodyMedium,
+              ),
+            ],
+            if (colorAnalysis['tone'] != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                'トーン: ${colorAnalysis['tone']}',
+                style: theme.textTheme.bodyMedium,
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 詳細情報セクションを構築
+  Widget _buildAdvancedDetails({
+    required ThemeData theme,
+    required Map<String, dynamic> result,
+    required Map<String, dynamic>? generatedImage,
+    required Map<String, dynamic>? generationMetadata,
+  }) {
+    final hasRequestInfo =
+        result['request_id'] != null || result['timestamp'] != null;
+    final hasImageInfo = generatedImage != null && generatedImage.isNotEmpty;
+    final hasMetadataInfo =
+        generationMetadata != null && generationMetadata.isNotEmpty;
+
+    if (!hasRequestInfo && !hasImageInfo && !hasMetadataInfo) {
+      return const SizedBox.shrink();
+    }
+
+    final imageInfoSection = generatedImage == null
+        ? null
+        : _buildGeneratedImageInfo(theme, generatedImage);
+    final metadataSection = generationMetadata == null
+        ? null
+        : _buildGenerationMetadata(theme, generationMetadata);
+
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 0,
+      child: Theme(
+        data: theme.copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          leading: Icon(
+            Icons.insights_outlined,
+            color: theme.colorScheme.primary,
+          ),
+          title: Text(
+            '詳細情報',
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          subtitle: Text(
+            '生成に関する技術的な情報を確認できます',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          children: [
+            if (imageInfoSection != null) ...[
+              imageInfoSection,
+              const SizedBox(height: 12),
+            ],
+            if (hasRequestInfo) ...[
+              _buildRequestInfo(theme, result),
+              const SizedBox(height: 12),
+            ],
+            if (metadataSection != null) metadataSection,
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// リクエスト情報を構築
+  Widget _buildRequestInfo(ThemeData theme, Map<String, dynamic> result) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'リクエスト情報',
+          style: theme.textTheme.bodySmall?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Card(
+          color: theme.colorScheme.surface,
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (result['request_id'] != null)
+                  _buildDetailRow(
+                    theme,
+                    'リクエストID',
+                    result['request_id'].toString(),
+                    Icons.fingerprint,
+                  ),
+                if (result['request_id'] != null) const SizedBox(height: 8),
+                if (result['timestamp'] != null)
+                  _buildDetailRow(
+                    theme,
+                    '受信時刻',
+                    result['timestamp'].toString(),
+                    Icons.schedule,
+                  ),
               ],
             ),
           ),
@@ -630,42 +1000,269 @@ class _AIFashionCoordinateViewState extends State<_AIFashionCoordinateView> {
     );
   }
 
-  /// スタイリングポイントを構築
-  Widget _buildStylingPoints(ThemeData theme, List<dynamic> stylingPoints) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'スタイリングのコツ',
-          style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.bold,
+  /// 詳細行を構築
+  Widget _buildDetailRow(
+    ThemeData theme,
+    String label,
+    String value,
+    IconData icon,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 28,
+            height: 28,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              icon,
+              size: 16,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ),
-        ),
-        const SizedBox(height: 8),
-        ...stylingPoints.map(
-          (point) => Padding(
-            padding: const EdgeInsets.only(bottom: 4),
-            child: Row(
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.lightbulb_outline,
-                  color: theme.colorScheme.primary,
-                  size: 16,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    point.toString(),
-                    style: theme.textTheme.bodyMedium,
+                Text(
+                  label,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
+                const SizedBox(height: 2),
+                SelectableText(value, style: theme.textTheme.bodySmall),
               ],
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
+  }
+
+  /// ヒーロー用の画像プレビュー
+  Widget _buildHeroImage(ThemeData theme, String imageUrl) {
+    return _buildGeneratedImagePreview(
+      theme,
+      imageUrl,
+      showSourceDetails: false,
+      height: 260,
+    );
+  }
+
+  /// ヒーロー画像のプレースホルダー
+  Widget _buildHeroPlaceholder(ThemeData theme) {
+    return _buildImageContainer(
+      theme,
+      Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.image_not_supported_outlined,
+              size: 36,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '生成画像はまだありません',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      ),
+      height: 260,
+    );
+  }
+
+  /// 情報表示用のチップを構築
+  Widget _buildInfoChip(
+    ThemeData theme, {
+    required IconData icon,
+    required String label,
+  }) {
+    return Chip(
+      avatar: Icon(
+        icon,
+        size: 16,
+        color: theme.colorScheme.onSecondaryContainer,
+      ),
+      label: Text(label),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      backgroundColor: theme.colorScheme.secondaryContainer,
+      labelStyle: theme.textTheme.bodySmall?.copyWith(
+        color: theme.colorScheme.onSecondaryContainer,
+      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    );
+  }
+
+  /// カラー表示用のチップを構築
+  Widget _buildColorChip(ThemeData theme, String label) {
+    final color = _parseHexColor(label);
+    return Chip(
+      avatar: color != null
+          ? CircleAvatar(backgroundColor: color, radius: 8)
+          : null,
+      label: Text(label),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      backgroundColor: theme.colorScheme.surfaceContainerHighest,
+      labelStyle: theme.textTheme.bodySmall,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    );
+  }
+
+  /// Hex文字列からColorへ変換
+  Color? _parseHexColor(String value) {
+    final match = RegExp(r'#([0-9a-fA-F]{6})').firstMatch(value);
+    if (match != null) {
+      final hex = match.group(1);
+      if (hex != null) {
+        final colorValue = int.parse(hex, radix: 16);
+        return Color(0xFF000000 | colorValue);
+      }
+    }
+    return null;
+  }
+
+  /// カテゴリに応じたアイコンを取得
+  IconData _iconForCategory(String? category) {
+    switch (category) {
+      case 'top':
+        return Icons.checkroom;
+      case 'bottom':
+        return Icons.view_day_outlined;
+      case 'shoes':
+        return Icons.directions_walk;
+      case 'accessories':
+        return Icons.style;
+      case 'outerwear':
+        return Icons.shopping_bag;
+      case 'age_appropriate_coordinate':
+        return Icons.auto_awesome;
+      default:
+        return Icons.shopping_bag_outlined;
+    }
+  }
+
+  /// 個別のデータマッピング
+  String? _formatPersonalColorLabel(String? type) {
+    if (type == null) return null;
+    switch (type.toLowerCase()) {
+      case 'spring':
+        return 'スプリングタイプ';
+      case 'summer':
+        return 'サマータイプ';
+      case 'autumn':
+        return 'オータムタイプ';
+      case 'winter':
+        return 'ウィンタータイプ';
+      default:
+        return type;
+    }
+  }
+
+  String? _formatStyleLabel(String? style) {
+    if (style == null || style.isEmpty) return null;
+    switch (style.toLowerCase()) {
+      case 'casual':
+        return 'カジュアル';
+      case 'formal':
+        return 'フォーマル';
+      case 'street':
+        return 'ストリート';
+      case 'sporty':
+        return 'スポーティ';
+      case 'business':
+        return 'ビジネス';
+      case 'romantic':
+        return 'ロマンティック';
+      default:
+        return style;
+    }
+  }
+
+  String? _formatSeasonLabel(String? season) {
+    if (season == null || season.isEmpty) return null;
+    switch (season.toLowerCase()) {
+      case 'spring':
+        return '春シーズン';
+      case 'summer':
+        return '夏シーズン';
+      case 'autumn':
+        return '秋シーズン';
+      case 'winter':
+        return '冬シーズン';
+      case 'all_season':
+        return 'オールシーズン';
+      default:
+        return season;
+    }
+  }
+
+  String? _formatItemCategory(String? category) {
+    if (category == null) return null;
+    switch (category) {
+      case 'top':
+        return 'トップス';
+      case 'bottom':
+        return 'ボトムス';
+      case 'shoes':
+        return 'シューズ';
+      case 'accessories':
+        return 'アクセサリー';
+      case 'outerwear':
+        return 'アウター';
+      case 'age_appropriate_coordinate':
+        return 'おすすめコーデ';
+      default:
+        return category;
+    }
+  }
+
+  String _composeHeroTitle(String? personalColorType, String? stylePreference) {
+    final colorLabel = _formatPersonalColorLabel(personalColorType);
+    final styleLabel = _formatStyleLabel(stylePreference);
+
+    if (colorLabel != null && styleLabel != null) {
+      return '$colorLabel × $styleLabel コーデ';
+    }
+    if (colorLabel != null) {
+      return '$colorLabelのコーディネート';
+    }
+    if (styleLabel != null) {
+      return '$styleLabelスタイルの提案';
+    }
+    return 'AIコーディネートが完成しました';
+  }
+
+  List<Map<String, dynamic>> _extractMapList(dynamic data) {
+    if (data is List) {
+      return data
+          .map((item) {
+            if (item is Map<String, dynamic>) {
+              return Map<String, dynamic>.from(item);
+            }
+            if (item is Map) {
+              return item.map((key, value) => MapEntry(key.toString(), value));
+            }
+            return null;
+          })
+          .whereType<Map<String, dynamic>>()
+          .toList();
+    }
+    return [];
   }
 
   /// 空の状態表示
@@ -743,419 +1340,6 @@ class _AIFashionCoordinateViewState extends State<_AIFashionCoordinateView> {
     }
   }
 
-  /// パーソナルカラータイプに応じた推奨理由を取得
-  String _getRecommendationReasonForPersonalColorType(
-    String personalColorType,
-  ) {
-    switch (personalColorType.toLowerCase()) {
-      case 'spring':
-        return 'スプリングタイプの方に最適な明るく鮮やかなカラーコーディネートです。この組み合わせは肌の透明感を引き立て、健康的で若々しい印象を与えます。';
-      case 'summer':
-        return 'サマータイプの方にぴったりの上品で涼やかなカラーコーディネートです。ソフトで優雅なトーンが、エレガントで知的な印象を演出します。';
-      case 'autumn':
-        return 'オータムタイプの方におすすめの深みのある温かなカラーコーディネートです。リッチなアースカラーが、大人の魅力と落ち着いた雰囲気を表現します。';
-      case 'winter':
-        return 'ウィンタータイプの方に最適なクリアで洗練されたカラーコーディネートです。コントラストの効いた配色が、凛とした美しさとモダンな印象を引き立てます。';
-      default:
-        return 'あなたのパーソナルカラーに合わせた最適なコーディネートをご提案いたします。';
-    }
-  }
-
-  /// パーソナルカラータイプに応じたデモファッションアイテムを取得
-  List<Map<String, dynamic>> _getDemoFashionItemsForPersonalColorType(
-    String personalColorType,
-  ) {
-    switch (personalColorType.toLowerCase()) {
-      case 'spring':
-        return [
-          {
-            'id': 'demo_top_001',
-            'category': 'top',
-            'name': 'パステルブルーブラウス',
-            'color': 'パステルブルー',
-            'style': 'カジュアル',
-            'season_appropriate': true,
-            'age_appropriate': true,
-          },
-          {
-            'id': 'demo_bottom_001',
-            'category': 'bottom',
-            'name': 'ホワイトデニムパンツ',
-            'color': 'ホワイト',
-            'style': 'カジュアル',
-            'season_appropriate': true,
-            'age_appropriate': true,
-          },
-          {
-            'id': 'demo_shoes_001',
-            'category': 'shoes',
-            'name': 'ベージュスニーカー',
-            'color': 'ベージュ',
-            'style': 'カジュアル',
-            'season_appropriate': true,
-            'age_appropriate': true,
-          },
-          {
-            'id': 'demo_acc_001',
-            'category': 'accessories',
-            'name': 'コーラルピンクスカーフ',
-            'color': 'コーラルピンク',
-            'style': 'カジュアル',
-            'season_appropriate': true,
-            'age_appropriate': true,
-          },
-        ];
-      case 'summer':
-        return [
-          {
-            'id': 'demo_top_002',
-            'category': 'top',
-            'name': 'ラベンダーシャツ',
-            'color': 'ラベンダー',
-            'style': 'エレガント',
-            'season_appropriate': true,
-            'age_appropriate': true,
-          },
-          {
-            'id': 'demo_bottom_002',
-            'category': 'bottom',
-            'name': 'グレーワイドパンツ',
-            'color': 'グレー',
-            'style': 'エレガント',
-            'season_appropriate': true,
-            'age_appropriate': true,
-          },
-          {
-            'id': 'demo_shoes_002',
-            'category': 'shoes',
-            'name': 'ネイビーローファー',
-            'color': 'ネイビー',
-            'style': 'エレガント',
-            'season_appropriate': true,
-            'age_appropriate': true,
-          },
-          {
-            'id': 'demo_acc_002',
-            'category': 'accessories',
-            'name': 'シルバーネックレス',
-            'color': 'シルバー',
-            'style': 'エレガント',
-            'season_appropriate': true,
-            'age_appropriate': true,
-          },
-        ];
-      case 'autumn':
-        return [
-          {
-            'id': 'demo_top_003',
-            'category': 'top',
-            'name': 'テラコッタニット',
-            'color': 'テラコッタ',
-            'style': 'ナチュラル',
-            'season_appropriate': true,
-            'age_appropriate': true,
-          },
-          {
-            'id': 'demo_bottom_003',
-            'category': 'bottom',
-            'name': 'キャメルワイドパンツ',
-            'color': 'キャメル',
-            'style': 'ナチュラル',
-            'season_appropriate': true,
-            'age_appropriate': true,
-          },
-          {
-            'id': 'demo_shoes_003',
-            'category': 'shoes',
-            'name': 'ブラウンブーツ',
-            'color': 'ブラウン',
-            'style': 'ナチュラル',
-            'season_appropriate': true,
-            'age_appropriate': true,
-          },
-          {
-            'id': 'demo_acc_003',
-            'category': 'accessories',
-            'name': 'ゴールドバングル',
-            'color': 'ゴールド',
-            'style': 'ナチュラル',
-            'season_appropriate': true,
-            'age_appropriate': true,
-          },
-        ];
-      case 'winter':
-        return [
-          {
-            'id': 'demo_top_004',
-            'category': 'top',
-            'name': 'ブラックタートルネック',
-            'color': 'ブラック',
-            'style': 'モダン',
-            'season_appropriate': true,
-            'age_appropriate': true,
-          },
-          {
-            'id': 'demo_bottom_004',
-            'category': 'bottom',
-            'name': 'ホワイトストレートパンツ',
-            'color': 'ホワイト',
-            'style': 'モダン',
-            'season_appropriate': true,
-            'age_appropriate': true,
-          },
-          {
-            'id': 'demo_shoes_004',
-            'category': 'shoes',
-            'name': 'ブラックパンプス',
-            'color': 'ブラック',
-            'style': 'モダン',
-            'season_appropriate': true,
-            'age_appropriate': true,
-          },
-          {
-            'id': 'demo_acc_004',
-            'category': 'accessories',
-            'name': 'ロイヤルブルースカーフ',
-            'color': 'ロイヤルブルー',
-            'style': 'モダン',
-            'season_appropriate': true,
-            'age_appropriate': true,
-          },
-        ];
-      default:
-        return _getDemoFashionItemsForPersonalColorType('spring');
-    }
-  }
-
-  /// パーソナルカラータイプに応じたスタイリングポイントを取得
-  List<Map<String, dynamic>> _getDemoStylingPointsForPersonalColorType(
-    String personalColorType,
-  ) {
-    switch (personalColorType.toLowerCase()) {
-      case 'spring':
-        return [
-          {
-            'category': 'カラーコーディネート',
-            'point': 'パステルブルーとコーラルピンクの組み合わせで春らしい印象に',
-            'reason': 'スプリングタイプの特徴である明るく透明感のあるカラーを活用',
-          },
-          {
-            'category': 'バランス',
-            'point': 'ホワイトデニムで軽やかさをプラス',
-            'reason': '重くなりがちなコーディネートに抜け感を与える',
-          },
-          {
-            'category': 'アクセント',
-            'point': 'スカーフで顔周りに血色感をプラス',
-            'reason': '顔色を明るく見せ、全体のバランスを整える',
-          },
-        ];
-      case 'summer':
-        return [
-          {
-            'category': 'カラーコーディネート',
-            'point': 'ラベンダーとグレーの上品な組み合わせ',
-            'reason': 'サマータイプの特徴である涼やかで上品なトーンを活用',
-          },
-          {
-            'category': 'バランス',
-            'point': 'シルバーアクセサリーで洗練された印象',
-            'reason': 'クールトーンのアクセサリーが全体をまとめる',
-          },
-          {
-            'category': 'スタイル',
-            'point': 'エレガントなシルエットで品格をアップ',
-            'reason': 'サマータイプの上品さを引き立てるスタイリング',
-          },
-        ];
-      case 'autumn':
-        return [
-          {
-            'category': 'カラーコーディネート',
-            'point': 'テラコッタとキャメルの温かみのある組み合わせ',
-            'reason': 'オータムタイプの特徴である深みのあるアースカラーを活用',
-          },
-          {
-            'category': 'テクスチャー',
-            'point': 'ニット素材で季節感と温かみを表現',
-            'reason': '秋冬らしい素材感がコーディネートに深みを与える',
-          },
-          {
-            'category': 'アクセント',
-            'point': 'ゴールドアクセサリーで華やかさをプラス',
-            'reason': 'ウォームトーンのアクセサリーが肌色を美しく見せる',
-          },
-        ];
-      case 'winter':
-        return [
-          {
-            'category': 'カラーコーディネート',
-            'point': 'ブラックとホワイトのコントラストで洗練された印象',
-            'reason': 'ウィンタータイプの特徴であるクリアで強いコントラストを活用',
-          },
-          {
-            'category': 'アクセント',
-            'point': 'ロイヤルブルーのスカーフで品格をアップ',
-            'reason': '鮮やかなブルーが顔色を明るく見せ、エレガントさを演出',
-          },
-          {
-            'category': 'シルエット',
-            'point': 'シャープなラインで都会的な印象',
-            'reason': 'ウィンタータイプの凛とした美しさを引き立てる',
-          },
-        ];
-      default:
-        return _getDemoStylingPointsForPersonalColorType('spring');
-    }
-  }
-
-  /// パーソナルカラータイプに応じたカラー分析を取得
-  Map<String, dynamic> _getDemoColorAnalysisForPersonalColorType(
-    String personalColorType,
-  ) {
-    switch (personalColorType.toLowerCase()) {
-      case 'spring':
-        return {
-          'main_colors': ['パステルブルー', 'ホワイト', 'ベージュ', 'コーラルピンク'],
-          'personal_color_type': 'spring',
-          'color_harmony': '同系色+アクセントカラー',
-          'brightness_level': 'bright',
-          'saturation_level': 'medium',
-        };
-      case 'summer':
-        return {
-          'main_colors': ['ラベンダー', 'グレー', 'ネイビー', 'シルバー'],
-          'personal_color_type': 'summer',
-          'color_harmony': 'クールトーン',
-          'brightness_level': 'soft',
-          'saturation_level': 'low',
-        };
-      case 'autumn':
-        return {
-          'main_colors': ['テラコッタ', 'キャメル', 'ブラウン', 'ゴールド'],
-          'personal_color_type': 'autumn',
-          'color_harmony': 'アースカラー',
-          'brightness_level': 'deep',
-          'saturation_level': 'rich',
-        };
-      case 'winter':
-        return {
-          'main_colors': ['ブラック', 'ホワイト', 'ロイヤルブルー', 'シルバー'],
-          'personal_color_type': 'winter',
-          'color_harmony': 'ハイコントラスト',
-          'brightness_level': 'clear',
-          'saturation_level': 'vivid',
-        };
-      default:
-        return _getDemoColorAnalysisForPersonalColorType('spring');
-    }
-  }
-
-  /// パーソナルカラータイプに応じた推奨事項を取得
-  List<String> _getDemoRecommendationsForPersonalColorType(
-    String personalColorType,
-  ) {
-    switch (personalColorType.toLowerCase()) {
-      case 'spring':
-        return [
-          'パステルブルーとコーラルピンクの組み合わせで春らしい印象に',
-          'ホワイトデニムで軽やかさをプラス',
-          'スカーフで顔周りに血色感をプラス',
-        ];
-      case 'summer':
-        return [
-          'ラベンダーとグレーの上品な組み合わせ',
-          'シルバーアクセサリーで洗練された印象',
-          'エレガントなシルエットで品格をアップ',
-        ];
-      case 'autumn':
-        return [
-          'テラコッタとキャメルの温かみのある組み合わせ',
-          'ニット素材で季節感と温かみを表現',
-          'ゴールドアクセサリーで華やかさをプラス',
-        ];
-      case 'winter':
-        return [
-          'ブラックとホワイトのコントラストで洗練された印象',
-          'ロイヤルブルーのスカーフで品格をアップ',
-          'シャープなラインで都会的な印象',
-        ];
-      default:
-        return _getDemoRecommendationsForPersonalColorType('spring');
-    }
-  }
-
-  /// デモコーディネートを生成（テスト用）
-  void _generateDemoCoordinate() {
-    final personalColorType = widget.personalColorType ?? 'spring';
-    final season = _getSeasonFromPersonalColorType(personalColorType);
-
-    final demoResult = {
-      'request_id': 'demo_${DateTime.now().millisecondsSinceEpoch}',
-      'timestamp': DateTime.now().toIso8601String(),
-      'personal_color_type': personalColorType,
-      'style_preference': 'casual',
-      'estimated_age': 25,
-      'season_context': season,
-      'recommendation_reason': _getRecommendationReasonForPersonalColorType(
-        personalColorType,
-      ),
-
-      'fashion_items': _getDemoFashionItemsForPersonalColorType(
-        personalColorType,
-      ),
-
-      'styling_points': _getDemoStylingPointsForPersonalColorType(
-        personalColorType,
-      ),
-
-      'color_analysis': _getDemoColorAnalysisForPersonalColorType(
-        personalColorType,
-      ),
-
-      'generated_image': {
-        'image_url':
-            'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==',
-        'generation_time': 2.5,
-        'model_version': 'demo-v1.0',
-        'prompt_used':
-            'A casual $season outfit for a $personalColorType type person',
-      },
-
-      'personal_color_info': {
-        'type': personalColorType,
-        'confidence': 0.85,
-        'description': '$personalColorTypeタイプの方に最適なコーディネートです',
-      },
-      'recommendations': _getDemoRecommendationsForPersonalColorType(
-        personalColorType,
-      ),
-      'generated_image_url':
-          'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==',
-      'generation_metadata': {
-        'model_version': 'demo-v1.0',
-        'generation_time': '2.5s',
-        'prompt_used':
-            'A casual $season outfit for a $personalColorType type person',
-        'style_preferences': {
-          'personalColorType': personalColorType,
-          'stylePreference': 'casual',
-          'season': season,
-          'includeAccessories': true,
-          'generateImage': true,
-        },
-        'request_id': 'demo_${DateTime.now().millisecondsSinceEpoch}',
-        'timestamp': DateTime.now().toIso8601String(),
-        'processing_duration': 2500,
-      },
-    };
-
-    // デモ結果をBlocに送信
-    context.read<AIFashionCoordinateBloc>().add(
-      AIFashionCoordinateGenerationSucceeded(demoResult),
-    );
-  }
-
   /// コーディネートを生成
   void _generateCoordinate() {
     final currentState = context.read<AIFashionCoordinateBloc>().state;
@@ -1199,430 +1383,6 @@ class _AIFashionCoordinateViewState extends State<_AIFashionCoordinateView> {
   void _retryGeneration() {
     context.read<AIFashionCoordinateBloc>().add(
       const AIFashionRetryRequested(),
-    );
-  }
-
-  /// 結果を共有
-  void _shareResult(AIFashionGenerationSuccess state) {
-    context.read<AIFashionCoordinateBloc>().add(
-      AIFashionResultShareRequested(result: state.result, shareType: 'social'),
-    );
-  }
-
-  /// 結果を保存
-  void _saveResult(AIFashionGenerationSuccess state) {
-    context.read<AIFashionCoordinateBloc>().add(
-      AIFashionResultSaveRequested(result: state.result),
-    );
-  }
-
-  /// API レスポンス詳細情報を構築
-  Widget _buildAPIResponseDetails(
-    ThemeData theme,
-    AIFashionGenerationSuccess state,
-  ) {
-    final result = state.result;
-
-    return ExpansionTile(
-      leading: Icon(Icons.api, color: theme.colorScheme.primary),
-      title: Text(
-        'API レスポンス詳細',
-        style: theme.textTheme.titleSmall?.copyWith(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // リクエストID
-              if (result['request_id'] != null)
-                _buildDetailRow(
-                  theme,
-                  'リクエストID',
-                  result['request_id'].toString(),
-                  Icons.fingerprint,
-                ),
-              if (result['request_id'] != null) const SizedBox(height: 8),
-
-              // タイムスタンプ
-              if (result['timestamp'] != null)
-                _buildDetailRow(
-                  theme,
-                  'タイムスタンプ',
-                  result['timestamp'].toString(),
-                  Icons.access_time,
-                ),
-              if (result['timestamp'] != null) const SizedBox(height: 8),
-
-              // パーソナルカラータイプ
-              if (result['personal_color_type'] != null)
-                _buildDetailRow(
-                  theme,
-                  'パーソナルカラータイプ',
-                  result['personal_color_type'].toString(),
-                  Icons.palette,
-                ),
-              if (result['personal_color_type'] != null)
-                const SizedBox(height: 8),
-
-              // スタイル設定
-              if (result['style_preference'] != null)
-                _buildDetailRow(
-                  theme,
-                  'スタイル設定',
-                  result['style_preference'].toString(),
-                  Icons.style,
-                ),
-              if (result['style_preference'] != null) const SizedBox(height: 8),
-
-              // 推定年齢
-              if (result['estimated_age'] != null)
-                _buildDetailRow(
-                  theme,
-                  '推定年齢',
-                  '${result['estimated_age']}歳',
-                  Icons.person,
-                ),
-              if (result['estimated_age'] != null) const SizedBox(height: 8),
-
-              // 季節コンテキスト
-              if (result['season_context'] != null)
-                _buildDetailRow(
-                  theme,
-                  '季節コンテキスト',
-                  result['season_context'].toString(),
-                  Icons.wb_sunny,
-                ),
-              if (result['season_context'] != null) const SizedBox(height: 8),
-
-              // 推薦理由
-              if (result['recommendation_reason'] != null) ...[
-                const Divider(),
-                Text(
-                  '推薦理由',
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: SelectableText(
-                      result['recommendation_reason'].toString(),
-                      style: theme.textTheme.bodyMedium,
-                    ),
-                  ),
-                ),
-              ],
-
-              // ファッションアイテム詳細
-              if (result['fashion_items'] != null &&
-                  (result['fashion_items'] as List).isNotEmpty) ...[
-                const Divider(),
-                Text(
-                  'ファッションアイテム詳細',
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                ...(result['fashion_items'] as List).map(
-                  (item) => _buildFashionItemDetail(
-                    theme,
-                    item as Map<String, dynamic>,
-                  ),
-                ),
-              ],
-
-              // スタイリングポイント詳細
-              if (result['styling_points'] != null &&
-                  (result['styling_points'] as List).isNotEmpty) ...[
-                const Divider(),
-                Text(
-                  'スタイリングポイント詳細',
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                ...(result['styling_points'] as List).map(
-                  (point) => _buildStylingPointDetail(
-                    theme,
-                    point as Map<String, dynamic>,
-                  ),
-                ),
-              ],
-
-              // カラー分析
-              if (result['color_analysis'] != null &&
-                  (result['color_analysis'] as Map<String, dynamic>)
-                      .isNotEmpty) ...[
-                const Divider(),
-                Text(
-                  'カラー分析',
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                _buildColorAnalysis(
-                  theme,
-                  result['color_analysis'] as Map<String, dynamic>,
-                ),
-              ],
-
-              // 生成画像情報
-              if (result['generated_image'] != null) ...[
-                const Divider(),
-                _buildGeneratedImageInfo(
-                  theme,
-                  result['generated_image'] as Map<String, dynamic>,
-                ),
-              ],
-
-              // 生成メタデータ
-              if (result['generation_metadata'] != null) ...[
-                const Divider(),
-                _buildGenerationMetadata(
-                  theme,
-                  result['generation_metadata'] as Map<String, dynamic>,
-                ),
-              ],
-
-              // Raw JSON データ表示（デバッグ用）
-              const Divider(),
-              ExpansionTile(
-                leading: Icon(Icons.code, color: theme.colorScheme.secondary),
-                title: Text(
-                  'Raw JSON データ（デバッグ用）',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.secondary,
-                  ),
-                ),
-                children: [
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(12.0),
-                    margin: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceContainerHigh,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: theme.colorScheme.outline.withValues(alpha: 0.2),
-                      ),
-                    ),
-                    child: SelectableText(
-                      _formatJson(result),
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontFamily: 'monospace',
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// 詳細行を構築
-  Widget _buildDetailRow(
-    ThemeData theme,
-    String label,
-    String value,
-    IconData icon,
-  ) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, size: 16, color: theme.colorScheme.onSurfaceVariant),
-        const SizedBox(width: 8),
-        SizedBox(
-          width: 100,
-          child: Text(
-            label,
-            style: theme.textTheme.bodySmall?.copyWith(
-              fontWeight: FontWeight.w500,
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: SelectableText(value, style: theme.textTheme.bodySmall),
-        ),
-      ],
-    );
-  }
-
-  /// ファッションアイテム詳細を構築
-  Widget _buildFashionItemDetail(ThemeData theme, Map<String, dynamic> item) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              item['name']?.toString() ?? 'アイテム名不明',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                _buildItemProperty('カテゴリー', item['category']?.toString() ?? ''),
-                const SizedBox(width: 16),
-                _buildItemProperty('カラー', item['color']?.toString() ?? ''),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                _buildItemProperty('スタイル', item['style']?.toString() ?? ''),
-                const SizedBox(width: 16),
-                _buildBooleanProperty(
-                  '季節適合',
-                  item['season_appropriate'] == true,
-                ),
-                const SizedBox(width: 16),
-                _buildBooleanProperty('年齢適合', item['age_appropriate'] == true),
-              ],
-            ),
-            if (item['id'] != null) ...[
-              const SizedBox(height: 4),
-              Text(
-                'ID: ${item['id']}',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                  fontFamily: 'monospace',
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// スタイリングポイント詳細を構築
-  Widget _buildStylingPointDetail(ThemeData theme, Map<String, dynamic> point) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (point['category'] != null) ...[
-              Text(
-                point['category'].toString(),
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.primary,
-                ),
-              ),
-              const SizedBox(height: 4),
-            ],
-            if (point['point'] != null) ...[
-              Text(
-                point['point'].toString(),
-                style: theme.textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 4),
-            ],
-            if (point['reason'] != null) ...[
-              Text(
-                '理由: ${point['reason']}',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// アイテムプロパティを構築
-  Widget _buildItemProperty(String label, String value) {
-    return Text('$label: $value', style: Theme.of(context).textTheme.bodySmall);
-  }
-
-  /// ブール値プロパティを構築
-  Widget _buildBooleanProperty(String label, bool value) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text('$label: ', style: Theme.of(context).textTheme.bodySmall),
-        Icon(
-          value ? Icons.check_circle : Icons.cancel,
-          size: 16,
-          color: value ? Colors.green : Colors.red,
-        ),
-      ],
-    );
-  }
-
-  /// カラー分析を構築
-  Widget _buildColorAnalysis(
-    ThemeData theme,
-    Map<String, dynamic> colorAnalysis,
-  ) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (colorAnalysis['main_colors'] != null) ...[
-              Text(
-                'メインカラー:',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Wrap(
-                spacing: 8,
-                children: (colorAnalysis['main_colors'] as List)
-                    .map(
-                      (color) => Chip(
-                        label: Text(
-                          color.toString(),
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        backgroundColor: theme.colorScheme.secondaryContainer,
-                      ),
-                    )
-                    .toList(),
-              ),
-            ],
-            if (colorAnalysis['personal_color_type'] != null) ...[
-              const SizedBox(height: 8),
-              Text(
-                'パーソナルカラータイプ: ${colorAnalysis['personal_color_type']}',
-                style: theme.textTheme.bodySmall,
-              ),
-            ],
-          ],
-        ),
-      ),
     );
   }
 
@@ -1708,7 +1468,12 @@ class _AIFashionCoordinateViewState extends State<_AIFashionCoordinateView> {
   }
 
   /// 生成画像プレビューを構築
-  Widget _buildGeneratedImagePreview(ThemeData theme, String imageUrl) {
+  Widget _buildGeneratedImagePreview(
+    ThemeData theme,
+    String imageUrl, {
+    bool showSourceDetails = true,
+    double height = 220,
+  }) {
     if (imageUrl.startsWith('data:image')) {
       final imageBytes = _decodeBase64DataUri(imageUrl);
       if (imageBytes != null) {
@@ -1724,20 +1489,28 @@ class _AIFashionCoordinateViewState extends State<_AIFashionCoordinateView> {
                   gaplessPlayback: true,
                 ),
               ),
+              height: height,
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Base64エンコードされた画像データを表示しています。',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-                fontStyle: FontStyle.italic,
+            if (showSourceDetails) ...[
+              const SizedBox(height: 8),
+              Text(
+                'Base64エンコードされた画像データを表示しています。',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
-            ),
+            ],
           ],
         );
       }
 
-      return _buildImageFallback(theme, '画像データを読み込めませんでした');
+      return _buildImageFallback(
+        theme,
+        '画像データを読み込めませんでした',
+        height: height,
+        showNote: showSourceDetails,
+      );
     }
 
     return Column(
@@ -1773,21 +1546,30 @@ class _AIFashionCoordinateViewState extends State<_AIFashionCoordinateView> {
                   _buildImageErrorPlaceholder(theme),
             ),
           ),
+          height: height,
         ),
-        const SizedBox(height: 8),
-        SelectableText(
-          imageUrl.length > 100 ? '${imageUrl.substring(0, 100)}...' : imageUrl,
-          style: theme.textTheme.bodySmall?.copyWith(fontFamily: 'monospace'),
-        ),
+        if (showSourceDetails) ...[
+          const SizedBox(height: 8),
+          SelectableText(
+            imageUrl.length > 100
+                ? '${imageUrl.substring(0, 100)}...'
+                : imageUrl,
+            style: theme.textTheme.bodySmall?.copyWith(fontFamily: 'monospace'),
+          ),
+        ],
       ],
     );
   }
 
   /// 画像コンテナを構築
-  Widget _buildImageContainer(ThemeData theme, Widget child) {
+  Widget _buildImageContainer(
+    ThemeData theme,
+    Widget child, {
+    double height = 220,
+  }) {
     return Container(
       width: double.infinity,
-      height: 220,
+      height: height,
       decoration: BoxDecoration(
         border: Border.all(color: theme.colorScheme.outline),
         borderRadius: BorderRadius.circular(8),
@@ -1798,7 +1580,12 @@ class _AIFashionCoordinateViewState extends State<_AIFashionCoordinateView> {
   }
 
   /// 画像読み込み失敗時の表示を構築
-  Widget _buildImageFallback(ThemeData theme, String message) {
+  Widget _buildImageFallback(
+    ThemeData theme,
+    String message, {
+    double height = 220,
+    bool showNote = true,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1813,15 +1600,18 @@ class _AIFashionCoordinateViewState extends State<_AIFashionCoordinateView> {
               textAlign: TextAlign.center,
             ),
           ),
+          height: height,
         ),
-        const SizedBox(height: 8),
-        Text(
-          '画像ソースを取得できませんでした。',
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-            fontStyle: FontStyle.italic,
+        if (showNote) ...[
+          const SizedBox(height: 8),
+          Text(
+            '画像ソースを取得できませんでした。',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+              fontStyle: FontStyle.italic,
+            ),
           ),
-        ),
+        ],
       ],
     );
   }
@@ -1905,15 +1695,5 @@ class _AIFashionCoordinateViewState extends State<_AIFashionCoordinateView> {
         ),
       ],
     );
-  }
-
-  /// JSON フォーマット
-  String _formatJson(Map<String, dynamic> json) {
-    const encoder = JsonEncoder.withIndent('  ');
-    try {
-      return encoder.convert(json);
-    } catch (e) {
-      return json.toString();
-    }
   }
 }

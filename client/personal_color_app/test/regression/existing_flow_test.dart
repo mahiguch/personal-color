@@ -1,13 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:provider/provider.dart';
 
 import 'package:personal_color_app/main.dart';
-import 'package:personal_color_app/features/diagnosis/domain/entities/diagnosis_result.dart';
-import 'package:personal_color_app/features/diagnosis/presentation/ios/ios_diagnosis_result_page.dart';
-import 'package:personal_color_app/features/makeup/presentation/providers/makeup_recommendation_provider.dart';
-import 'package:personal_color_app/features/diagnosis/presentation/providers/diagnosis_provider.dart';
 import 'package:personal_color_app/core/di/injection_container.dart' as di;
 import 'package:personal_color_app/core/network/api_client.dart';
 
