@@ -17,7 +17,7 @@ void main() {
 
       // Verify that the AI画像生成メイク button is NOT present
       expect(find.text('AI画像生成メイク'), findsNothing);
-      expect(find.text('AI生成メイク'), findsNothing);
+      expect(find.text('おすすめメイク'), findsNothing);
       
       // Verify that the auto_awesome icon is NOT present (it was used for AI makeup)
       expect(find.byIcon(Icons.auto_awesome), findsNothing);

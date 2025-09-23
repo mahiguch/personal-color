@@ -158,7 +158,7 @@ void main() {
       );
 
       // Verify that the AI makeup button is present
-      expect(find.text('AI生成メイク'), findsOneWidget);
+      expect(find.text('おすすめメイク'), findsOneWidget);
       expect(find.byIcon(Icons.auto_awesome), findsOneWidget);
     });
 
@@ -174,7 +174,7 @@ void main() {
       );
 
       // Tap the AI makeup button
-      await tester.tap(find.text('AI生成メイク'));
+      await tester.tap(find.text('おすすめメイク'));
       await tester.pumpAndSettle();
 
       // Wait for UI to settle after error handling
@@ -220,7 +220,7 @@ void main() {
       );
 
       // Tap the AI makeup button to trigger error
-      await tester.tap(find.text('AI生成メイク'));
+      await tester.tap(find.text('おすすめメイク'));
       await tester.pumpAndSettle();
 
       // Verify fallback options are available
@@ -285,7 +285,7 @@ void main() {
       );
 
       // Tap the AI makeup button
-      await tester.tap(find.text('AI生成メイク'));
+      await tester.tap(find.text('おすすめメイク'));
       await tester.pumpAndSettle();
 
       // Should show low confidence warning dialog
@@ -334,7 +334,7 @@ void main() {
 
       // Verify the page loads correctly
       expect(find.text('診断結果'), findsOneWidget);
-      expect(find.text('AI生成メイク'), findsOneWidget);
+      expect(find.text('おすすめメイク'), findsOneWidget);
       expect(find.text('おすすめのファッション'), findsOneWidget);
       expect(find.text('もう一度診断する'), findsOneWidget);
     });
@@ -342,11 +342,11 @@ void main() {
     group('Error Message Content Tests', () {
       test('should have appropriate error messages for different error types', () {
         // Test error message content
-        const imageNotFoundMessage = '診断に使用した画像が見つかりません。もう一度診断を行ってからAI生成メイクをお試しください。';
+        const imageNotFoundMessage = '診断に使用した画像が見つかりません。もう一度診断を行ってからおすすめメイクをお試しください。';
         const imageTooLargeMessage = '診断に使用した画像が大きすぎます（10MB以上）。新しい画像で診断をやり直してください。';
         const imageTooSmallMessage = '診断に使用した画像が無効または破損している可能性があります。新しい画像で診断をやり直してください。';
         const imageAccessErrorMessage = '診断に使用した画像にアクセスできません。アプリを再起動するか、新しい診断を実行してください。';
-        const lowConfidenceMessage = '診断結果の信頼度が低いため、AI生成メイクの精度が低下する可能性があります。より良い結果を得るために、明るい場所で顔がはっきり写った写真で再診断することをお勧めします。';
+        const lowConfidenceMessage = '診断結果の信頼度が低いため、おすすめメイクの精度が低下する可能性があります。より良い結果を得るために、明るい場所で顔がはっきり写った写真で再診断することをお勧めします。';
 
         // Verify messages are informative and actionable
         expect(imageNotFoundMessage, contains('画像が見つかりません'));

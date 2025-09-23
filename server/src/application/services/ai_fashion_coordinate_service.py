@@ -2,7 +2,7 @@
 AI Fashion Coordinate Service  
 Task #015: Performance Optimization Integration
 
-パフォーマンス最適化統合版AIファッションコーディネートサービス
+パフォーマンス最適化統合版おすすめコーデサービス
 - 拡張AI画像生成サービスとGemini推奨サービスの統合
 - キャッシュ機能による高速化
 - 画像最適化による効率化
@@ -527,7 +527,7 @@ def create_enhanced_ai_fashion_coordinate_service(
     max_workers: int = 6
 ) -> EnhancedAIFashionCoordinateService:
     """
-    拡張AIファッションコーディネートサービスの作成
+    拡張おすすめコーデサービスの作成
     
     Task #015で追加されたパフォーマンス最適化機能付きサービスを作成
     
@@ -599,7 +599,7 @@ def create_standard_ai_fashion_coordinate_service(
     max_workers: int = 4
 ) -> AIFashionCoordinateService:
     """
-    標準AIファッションコーディネートサービスの作成（後方互換性）
+    標準おすすめコーデサービスの作成（後方互換性）
     
     Args:
         age_estimation_service: 年齢推定サービス

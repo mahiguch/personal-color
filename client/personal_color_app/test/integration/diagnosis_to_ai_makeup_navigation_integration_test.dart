@@ -295,12 +295,12 @@ void main() {
         expect(find.text('診断結果'), findsOneWidget);
 
         // Scroll to make the AI makeup button visible
-        await tester.ensureVisible(find.text('AI生成メイク'));
+        await tester.ensureVisible(find.text('おすすめメイク'));
 
-        expect(find.text('AI生成メイク'), findsOneWidget);
+        expect(find.text('おすすめメイク'), findsOneWidget);
 
         // Act - Tap AI makeup button
-        await tester.tap(find.text('AI生成メイク'));
+        await tester.tap(find.text('おすすめメイク'));
         // Use custom pump loop instead of pumpAndSettle
         for (int i = 0; i < 25; i++) {
           await tester.pump(const Duration(milliseconds: 400));
@@ -312,7 +312,7 @@ void main() {
         // Assert - Should navigate to AI makeup page
         expect(find.byType(AIMakeupRecommendationPageV3), findsOneWidget);
         // Check for any AI makeup related text instead of specific title
-        final aiMakeupTexts = ['AI画像生成メイク (V3)', 'AI画像生成メイク', 'メイク生成中', 'メイク推奨'];
+        final aiMakeupTexts = ['おすすめメイク', 'AI画像生成メイク', 'メイク生成中', 'メイク推奨'];
         bool foundAnyText = false;
         for (final text in aiMakeupTexts) {
           if (find.text(text).evaluate().isNotEmpty) {
@@ -341,10 +341,10 @@ void main() {
       );
 
       // Scroll to make the AI makeup button visible
-      await tester.ensureVisible(find.text('AI生成メイク'));
+      await tester.ensureVisible(find.text('おすすめメイク'));
 
       // Act - Navigate to AI makeup
-      await tester.tap(find.text('AI生成メイク'));
+      await tester.tap(find.text('おすすめメイク'));
       // Use custom pump loop instead of pumpAndSettle
       for (int i = 0; i < 25; i++) {
         await tester.pump(const Duration(milliseconds: 400));
@@ -386,7 +386,7 @@ void main() {
         );
 
         // Act - Navigate to AI makeup
-        await scrollToAndTap(tester, 'AI生成メイク');
+        await scrollToAndTap(tester, 'おすすめメイク');
 
         // Wait for loading to complete with custom pump loop
         for (int i = 0; i < 20; i++) {
@@ -420,12 +420,12 @@ void main() {
         );
 
         // Act - Try to navigate to AI makeup
-        await scrollToAndTap(tester, 'AI生成メイク');
+        await scrollToAndTap(tester, 'おすすめメイク');
 
         // Assert - Should show error dialog
         expect(find.text('画像が見つかりません'), findsOneWidget);
         expect(
-          find.text('診断に使用した画像が見つかりません。もう一度診断を行ってからAI生成メイクをお試しください。'),
+          find.text('診断に使用した画像が見つかりません。もう一度診断を行ってからおすすめメイクをお試しください。'),
           findsOneWidget,
         );
         expect(find.text('診断をやり直す'), findsOneWidget);
@@ -450,7 +450,7 @@ void main() {
           );
 
           // Act - Try to navigate to AI makeup
-          await scrollToAndTap(tester, 'AI生成メイク');
+          await scrollToAndTap(tester, 'おすすめメイク');
 
           // Assert - Should show low confidence error dialog
           expect(find.text('診断結果の信頼度が低いです'), findsOneWidget);
@@ -483,7 +483,7 @@ void main() {
           );
 
           // Act - Navigate to AI makeup
-          await scrollToAndTap(tester, 'AI生成メイク');
+          await scrollToAndTap(tester, 'おすすめメイク');
 
           // Assert - Verify correct color type is passed
           final aiMakeupPage = tester.widget<AIMakeupRecommendationPageV3>(
@@ -521,7 +521,7 @@ void main() {
         );
 
         // Act - Try to navigate to AI makeup
-        await scrollToAndTap(tester, 'AI生成メイク');
+        await scrollToAndTap(tester, 'おすすめメイク');
 
         // Assert - Should show image invalid error
         expect(find.text('画像が無効です'), findsOneWidget);
@@ -569,7 +569,7 @@ void main() {
         );
 
         // Act - Navigate to AI makeup
-        await scrollToAndTap(tester, 'AI生成メイク');
+        await scrollToAndTap(tester, 'おすすめメイク');
 
         // Assert - Verify all data is passed correctly
         final aiMakeupPage = tester.widget<AIMakeupRecommendationPageV3>(
@@ -602,7 +602,7 @@ void main() {
           );
 
           // Act - Navigate to AI makeup
-          await scrollToAndTap(tester, 'AI生成メイク');
+          await scrollToAndTap(tester, 'おすすめメイク');
 
           // Assert - Verify image file is accessible
           final aiMakeupPage = tester.widget<AIMakeupRecommendationPageV3>(

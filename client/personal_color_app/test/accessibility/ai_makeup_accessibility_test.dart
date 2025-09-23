@@ -263,7 +263,7 @@ void main() {
         expect(diagnosticResultSemantics.label, contains('診断結果'));
 
         // Test AI makeup button semantics
-        final aiMakeupButton = find.text('AI生成メイク');
+        final aiMakeupButton = find.text('おすすめメイク');
         expect(aiMakeupButton, findsOneWidget);
         
         final aiMakeupButtonSemantics = tester.getSemantics(aiMakeupButton);
@@ -313,7 +313,7 @@ void main() {
         }
 
         // Navigate to AI makeup screen
-        final aiMakeupButtonFinder = find.text('AI生成メイク');
+        final aiMakeupButtonFinder = find.text('おすすめメイク');
         if (aiMakeupButtonFinder.evaluate().isNotEmpty) {
           await tester.ensureVisible(aiMakeupButtonFinder);
           await tester.tap(aiMakeupButtonFinder);
@@ -342,7 +342,7 @@ void main() {
         }
 
         // Test main heading semantics
-        final mainHeading = find.text('AI画像生成メイク (V3)');
+        final mainHeading = find.text('おすすめメイク');
         if (mainHeading.evaluate().isNotEmpty) {
           final headingSemantics = tester.getSemantics(mainHeading);
           expect(headingSemantics.label, isNotNull);
@@ -396,7 +396,7 @@ void main() {
         }
 
         // Navigate to AI makeup screen
-        final aiMakeupButtonFinder = find.text('AI生成メイク');
+        final aiMakeupButtonFinder = find.text('おすすめメイク');
         if (aiMakeupButtonFinder.evaluate().isNotEmpty) {
           await tester.ensureVisible(aiMakeupButtonFinder);
           await tester.tap(aiMakeupButtonFinder);
@@ -491,7 +491,7 @@ void main() {
             foundDiagnosisResult = true;
           }
           
-          if (label.contains('AI生成メイク') || value.contains('AI生成メイク')) {
+          if (label.contains('おすすめメイク') || value.contains('おすすめメイク')) {
             foundAiMakeupButton = true;
             expect(node.getSemanticsData().hasAction(SemanticsAction.tap), isTrue);
           }
@@ -537,7 +537,7 @@ void main() {
         }
 
         // Navigate to AI makeup screen
-        final aiMakeupButtonFinder = find.text('AI生成メイク');
+        final aiMakeupButtonFinder = find.text('おすすめメイク');
         if (aiMakeupButtonFinder.evaluate().isNotEmpty) {
           await tester.ensureVisible(aiMakeupButtonFinder);
           await tester.tap(aiMakeupButtonFinder);
@@ -605,7 +605,7 @@ void main() {
         }
 
         // Navigate to AI makeup screen
-        final aiMakeupButtonFinder = find.text('AI生成メイク');
+        final aiMakeupButtonFinder = find.text('おすすめメイク');
         if (aiMakeupButtonFinder.evaluate().isNotEmpty) {
           await tester.ensureVisible(aiMakeupButtonFinder);
           await tester.tap(aiMakeupButtonFinder);
@@ -682,7 +682,7 @@ void main() {
         }
 
         // Verify AI makeup button is focusable
-        final aiMakeupButton = find.text('AI生成メイク');
+        final aiMakeupButton = find.text('おすすめメイク');
         expect(aiMakeupButton, findsOneWidget);
         
         final buttonSemantics = tester.getSemantics(aiMakeupButton);
@@ -712,7 +712,7 @@ void main() {
         }
 
         // Navigate to AI makeup screen
-        final aiMakeupButtonFinder = find.text('AI生成メイク');
+        final aiMakeupButtonFinder = find.text('おすすめメイク');
         if (aiMakeupButtonFinder.evaluate().isNotEmpty) {
           await tester.ensureVisible(aiMakeupButtonFinder);
           await tester.tap(aiMakeupButtonFinder);
@@ -777,7 +777,7 @@ void main() {
         }
 
         // Test button contrast
-        final aiMakeupButton = find.text('AI生成メイク');
+        final aiMakeupButton = find.text('おすすめメイク');
         expect(aiMakeupButton, findsOneWidget);
 
         // Find button widget with error handling
@@ -869,10 +869,10 @@ void main() {
 
         // Verify elements are still visible and accessible in high contrast mode
         expect(find.text('診断結果'), findsOneWidget);
-        expect(find.text('AI生成メイク'), findsOneWidget);
+        expect(find.text('おすすめメイク'), findsOneWidget);
 
         // Navigate to AI makeup screen
-        final aiMakeupButtonFinder = find.text('AI生成メイク');
+        final aiMakeupButtonFinder = find.text('おすすめメイク');
         if (aiMakeupButtonFinder.evaluate().isNotEmpty) {
           await tester.ensureVisible(aiMakeupButtonFinder);
           await tester.tap(aiMakeupButtonFinder);
@@ -936,7 +936,7 @@ void main() {
         }
 
         // Navigate to AI makeup screen
-        final aiMakeupButtonFinder = find.text('AI生成メイク');
+        final aiMakeupButtonFinder = find.text('おすすめメイク');
         if (aiMakeupButtonFinder.evaluate().isNotEmpty) {
           await tester.ensureVisible(aiMakeupButtonFinder);
           await tester.tap(aiMakeupButtonFinder);
@@ -994,7 +994,7 @@ void main() {
         }
 
         // Try to navigate to AI makeup
-        final aiMakeupButtonFinder = find.text('AI生成メイク');
+        final aiMakeupButtonFinder = find.text('おすすめメイク');
         if (aiMakeupButtonFinder.evaluate().isNotEmpty) {
           await tester.ensureVisible(aiMakeupButtonFinder);
           await tester.tap(aiMakeupButtonFinder);
@@ -1052,7 +1052,7 @@ void main() {
         }
 
         // Navigate to AI makeup screen
-        final aiMakeupButtonFinder = find.text('AI生成メイク');
+        final aiMakeupButtonFinder = find.text('おすすめメイク');
         if (aiMakeupButtonFinder.evaluate().isNotEmpty) {
           await tester.ensureVisible(aiMakeupButtonFinder);
           await tester.tap(aiMakeupButtonFinder);
@@ -1148,7 +1148,7 @@ void main() {
         }
 
         // Navigate to AI makeup screen
-        final aiMakeupButtonFinder = find.text('AI生成メイク');
+        final aiMakeupButtonFinder = find.text('おすすめメイク');
         if (aiMakeupButtonFinder.evaluate().isNotEmpty) {
           await tester.ensureVisible(aiMakeupButtonFinder);
           await tester.tap(aiMakeupButtonFinder);

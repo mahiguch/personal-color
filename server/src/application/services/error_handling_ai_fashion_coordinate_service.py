@@ -57,7 +57,7 @@ from src.core.error_handling.error_manager import BackoffStrategy
 
 
 class ErrorHandlingAIFashionCoordinateService:
-    """エラーハンドリング強化版AIファッションコーディネートサービス"""
+    """エラーハンドリング強化版おすすめコーデサービス"""
     
     def __init__(self, base_service: Optional[BaseService] = None):
         self.base_service = base_service or BaseService()

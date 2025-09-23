@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This feature involves improving the AI-generated makeup functionality by relocating the "AI生成メイク" (AI Generated Makeup) button from the home screen to the diagnosis result screen, modifying the camera behavior to use previously captured images instead of launching the camera, and enhancing the AI makeup screen with additional information such as reasoning and makeup steps.
+This feature involves improving the AI-generated makeup functionality by relocating the "おすすめメイク" (AI Generated Makeup) button from the home screen to the diagnosis result screen, modifying the camera behavior to use previously captured images instead of launching the camera, and enhancing the AI makeup screen with additional information such as reasoning and makeup steps.
 
 ## Requirements
 
@@ -12,9 +12,9 @@ This feature involves improving the AI-generated makeup functionality by relocat
 
 #### Acceptance Criteria
 
-1. WHEN the user is on the diagnosis result screen THEN the system SHALL display an "AI生成メイク" button
-2. WHEN the user taps the "AI生成メイク" button on the diagnosis result screen THEN the system SHALL navigate to the AI makeup screen
-3. WHEN the user is on the home screen THEN the system SHALL NOT display the "AI生成メイク" button
+1. WHEN the user is on the diagnosis result screen THEN the system SHALL display an "おすすめメイク" button
+2. WHEN the user taps the "おすすめメイク" button on the diagnosis result screen THEN the system SHALL navigate to the AI makeup screen
+3. WHEN the user is on the home screen THEN the system SHALL NOT display the "おすすめメイク" button
 
 ### Requirement 2
 
@@ -22,7 +22,7 @@ This feature involves improving the AI-generated makeup functionality by relocat
 
 #### Acceptance Criteria
 
-1. WHEN the user taps the "AI生成メイク" button THEN the system SHALL NOT launch the camera
+1. WHEN the user taps the "おすすめメイク" button THEN the system SHALL NOT launch the camera
 2. WHEN the user accesses the AI makeup feature THEN the system SHALL use the image from the previous diagnosis session
 3. WHEN no previous diagnosis image is available THEN the system SHALL display an appropriate error message and guide the user to complete a diagnosis first
 

@@ -7,7 +7,7 @@
   - _Requirements: 1.3_
 
 - [x] 2. Add AI makeup button to diagnosis result screen
-  - Add "AI生成メイク" button to the action buttons section in AndroidDiagnosisResultPage
+  - Add "おすすめメイク" button to the action buttons section in AndroidDiagnosisResultPage
   - Implement proper Material Design 3 styling consistent with existing buttons
   - Position the button appropriately in the UI layout
   - _Requirements: 1.1, 1.2_

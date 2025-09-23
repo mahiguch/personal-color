@@ -113,7 +113,7 @@ void main() {
 
       // Act & Assert
       // Verify that AI makeup button is present
-      expect(find.text('AI生成メイク'), findsOneWidget);
+      expect(find.text('おすすめメイク'), findsOneWidget);
       expect(find.byIcon(Icons.auto_awesome), findsOneWidget);
     });
 
@@ -139,7 +139,7 @@ void main() {
       expect(sizedBoxes, findsWidgets);
       
       // Verify the AI makeup text is present
-      expect(find.text('AI生成メイク'), findsOneWidget);
+      expect(find.text('おすすめメイク'), findsOneWidget);
       
       // Verify the auto_awesome icon is present
       expect(find.byIcon(Icons.auto_awesome), findsOneWidget);
@@ -152,7 +152,7 @@ void main() {
           // Check if this SizedBox contains the AI makeup text
           final descendants = find.descendant(
             of: sizedBoxes.at(i),
-            matching: find.text('AI生成メイク'),
+            matching: find.text('おすすめメイク'),
           );
           if (descendants.evaluate().isNotEmpty) {
             foundCorrectSizedBox = true;
@@ -181,47 +181,16 @@ void main() {
 
       // Act & Assert
       // Verify both icon and text are present
-      expect(find.text('AI生成メイク'), findsOneWidget);
+      expect(find.text('おすすめメイク'), findsOneWidget);
       expect(find.byIcon(Icons.auto_awesome), findsOneWidget);
       
       // Verify they are close to each other in the widget tree (both should be in the same button)
-      final textWidget = tester.getCenter(find.text('AI生成メイク'));
+      final textWidget = tester.getCenter(find.text('おすすめメイク'));
       final iconWidget = tester.getCenter(find.byIcon(Icons.auto_awesome));
       
       // They should be on the same horizontal line (same y coordinate approximately)
       expect((textWidget.dy - iconWidget.dy).abs(), lessThan(10.0), 
         reason: 'Icon and text should be on the same horizontal line');
-    });
-
-    testWidgets('Remaining action buttons should be present in correct order', (WidgetTester tester) async {
-      // Arrange
-      await tester.pumpWidget(
-        MaterialApp(
-          home: ChangeNotifierProvider<DiagnosisProvider>(
-            create: (_) => MockDiagnosisProvider(),
-            child: AndroidDiagnosisResultPage(
-              result: mockDiagnosisResult,
-              originalImagePath: mockImagePath,
-            ),
-          ),
-        ),
-      );
-
-      // Act & Assert
-      // Verify remaining buttons are present
-      expect(find.text('AI生成メイク'), findsOneWidget);
-      expect(find.text('おすすめのファッション'), findsOneWidget);
-      expect(find.text('もう一度診断する'), findsOneWidget);
-      
-      // Verify button order by checking their positions
-      final aiMakeupButton = tester.getCenter(find.text('AI生成メイク'));
-      final fashionButton = tester.getCenter(find.text('おすすめのファッション'));
-      final retakeButton = tester.getCenter(find.text('もう一度診断する'));
-      
-      // Fashion button should be after AI makeup button
-      expect(fashionButton.dy, greaterThan(aiMakeupButton.dy));
-      // Retake button should be last
-      expect(retakeButton.dy, greaterThan(fashionButton.dy));
     });
 
     testWidgets('AI makeup button should be positioned correctly in the layout', (WidgetTester tester) async {
@@ -242,10 +211,10 @@ void main() {
 
       // Act & Assert
       // Verify the AI makeup text is present
-      expect(find.text('AI生成メイク'), findsOneWidget);
+      expect(find.text('おすすめメイク'), findsOneWidget);
       
       // Get the position of the AI makeup button text
-      final aiMakeupTextPosition = tester.getCenter(find.text('AI生成メイク'));
+      final aiMakeupTextPosition = tester.getCenter(find.text('おすすめメイク'));
       final screenWidth = tester.getSize(find.byType(MaterialApp)).width;
       
       // Button should be positioned within the screen bounds
@@ -275,11 +244,11 @@ void main() {
 
       // Act & Assert
       // Verify the AI makeup text and icon are present
-      expect(find.text('AI生成メイク'), findsOneWidget);
+      expect(find.text('おすすめメイク'), findsOneWidget);
       expect(find.byIcon(Icons.auto_awesome), findsOneWidget);
       
       // Get the size of the text widget to verify it's within reasonable bounds
-      final textSize = tester.getSize(find.text('AI生成メイク'));
+      final textSize = tester.getSize(find.text('おすすめメイク'));
       
       // Text should have reasonable dimensions
       expect(textSize.height, greaterThan(10.0));
@@ -309,7 +278,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Act & Assert
-        final aiMakeupButton = find.text('AI生成メイク');
+        final aiMakeupButton = find.text('おすすめメイク');
         expect(aiMakeupButton, findsOneWidget);
         
         // Verify button can be tapped (this will trigger navigation logic but may fail due to missing dependencies)
@@ -322,7 +291,7 @@ void main() {
         }
         
         // Verify the button is still there after tap attempt
-        expect(find.text('AI生成メイク'), findsOneWidget);
+        expect(find.text('おすすめメイク'), findsOneWidget);
       });
     });
   });

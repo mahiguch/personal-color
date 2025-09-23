@@ -45,7 +45,7 @@ class AIFashionCoordinateScreen extends StatelessWidget {
   }
 }
 
-/// AIファッションコーディネート画面のメインビュー
+/// おすすめコーデ画面のメインビュー
 class _AIFashionCoordinateView extends StatefulWidget {
   const _AIFashionCoordinateView({
     this.personalColorType,

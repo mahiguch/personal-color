@@ -396,16 +396,16 @@ void main() {
         
         // Verify diagnosis result page is displayed
         expect(find.text('診断結果'), findsOneWidget);
-        expect(find.text('AI生成メイク'), findsOneWidget);
+        expect(find.text('おすすめメイク'), findsOneWidget);
         
         // Step 3: Navigate to AI makeup screen
-        await tester.ensureVisible(find.text('AI生成メイク'));
-        await tester.tap(find.text('AI生成メイク'));
+        await tester.ensureVisible(find.text('おすすめメイク'));
+        await tester.tap(find.text('おすすめメイク'));
         await tester.pumpAndSettle();
         
         // Verify AI makeup page is displayed
         expect(find.byType(AIMakeupRecommendationPageV3), findsOneWidget);
-        expect(find.text('AI画像生成メイク (V3)'), findsOneWidget);
+        expect(find.text('おすすめメイク'), findsOneWidget);
         
         // Step 4: Wait for AI makeup generation to complete
         await tester.pump(const Duration(milliseconds: 1000));
@@ -467,8 +467,8 @@ void main() {
           await tester.pumpAndSettle();
           
           // Navigate to AI makeup
-          await tester.ensureVisible(find.text('AI生成メイク'));
-          await tester.tap(find.text('AI生成メイク'));
+          await tester.ensureVisible(find.text('おすすめメイク'));
+          await tester.tap(find.text('おすすめメイク'));
           await tester.pumpAndSettle();
           
           // Verify correct color type is handled
@@ -527,8 +527,8 @@ void main() {
         final afterDiagnosisMemory = afterDiagnosisMetrics!['appUsedMB'] as int;
         
         // Navigate to AI makeup
-        await tester.ensureVisible(find.text('AI生成メイク'));
-        await tester.tap(find.text('AI生成メイク'));
+        await tester.ensureVisible(find.text('おすすめメイク'));
+        await tester.tap(find.text('おすすめメイク'));
         await tester.pumpAndSettle();
         
         // Wait for AI makeup processing
@@ -588,8 +588,8 @@ void main() {
         await tester.pumpAndSettle();
         
         // Navigate to AI makeup
-        await tester.ensureVisible(find.text('AI生成メイク'));
-        await tester.tap(find.text('AI生成メイク'));
+        await tester.ensureVisible(find.text('おすすめメイク'));
+        await tester.tap(find.text('おすすめメイク'));
         await tester.pumpAndSettle();
         
         // Wait for failure
@@ -624,8 +624,8 @@ void main() {
         await tester.pumpAndSettle();
         
         // Try to navigate to AI makeup
-        await tester.ensureVisible(find.text('AI生成メイク'));
-        await tester.tap(find.text('AI生成メイク'));
+        await tester.ensureVisible(find.text('おすすめメイク'));
+        await tester.tap(find.text('おすすめメイク'));
         await tester.pumpAndSettle();
         
         // Verify error dialog is shown

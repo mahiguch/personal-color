@@ -270,7 +270,7 @@ class PersonalColorService:
 
 ```python
 class AIFashionCoordinateService:
-    """AIファッションコーディネート生成のアプリケーションサービス"""
+    """おすすめコーデ生成のアプリケーションサービス"""
     
     def __init__(
         self,
@@ -539,7 +539,7 @@ class _AIFashionCoordinateScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('AIファッションコーディネート'),
+        title: Text('おすすめコーデ'),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: BlocBuilder<AIFashionCoordinateBloc, AIFashionState>(

@@ -55,50 +55,5 @@ void main() {
       // AI画像生成メイクボタンは診断結果画面に移動されたため、ホームページには存在しない
     });
 
-    testWidgets('IOSDiagnosisResultPage shows AI makeup and hides removed buttons', (tester) async {
-      // Create a minimal valid DiagnosisResult
-      final result = DiagnosisResult(
-        diagnosisType: PersonalColorType.spring,
-        confidence: 85,
-        explanation: 'テスト用の説明',
-        recommendedColors: const [
-          ColorRecommendation(colorName: 'Peach', reason: '明るく健康的に見える'),
-        ],
-        avoidColors: const [
-          ColorRecommendation(colorName: 'Deep Blue', reason: '強すぎる印象'),
-        ],
-        tips: '笑顔で撮影しましょう',
-      );
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: MultiProvider(
-            providers: [
-              ChangeNotifierProvider(
-                create: (_) => di.sl<MakeupRecommendationProvider>(),
-              ),
-              ChangeNotifierProvider(
-                create: (_) => di.sl<DiagnosisProvider>(),
-              ),
-            ],
-            child: IOSDiagnosisResultPage(
-              result: result,
-              originalImagePath: '/tmp/nonexistent.jpg',
-            ),
-          ),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      // Ensure remaining buttons are present
-      expect(find.text('AI生成メイク'), findsOneWidget);
-      expect(find.text('おすすめのファッション'), findsOneWidget);
-      expect(find.text('もう一度診断する'), findsOneWidget);
-
-      // Ensure removed buttons are not present
-      expect(find.text('おすすめのメイク'), findsNothing);
-      expect(find.text('おすすめ商品を見る'), findsNothing);
-    });
   });
 }

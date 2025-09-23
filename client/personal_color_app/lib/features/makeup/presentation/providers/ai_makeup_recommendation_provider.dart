@@ -538,7 +538,7 @@ class AIMakeupRecommendationProvider extends ChangeNotifier {
 
   /// サービス利用可能性をチェック
   /// 
-  /// AI生成メイクサービスが利用可能かどうかを確認します。
+  /// おすすめメイクサービスが利用可能かどうかを確認します。
   /// 実際の実装では、サーバーのヘルスチェックAPIを呼び出すことができます。
   Future<bool> isServiceAvailable() async {
     try {
@@ -566,7 +566,7 @@ class AIMakeupRecommendationProvider extends ChangeNotifier {
     // サービス利用可能性をチェック
     final isAvailable = await isServiceAvailable();
     if (!isAvailable) {
-      _setError('AI生成メイクサービスが一時的に利用できません。しばらく時間をおいてから再試行してください');
+      _setError('おすすめメイクサービスが一時的に利用できません。しばらく時間をおいてから再試行してください');
       return;
     }
 
