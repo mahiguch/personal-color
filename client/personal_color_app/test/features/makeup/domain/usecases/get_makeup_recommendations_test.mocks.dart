@@ -122,4 +122,33 @@ class MockMakeupRepository extends _i1.Mock implements _i3.MakeupRepository {
                 ),
           )
           as _i4.Future<_i2.Either<_i5.Failure, _i6.MakeupRecommendation>>);
+
+  @override
+  _i4.Future<_i2.Either<_i5.Failure, _i6.MakeupRecommendation>>
+  getAIMakeupRecommendationsWithContext(
+    _i7.PersonalColorType? personalColorType,
+    _i8.File? imageFile,
+    _i7.DiagnosisResult? diagnosisResult,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#getAIMakeupRecommendationsWithContext, [
+              personalColorType,
+              imageFile,
+              diagnosisResult,
+            ]),
+            returnValue:
+                _i4.Future<
+                  _i2.Either<_i5.Failure, _i6.MakeupRecommendation>
+                >.value(
+                  _FakeEither_0<_i5.Failure, _i6.MakeupRecommendation>(
+                    this,
+                    Invocation.method(#getAIMakeupRecommendationsWithContext, [
+                      personalColorType,
+                      imageFile,
+                      diagnosisResult,
+                    ]),
+                  ),
+                ),
+          )
+          as _i4.Future<_i2.Either<_i5.Failure, _i6.MakeupRecommendation>>);
 }

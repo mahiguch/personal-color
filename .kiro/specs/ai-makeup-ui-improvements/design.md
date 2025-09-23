@@ -2,7 +2,7 @@
 
 ## Overview
 
-This design document outlines the implementation plan for improving the AI-generated makeup functionality by relocating the "AI生成メイク" button from the home screen to the diagnosis result screen, modifying the camera behavior to reuse previously captured images, and enhancing the AI makeup screen with detailed explanations and step-by-step instructions.
+This design document outlines the implementation plan for improving the AI-generated makeup functionality by relocating the "おすすめメイク" button from the home screen to the diagnosis result screen, modifying the camera behavior to reuse previously captured images, and enhancing the AI makeup screen with detailed explanations and step-by-step instructions.
 
 ## Architecture
 
@@ -10,7 +10,7 @@ This design document outlines the implementation plan for improving the AI-gener
 
 The current Flutter app follows a clean architecture pattern with feature-based organization:
 
-- **Home Feature**: Contains Android/iOS specific home pages with the current "AI生成メイク" button
+- **Home Feature**: Contains Android/iOS specific home pages with the current "おすすめメイク" button
 - **Diagnosis Feature**: Contains result pages that display diagnosis results with action buttons
 - **Makeup Feature**: Contains AI makeup recommendation pages and providers
 - **Navigation**: Uses Material Design navigation patterns with proper page transitions
@@ -38,7 +38,7 @@ The current Flutter app follows a clean architecture pattern with feature-based 
 **File**: `client/personal_color_app/lib/features/diagnosis/presentation/android/android_diagnosis_result_page.dart`
 
 **Changes**:
-- Add "AI生成メイク" button to the action buttons section
+- Add "おすすめメイク" button to the action buttons section
 - Implement navigation to AI makeup screen with diagnosis context
 - Pass the original diagnosis image and result data to the AI makeup screen
 

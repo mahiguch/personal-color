@@ -12,9 +12,8 @@ import '../../../makeup/presentation/pages/makeup_recommendation_page.dart';
 import '../../../makeup/presentation/providers/makeup_recommendation_provider.dart';
 import '../../../makeup/presentation/pages/ai_makeup_recommendation_page_v3.dart';
 import '../../../makeup/presentation/providers/ai_makeup_recommendation_provider.dart';
-import '../../../clothing/presentation/pages/clothing_recommendation_page.dart';
-import '../../../clothing/presentation/providers/clothing_recommendation_provider.dart';
 import '../../../../core/di/injection_container.dart' as di;
+import '../../../../screens/ai_fashion_coordinate_screen.dart';
 import 'dart:io';
 
 class IOSDiagnosisResultPage extends StatelessWidget {
@@ -158,7 +157,7 @@ class IOSDiagnosisResultPage extends StatelessWidget {
   Widget _buildActionButtons(BuildContext context, AdaptiveUiTheme uiTheme) {
     return Column(
       children: [
-        // AI生成メイクボタン
+        // おすすめメイク
         SizedBox(
           width: double.infinity,
           height: 56,
@@ -183,7 +182,7 @@ class IOSDiagnosisResultPage extends StatelessWidget {
                     Icon(Icons.auto_awesome, color: Colors.white, size: 24 * uiTheme.fontScale),
                     const SizedBox(width: 8),
                     Text(
-                      'AI生成メイク',
+                      'おすすめメイク',
                       style: TextStyle(
                         fontSize: 16 * uiTheme.fontScale,
                         fontWeight: FontWeight.bold,
@@ -199,19 +198,15 @@ class IOSDiagnosisResultPage extends StatelessWidget {
         
         const SizedBox(height: 12),
         
-        // おすすめのファッションボタン
+        // おすすめコーデボタン
         SizedBox(
           width: double.infinity,
           height: 56,
           child: GestureDetector(
-            onTap: () => _navigateToClothingRecommendation(context, forceRefresh: false),
-            onLongPress: () {
-              debugPrint('🔄 長押し検知: forceRefresh=trueで実行');
-              _navigateToClothingRecommendation(context, forceRefresh: true);
-            },
+            onTap: () => _navigateToAIFashionCoordinate(context),
             child: Container(
               decoration: BoxDecoration(
-                color: Color(uiTheme.primaryColor).withValues(alpha: 0.8),
+                color: Color(uiTheme.primaryColor).withValues(alpha: 0.7),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
@@ -225,10 +220,10 @@ class IOSDiagnosisResultPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.checkroom, color: Colors.white, size: 24 * uiTheme.fontScale),
+                    Icon(Icons.style, color: Colors.white, size: 24 * uiTheme.fontScale),
                     const SizedBox(width: 8),
                     Text(
-                      'おすすめのファッション',
+                      'おすすめコーデ',
                       style: TextStyle(
                         fontSize: 16 * uiTheme.fontScale,
                         fontWeight: FontWeight.bold,
@@ -241,8 +236,6 @@ class IOSDiagnosisResultPage extends StatelessWidget {
             ),
           ),
         ),
-
-        const SizedBox(height: 12),
 
         const SizedBox(height: 12),
         
@@ -345,31 +338,15 @@ class IOSDiagnosisResultPage extends StatelessWidget {
     }
   }
 
-  void _navigateToClothingRecommendation(BuildContext context, {bool forceRefresh = false}) {
-    debugPrint('👗 おすすめファッションボタン押下: ${result.diagnosisType} (forceRefresh: $forceRefresh)');
-    
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => ChangeNotifierProvider(
-          create: (context) => di.sl<ClothingRecommendationProvider>(),
-          child: ClothingRecommendationPage(
-            personalColorType: result.diagnosisType,
-            forceRefresh: forceRefresh,
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// AI生成メイクページに移動する
+  /// おすすめメイクページに移動する
   void _navigateToAIMakeup(BuildContext context) {
     try {
-      debugPrint('🤖 [iOS] AI生成メイクボタン押下: ${result.diagnosisType}');
+      debugPrint('🤖 [iOS] おすすめメイクボタン押下: ${result.diagnosisType}');
       
       // 包括的な事前検証
       final validationError = _validateAIMakeupPrerequisites();
       if (validationError != null) {
-        debugPrint('❌ [iOS] AI生成メイク事前検証エラー: $validationError');
+        debugPrint('❌ [iOS] おすすめメイク事前検証エラー: $validationError');
         _showValidationErrorDialog(context, validationError);
         return;
       }
@@ -393,11 +370,54 @@ class IOSDiagnosisResultPage extends StatelessWidget {
       debugPrint('✅ [iOS] AIMakeupRecommendationPageV3ナビゲーション成功');
       
     } catch (e, stackTrace) {
-      debugPrint('❌ [iOS] AI生成メイクナビゲーションエラー: $e');
+      debugPrint('❌ [iOS] おすすめメイクナビゲーションエラー: $e');
       debugPrint('スタックトレース: $stackTrace');
       
       // 包括的なエラーハンドリング
       _handleAIMakeupNavigationError(context, e);
+    }
+  }
+
+  /// おすすめコーデページに移動する
+  void _navigateToAIFashionCoordinate(BuildContext context) {
+    try {
+      debugPrint('👗 [iOS] おすすめコーデボタン押下: ${result.diagnosisType}');
+      
+      // 診断結果からパーソナルカラータイプを取得し、文字列に変換
+      final personalColorType = result.diagnosisType.toString().split('.').last;
+      debugPrint('👗 [iOS] Converted personalColorType: $personalColorType');
+      debugPrint('👗 [iOS] Original diagnosisType: ${result.diagnosisType}');
+      debugPrint('👗 [iOS] Full toString: ${result.diagnosisType.toString()}');
+      
+      debugPrint('🚀 [iOS] AIFashionCoordinateScreenへナビゲーション開始');
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => AIFashionCoordinateScreen(
+            personalColorType: personalColorType,
+            originalImagePath: originalImagePath,
+          ),
+        ),
+      );
+      debugPrint('✅ [iOS] AIFashionCoordinateScreenナビゲーション成功');
+      
+    } catch (e, stackTrace) {
+      debugPrint('❌ [iOS] おすすめコーデナビゲーションエラー: $e');
+      debugPrint('スタックトレース: $stackTrace');
+      
+      // エラーダイアログを表示
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('エラー'),
+          content: const Text('おすすめコーデ画面への移動中にエラーが発生しました。'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
     }
   }
 
@@ -410,7 +430,7 @@ class IOSDiagnosisResultPage extends StatelessWidget {
     Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
-  /// AI生成メイクの事前要件を検証
+  /// おすすめメイクの事前要件を検証
   String? _validateAIMakeupPrerequisites() {
     // 1. 画像ファイルの存在確認
     final imageFile = File(originalImagePath);
@@ -463,7 +483,7 @@ class IOSDiagnosisResultPage extends StatelessWidget {
     }
   }
 
-  /// AI生成メイクナビゲーションエラーを処理
+  /// おすすめメイクナビゲーションエラーを処理
   void _handleAIMakeupNavigationError(BuildContext context, dynamic error) {
     String errorMessage;
     List<Widget> actions;
@@ -487,7 +507,7 @@ class IOSDiagnosisResultPage extends StatelessWidget {
       ];
     } else if (error.toString().contains('ServiceUnavailable')) {
       // サービス利用不可
-      errorMessage = 'AI生成メイク機能が一時的に利用できません。通常のメイク推奨をご利用ください。';
+      errorMessage = 'おすすめメイク機能が一時的に利用できません。通常のメイク推奨をご利用ください。';
       actions = [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
@@ -503,7 +523,7 @@ class IOSDiagnosisResultPage extends StatelessWidget {
       ];
     } else {
       // その他のエラー
-      errorMessage = 'AI生成メイク機能でエラーが発生しました。通常のメイク推奨をお試しください。';
+      errorMessage = 'おすすめメイク機能でエラーが発生しました。通常のメイク推奨をお試しください。';
       actions = [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
@@ -535,7 +555,7 @@ class IOSDiagnosisResultPage extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('画像が見つかりません'),
-        content: const Text('診断に使用した画像が見つかりません。もう一度診断を行ってからAI生成メイクをお試しください。'),
+        content: const Text('診断に使用した画像が見つかりません。もう一度診断を行ってからおすすめメイクをお試しください。'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -659,7 +679,7 @@ class IOSDiagnosisResultPage extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('診断結果の信頼度が低いです'),
-        content: const Text('診断結果の信頼度が低いため、AI生成メイクの精度が低下する可能性があります。より良い結果を得るために、明るい場所で顔がはっきり写った写真で再診断することをお勧めします。'),
+        content: const Text('診断結果の信頼度が低いため、おすすめメイクの精度が低下する可能性があります。より良い結果を得るために、明るい場所で顔がはっきり写った写真で再診断することをお勧めします。'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -697,7 +717,7 @@ class IOSDiagnosisResultPage extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('エラー'),
-        content: Text('AI生成メイク機能を利用できません（エラー: $errorType）。通常のメイク推奨をお試しください。'),
+        content: Text('おすすめメイク機能を利用できません（エラー: $errorType）。通常のメイク推奨をお試しください。'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),

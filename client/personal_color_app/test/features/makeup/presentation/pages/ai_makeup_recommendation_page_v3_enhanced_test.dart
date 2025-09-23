@@ -407,7 +407,7 @@ void main() {
         // Verify main layout structure
         expect(find.byType(Scaffold), findsOneWidget);
         expect(find.byType(AppBar), findsOneWidget);
-        expect(find.text('AI画像生成メイク (V3)'), findsOneWidget);
+        expect(find.text('おすすめメイク'), findsOneWidget);
         expect(find.byType(CustomScrollView), findsOneWidget);
         
         // Verify all major components are present
@@ -534,7 +534,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Verify error state is displayed
-        expect(find.text('AI生成メイクでエラーが発生しました'), findsOneWidget);
+        expect(find.text('おすすめメイクでエラーが発生しました'), findsOneWidget);
         expect(find.byIcon(Icons.error_outline), findsOneWidget);
         
         // Verify fallback options are displayed
@@ -614,7 +614,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Verify the page is rendered correctly with factory constructor
-        expect(find.text('AI画像生成メイク (V3)'), findsOneWidget);
+        expect(find.text('おすすめメイク'), findsOneWidget);
         expect(find.byType(MakeupReasoningWidget), findsOneWidget);
         expect(find.text('Factory constructor test'), findsOneWidget);
       });

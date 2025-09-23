@@ -9,7 +9,7 @@ import '../../../../core/di/injection_container.dart' as di;
 
 /// Android版ホーム画面 - Material Design 3準拠
 /// 
-/// AI生成メイクボタンは診断結果画面に移動されました。
+/// おすすめメイクボタンは診断結果画面に移動されました。
 /// このページは診断開始のメインエントリーポイントとして機能します。
 /// 
 /// 実装された機能:
@@ -18,7 +18,7 @@ import '../../../../core/di/injection_container.dart' as di;
 /// - Material Design 3準拠のUI
 /// 
 /// 削除された機能:
-/// - AI生成メイクボタン（診断結果画面に移動）
+/// - おすすめメイクボタン（診断結果画面に移動）
 /// - 画像選択機能（診断結果画面から直接アクセス）
 class AndroidHomePage extends StatelessWidget {
   const AndroidHomePage({
@@ -61,17 +61,15 @@ class AndroidHomePage extends StatelessWidget {
                 
                 const SizedBox(height: 48),
                 
-            // メインCTAボタン
-            _buildMainCTAButton(context, theme),
-            
-            const SizedBox(height: 24),
-            
+                // メインCTAボタン
+                _buildMainCTAButton(context, theme),
+                
+                const SizedBox(height: 24),
+                
+                // サブ情報
+                _buildSubInfo(theme),
 
-
-            // サブ情報
-            _buildSubInfo(theme),
-
-            const SizedBox(height: 32),
+                const SizedBox(height: 32),
 
             // プライバシーポリシーリンク
             _buildPrivacyPolicyLink(theme),
@@ -160,6 +158,16 @@ class AndroidHomePage extends StatelessWidget {
           ),
           textAlign: TextAlign.center,
         ),
+
+        const SizedBox(height: 8),
+        
+        Text(
+          'まずはあなたのパーソナルカラーを診断しましょう',
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+          textAlign: TextAlign.center,
+        ),
       ],
     );
   }
@@ -197,7 +205,6 @@ class AndroidHomePage extends StatelessWidget {
       ),
     );
   }
-
 
   /// プライバシーポリシーリンク
   Widget _buildPrivacyPolicyLink(ThemeData theme) {
@@ -269,9 +276,6 @@ class AndroidHomePage extends StatelessWidget {
       ),
     );
   }
-
-
-
 
   /// Material Motion準拠のページ遷移を作成
   PageRouteBuilder _createMaterialPageRoute(Widget page) {

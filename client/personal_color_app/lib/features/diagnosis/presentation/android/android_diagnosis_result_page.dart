@@ -9,9 +9,8 @@ import '../../../makeup/presentation/pages/makeup_recommendation_page.dart';
 import '../../../makeup/presentation/providers/makeup_recommendation_provider.dart';
 import '../../../makeup/presentation/pages/ai_makeup_recommendation_page_v3.dart';
 import '../../../makeup/presentation/providers/ai_makeup_recommendation_provider.dart';
-import '../../../clothing/presentation/pages/clothing_recommendation_page.dart';
-import '../../../clothing/presentation/providers/clothing_recommendation_provider.dart';
 import '../../../../core/di/injection_container.dart' as di;
+import '../../../../screens/ai_fashion_coordinate_screen.dart';
 import 'dart:io';
 
 /// Android版診断結果画面 - Material Design 3準拠
@@ -21,12 +20,11 @@ import 'dart:io';
 /// 主な機能:
 /// - 診断結果の詳細表示
 /// - おすすめメイクへのナビゲーション
-/// - AI生成メイクへのナビゲーション（新機能）
-/// - おすすめファッションへのナビゲーション
+/// - おすすめメイクへのナビゲーション（新機能）
 /// - 診断のやり直し機能
 /// 
-/// AI生成メイク機能の改善:
-/// - ホーム画面から移動されたAI生成メイクボタンを統合
+/// おすすめメイク機能の改善:
+/// - ホーム画面から移動されたおすすめメイクボタンを統合
 /// - 診断画像の再利用により、カメラ起動を回避
 /// - 診断コンテキストを含む詳細な推奨を提供
 /// - 包括的なエラーハンドリングと検証
@@ -150,14 +148,14 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
   Widget _buildMaterialActionButtons(BuildContext context, ThemeData theme) {
     return Column(
       children: [
-        // AI生成メイクボタン - FilledButton.tonal使用
+        // おすすめメイクボタン - FilledButton.tonal使用
         SizedBox(
           width: double.infinity,
           height: 56,
           child: FilledButton.tonalIcon(
             onPressed: () => _navigateToAIMakeup(context),
             icon: const Icon(Icons.auto_awesome),
-            label: const Text('AI生成メイク'),
+            label: const Text('おすすめメイク'),
             style: FilledButton.styleFrom(
               backgroundColor: _getMaterialThemeColor(theme, result.diagnosisType).withValues(alpha: 0.12),
               foregroundColor: _getMaterialThemeColor(theme, result.diagnosisType),
@@ -167,41 +165,17 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
 
         const SizedBox(height: 12),
         
-        // おすすめのファッションボタン - FilledButton.tonal使用
+        // おすすめコーデボタン - FilledButton.tonal使用
         SizedBox(
           width: double.infinity,
           height: 56,
-          child: GestureDetector(
-            onTap: () => _navigateToClothingRecommendation(context, forceRefresh: false),
-            onLongPress: () {
-              debugPrint('🔄 長押し検知: forceRefresh=trueで実行');
-              _navigateToClothingRecommendation(context, forceRefresh: true);
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: _getMaterialThemeColor(theme, result.diagnosisType).withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.checkroom,
-                      color: _getMaterialThemeColor(theme, result.diagnosisType),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'おすすめのファッション',
-                      style: TextStyle(
-                        color: _getMaterialThemeColor(theme, result.diagnosisType),
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+          child: FilledButton.tonalIcon(
+            onPressed: () => _navigateToAIFashionCoordinate(context),
+            icon: const Icon(Icons.checkroom),
+            label: const Text('おすすめコーデ'),
+            style: FilledButton.styleFrom(
+              backgroundColor: _getMaterialThemeColor(theme, result.diagnosisType).withValues(alpha: 0.12),
+              foregroundColor: _getMaterialThemeColor(theme, result.diagnosisType),
             ),
           ),
         ),
@@ -299,15 +273,15 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
     }
   }
 
-  /// AI生成メイクページに移動する
+  /// おすすめメイクページに移動する
   void _navigateToAIMakeup(BuildContext context) {
     try {
-      debugPrint('🤖 [Android] AI生成メイクボタン押下: ${result.diagnosisType}');
+      debugPrint('🤖 [Android] おすすめメイクボタン押下: ${result.diagnosisType}');
       
       // 包括的な事前検証
       final validationError = _validateAIMakeupPrerequisites();
       if (validationError != null) {
-        debugPrint('❌ [Android] AI生成メイク事前検証エラー: $validationError');
+        debugPrint('❌ [Android] おすすめメイク事前検証エラー: $validationError');
         _showValidationErrorDialog(context, validationError);
         return;
       }
@@ -331,7 +305,7 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
       debugPrint('✅ [Android] AIMakeupRecommendationPageV3ナビゲーション成功');
       
     } catch (e, stackTrace) {
-      debugPrint('❌ [Android] AI生成メイクナビゲーションエラー: $e');
+      debugPrint('❌ [Android] おすすめメイクナビゲーションエラー: $e');
       debugPrint('スタックトレース: $stackTrace');
       
       // 包括的なエラーハンドリング
@@ -339,7 +313,7 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
     }
   }
 
-  /// AI生成メイクの事前要件を検証
+  /// おすすめメイクの事前要件を検証
   String? _validateAIMakeupPrerequisites() {
     // 1. 画像ファイルの存在確認
     final imageFile = File(originalImagePath);
@@ -396,7 +370,7 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
     }
   }
 
-  /// AI生成メイクナビゲーションエラーを処理
+  /// おすすめメイクナビゲーションエラーを処理
   void _handleAIMakeupNavigationError(BuildContext context, dynamic error) {
     String errorMessage;
     List<Widget> actions;
@@ -420,7 +394,7 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
       ];
     } else if (error.toString().contains('ServiceUnavailable')) {
       // サービス利用不可
-      errorMessage = 'AI生成メイク機能が一時的に利用できません。通常のメイク推奨をご利用ください。';
+      errorMessage = 'おすすめメイク機能が一時的に利用できません。通常のメイク推奨をご利用ください。';
       actions = [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
@@ -436,7 +410,7 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
       ];
     } else {
       // その他のエラー
-      errorMessage = 'AI生成メイク機能でエラーが発生しました。通常のメイク推奨をお試しください。';
+      errorMessage = 'おすすめメイク機能でエラーが発生しました。通常のメイク推奨をお試しください。';
       actions = [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
@@ -468,7 +442,7 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('画像が見つかりません'),
-        content: const Text('診断に使用した画像が見つかりません。もう一度診断を行ってからAI生成メイクをお試しください。'),
+        content: const Text('診断に使用した画像が見つかりません。もう一度診断を行ってからおすすめメイクをお試しください。'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -592,7 +566,7 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('診断結果の信頼度が低いです'),
-        content: const Text('診断結果の信頼度が低いため、AI生成メイクの精度が低下する可能性があります。より良い結果を得るために、明るい場所で顔がはっきり写った写真で再診断することをお勧めします。'),
+        content: const Text('診断結果の信頼度が低いため、おすすめメイクの精度が低下する可能性があります。より良い結果を得るために、明るい場所で顔がはっきり写った写真で再診断することをお勧めします。'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -630,7 +604,7 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('エラー'),
-        content: Text('AI生成メイク機能を利用できません（エラー: $errorType）。通常のメイク推奨をお試しください。'),
+        content: Text('おすすめメイク機能を利用できません（エラー: $errorType）。通常のメイク推奨をお試しください。'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -648,22 +622,6 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
     );
   }
 
-  void _navigateToClothingRecommendation(BuildContext context, {bool forceRefresh = false}) {
-    debugPrint('👗 [Android] おすすめファッションボタン押下: ${result.diagnosisType} (forceRefresh: $forceRefresh)');
-    
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => ChangeNotifierProvider(
-          create: (context) => di.sl<ClothingRecommendationProvider>(),
-          child: ClothingRecommendationPage(
-            personalColorType: result.diagnosisType,
-            forceRefresh: forceRefresh,
-          ),
-        ),
-      ),
-    );
-  }
-
   /// 診断をやり直す
   void _retakeDiagnosis(BuildContext context) {
     // 診断プロバイダーをリセット
@@ -672,6 +630,26 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
     
     // カメラ画面に戻る
     Navigator.of(context).popUntil((route) => route.isFirst);
+  }
+
+  /// おすすめコーデ画面への遷移
+  void _navigateToAIFashionCoordinate(BuildContext context) {
+    debugPrint('🎨 [Android] おすすめコーデボタン押下: ${result.diagnosisType}');
+    
+    // パーソナルカラータイプの変換を確認
+    final personalColorType = result.diagnosisType.toString().split('.').last;
+    debugPrint('🎨 [Android] Converted personalColorType: $personalColorType');
+    debugPrint('🎨 [Android] Original diagnosisType: ${result.diagnosisType}');
+    debugPrint('🎨 [Android] Full toString: ${result.diagnosisType.toString()}');
+    
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => AIFashionCoordinateScreen(
+          personalColorType: personalColorType,
+          originalImagePath: originalImagePath,
+        ),
+      ),
+    );
   }
 
 }

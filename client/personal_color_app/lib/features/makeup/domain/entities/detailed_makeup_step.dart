@@ -2,7 +2,7 @@ import 'makeup_step.dart';
 
 /// 詳細メイクアップステップエンティティ
 /// 
-/// 基本的なMakeupStepを拡張し、AI生成メイクアップ機能で使用する
+/// 基本的なMakeupStepを拡張し、おすすめメイクアップ機能で使用する
 /// 詳細な説明、理由、追加のヒントなどを含みます。
 class DetailedMakeupStep extends MakeupStep {
   const DetailedMakeupStep({

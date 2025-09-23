@@ -9,21 +9,21 @@ This document provides a detailed verification that all requirements for the AI 
 
 ### Acceptance Criteria Verification
 
-#### 1.1 ✅ WHEN the user is on the diagnosis result screen THEN the system SHALL display an "AI生成メイク" button
+#### 1.1 ✅ WHEN the user is on the diagnosis result screen THEN the system SHALL display an "おすすめメイク" button
 
 **Implementation Evidence:**
 - **File:** `client/personal_color_app/lib/features/diagnosis/presentation/android/android_diagnosis_result_page.dart`
 - **Lines:** 108-119
 - **Code:**
 ```dart
-// AI生成メイクボタン - FilledButton.tonal使用
+// おすすめメイクボタン - FilledButton.tonal使用
 SizedBox(
   width: double.infinity,
   height: 56,
   child: FilledButton.tonalIcon(
     onPressed: () => _navigateToAIMakeup(context),
     icon: const Icon(Icons.auto_awesome),
-    label: const Text('AI生成メイク'),
+    label: const Text('おすすめメイク'),
     // ... styling
   ),
 ),
@@ -33,7 +33,7 @@ SizedBox(
 - Unit tests verify button presence in diagnosis result screen
 - Widget tests confirm proper styling and positioning
 
-#### 1.2 ✅ WHEN the user taps the "AI生成メイク" button on the diagnosis result screen THEN the system SHALL navigate to the AI makeup screen
+#### 1.2 ✅ WHEN the user taps the "おすすめメイク" button on the diagnosis result screen THEN the system SHALL navigate to the AI makeup screen
 
 **Implementation Evidence:**
 - **File:** `client/personal_color_app/lib/features/diagnosis/presentation/android/android_diagnosis_result_page.dart`
@@ -58,7 +58,7 @@ Navigator.of(context).push(
 - Integration tests verify complete navigation flow
 - Navigation parameters correctly passed to AI makeup screen
 
-#### 1.3 ✅ WHEN the user is on the home screen THEN the system SHALL NOT display the "AI生成メイク" button
+#### 1.3 ✅ WHEN the user is on the home screen THEN the system SHALL NOT display the "おすすめメイク" button
 
 **Implementation Evidence:**
 - **File:** `client/personal_color_app/lib/features/home/presentation/android/android_home_page.dart`
@@ -75,7 +75,7 @@ Navigator.of(context).push(
 
 ### Acceptance Criteria Verification
 
-#### 2.1 ✅ WHEN the user taps the "AI生成メイク" button THEN the system SHALL NOT launch the camera
+#### 2.1 ✅ WHEN the user taps the "おすすめメイク" button THEN the system SHALL NOT launch the camera
 
 **Implementation Evidence:**
 - **File:** `client/personal_color_app/lib/features/makeup/presentation/pages/ai_makeup_recommendation_page_v3.dart`

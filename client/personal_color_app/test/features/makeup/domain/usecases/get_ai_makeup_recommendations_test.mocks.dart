@@ -167,6 +167,35 @@ class MockMakeupRepository extends _i1.Mock implements _i4.MakeupRepository {
                 ),
           )
           as _i5.Future<_i2.Either<_i6.Failure, _i7.MakeupRecommendation>>);
+
+  @override
+  _i5.Future<_i2.Either<_i6.Failure, _i7.MakeupRecommendation>>
+  getAIMakeupRecommendationsWithContext(
+    _i8.PersonalColorType? personalColorType,
+    _i3.File? imageFile,
+    _i8.DiagnosisResult? diagnosisResult,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#getAIMakeupRecommendationsWithContext, [
+              personalColorType,
+              imageFile,
+              diagnosisResult,
+            ]),
+            returnValue:
+                _i5.Future<
+                  _i2.Either<_i6.Failure, _i7.MakeupRecommendation>
+                >.value(
+                  _FakeEither_0<_i6.Failure, _i7.MakeupRecommendation>(
+                    this,
+                    Invocation.method(#getAIMakeupRecommendationsWithContext, [
+                      personalColorType,
+                      imageFile,
+                      diagnosisResult,
+                    ]),
+                  ),
+                ),
+          )
+          as _i5.Future<_i2.Either<_i6.Failure, _i7.MakeupRecommendation>>);
 }
 
 /// A class which mocks [File].

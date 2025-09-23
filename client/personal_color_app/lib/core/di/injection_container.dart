@@ -50,6 +50,11 @@ import '../../features/clothing/domain/repositories/clothing_repository.dart';
 import '../../features/clothing/domain/usecases/get_clothing_recommendations.dart';
 import '../../features/clothing/presentation/providers/clothing_recommendation_provider.dart';
 
+// AI Fashion feature
+import '../../repositories/ai_fashion_repository.dart';
+import '../../repositories/ai_fashion_repository_impl.dart';
+import '../../config/api_config.dart';
+
 final sl = GetIt.instance;
 
 Future<void> init() async {
@@ -215,6 +220,16 @@ Future<void> init() async {
   // Data sources
   sl.registerLazySingleton<ClothingRemoteDataSource>(
     () => ClothingRemoteDataSourceImpl(dio: sl()),
+  );
+
+  //! Features - AI Fashion
+  // Repository
+  sl.registerLazySingleton<AIFashionRepository>(
+    () => AIFashionRepositoryImpl(
+      dio: sl(),
+      baseUrl: APIConfig.getCurrentBaseUrl(),
+      timeout: APIConfig.defaultTimeout,
+    ),
   );
 
 }

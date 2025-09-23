@@ -136,6 +136,32 @@ class MockMakeupRemoteDataSource extends _i1.Mock
             ),
           )
           as _i6.Future<_i3.AIMakeupRecommendationModel>);
+
+  @override
+  _i6.Future<_i3.AIMakeupRecommendationModel>
+  getAIMakeupRecommendationsWithContext({
+    required _i7.PersonalColorType? personalColorType,
+    required _i4.File? imageFile,
+    required _i7.DiagnosisResult? diagnosisResult,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#getAIMakeupRecommendationsWithContext, [], {
+              #personalColorType: personalColorType,
+              #imageFile: imageFile,
+              #diagnosisResult: diagnosisResult,
+            }),
+            returnValue: _i6.Future<_i3.AIMakeupRecommendationModel>.value(
+              _FakeAIMakeupRecommendationModel_1(
+                this,
+                Invocation.method(#getAIMakeupRecommendationsWithContext, [], {
+                  #personalColorType: personalColorType,
+                  #imageFile: imageFile,
+                  #diagnosisResult: diagnosisResult,
+                }),
+              ),
+            ),
+          )
+          as _i6.Future<_i3.AIMakeupRecommendationModel>);
 }
 
 /// A class which mocks [MakeupLocalDataSource].

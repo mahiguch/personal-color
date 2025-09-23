@@ -37,6 +37,11 @@ class IosHomePage extends StatelessWidget {
                     'あなたに似合う色を見つけましょう！',
                     style: TextStyle(fontSize: 16),
                   ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'まずはあなたのパーソナルカラーを診断しましょう',
+                    style: TextStyle(fontSize: 16),
+                  ),
                   const SizedBox(height: 40),
                   ElevatedButton(
                     onPressed: () => _navigateToDiagnosis(context),

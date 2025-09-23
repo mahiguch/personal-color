@@ -15,9 +15,9 @@ import '../widgets/makeup_reasoning_widget.dart';
 import '../config/age_adaptive_ui_config.dart';
 import '../widgets/age_adaptive_container.dart';
 
-/// AI生成メイク推奨ページ V3 - 診断コンテキスト対応版
+/// おすすめメイク推奨ページ V3 - 診断コンテキスト対応版
 /// 
-/// 診断結果画面から直接アクセスされる拡張AI生成メイク機能を提供します。
+/// 診断結果画面から直接アクセスされる拡張おすすめメイク機能を提供します。
 /// 
 /// 主な機能:
 /// - 診断画像の再利用（カメラ起動なし）
@@ -92,7 +92,7 @@ class _AIMakeupRecommendationPageV3State extends State<AIMakeupRecommendationPag
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('AI画像生成メイク (V3)')),
+      appBar: AppBar(title: const Text('おすすめメイク')),
       body: Consumer<AIMakeupRecommendationProvider>(
         builder: (context, provider, child) {
           if (provider.isLoading) {
@@ -376,7 +376,7 @@ class _AIMakeupRecommendationPageV3State extends State<AIMakeupRecommendationPag
           ),
           const SizedBox(height: 16),
           Text(
-            'AI生成メイクでエラーが発生しました',
+            'おすすめメイクでエラーが発生しました',
             style: Theme.of(context).textTheme.headlineSmall,
             textAlign: TextAlign.center,
           ),
@@ -467,7 +467,7 @@ class _AIMakeupRecommendationPageV3State extends State<AIMakeupRecommendationPag
           ),
           const SizedBox(height: 8),
           const Text(
-            'AI生成メイクのデータを取得できませんでした。通常のメイク推奨をお試しください。',
+            'おすすめメイクのデータを取得できませんでした。通常のメイク推奨をお試しください。',
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -528,7 +528,7 @@ class _AIMakeupRecommendationPageV3State extends State<AIMakeupRecommendationPag
     }
   }
 
-  /// AI生成メイクを再試行
+  /// おすすめメイクを再試行
   void _retryAIMakeup(AIMakeupRecommendationProvider provider) {
     provider.clearError();
     if (widget.diagnosisResult != null) {

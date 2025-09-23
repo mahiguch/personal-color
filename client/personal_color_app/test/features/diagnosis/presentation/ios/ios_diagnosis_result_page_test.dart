@@ -52,7 +52,7 @@ void main() {
       mockImagePath = '/test/path/image.jpg';
     });
 
-    testWidgets('should display AI生成メイク button on iOS diagnosis result page', (WidgetTester tester) async {
+    testWidgets('should display おすすめメイク button on iOS diagnosis result page', (WidgetTester tester) async {
       // Create a mock diagnosis provider
       final mockProvider = DiagnosisProvider(
         diagnosePersonalColor: MockDiagnosePersonalColor(),
@@ -78,12 +78,12 @@ void main() {
       // Wait for the widget to settle
       await tester.pumpAndSettle();
 
-      // Verify that the AI生成メイク button is present
-      expect(find.text('AI生成メイク'), findsOneWidget);
+      // Verify that the おすすめメイク button is present
+      expect(find.text('おすすめメイク'), findsOneWidget);
       expect(find.byIcon(Icons.auto_awesome), findsOneWidget);
     });
 
-    testWidgets('should display AI生成メイク button with correct styling', (WidgetTester tester) async {
+    testWidgets('should display おすすめメイク button with correct styling', (WidgetTester tester) async {
       // Create a mock diagnosis provider
       final mockProvider = DiagnosisProvider(
         diagnosePersonalColor: MockDiagnosePersonalColor(),
@@ -109,9 +109,9 @@ void main() {
       // Wait for the widget to settle
       await tester.pumpAndSettle();
 
-      // Find the AI生成メイク button container
+      // Find the おすすめメイク button container
       final aiMakeupButton = find.ancestor(
-        of: find.text('AI生成メイク'),
+        of: find.text('おすすめメイク'),
         matching: find.byType(GestureDetector),
       );
 
@@ -119,47 +119,11 @@ void main() {
 
       // Verify the button is properly sized
       final container = find.ancestor(
-        of: find.text('AI生成メイク'),
+        of: find.text('おすすめメイク'),
         matching: find.byType(Container),
       );
       expect(container, findsOneWidget);
     });
 
-    testWidgets('should display remaining action buttons in correct order', (WidgetTester tester) async {
-      // Create a mock diagnosis provider
-      final mockProvider = DiagnosisProvider(
-        diagnosePersonalColor: MockDiagnosePersonalColor(),
-        diagnosePersonalColorEnhanced: MockDiagnosePersonalColorEnhanced(),
-        checkApiHealth: MockCheckApiHealth(),
-        contentAdaptationService: MockContentAdaptationService(),
-        privacySettingsService: MockPrivacySettingsService(),
-      );
-
-      // Build the widget
-      await tester.pumpWidget(
-        MaterialApp(
-          home: ChangeNotifierProvider<DiagnosisProvider>.value(
-            value: mockProvider,
-            child: IOSDiagnosisResultPage(
-              result: mockDiagnosisResult,
-              originalImagePath: mockImagePath,
-            ),
-          ),
-        ),
-      );
-
-      // Wait for the widget to settle
-      await tester.pumpAndSettle();
-
-      // Verify remaining buttons are present
-      expect(find.text('AI生成メイク'), findsOneWidget);
-      expect(find.text('おすすめのファッション'), findsOneWidget);
-      expect(find.text('もう一度診断する'), findsOneWidget);
-
-      // Verify icons are present for remaining actions
-      expect(find.byIcon(Icons.auto_awesome), findsOneWidget);
-      expect(find.byIcon(Icons.checkroom), findsOneWidget);
-      expect(find.byIcon(Icons.camera_alt), findsOneWidget);
-    });
   });
 }

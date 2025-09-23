@@ -33,10 +33,40 @@ class Settings(BaseSettings):
     gemini_model_name: str = Field(
         default="gemini-2.5-flash", description="使用するGeminiモデル名"
     )
-    
+
     # Google Gen AI SDK設定
     use_vertexai: bool = Field(default=True, description="Vertex AI使用フラグ")
     
+    # Virtual Try-On 設定
+    virtual_try_on_model: str = Field(
+        default="virtual-try-on-preview-08-04",
+        description="使用するVirtual Try-Onモデル ID"
+    )
+    virtual_try_on_sample_count: int = Field(
+        default=1,
+        description="Virtual Try-On で生成するサンプル数"
+    )
+    virtual_try_on_add_watermark: bool = Field(
+        default=True,
+        description="Virtual Try-On 画像に透かしを付与するか"
+    )
+    virtual_try_on_person_generation: str = Field(
+        default="allow_adult",
+        description="Virtual Try-On で人物生成を許可する範囲"
+    )
+    virtual_try_on_safety_setting: str = Field(
+        default="block_medium_and_above",
+        description="Virtual Try-On のセーフティ設定"
+    )
+    virtual_try_on_default_product_image_uris: str = Field(
+        default="",
+        description="Virtual Try-On に使用するデフォルト商品画像URI（カンマ区切り）"
+    )
+    virtual_try_on_timeout_seconds: int = Field(
+        default=60,
+        description="Virtual Try-On API呼び出しのタイムアウト(秒)"
+    )
+
     # Imagen 4.0 設定
     imagen_model_name: str = Field(
         default="imagen-4.0-generate-001", description="使用するImagenモデル名"
