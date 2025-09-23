@@ -6,8 +6,9 @@ CoordinateApplicationService に統合し、年齢に適したファッション
 生成を実現します。
 """
 
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Tuple
 import logging
+import time
 from dataclasses import dataclass
 import re
 
@@ -24,7 +25,13 @@ from src.domain.services.enhanced_personal_color_service import (
     create_enhanced_personal_color_service
 )
 from src.domain.value_objects import GenerationMetadata
+from src.core.config.settings import get_settings
 from src.infrastructure.exceptions import CoordinateGenerationError, AgeEstimationError
+from src.infrastructure.services.virtual_try_on_service import (
+    VirtualTryOnService,
+    VirtualTryOnResult,
+    VirtualTryOnError,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -49,6 +56,7 @@ class AgeAwareCoordinateResult:
     adjustment_reason: str
     confidence_score: float
     color_analysis_summary: str = ""
+    image_mime_type: str = "image/png"
 
 
 class AgeAwareCoordinateService:
@@ -59,7 +67,8 @@ class AgeAwareCoordinateService:
         age_estimation_service: EnhancedAgeEstimationService,
         personal_color_service: EnhancedPersonalColorService = None,
         gemini_service: Any = None,
-        imagen_service: Any = None
+        imagen_service: Any = None,
+        virtual_try_on_service: Optional[VirtualTryOnService] = None
     ):
         """
         Args:
@@ -72,6 +81,7 @@ class AgeAwareCoordinateService:
         self.personal_color_service = personal_color_service or create_enhanced_personal_color_service()
         self.gemini_service = gemini_service
         self.imagen_service = imagen_service
+        self.virtual_try_on_service = virtual_try_on_service
     
     async def generate_age_aware_coordinate(
         self,
@@ -117,7 +127,7 @@ class AgeAwareCoordinateService:
             )
             
             # Step 5: 統合されたコーディネート生成
-            coordinate, color_analysis_summary = await self._generate_integrated_coordinate(
+            coordinate, color_analysis_summary, image_result = await self._generate_integrated_coordinate(
                 request.user_photo,
                 request.personal_color,
                 adjusted_style,
@@ -149,13 +159,15 @@ class AgeAwareCoordinateService:
                 style_recommendation=style_recommendation,
                 adjustment_reason=adjustment_reason,
                 confidence_score=confidence_score,
-                color_analysis_summary=color_analysis_summary
+                color_analysis_summary=color_analysis_summary,
+                image_mime_type=image_result.mime_type
             )
             
             logger.info(
                 f"年齢を考慮したコーディネート生成が完了: "
                 f"推定年齢={age_estimation.estimated_age}, "
-                f"信頼度={confidence_score:.2f}"
+                f"信頼度={confidence_score:.2f}, "
+                f"生成画像={coordinate.generated_image[0:1000] if coordinate.generated_image else 'None'}"
             )
             
             return result
@@ -332,7 +344,7 @@ class AgeAwareCoordinateService:
         age_estimation: AgeEstimationResult,
         style_recommendation: StyleRecommendation,
         personal_color_analysis
-    ) -> tuple[FashionCoordinate, str]:
+    ) -> tuple[FashionCoordinate, str, VirtualTryOnResult]:
         """統合されたコーディネートを生成（年齢+パーソナルカラー考慮）"""
         
         # 統合されたプロンプトの生成
@@ -352,17 +364,22 @@ class AgeAwareCoordinateService:
             age_estimation
         )
 
-        # 画像生成（Imagen）
-        coordinate_image = await self._generate_enhanced_coordinate_image(
+        product_image_data = coordinate_text.get("product_images")
+        product_image_uris, product_image_base64 = self._parse_product_image_sources(product_image_data)
+
+        # 画像生成（Virtual Try-On / Imagen）
+        coordinate_image_result = await self._generate_enhanced_coordinate_image(
             user_photo,
             personal_color,
             selected_style,
             integrated_prompt,
-            personal_color_analysis
+            personal_color_analysis,
+            product_image_uris,
+            product_image_base64
         )
 
         coordinate = FashionCoordinate(
-            generated_image=coordinate_image or b"",
+            generated_image=coordinate_image_result.image_bytes or b"",
             recommendation_reason=coordinate_text.get("recommendation", ""),
             styling_points=self._normalize_styling_points(coordinate_text.get("points", "")),
             main_colors=self._extract_main_colors(personal_color_analysis, style_recommendation),
@@ -370,11 +387,13 @@ class AgeAwareCoordinateService:
             style_type=selected_style,
             metadata=self._build_generation_metadata(
                 age_estimation=age_estimation,
-                prompt_used="Age-aware coordinate generation"
+                prompt_used="Age-aware coordinate generation",
+                generation_time=coordinate_image_result.generation_time,
+                model_version=coordinate_image_result.model_version
             )
         )
 
-        return coordinate, coordinate_text.get("color_analysis", "")
+        return coordinate, coordinate_text.get("color_analysis", ""), coordinate_image_result
 
     def _create_integrated_context_prompt(
         self,
@@ -415,6 +434,42 @@ class AgeAwareCoordinateService:
 """
         return integrated_context.strip()
 
+    def _parse_product_image_sources(
+        self,
+        product_images_data: Optional[Any]
+    ) -> Tuple[List[str], List[str]]:
+        """Gemini応答からVirtual Try-On用の画像ソースを抽出"""
+
+        uris: List[str] = []
+        base64_images: List[str] = []
+
+        if not isinstance(product_images_data, list):
+            return uris, base64_images
+
+        for item in product_images_data:
+            if not isinstance(item, dict):
+                continue
+
+            uri = item.get("gcsUri") or item.get("gcs_uri") or item.get("gcs")
+            if isinstance(uri, str) and uri.strip():
+                uris.append(uri.strip())
+
+            # サブキー image.bytesBase64Encoded にも対応
+            base64_value = item.get("bytesBase64Encoded") or item.get("base64") or item.get("imageBase64")
+            if isinstance(base64_value, str) and base64_value.strip():
+                base64_images.append(base64_value.strip())
+
+            nested_image = item.get("image")
+            if isinstance(nested_image, dict):
+                nested_uri = nested_image.get("gcsUri") or nested_image.get("gcs_uri")
+                if isinstance(nested_uri, str) and nested_uri.strip():
+                    uris.append(nested_uri.strip())
+                nested_base64 = nested_image.get("bytesBase64Encoded") or nested_image.get("base64")
+                if isinstance(nested_base64, str) and nested_base64.strip():
+                    base64_images.append(nested_base64.strip())
+
+        return uris, base64_images
+
     def _normalize_styling_points(self, points_text: str) -> List[str]:
         """スタイリングポイントのテキストをリストへ正規化"""
         if not points_text:
@@ -451,16 +506,80 @@ class AgeAwareCoordinateService:
         self,
         age_estimation: AgeEstimationResult,
         prompt_used: str,
-        generation_time: float = 0.0
+        generation_time: float = 0.0,
+        model_version: str = "age-aware-v1.0"
     ) -> GenerationMetadata:
         """GenerationMetadataを作成"""
         return GenerationMetadata(
-            model_version="age-aware-v1.0",
+            model_version=model_version,
             generation_time=generation_time,
             confidence_score=age_estimation.confidence_score,
             estimated_age=age_estimation.estimated_age,
             prompt_used=prompt_used
         )
+
+    async def _generate_virtual_try_on_image(
+        self,
+        user_photo: UserPhoto,
+        personal_color: PersonalColorType,
+        selected_style: StylePreference,
+        context_prompt: str,
+        product_image_uris: Optional[List[str]] = None,
+        product_images_base64: Optional[List[str]] = None
+    ) -> Optional[VirtualTryOnResult]:
+        """Virtual Try-On APIを使用して画像生成を試行"""
+
+        if not self.virtual_try_on_service:
+            return None
+
+        resolved_product_uris = list(product_image_uris or [])
+        base64_images = list(product_images_base64 or [])
+        if not resolved_product_uris and not base64_images:
+            fallback_uris = self._resolve_product_image_uris(personal_color, selected_style) or []
+            resolved_product_uris.extend(fallback_uris)
+
+        logger.warning(
+            "Virtual Try-On invocation: personal_color=%s, style=%s, product_uris=%s",
+            personal_color.value,
+            selected_style.value,
+            resolved_product_uris,
+        )
+
+        if not resolved_product_uris and not base64_images:
+            logger.warning("Virtual Try-On skipped: product images were not provided or configured.")
+            return None
+
+        try:
+            return await self.virtual_try_on_service.generate_try_on(
+                person_image_bytes=user_photo.image_data,
+                product_image_uris=resolved_product_uris or None,
+                product_images_base64=base64_images or None,
+                extra_parameters=None,
+            )
+        except VirtualTryOnError as exc:
+            logger.warning(f"Virtual Try-On での画像生成に失敗: {exc}")
+            return None
+
+    def _resolve_product_image_uris(
+        self,
+        personal_color: PersonalColorType,
+        selected_style: StylePreference
+    ) -> Optional[List[str]]:
+        """Virtual Try-On に使用する商品画像URIを決定"""
+
+        if not self.virtual_try_on_service:
+            return None
+
+        product_uris = self.virtual_try_on_service.default_product_image_uris
+        if product_uris:
+            return product_uris
+
+        logger.debug(
+            "Virtual Try-On product image URIs not configured. personal_color=%s, style=%s",
+            personal_color.value,
+            selected_style.value,
+        )
+        return None
     
     async def _generate_enhanced_coordinate_description(
         self,
@@ -469,7 +588,7 @@ class AgeAwareCoordinateService:
         integrated_context: str,
         personal_color_analysis,
         age_estimation: AgeEstimationResult
-    ) -> Dict[str, str]:
+    ) -> Dict[str, Any]:
         """強化されたコーディネート説明を生成"""
         
         # カラーハーモニー情報を追加
@@ -479,7 +598,7 @@ class AgeAwareCoordinateService:
             harmony_info = f"\nカラーハーモニー: {best_harmony.description}\nスタイリングアドバイス: {best_harmony.styling_advice}"
         
         prompt = f"""
-以下の統合分析に基づいて、ファッションコーディネートの推薦文を作成してください：
+以下の統合分析に基づいて、ファッションコーディネートの推薦文と推奨アイテム情報を作成してください：
 
 {integrated_context}
 {harmony_info}
@@ -488,7 +607,16 @@ class AgeAwareCoordinateService:
 {{
     "recommendation": "年齢とパーソナルカラーを考慮したコーディネート推薦理由（150文字以内）",
     "points": "具体的なスタイリングポイント（200文字以内）",
-    "color_analysis": "パーソナルカラーと年齢を統合した色の分析（150文字以内）"
+    "color_analysis": "パーソナルカラーと年齢を統合した色の分析（150文字以内）",
+    "product_images": [
+        {{
+            "category": "アイテムカテゴリ（例: dress, top, outer）",
+            "description": "アイテムの説明（100文字以内）",
+            "color": "主要カラーまたは配色キーワード",
+            "gcsUri": "gs://... 形式のCloud Storage画像パス（利用可能な場合）",
+            "reference": "それ以外の画像参照 (https://... や base64 など)"
+        }}
+    ]
 }}
 
 年齢に適した上品さと、パーソナルカラーによる個人の魅力を両立させたアドバイスを含めてください。
@@ -508,10 +636,27 @@ class AgeAwareCoordinateService:
         
         # 強化されたモックレスポンス
         primary_color = personal_color_analysis.color_palette.primary_colors[0]
+        product_image_uris = self._resolve_product_image_uris(personal_color, selected_style) or []
+        product_images_payload = []
+        for uri in product_image_uris:
+            product_images_payload.append({
+                "category": selected_style.value,
+                "description": f"{personal_color.value}タイプ向けの{selected_style.value}スタイルアイテム",
+                "color": personal_color.value,
+                "gcsUri": uri
+            })
+        if not product_images_payload:
+            product_images_payload.append({
+                "category": selected_style.value,
+                "description": f"{personal_color.value}タイプに調和するスタイリングアイテム",
+                "color": personal_color.value,
+                "reference": ""
+            })
         return {
             "recommendation": f"{personal_color.value}タイプの{selected_style.value}スタイルで、推定年齢{age_estimation.estimated_age}歳に最適化された上品なコーディネートです。",
             "points": f"{primary_color.name}を基調とした{best_harmony.harmony_type.value if best_harmony else '調和のとれた'}配色で、年齢に適したエレガンスと個人の魅力を引き出します。",
-            "color_analysis": f"{personal_color.value}の特徴を活かし、年齢に適した色の深みと明度で洗練された印象を演出します。"
+            "color_analysis": f"{personal_color.value}の特徴を活かし、年齢に適した色の深みと明度で洗練された印象を演出します。",
+            "product_images": product_images_payload
         }
     
     async def _generate_enhanced_coordinate_image(
@@ -520,15 +665,17 @@ class AgeAwareCoordinateService:
         personal_color: PersonalColorType,
         selected_style: StylePreference,
         integrated_context: str,
-        personal_color_analysis
-    ) -> bytes:
+        personal_color_analysis,
+        product_image_uris: Optional[List[str]] = None,
+        product_image_base64: Optional[List[str]] = None
+    ) -> VirtualTryOnResult:
         """強化されたコーディネート画像を生成"""
         
         # 具体的な色指定を追加
         color_specifications = []
         for color in personal_color_analysis.color_palette.primary_colors[:2]:
             color_specifications.append(f"{color.name} ({color.hex_code})")
-        
+
         prompt = f"""
 Professional age-appropriate fashion coordinate image generation:
 
@@ -549,18 +696,48 @@ Generate a high-quality fashion coordinate image featuring:
 Image should be photorealistic, well-lit, and showcase a complete outfit coordination that exemplifies both age-appropriate style and personal color enhancement.
 """
         
+        virtual_try_on_result = await self._generate_virtual_try_on_image(
+            user_photo=user_photo,
+            personal_color=personal_color,
+            selected_style=selected_style,
+            context_prompt=integrated_context,
+            product_image_uris=product_image_uris,
+            product_images_base64=product_image_base64
+        )
+
+        if virtual_try_on_result:
+            logger.info("Virtual Try-On image generated successfully. %s", virtual_try_on_result.image_bytes[:1000])
+            return virtual_try_on_result
+
         if self.imagen_service:
             try:
-                return await self.imagen_service.generate_image(
+                start_time = time.perf_counter()
+                image_bytes = await self.imagen_service.generate_image(
                     prompt=prompt,
                     width=512,
                     height=512
+                )
+                elapsed = time.perf_counter() - start_time
+                return VirtualTryOnResult(
+                    image_bytes=image_bytes,
+                    mime_type="image/png",
+                    model_version=getattr(self.imagen_service, "model_name", "imagen"),
+                    generation_time=elapsed,
+                    raw_response={},
+                    parameters_used={"prompt": "enhanced"}
                 )
             except Exception as e:
                 logger.warning(f"Imagen での強化画像生成に失敗: {e}")
         
         # モック画像データ
-        return b"mock_enhanced_coordinate_image_data"
+        return VirtualTryOnResult(
+            image_bytes=b"mock_enhanced_coordinate_image_data",
+            mime_type="image/png",
+            model_version="age-aware-mock",
+            generation_time=0.0,
+            raw_response={},
+            parameters_used={}
+        )
     
     def _generate_enhanced_adjustment_reason(
         self,
@@ -706,7 +883,7 @@ Image should be photorealistic, well-lit, and showcase a complete outfit coordin
         selected_style: StylePreference,
         age_estimation: AgeEstimationResult,
         style_recommendation: StyleRecommendation
-    ) -> tuple[FashionCoordinate, str]:
+    ) -> tuple[FashionCoordinate, str, VirtualTryOnResult]:
         """年齢コンテキストを含むコーディネートを生成"""
         
         # 年齢に適したプロンプトの生成
@@ -724,15 +901,15 @@ Image should be photorealistic, well-lit, and showcase a complete outfit coordin
         )
         
         # 画像生成（Imagen）
-        coordinate_image = await self._generate_coordinate_image(
+        coordinate_image_result = await self._generate_coordinate_image(
             user_photo,
             personal_color,
             selected_style,
             age_context_prompt
         )
-        
+
         coordinate = FashionCoordinate(
-            generated_image=coordinate_image or b"",
+            generated_image=coordinate_image_result.image_bytes or b"",
             recommendation_reason=coordinate_text.get("recommendation", ""),
             styling_points=self._normalize_styling_points(coordinate_text.get("points", "")),
             main_colors=self._extract_main_colors(style_recommendation=style_recommendation),
@@ -740,11 +917,13 @@ Image should be photorealistic, well-lit, and showcase a complete outfit coordin
             style_type=selected_style,
             metadata=self._build_generation_metadata(
                 age_estimation=age_estimation,
-                prompt_used="Age-context coordinate generation"
+                prompt_used="Age-context coordinate generation",
+                generation_time=coordinate_image_result.generation_time,
+                model_version=coordinate_image_result.model_version
             )
         )
 
-        return coordinate, coordinate_text.get("color_analysis", "")
+        return coordinate, coordinate_text.get("color_analysis", ""), coordinate_image_result
     
     def _create_age_context_prompt(
         self,
@@ -825,7 +1004,7 @@ Image should be photorealistic, well-lit, and showcase a complete outfit coordin
         personal_color: PersonalColorType,
         selected_style: StylePreference,
         age_context: str
-    ) -> bytes:
+    ) -> VirtualTryOnResult:
         """コーディネート画像を生成"""
         
         prompt = f"""
@@ -846,18 +1025,45 @@ Generate a high-quality fashion coordinate image showing:
 Image should be photorealistic, well-lit, and showcase the complete outfit coordination.
 """
         
+        virtual_try_on_result = await self._generate_virtual_try_on_image(
+            user_photo=user_photo,
+            personal_color=personal_color,
+            selected_style=selected_style,
+            context_prompt=age_context
+        )
+
+        if virtual_try_on_result:
+            return virtual_try_on_result
+
         if self.imagen_service:
             try:
-                return await self.imagen_service.generate_image(
+                start_time = time.perf_counter()
+                image_bytes = await self.imagen_service.generate_image(
                     prompt=prompt,
                     width=512,
                     height=512
+                )
+                elapsed = time.perf_counter() - start_time
+                return VirtualTryOnResult(
+                    image_bytes=image_bytes,
+                    mime_type="image/png",
+                    model_version=getattr(self.imagen_service, "model_name", "imagen"),
+                    generation_time=elapsed,
+                    raw_response={},
+                    parameters_used={"prompt": "age-context"}
                 )
             except Exception as e:
                 logger.warning(f"Imagen での画像生成に失敗: {e}")
         
         # モック画像データ
-        return b"mock_coordinate_image_data"
+        return VirtualTryOnResult(
+            image_bytes=b"mock_coordinate_image_data",
+            mime_type="image/png",
+            model_version="age-aware-mock",
+            generation_time=0.0,
+            raw_response={},
+            parameters_used={}
+        )
     
     def _generate_adjustment_reason(
         self,
@@ -915,16 +1121,46 @@ Image should be photorealistic, well-lit, and showcase the complete outfit coord
 # 使用例とテスト用のヘルパー関数
 def create_age_aware_coordinate_service(
     gemini_service=None,
-    imagen_service=None
+    imagen_service=None,
+    virtual_try_on_service: Optional[VirtualTryOnService] = None
 ) -> AgeAwareCoordinateService:
     """Age Aware Coordinate Service のファクトリー関数"""
     
     age_estimation_service = EnhancedAgeEstimationService(gemini_service=gemini_service)
     personal_color_service = create_enhanced_personal_color_service()
+
+    if virtual_try_on_service is None:
+        settings = get_settings()
+        default_product_uris = [
+            uri.strip()
+            for uri in settings.virtual_try_on_default_product_image_uris.split(",")
+            if uri.strip()
+        ]
+
+        if settings.google_cloud_project:
+            try:
+                virtual_try_on_service = VirtualTryOnService(
+                    project_id=settings.google_cloud_project,
+                    location=settings.vertex_ai_location,
+                    model_id=settings.virtual_try_on_model,
+                    default_product_image_uris=default_product_uris,
+                    sample_count=settings.virtual_try_on_sample_count,
+                    add_watermark=settings.virtual_try_on_add_watermark,
+                    person_generation=settings.virtual_try_on_person_generation,
+                    safety_setting=settings.virtual_try_on_safety_setting,
+                    timeout_seconds=settings.virtual_try_on_timeout_seconds,
+                )
+                if not default_product_uris:
+                    logger.warning("Virtual Try-On default product image URIs are not configured.")
+            except ValueError as exc:
+                logger.warning(f"Virtual Try-On service initialization skipped: {exc}")
+        else:
+            logger.debug("Google Cloud project ID is not configured. Virtual Try-On disabled.")
     
     return AgeAwareCoordinateService(
         age_estimation_service=age_estimation_service,
         personal_color_service=personal_color_service,
         gemini_service=gemini_service,
-        imagen_service=imagen_service
+        imagen_service=imagen_service,
+        virtual_try_on_service=virtual_try_on_service
     )

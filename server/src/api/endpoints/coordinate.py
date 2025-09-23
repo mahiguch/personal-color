@@ -179,9 +179,11 @@ async def ai_coordinate_recommendation_age_aware(
                     for point in result.coordinate.styling_points
                 ],
                 generated_image=GeneratedImageData(
-                    image_url="data:image/jpeg;base64," + base64.b64encode(result.coordinate.generated_image).decode() if result.coordinate.generated_image else "",
+                    image_url=(
+                        f"data:{result.image_mime_type};base64," + base64.b64encode(result.coordinate.generated_image).decode()
+                    ) if result.coordinate.generated_image else "",
                     generation_time=generation_time,
-                    model_version="age-aware-v1.0",
+                    model_version=result.coordinate.metadata.model_version,
                     prompt_used="Age-aware coordinate generation"
                 ) if result.coordinate.generated_image and generate_image else None,
                 estimated_age=result.age_estimation.estimated_age,
@@ -201,6 +203,7 @@ async def ai_coordinate_recommendation_age_aware(
                 f"Successfully generated age-aware coordinate recommendation: {request_id}, "
                 f"estimated_age: {result.age_estimation.estimated_age}, "
                 f"confidence: {result.confidence_score}"
+                f"response: {response}"
             )
             return response
             
