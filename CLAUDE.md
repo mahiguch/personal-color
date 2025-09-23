@@ -4,18 +4,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## プロジェクト概要
 
-AIスタイリストのリポジトリです。小学5年生向けエンターテイメントアプリとして設計されています。
+AIスタイリストのリポジトリです。小学5年生向けエンターテイメントアプリとして設計され、AIによるパーソナルカラー診断とファッションコーディネート機能を提供します。
+
+### 主要機能
+- パーソナルカラー診断（イエローベース・ブルーベース）
+- AIファッションコーディネート機能
+- バーチャルトライオン機能
+- 年齢・性別を考慮した拡張診断
+- 安全で教育的なコンテンツ（保護者向けアピール）
 
 ## ディレクトリ構成
 
-- `specifications/` - 設計・仕様書 (要件ごとにサブディレクトリを作成)
+- `specifications/` - 設計・仕様書 (機能別に分類済み)
   - `initialize/` - 初期実装の仕様書 (requirements.md, design.md, test_design.md, tasks.md)
   - `teaser/` - ティザーサイトの仕様書 (requirements.md, design.md, tasks.md)
-  - `[feature_name]/` - 各機能・要件の仕様書
-- `client/personal_color_app/` - Flutter iOS アプリケーション
-- `server/` - Python サーバーサイドコード (ADK + Vertex AI)
+  - `ai-coordinate/` - AIコーディネート機能の仕様書
+  - `ai-makeup/` - AIメイクアップ機能の仕様書
+  - `genai/` - 生成AI関連の仕様書
+  - `android/` - Android対応の仕様書
+  - その他の機能別仕様書
+- `client/personal_color_app/` - Flutter iOS・Android アプリケーション
+- `server/` - Python サーバーサイドコード (FastAPI + Vertex AI Gemini)
 - `web/` - Next.js ティザーサイト (静的サイト)
-- `docs/` - iOS セットアップガイド
+- `docs/` - ドキュメント・ガイド
 - `scripts/` - セットアップスクリプト
 
 ## 開発コマンド
@@ -28,9 +39,23 @@ cd client/personal_color_app
 # 依存関係インストール
 flutter pub get
 
-# ビルド
-flutter build ios
+# Makefile コマンドを使用した開発
+# iOS 実機でデバッグ実行
+make ios-debug-device
 
+# Android 実機でデバッグ実行
+make android-debug-device
+
+# iOS リリースビルド（App Store用）
+make ios-release
+
+# Android App Bundle作成（Play Store用）
+make android-release
+
+# 利用可能なコマンド一覧
+make help
+
+# 従来のFlutterコマンド
 # テスト実行
 flutter test
 
@@ -84,6 +109,32 @@ source .venv/bin/activate && python test_gemini_prompts.py
 ```bash
 cd web
 
+# Makefile コマンドを使用した開発（推奨）
+# 依存関係インストール
+make install
+
+# 開発サーバー起動
+make dev
+
+# プロダクション用ビルド
+make build
+
+# Firebase Hostingデプロイ
+make deploy
+
+# Firebase Hostingプレビューデプロイ
+make preview
+
+# コードLintチェック
+make lint
+
+# ビルドファイル削除
+make clean
+
+# 利用可能なコマンド一覧
+make help
+
+# 従来のnpmコマンド
 # プロジェクト作成 (初回のみ)
 npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir
 npm install next@15
@@ -116,12 +167,14 @@ npx tsc --noEmit
 
 ### 技術スタック
 
-- **クライアント**: Flutter 3.13+ (Dart 3.0+) - iOS専用
-- **サーバー**: Python 3.10+ with Google Gen AI SDK
-- **Web**: Next.js 15 (App Router) + TypeScript - ティザーサイト
-- **AI**: Google Gen AI SDK (Vertex AI Gemini-1.5-flash)
+- **クライアント**: Flutter 3.8+ (Dart 3.0+) - iOS・Android対応、v1.4.0
+  - iOS: App Store配布済み
+  - Android: Google Play Store配布準備中
+- **サーバー**: Python 3.11+ with Google Gen AI SDK
+- **Web**: Next.js 15.5.0 (App Router) + React 19 + TypeScript + Tailwind CSS 4 - ティザーサイト
+- **AI**: Google Gen AI SDK 1.33.0 (Vertex AI Gemini)
 - **クラウド**: Google Cloud Platform
-- **ホスティング**: Firebase App Hosting (Web), App Store (iOS)
+- **ホスティング**: Firebase App Hosting (Web), App Store・Google Play Store (Mobile)
 - **アーキテクチャ**: Clean Architecture + DDD
 
 ### クライアント側アーキテクチャ
@@ -131,7 +184,10 @@ lib/
 ├── core/           # 共通機能
 ├── features/       # 機能別モジュール
 │   ├── camera/     # カメラ撮影機能
-│   └── diagnosis/  # 診断結果表示
+│   ├── diagnosis/  # 診断結果表示
+│   ├── coordinate/ # AIファッションコーディネート
+│   ├── makeup/     # AIメイクアップ機能
+│   └── virtual_try_on/ # バーチャルトライオン
 └── shared/         # UI共通要素
 ```
 
@@ -198,6 +254,8 @@ Figmaデザインベース、Tailwind CSS + shadcn/ui使用。
 
 初期実装については`specifications/initialize/`に格納済み。
 ティザーサイトについては`specifications/teaser/`に格納済み。
+AIコーディネート機能については`specifications/ai-coordinate/`に格納済み。
+その他の機能についても`specifications/`の各ディレクトリに格納済み。
 
 ### GitHub Instructionsに従う
 
@@ -209,12 +267,13 @@ Figmaデザインベース、Tailwind CSS + shadcn/ui使用。
 
 ### Flutter依存関係
 
-主要パッケージ：
-- UI/State: `provider`, `go_router`
-- Camera: `camera`, `permission_handler`, `image`
-- Network: `http`, `dio`
-- DI: `get_it`
-- Utils: `equatable`, `dartz`
+主要パッケージ（v1.4.0）：
+- UI/State: `provider ^6.0.5`, `flutter_bloc ^8.1.3`, `go_router ^12.1.1`
+- Camera: `camera ^0.10.5+5`, `permission_handler ^11.0.1`, `image ^4.1.3`, `image_picker ^1.0.4`
+- Network: `http ^1.1.0`, `dio ^5.3.2`
+- Firebase: `firebase_core ^4.0.0`, `firebase_app_check ^0.4.0`
+- DI: `get_it ^7.6.4`
+- Utils: `equatable ^2.0.5`, `dartz ^0.10.1`, `shared_preferences ^2.2.2`, `crypto ^3.0.3`
 
 ### Python依存関係
 
@@ -226,11 +285,12 @@ Figmaデザインベース、Tailwind CSS + shadcn/ui使用。
 
 ### Next.js依存関係 (ティザーサイト)
 
-主要パッケージ：
-- Framework: `next@15`, `react`, `typescript`
-- Styling: `tailwindcss`, `@radix-ui/react-*`, `lucide-react`
-- UI Library: `shadcn/ui` components
-- Development: `eslint`, `prettier`
+主要パッケージ（v15.5.0）：
+- Framework: `next 15.5.0`, `react 19.1.0`, `typescript ^5`
+- Styling: `tailwindcss ^4`, `@radix-ui/react-*`, `lucide-react ^0.541.0`
+- UI Library: `shadcn/ui` components, `class-variance-authority ^0.7.1`
+- Utils: `clsx ^2.1.1`, `tailwind-merge ^3.3.1`, `tailwindcss-animate ^1.0.7`
+- Development: `eslint ^9`, `eslint-config-next 15.5.0`
 
 ## セットアップ
 
@@ -304,6 +364,29 @@ Figmaデザインベース、Tailwind CSS + shadcn/ui使用。
 - **Python**: pytest による Unit/Integration テスト
 - **Next.js**: 基本的な動作確認 + Lighthouse パフォーマンステスト (80+目標)
 - **AI**: Geminiプロンプトの精度テスト (80%以上目標)
+
+## プロジェクト現況
+
+### 現在のバージョン
+- **モバイルアプリ**: v1.4.0 (build 20)
+- **最新機能**: AIファッションコーディネート（phase1完了）
+- **配布状況**:
+  - iOS: App Store配布済み
+  - Android: Google Play Store配布準備中
+
+### 最近の主要更新
+- AIコーディネート機能phase1実装完了
+- バーチャルトライオンAPI対応
+- 年齢・性別認識機能追加
+- 古いドキュメントやスクリプトの削除
+- Makefileベースの開発コマンド体系整備
+
+### 開発の進捗
+- ✅ 基本的なパーソナルカラー診断機能
+- ✅ ティザーサイト（Firebase App Hosting）
+- ✅ AIファッションコーディネート機能（phase1）
+- 🚧 Android対応（Google Play Store配布準備中）
+- 📋 今後: AIメイクアップ機能の拡張
 
 ## Instruction
 - .github/instructions/*.md を参照してください。

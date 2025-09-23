@@ -1,25 +1,34 @@
 # AIスタイリスト
 
-AIスタイリストのリポジトリです。
+AIスタイリストのリポジトリです。小学5年生向けエンターテイメントアプリとして、AIによるパーソナルカラー診断とファッションコーディネート機能を提供します。
 
 ## 概要
 
-AIを使ってユーザーのパーソナルカラー（イエローベース・ブルーベース）を診断するアプリケーションです。
-- **メインアプリ**: 小学5年生向けiOSアプリ（Flutter）
+AIを使ってユーザーのパーソナルカラー（イエローベース・ブルーベース）を診断し、さらにファッションコーディネートを提案するアプリケーションです。
+- **メインアプリ**: 小学5年生向けiOS・Androidアプリ（Flutter）
 - **ティザーサイト**: アプリ告知用Webサイト（Next.js）
+- **AI診断サーバー**: Python FastAPI + Vertex AI Gemini
 
-## 要件
+## 主要機能
 
-- ユーザーが自分のパーソナルカラーを診断できる機能
+- パーソナルカラー診断（イエローベース・ブルーベース）
+- AIファッションコーディネート機能
+- バーチャルトライオン機能
+- 年齢・性別を考慮した拡張診断
 - 安全で教育的なコンテンツ（保護者向けアピール）
 - プライバシー保護重視（画像は診断後即削除）
 
 ## ディレクトリ構成
 
-- `specifications/` - 設計・仕様書
-  - `initialize/` - メインアプリの仕様書
+- `specifications/` - 設計・仕様書（機能別に分類）
+  - `initialize/` - 初期実装の仕様書
   - `teaser/` - ティザーサイトの仕様書
-- `client/personal_color_app/` - Flutter iOS アプリケーション
+  - `ai-coordinate/` - AIコーディネート機能の仕様書
+  - `ai-makeup/` - AIメイクアップ機能の仕様書
+  - `genai/` - 生成AI関連の仕様書
+  - `android/` - Android対応の仕様書
+  - その他の機能別仕様書
+- `client/personal_color_app/` - Flutter iOS・Android アプリケーション
 - `server/` - Python サーバーサイドコード（AI診断API）
 - `web/` - Next.js ティザーサイト（静的サイト）
 - `docs/` - ドキュメント・ガイド
@@ -27,11 +36,11 @@ AIを使ってユーザーのパーソナルカラー（イエローベース・
 
 ## 技術スタック
 
-- **Mobile App**: Flutter 3.32+ (iOS & Android対応)
-  - iOS: App Store配布
-  - Android: Google Play Store配布
-- **Web**: Next.js 15 (App Router) + TypeScript + Tailwind CSS
-- **Server**: Python 3.11+ + FastAPI + Vertex AI Gemini
+- **Mobile App**: Flutter 3.8+ (iOS & Android対応) - v1.4.0
+  - iOS: App Store配布済み
+  - Android: Google Play Store配布準備中
+- **Web**: Next.js 15.5.0 (App Router) + React 19 + TypeScript + Tailwind CSS 4
+- **Server**: Python 3.11+ + FastAPI 0.115.6 + Vertex AI Gemini 1.33.0
 - **Hosting**: App Store・Google Play Store (Mobile) + Firebase App Hosting (Web)
 
 ## クイックスタート
@@ -42,14 +51,20 @@ AIを使ってユーザーのパーソナルカラー（イエローベース・
 # プロジェクトディレクトリに移動
 cd client/personal_color_app/
 
-# 初回セットアップ
-make setup
+# 依存関係インストール
+flutter pub get
 
-# iOS でデバッグ実行
-make ios-debug
+# iOS 実機でデバッグ実行
+make ios-debug-device
 
-# Android でデバッグ実行  
-make android-debug
+# Android 実機でデバッグ実行
+make android-debug-device
+
+# iOS リリースビルド（App Store用）
+make ios-release
+
+# Android App Bundle作成（Play Store用）
+make android-release
 
 # 利用可能なコマンド一覧
 make help
@@ -62,29 +77,47 @@ make help
 cd web/
 
 # 依存関係インストール
-npm install
+make install
 
 # 開発サーバー起動
-npm run dev
+make dev
+
+# プロダクション用ビルド
+make build
+
+# Firebase Hostingデプロイ
+make deploy
+
+# 利用可能なコマンド一覧
+make help
 ```
 
 ### 🔧 開発用Makefileコマンド
 
-モバイルアプリ（Flutter）では以下のMakefileコマンドが利用できます：
+#### モバイルアプリ（Flutter）
 
 | コマンド | 説明 |
 |---------|------|
 | `make help` | 利用可能なコマンド一覧表示 |
-| `make setup` | 初回セットアップ |
-| `make ios-debug` | iOS シミュレーターでデバッグ実行 |
-| `make android-debug` | Android エミュレーターでデバッグ実行 |
-| `make ios-release` | iOS リリースビルド |
-| `make android-bundle` | Android App Bundle作成 |
-| `make test` | 全テスト実行 |
-| `make lint` | コード品質チェック |
-| `make clean` | ビルドキャッシュクリア |
+| `make ios-debug-device` | iOS実機でデバッグ実行 |
+| `make android-debug-device` | Android実機でデバッグ実行 |
+| `make ios-release` | iOS リリースビルド（App Store用） |
+| `make android-release` | Android App Bundle作成（Play Store用） |
 
-詳細は `client/personal_color_app/Makefile` を参照してください。
+#### Webサイト（Next.js）
+
+| コマンド | 説明 |
+|---------|------|
+| `make help` | 利用可能なコマンド一覧表示 |
+| `make install` | 依存関係インストール |
+| `make dev` | 開発サーバー起動 |
+| `make lint` | コードLintチェック |
+| `make build` | プロダクション用ビルド |
+| `make preview` | Firebase Hostingプレビューデプロイ |
+| `make deploy` | Firebase Hostingデプロイ |
+| `make clean` | ビルドファイル削除 |
+
+詳細は各Makefileを参照してください。
 
 ## 運用ドキュメントへのリンク集
 
@@ -95,6 +128,30 @@ npm run dev
 - モニタリング設定ガイド: `docs/MONITORING.md`
 - トラブルシューティングガイド: `docs/TROUBLESHOOTING.md`
 - CI/CD 構成概要: `docs/CI_CD.md`
+
+### 🖥️ サーバー開発（Python）
+
+```bash
+# サーバーディレクトリに移動
+cd server/
+
+# 仮想環境作成・有効化（重要）
+python3 -m venv .venv
+source .venv/bin/activate
+
+# 依存関係インストール
+pip install -r requirements.txt
+
+# 開発サーバー起動
+uvicorn src.api.main:app --reload
+
+# テスト実行
+pytest tests/unit/
+pytest tests/integration/
+
+# コード品質チェック
+black . && flake8 . && mypy .
+```
 
 ## サーバー設定と機能フラグ（FastAPI）
 
@@ -141,9 +198,24 @@ npm run dev
 
 ## 開発の進め方
 
-1. **仕様書優先**: `specifications/` の各MDファイルを参照
+1. **仕様書優先**: `specifications/` の各MDファイルを参照（機能別に分類済み）
 2. **Clean Architecture**: DDD（ドメイン駆動開発）適用
 3. **TDD**: テスト駆動開発の実践
 4. **クロスプラットフォーム**: iOS・Android両対応、レスポンシブデザイン
+5. **AI機能拡張**: AIコーディネート、バーチャルトライオン等の継続開発
 
-詳細は `CLAUDE.md` を参照してください。
+## プロジェクト状況
+
+### 現在のバージョン
+- **モバイルアプリ**: v1.4.0 (build 20)
+- **技術的債務**: 古いドキュメントやスクリプトの削除済み
+- **最新機能**: AIファッションコーディネート（phase1完了）
+
+### 最近の更新（コミット履歴）
+- AIコーディネート機能phase1実装完了
+- バーチャルトライオンAPI対応
+- 年齢・性別認識機能追加
+- デバッグボタン修正
+- レコメンデーション設定更新
+
+詳細は `CLAUDE.md`, `GEMINI.md`, `AGENTS.md` を参照してください。

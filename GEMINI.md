@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This is a monorepo for a "Personal Color Diagnosis" application. The project's main goal is to provide an AI-powered tool that analyzes a user's photo to determine their personal color, specifically whether they are "Yellow Base" or "Blue Base".
+This is a monorepo for a "Personal Color Diagnosis" application. The project's main goal is to provide an AI-powered tool that analyzes a user's photo to determine their personal color, specifically whether they are "Yellow Base" or "Blue Base". It also includes features for AI-powered makeup simulation and fashion coordination advice based on the user's personal color.
 
 The project consists of three main components:
 1.  **Mobile App**: A Flutter-based application targeted at elementary school students for iOS and Android.

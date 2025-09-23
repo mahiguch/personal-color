@@ -1,103 +1,115 @@
 ---
 applyTo: "specifications/**"
 ---
-# Personal Color Project - Copilot Instructions
+# Personal Color Project - Specifications Instructions
 
-## Project Overview
+## プロジェクト概要
 
-specification-driven developmentに従います。
+パーソナルカラー診断AIスタイリストアプリの仕様駆動開発(Specification-Driven Development)に従います。
 
-## 開発フロー - スペック駆動開発
+## 📋 現在の開発状況（v1.4.0）
 
-本プロジェクトは**5段階ワークフロー**を採用し、各段階でユーザー承認を必須とします：
+### 完了済み機能
+- ✅ 初期実装（基本パーソナルカラー診断）
+- ✅ ティザーサイト（Firebase App Hosting）
+- ✅ AIファッションコーディネート機能（phase1）
+- ✅ 全年齢対応パーソナルカラー診断
+- ✅ Google Gen AI SDK移行
+- ✅ メイクアップ推奨機能
+- ✅ iOS App Store配布
+
+### 開発中・計画中
+- 🚧 Android Google Play Store配布準備
+- 📋 AIメイクアップ機能拡張（ai-makeup2, ai-makeup3）
+- 📋 服装推奨機能（clothing）
+
+## 📁 仕様書ディレクトリ構成
+
+```
+specifications/
+├── initialize/     # 初期実装仕様（完了）
+├── teaser/        # ティザーサイト仕様（完了）
+├── ai-coordinate/ # AIファッションコーディネート仕様（完了）
+├── allages/       # 全年齢対応診断仕様（完了）
+├── genai/         # Google Gen AI SDK移行仕様（完了）
+├── makeup/        # メイクアップ推奨機能仕様（完了）
+├── android/       # Android対応仕様（進行中）
+├── ai-makeup/     # AIメイク生成機能仕様（v1）
+├── ai-makeup2/    # AIメイク機能改修仕様（v2）
+├── ai-makeup3/    # AIメイク画面改善仕様（v3）
+└── clothing/      # 服装推奨機能仕様（計画中）
+```
+
+## 🔄 開発フロー - 仕様駆動開発
+
+本プロジェクトは**機能別仕様書管理**と**5段階ワークフロー**を採用：
+
+### 機能別仕様書構成
+各機能は `specifications/[feature_name]/` に以下の文書を格納：
+- `requirements.md` - 要件定義
+- `design.md` - 技術設計（DDD適用）
+- `test_design.md` - テスト設計
+- `tasks.md` - 実装タスク（TDD実践）
 
 ### Stage 1: 要件分析 (Requirements)
 - ユーザーリクエストを機能要件に変換
-- `specifications/requirements.md` に日本語で文書化
+- `specifications/[feature_name]/requirements.md` に日本語で文書化
 - 必須・オプション機能、非機能要件、制約事項を明確化
 
 #### 要件定義書の構成
-`specifications/requirements.md` には以下のセクションを含める。
-
 ```markdown
-# 要件定義書 - [タスク名]
+# 要件定義書 - [機能名]
 
-## 1. 目的
-
-[このタスク/プロジェクトの目的を明確に記述]
+## 1. 目的・背景
+[機能の目的、開発に至った背景]
 
 ## 2. 機能要件
 
 ### 2.1 必須機能
-
 - [ ] [機能1の詳細説明]
 - [ ] [機能2の詳細説明]
-      ...
 
 ### 2.2 オプション機能
-
 - [ ] [将来的に実装可能な機能]
-      ...
 
 ## 3. 非機能要件
 
 ### 3.1 パフォーマンス
-
-- [応答時間、処理速度などの要件]
+- 応答時間: X秒以内
+- 処理能力: Y件/秒
 
 ### 3.2 セキュリティ
-
-- [セキュリティに関する要件]
+- 画像データの適切な削除
+- PII情報の保護
 
 ### 3.3 保守性
-
-- [コードの保守性に関する要件]
+- Clean Architecture遵守
+- テストカバレッジ80%以上
 
 ### 3.4 互換性
-
-- [既存システムとの互換性要件]
+- 既存API互換性維持
+- iOS 15+, Android 8.0+対応
 
 ## 4. 制約事項
 
 ### 4.1 技術的制約
-
-- [使用技術、ライブラリの制約]
+- Flutter 3.8+, Python 3.11+
+- Google Gen AI SDK使用
 
 ### 4.2 ビジネス制約
+- 小学5年生向けアプリとしての適切性
+- 保護者向けアピール
 
-- [納期、予算などの制約]
+## 5. 成功基準・受入条件
+- [ ] [明確な完了条件]
+- [ ] [品質基準達成]
 
-## 5. 成功基準
-
-### 5.1 完了の定義
-
-- [ ] [明確な完了条件1]
-- [ ] [明確な完了条件2]
-      ...
-
-### 5.2 受け入れテスト
-
-- [ユーザーが満足する条件]
-
-## 6. 想定されるリスク
-
-- [実装上のリスクと対策]
+## 6. リスク・課題
+[実装上のリスクと対策]
 
 ## 7. 今後の検討事項
-
-- [設計フェーズで詳細化すべき事項]
+[設計フェーズで詳細化すべき事項]
 ```
-
-#### 要件分析の重要ポイント
-- 暗黙的な要件の洗い出し
-- エッジケースと制約の特定
-- 測定可能な成功基準の設定
-- 現在のニーズと将来の拡張性の両方を考慮
-
-### Stage 2: 技術設計 (Design)
-- 要件に基づく技術アーキテクチャ設計
-- `specifications/design.md` にコンポーネント設計、API設計を記載
-- データフロー、エラーハンドリング戦略を定義
 
 #### 詳細設計書の構成
 `specifications/design.md` には以下のセクションを含める。
@@ -480,28 +492,99 @@ specification-driven developmentに従います。
 - タスクリストに従った段階的実装
 - 各タスクでコミット、テスト実行、品質チェック
 
-## 重要ルール
+## 🎯 現在の仕様駆動開発原則
 
-1. **新機能開発時は必ず5段階ワークフローを実行** - 段階スキップ禁止
-2. **各段階完了後、必ずユーザー承認を取得**してから次段階へ
-3. **`specifications/`ディレクトリ**に全ての設計文書を格納
-4. **実装は最後** - 設計完了まで実装開始禁止
-5. **issue** - 機能ごとにissueを作成する。
-6. **プルリクエスト** - 各タスク完了時にプルリクエストを作成する。プルリクエストは、issueに関連付ける。
-7. **MCP活用** - 各段階で適切なMCPツールを活用し、効率的に作業を進める：
-   - 技術調査・ドキュメント参照: Context7 MCP
-   - GitHub管理: GitHub MCP
-   - ブラウザ自動化: Playwright MCP
-   - 実装準備: Serena MCP（キャッシュ更新）
+### 技術アーキテクチャ標準
 
-## プロジェクト構造
+#### Flutter Client側（Clean Architecture + DDD）
+```
+lib/features/[feature_name]/
+├── presentation/  # UI層（pages, widgets, providers）
+├── domain/        # ビジネスロジック層（entities, repositories, usecases）
+└── data/          # データ層（datasources, models, repositories）
+```
 
-- `specifications/` - 設計・仕様書
-- `src/` - メインソースコード (今後作成予定)
-- `tests/` - テストコード (今後作成予定)
+#### Python Server側（Clean Architecture）
+```
+src/
+├── api/           # エンドポイント（FastAPI）
+├── services/      # ビジネスロジック
+├── core/          # 共通機能
+├── prompts/       # Geminiプロンプト定義
+└── models/        # データモデル
+```
 
-## 品質基準
+### 技術スタック標準
+- **Flutter**: 3.8+ (Dart 3.0+) - v1.4.0+20
+- **Python**: 3.11+ with Google Gen AI SDK 1.33.0
+- **Web**: Next.js 15.5.0 + React 19 + TypeScript + Tailwind CSS 4
+- **AI**: Google Gen AI SDK（Vertex AI経由）
+- **アーキテクチャ**: Clean Architecture + DDD
 
-- パフォーマンスとセキュリティを初期段階から考慮
-- Clean Architectureの原則に従った設計
-- TDDを実践し、テスト駆動で開発を進める
+### 開発コマンド標準（Makefile統一）
+```bash
+# Flutter
+make ios-debug-device     # iOS実機デバッグ
+make android-debug-device # Android実機デバッグ
+make ios-release         # App Store用ビルド
+make android-release     # Play Store用ビルド
+
+# Web
+make dev                 # 開発サーバー起動
+make build              # プロダクション用ビルド
+make deploy             # Firebase Hostingデプロイ
+
+# Server（仮想環境必須）
+source .venv/bin/activate
+uvicorn src.api.main:app --reload
+pytest tests/unit/
+```
+
+## 🚀 MCP活用による効率化
+
+### 実装前フェーズ
+- **技術調査**: Context7 MCPで最新ドキュメント・ライブラリ情報確認
+- **プロジェクト準備**: Serena MCPでシンボル検索・効率的コード編集
+- **重要**: ファイル全体読み取りではなく、Serenaのシンボル検索ツール優先使用
+
+### 開発管理フェーズ
+- **Issue・PR管理**: GitHub MCPでissue作成、Pull Request管理
+- **自動化**: Playwright MCPで繰り返し作業・手動テスト自動化
+- **AI統合**: Gemini CLI MCPでGoogle検索、チャット、ファイル解析
+
+### 外部サービス連携
+- **決済処理**: Stripe MCPで決済機能実装・テスト
+- **データ管理**: Kintone MCPでデータベース操作・フォーム管理
+
+## 📋 品質基準・原則
+
+### コード品質
+- **TDD実践**: テスト駆動開発による品質確保
+- **テストカバレッジ**: 80%以上
+- **Clean Architecture遵守**: 依存方向の適切な管理
+- **API互換性**: 既存クライアントとの完全互換性維持
+
+### パフォーマンス
+- **レスポンス時間**: 5秒以内（API）
+- **アプリ起動時間**: 3秒以内
+- **Lighthouse Score**: 80+（Web）
+
+### セキュリティ
+- **画像処理後削除**: プライバシー保護徹底
+- **入力検証**: APIエンドポイントでの適切なバリデーション
+- **PII保護**: 個人情報のログ出力回避
+
+### 実装原則
+- **各タスクはコミット単位**で完結
+- **段階的実装**: 影響範囲最小化
+- **既存機能影響最小化**: 新機能として独立実装
+- **小学5年生向け**: 適切性・安全性の考慮
+
+## 🔄 重要ルール
+
+1. **5段階ワークフロー必須実行** - Requirements → Design → Test Design → Tasks → Implementation
+2. **各段階完了後のユーザー承認必須**
+3. **仕様書ディレクトリ管理**: `specifications/[feature_name]/` 構成
+4. **実装は設計完了後**: 設計未完了での実装開始禁止
+5. **Issue・PR連携**: 機能ごとのissue作成、タスク完了時PR作成
+6. **MCP積極活用**: 各段階での適切なツール選択・効率化

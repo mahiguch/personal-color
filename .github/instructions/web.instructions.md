@@ -6,7 +6,13 @@ applyTo: "web/**"
 
 このディレクトリでは、AIスタイリストのティザーサイト開発を行います。
 
-## 📋 仕様書の参照
+## 📋 現在の状況
+- **技術スタック**: Next.js 15.5.0 + React 19 + TypeScript + Tailwind CSS 4
+- **ホスティング**: Firebase App Hosting
+- **サイトタイプ**: 静的サイト（`output: 'export'`）
+- **URL**: https://personal-color-app-public.web.app
+
+## 📚 仕様書の参照
 
 以下の仕様書を必ず参照してコードの変更・追加を行ってください：
 
@@ -27,12 +33,39 @@ applyTo: "web/**"
   - 画像アセット生成要件
   - 具体的なコマンド、設定ファイル例
 
+## 🔧 開発コマンド（Makefile統一）
+
+```bash
+cd web
+
+# 基本コマンド
+make help       # 利用可能なコマンド一覧表示
+make install    # 依存関係インストール
+make dev        # 開発サーバー起動（http://localhost:3000）
+make lint       # コードLintチェック
+make build      # プロダクション用ビルド
+make preview    # Firebase Hostingプレビューデプロイ
+make deploy     # Firebase Hostingデプロイ
+make clean      # ビルドファイル削除
+
+# 高度なコマンド
+make setup              # 初回セットアップ（install+setup完了）
+make production-deploy  # 本番デプロイ用（全チェック付き）
+make watch             # ファイル変更監視モード
+
+# 従来のnpmコマンドも利用可能
+npm install
+npm run dev
+npm run build
+npm run lint
+```
+
 ## 🎯 開発方針
 
 ### 技術スタック
-- **フレームワーク**: Next.js 15 (App Router)
-- **スタイリング**: Tailwind CSS + shadcn/ui
-- **言語**: TypeScript
+- **フレームワーク**: Next.js 15.5.0 (App Router)
+- **スタイリング**: Tailwind CSS 4 + shadcn/ui
+- **言語**: TypeScript 5
 - **ホスティング**: Firebase App Hosting
 - **サイトタイプ**: 静的サイト（`output: 'export'`）
 
@@ -48,6 +81,91 @@ applyTo: "web/**"
 - **文言**: 仕様書記載の具体的なキャッチコピー・レビュー内容を使用
 
 ## 📁 ディレクトリ構成
+
+```
+web/src/
+├── app/
+│   ├── page.tsx          # ランディングページ
+│   ├── privacy/page.tsx  # プライバシーポリシー
+│   ├── support/page.tsx  # サポート・FAQ
+│   └── layout.tsx        # ルートレイアウト
+├── components/
+│   ├── ui/              # shadcn/ui コンポーネント
+│   ├── layout/          # Header, Footer
+│   └── sections/        # Hero, Features, Reviews
+├── lib/                 # ユーティリティ・設定
+└── types/               # TypeScript型定義
+
+public/
+├── images/
+│   ├── features/        # 機能アイコン・説明画像
+│   ├── screenshots/     # アプリスクリーンショット
+│   └── reviews/         # レビュー関連画像
+└── app_icon.svg         # アプリアイコン
+```
+
+## 🏗️ アーキテクチャ
+
+### Next.js 15 App Router + 静的サイト生成
+- App Router による ファイルベースルーティング
+- `output: 'export'` による静的サイト生成
+- shadcn/ui によるコンポーネントシステム
+- Tailwind CSS 4 による デザインシステム
+
+### 主要依存関係
+- **フレームワーク**: `next@15.5.0`, `react@19.1.0`
+- **スタイリング**: `tailwindcss@^4`, `@radix-ui/react-*`
+- **アイコン**: `lucide-react@^0.541.0`
+- **ユーティリティ**: `clsx@^2.1.1`, `tailwind-merge@^3.3.1`
+
+## MCP活用ガイドライン（Web開発）
+
+### 実装前準備
+- **プロジェクト分析**: Serena MCPを使用してシンボル検索・効率的なコード編集
+- **キャッシュ更新**: プロジェクト情報を最新化
+
+### 技術調査・ドキュメント参照
+- **最新技術情報**: Next.js 15、React 19、Tailwind CSS 4の最新ドキュメントはContext7 MCPで確認
+- **UI/UXパターン**: Webデザインパターンや最新のUI/UXトレンドを調査
+- **shadcn/ui**: コンポーネントライブラリの最新情報・ベストプラクティスを調査
+
+### GitHub連携
+- **Issue・PR管理**: GitHub MCPを使用してissue作成、Pull Request管理を行う
+
+### テスト・自動化
+- **UIテスト**: 複雑なE2Eテストやブラウザ表示確認が必要な場合はPlaywright MCPを活用
+- **パフォーマンステスト**: Lighthouse メトリクス確認
+- **レスポンシブテスト**: 各デバイスサイズでの表示確認
+
+### デプロイ・運用
+- **Firebase連携**: Firebase App Hosting でのデプロイメント管理
+- **プレビュー機能**: Pull Request ごとのプレビュー環境活用
+
+## 🎯 開発原則
+
+### 品質基準
+- **パフォーマンス**: Lighthouse Performance Score 80+
+- **アクセシビリティ**: WCAG 2.1 AA準拠
+- **SEO**: 基本的なSEO最適化（メタタグ、構造化データ）
+- **レスポンシブ**: モバイルファースト設計
+
+### コード品質
+- **TypeScript**: 厳密な型チェック
+- **ESLint**: コード品質チェック
+- **Prettier**: コードフォーマット
+- **コンポーネント設計**: 再利用可能で保守しやすい設計
+
+### 実装時の注意
+- **Static Site Generation**: 動的な機能は最小限に抑制
+- **画像最適化**: Next.js Image コンポーネント活用
+- **アニメーション**: パフォーマンスを考慮した適切な実装
+- **保護者向け**: 信頼感・安全性を重視したコンテンツ
+
+### Firebase App Hosting 対応
+- **設定ファイル**: `firebase.json` の適切な管理
+- **ビルド設定**: `next.config.ts` でのexport設定
+- **環境変数**: 必要最小限の環境変数設定
+- **カスタムドメイン**: 本番運用時のドメイン設定
 
 ```
 web/
