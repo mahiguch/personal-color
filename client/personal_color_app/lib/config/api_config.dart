@@ -3,8 +3,8 @@
 /// 環境ごとの設定やタイムアウト値などを管理する
 class APIConfig {
   // API エンドポイント
-  static const String developmentBaseUrl = 'http://localhost:8000';
-  static const String productionBaseUrl = 'https://personal-color-api.run.app';
+  static const String developmentBaseUrl = 'https://personal-color-api-666814602151.asia-northeast1.run.app';
+  static const String productionBaseUrl = 'https://personal-color-api-666814602151.asia-northeast1.run.app';
   
   // タイムアウト設定
   static const Duration defaultTimeout = Duration(seconds: 60);

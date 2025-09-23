@@ -108,7 +108,8 @@ class CoordinateValidator:
             raise ValidationError("personal_color_type", "Personal color type is required")
         
         try:
-            return PersonalColorType(color_type.upper())
+            # EnumのValueは小文字なので、そのまま使用
+            return PersonalColorType(color_type.lower())
         except ValueError:
             valid_types = [e.value for e in PersonalColorType]
             raise ValidationError(
@@ -124,7 +125,8 @@ class CoordinateValidator:
             return None
         
         try:
-            return StylePreference(style_preference.upper())
+            # EnumのValueは小文字なので、そのまま使用
+            return StylePreference(style_preference.lower())
         except ValueError:
             valid_styles = [e.value for e in StylePreference]
             raise ValidationError(

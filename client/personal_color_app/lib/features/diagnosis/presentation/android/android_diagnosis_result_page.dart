@@ -12,6 +12,7 @@ import '../../../makeup/presentation/providers/ai_makeup_recommendation_provider
 import '../../../clothing/presentation/pages/clothing_recommendation_page.dart';
 import '../../../clothing/presentation/providers/clothing_recommendation_provider.dart';
 import '../../../../core/di/injection_container.dart' as di;
+import '../../../../screens/ai_fashion_coordinate_screen.dart';
 import 'dart:io';
 
 /// Android版診断結果画面 - Material Design 3準拠
@@ -167,6 +168,23 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
 
         const SizedBox(height: 12),
         
+        // AIファッションコーディネートボタン - FilledButton.tonal使用
+        SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: FilledButton.tonalIcon(
+            onPressed: () => _navigateToAIFashionCoordinate(context),
+            icon: const Icon(Icons.checkroom),
+            label: const Text('AIファッションコーディネート'),
+            style: FilledButton.styleFrom(
+              backgroundColor: _getMaterialThemeColor(theme, result.diagnosisType).withValues(alpha: 0.12),
+              foregroundColor: _getMaterialThemeColor(theme, result.diagnosisType),
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 12),
+        
         // おすすめのファッションボタン - FilledButton.tonal使用
         SizedBox(
           width: double.infinity,
@@ -187,7 +205,7 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.checkroom,
+                      Icons.style,
                       color: _getMaterialThemeColor(theme, result.diagnosisType),
                     ),
                     const SizedBox(width: 8),
@@ -672,6 +690,26 @@ class AndroidDiagnosisResultPage extends StatelessWidget {
     
     // カメラ画面に戻る
     Navigator.of(context).popUntil((route) => route.isFirst);
+  }
+
+  /// AIファッションコーディネート画面への遷移
+  void _navigateToAIFashionCoordinate(BuildContext context) {
+    debugPrint('🎨 [Android] AIファッションコーディネートボタン押下: ${result.diagnosisType}');
+    
+    // パーソナルカラータイプの変換を確認
+    final personalColorType = result.diagnosisType.toString().split('.').last;
+    debugPrint('🎨 [Android] Converted personalColorType: $personalColorType');
+    debugPrint('🎨 [Android] Original diagnosisType: ${result.diagnosisType}');
+    debugPrint('🎨 [Android] Full toString: ${result.diagnosisType.toString()}');
+    
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => AIFashionCoordinateScreen(
+          personalColorType: personalColorType,
+          originalImagePath: originalImagePath,
+        ),
+      ),
+    );
   }
 
 }

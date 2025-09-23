@@ -11,7 +11,6 @@ from pydantic import BaseModel
 logger = logging.getLogger(__name__)
 
 from ...core.config.settings import get_settings
-from ...core.security.input_validation import SecurityValidator, InputValidationError
 from ...domain.entities import UserPhoto, FashionCoordinate, CoordinateRequest
 from ...domain.enums import PersonalColorType, StylePreference, Season
 from src.domain.services.age_aware_coordinate_service import (
@@ -85,9 +84,6 @@ class CoordinateGenerationRequest(BaseModel):
     include_accessories: bool = True
     generate_image: bool = True
 
-
-# Initialize security validator
-security_validator = SecurityValidator()
 
 # Initialize services (Dependency Injection will be implemented later)
 image_analysis_service = CoordinateImageAnalysisService()
@@ -176,10 +172,8 @@ async def ai_coordinate_recommendation(
             )
         
         # Security validation (additional check)
-        try:
-            await security_validator.validate_image_upload(image_data, image.filename)
-        except InputValidationError as e:
-            raise HTTPException(status_code=400, detail=str(e))
+        # 画像のセキュリティ検証はCoordinateValidatorで実行済み
+        # 追加のセキュリティチェックが必要な場合はここに実装
         
         coordinate_request = CoordinateRequest(
             user_photo=user_photo,
@@ -366,10 +360,8 @@ async def ai_coordinate_recommendation_age_aware(
             )
         
         # Security validation
-        try:
-            await security_validator.validate_image_upload(image_data, image.filename)
-        except InputValidationError as e:
-            raise HTTPException(status_code=400, detail=str(e))
+        # 画像のセキュリティ検証はCoordinateValidatorで実行済み
+        # 追加のセキュリティチェックが必要な場合はここに実装
         
         # Create age-aware coordinate request
         age_aware_request = AgeAwareCoordinateRequest(

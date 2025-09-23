@@ -15,6 +15,7 @@ import '../../../makeup/presentation/providers/ai_makeup_recommendation_provider
 import '../../../clothing/presentation/pages/clothing_recommendation_page.dart';
 import '../../../clothing/presentation/providers/clothing_recommendation_provider.dart';
 import '../../../../core/di/injection_container.dart' as di;
+import '../../../../screens/ai_fashion_coordinate_screen.dart';
 import 'dart:io';
 
 class IOSDiagnosisResultPage extends StatelessWidget {
@@ -184,6 +185,47 @@ class IOSDiagnosisResultPage extends StatelessWidget {
                     const SizedBox(width: 8),
                     Text(
                       'AI生成メイク',
+                      style: TextStyle(
+                        fontSize: 16 * uiTheme.fontScale,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        
+        const SizedBox(height: 12),
+        
+        // AIファッションコーディネートボタン
+        SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: GestureDetector(
+            onTap: () => _navigateToAIFashionCoordinate(context),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Color(uiTheme.primaryColor).withValues(alpha: 0.7),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.2),
+                    offset: const Offset(0, 2),
+                    blurRadius: 4,
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.style, color: Colors.white, size: 24 * uiTheme.fontScale),
+                    const SizedBox(width: 8),
+                    Text(
+                      'AIファッションコーディネート',
                       style: TextStyle(
                         fontSize: 16 * uiTheme.fontScale,
                         fontWeight: FontWeight.bold,
@@ -398,6 +440,49 @@ class IOSDiagnosisResultPage extends StatelessWidget {
       
       // 包括的なエラーハンドリング
       _handleAIMakeupNavigationError(context, e);
+    }
+  }
+
+  /// AIファッションコーディネートページに移動する
+  void _navigateToAIFashionCoordinate(BuildContext context) {
+    try {
+      debugPrint('👗 [iOS] AIファッションコーディネートボタン押下: ${result.diagnosisType}');
+      
+      // 診断結果からパーソナルカラータイプを取得し、文字列に変換
+      final personalColorType = result.diagnosisType.toString().split('.').last;
+      debugPrint('👗 [iOS] Converted personalColorType: $personalColorType');
+      debugPrint('👗 [iOS] Original diagnosisType: ${result.diagnosisType}');
+      debugPrint('👗 [iOS] Full toString: ${result.diagnosisType.toString()}');
+      
+      debugPrint('🚀 [iOS] AIFashionCoordinateScreenへナビゲーション開始');
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => AIFashionCoordinateScreen(
+            personalColorType: personalColorType,
+            originalImagePath: originalImagePath,
+          ),
+        ),
+      );
+      debugPrint('✅ [iOS] AIFashionCoordinateScreenナビゲーション成功');
+      
+    } catch (e, stackTrace) {
+      debugPrint('❌ [iOS] AIファッションコーディネートナビゲーションエラー: $e');
+      debugPrint('スタックトレース: $stackTrace');
+      
+      // エラーダイアログを表示
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('エラー'),
+          content: const Text('AIファッションコーディネート画面への移動中にエラーが発生しました。'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
     }
   }
 

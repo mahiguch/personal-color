@@ -6,7 +6,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../camera/presentation/providers/camera_provider.dart';
 import '../../../camera/presentation/pages/camera_page.dart';
 import '../../../../core/di/injection_container.dart' as di;
-import '../../../../screens/ai_fashion_coordinate_screen.dart';
 
 /// Android版ホーム画面 - Material Design 3準拠
 /// 
@@ -62,22 +61,15 @@ class AndroidHomePage extends StatelessWidget {
                 
                 const SizedBox(height: 48),
                 
-            // メインCTAボタン
-            _buildMainCTAButton(context, theme),
-            
-            const SizedBox(height: 16),
-            
-            // AI ファッションコーディネートボタン
-            _buildAIFashionCoordinateButton(context, theme),
-            
-            const SizedBox(height: 24),
-            
+                // メインCTAボタン
+                _buildMainCTAButton(context, theme),
+                
+                const SizedBox(height: 24),
+                
+                // サブ情報
+                _buildSubInfo(theme),
 
-
-            // サブ情報
-            _buildSubInfo(theme),
-
-            const SizedBox(height: 32),
+                const SizedBox(height: 32),
 
             // プライバシーポリシーリンク
             _buildPrivacyPolicyLink(theme),
@@ -204,45 +196,6 @@ class AndroidHomePage extends StatelessWidget {
     );
   }
 
-  /// AI ファッションコーディネートボタン
-  Widget _buildAIFashionCoordinateButton(BuildContext context, ThemeData theme) {
-    return SizedBox(
-      width: double.infinity,
-      height: 56,
-      child: OutlinedButton(
-        onPressed: () => _navigateToAIFashionCoordinate(context),
-        style: OutlinedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          side: BorderSide(
-            color: theme.colorScheme.primary,
-            width: 2,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.auto_awesome,
-              size: 24,
-              color: theme.colorScheme.primary,
-            ),
-            const SizedBox(width: 12),
-            Text(
-              'AI ファッションコーディネート',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.primary,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-
   /// プライバシーポリシーリンク
   Widget _buildPrivacyPolicyLink(ThemeData theme) {
     return Center(
@@ -313,18 +266,6 @@ class AndroidHomePage extends StatelessWidget {
       ),
     );
   }
-
-  /// AI ファッションコーディネート画面への遷移（Material Motion付き）
-  void _navigateToAIFashionCoordinate(BuildContext context) {
-    Navigator.of(context).push(
-      _createMaterialPageRoute(
-        const AIFashionCoordinateScreen(),
-      ),
-    );
-  }
-
-
-
 
   /// Material Motion準拠のページ遷移を作成
   PageRouteBuilder _createMaterialPageRoute(Widget page) {

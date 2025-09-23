@@ -141,6 +141,13 @@ class AIFashionRepositoryImpl implements AIFashionRepository {
       );
 
       // フォームデータの作成
+      debugPrint('🌐 AIFashionRepository: Preparing API request with form data:');
+      debugPrint('  personal_color_type: $personalColorType');
+      debugPrint('  style_preference: $stylePreference');
+      debugPrint('  season: $season');
+      debugPrint('  include_accessories: ${includeAccessories.toString()}');
+      debugPrint('  generate_image: ${generateImage.toString()}');
+      
       final formData = FormData.fromMap({
         'image': multipartFile,
         'personal_color_type': personalColorType,

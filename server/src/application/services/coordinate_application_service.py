@@ -10,6 +10,7 @@ from datetime import datetime
 
 from src.domain.entities import UserPhoto, FashionCoordinate, CoordinateRequest
 from src.domain.enums import PersonalColorType, StylePreference, Season
+from src.domain.value_objects import GenerationMetadata
 from src.infrastructure.exceptions import CoordinateGenerationError
 
 
@@ -48,13 +49,18 @@ class CoordinateApplicationService:
             
             # モック実装 - 実際のサービス実装に置き換える
             coordinate = FashionCoordinate(
-                user_photo=request.user_photo,
                 generated_image=b"mock_generated_image",
-                personal_color=request.personal_color_type,
-                style_preference=request.style_preference or StylePreference.ELEGANT,
-                recommendation_text="パーソナルカラーに基づくコーディネート推薦",
-                coordinate_points=["色の調和", "スタイルバランス", "季節感"],
-                color_analysis="カラー分析結果"
+                recommendation_reason="パーソナルカラーに基づくコーディネート推薦",
+                styling_points=["色の調和", "スタイルバランス", "季節感"],
+                main_colors=["ネイビー", "ベージュ", "ホワイト"],
+                estimated_age=request.user_photo.estimated_age or 25,
+                style_type=request.style_preference or StylePreference.ELEGANT,
+                metadata=GenerationMetadata(
+                    model_version="mock_v1.0",
+                    prompt_used="Mock coordinate generation",
+                    generation_time=1.0,
+                    confidence_score=0.8
+                )
             )
             
             logger.info("Successfully generated coordinate recommendation")
@@ -73,7 +79,7 @@ class CoordinateApplicationService:
         
         try:
             if self.coordinate_repository:
-                coordinate_id = await self.coordinate_repository.save(coordinate)
+                coordinate_id = await self.coordinate_repository.save_coordinate(coordinate, request_id)
                 logger.info(f"Saved coordinate: {coordinate_id}")
                 return coordinate_id
             else:

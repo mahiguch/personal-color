@@ -399,24 +399,78 @@ class AIFashionCoordinateBloc extends Bloc<AIFashionEvent, AIFashionState> {
       }
 
       // 実際のAPI呼び出し
+      debugPrint('🔍 AIFashionBloc: About to call API with parameters:');
+      debugPrint('  personalColorType: ${event.preferences?['personalColorType'] ?? 'spring'}');
+      debugPrint('  stylePreference: ${event.preferences?['stylePreference']}');
+      debugPrint('  season: ${event.preferences?['season']}');
+      debugPrint('  includeAccessories: ${event.preferences?['includeAccessories'] ?? true}');
+      debugPrint('  generateImage: ${event.preferences?['generateImage'] ?? true}');
+      
       final result = await _repository.generateCoordinateRecommendation(
         imageFile: event.imageFile,
-        personalColorType: event.preferences?['personalColorType'] ?? 'Spring',
+        personalColorType: event.preferences?['personalColorType'] ?? 'spring',
         stylePreference: event.preferences?['stylePreference'],
         season: event.preferences?['season'],
         includeAccessories: event.preferences?['includeAccessories'] ?? true,
         generateImage: event.preferences?['generateImage'] ?? true,
       );
 
-      // 成功イベントを発行
-      add(AIFashionCoordinateGenerationSucceeded({
+      // API レスポンスの内容をログに出力
+      debugPrint('AIFashionBloc: API Response received');
+      debugPrint('Personal Color Type: ${result.personalColorType}');
+      debugPrint('Style Preference: ${result.stylePreference}');
+      debugPrint('Request ID: ${result.requestId}');
+      debugPrint('Timestamp: ${result.timestamp}');
+      debugPrint('Fashion Items Count: ${result.fashionItems.length}');
+      debugPrint('Styling Points Count: ${result.stylingPoints.length}');
+
+      // レスポンス全体を state.result に保存して UI で表示できるようにする
+      final fullResultData = {
+        // APIレスポンスの完全なデータ
+        'request_id': result.requestId,
+        'timestamp': result.timestamp,
+        'personal_color_type': result.personalColorType,
+        'style_preference': result.stylePreference,
+        'estimated_age': result.estimatedAge,
+        'season_context': result.seasonContext,
+        'recommendation_reason': result.recommendationReason,
+        
+        // ファッションアイテム詳細
+        'fashion_items': result.fashionItems.map((item) => {
+          'id': item.id,
+          'category': item.category,
+          'name': item.name,
+          'color': item.color,
+          'style': item.style,
+          'season_appropriate': item.seasonAppropriate,
+          'age_appropriate': item.ageAppropriate,
+        }).toList(),
+        
+        // スタイリングポイント詳細
+        'styling_points': result.stylingPoints.map((point) => {
+          'category': point.category,
+          'point': point.point,
+          'reason': point.reason,
+        }).toList(),
+        
+        // カラー分析
+        'color_analysis': result.colorAnalysis,
+        
+        // 生成画像情報
+        'generated_image': result.generatedImage != null ? {
+          'image_url': result.generatedImage!.imageUrl,
+          'generation_time': result.generatedImage!.generationTime,
+          'model_version': result.generatedImage!.modelVersion,
+          'prompt_used': result.generatedImage!.promptUsed,
+        } : null,
+        
+        // メタデータ（UIで表示する用の便利なデータ）
         'personal_color_info': {
           'type': result.personalColorType,
           'confidence': 0.85, // API側で実装されたら使用
           'description': result.recommendationReason,
         },
         'recommendations': result.stylingPoints.map((point) => point.point).toList(),
-        'styling_points': result.stylingPoints.map((point) => point.reason).toList(),
         'generated_image_url': result.generatedImage?.imageUrl ?? '',
         'generation_metadata': {
           'model_version': result.generatedImage?.modelVersion ?? 'unknown',
@@ -425,8 +479,14 @@ class AIFashionCoordinateBloc extends Bloc<AIFashionEvent, AIFashionState> {
           'style_preferences': event.preferences ?? {},
           'request_id': result.requestId,
           'timestamp': result.timestamp,
+          'processing_duration': DateTime.now().difference(
+            DateTime.parse(result.timestamp)
+          ).inMilliseconds,
         },
-      }));
+      };
+
+      // 成功イベントを発行
+      add(AIFashionCoordinateGenerationSucceeded(fullResultData));
 
     } catch (e) {
       debugPrint('AIFashionBloc: API generation error - $e');
