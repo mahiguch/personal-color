@@ -19,7 +19,7 @@ class APIConfig {
   static const Duration retryDelay = Duration(seconds: 2);
   
   // API パス
-  static const String coordinateRecommendationPath = '/api/v1/coordinate/ai-recommendation';
+  static const String coordinateRecommendationPath = '/api/v1/coordinate/ai-recommendation-age-aware';
   static const String healthCheckPath = '/api/v1/health';
   
   // サポートされている画像形式

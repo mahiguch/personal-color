@@ -35,23 +35,32 @@ class TestCoordinateAPI:
         assert router.prefix == "/api/v1"
         assert "coordinate" in router.tags
     
-    def test_request_validation_structure(self):
-        """リクエストバリデーション構造のテスト"""
-        from src.api.endpoints.coordinate import CoordinateGenerationRequest
-        
-        # リクエストモデルの構造をテスト
-        request = CoordinateGenerationRequest(
-            personal_color_type="SPRING",
-            style_preference="CASUAL",
-            season="spring",
-            include_accessories=True,
-            generate_image=True
+    def test_age_aware_request_structure(self):
+        """年齢考慮リクエストの基本構造をテスト"""
+        from src.domain.entities import UserPhoto
+        from src.domain.enums import PersonalColorType, StylePreference
+        from src.domain.services.age_aware_coordinate_service import AgeAwareCoordinateRequest
+
+        user_photo = UserPhoto(
+            image_data=b"fake_data",
+            format="jpeg",
+            width=512,
+            height=512
         )
-        
-        assert request.personal_color_type == "SPRING"
-        assert request.style_preference == "CASUAL"
-        assert request.include_accessories is True
-        assert request.generate_image is True
+
+        request = AgeAwareCoordinateRequest(
+            user_photo=user_photo,
+            personal_color=PersonalColorType.SPRING,
+            preferred_style=StylePreference.CASUAL,
+            use_age_estimation=True,
+            confidence_threshold=0.7
+        )
+
+        assert request.user_photo == user_photo
+        assert request.personal_color == PersonalColorType.SPRING
+        assert request.preferred_style == StylePreference.CASUAL
+        assert request.use_age_estimation is True
+        assert request.confidence_threshold == 0.7
     
     def test_response_model_structure(self):
         """レスポンスモデル構造のテスト"""

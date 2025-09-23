@@ -6,9 +6,10 @@ CoordinateApplicationService に統合し、年齢に適したファッション
 生成を実現します。
 """
 
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 import logging
 from dataclasses import dataclass
+import re
 
 from src.domain.entities import UserPhoto, FashionCoordinate
 from src.domain.services.age_estimation_service import (
@@ -22,6 +23,7 @@ from src.domain.services.enhanced_personal_color_service import (
     EnhancedPersonalColorService,
     create_enhanced_personal_color_service
 )
+from src.domain.value_objects import GenerationMetadata
 from src.infrastructure.exceptions import CoordinateGenerationError, AgeEstimationError
 
 
@@ -46,6 +48,7 @@ class AgeAwareCoordinateResult:
     style_recommendation: StyleRecommendation
     adjustment_reason: str
     confidence_score: float
+    color_analysis_summary: str = ""
 
 
 class AgeAwareCoordinateService:
@@ -114,7 +117,7 @@ class AgeAwareCoordinateService:
             )
             
             # Step 5: 統合されたコーディネート生成
-            coordinate = await self._generate_integrated_coordinate(
+            coordinate, color_analysis_summary = await self._generate_integrated_coordinate(
                 request.user_photo,
                 request.personal_color,
                 adjusted_style,
@@ -145,7 +148,8 @@ class AgeAwareCoordinateService:
                 age_estimation=age_estimation,
                 style_recommendation=style_recommendation,
                 adjustment_reason=adjustment_reason,
-                confidence_score=confidence_score
+                confidence_score=confidence_score,
+                color_analysis_summary=color_analysis_summary
             )
             
             logger.info(
@@ -328,7 +332,7 @@ class AgeAwareCoordinateService:
         age_estimation: AgeEstimationResult,
         style_recommendation: StyleRecommendation,
         personal_color_analysis
-    ) -> FashionCoordinate:
+    ) -> tuple[FashionCoordinate, str]:
         """統合されたコーディネートを生成（年齢+パーソナルカラー考慮）"""
         
         # 統合されたプロンプトの生成
@@ -344,9 +348,10 @@ class AgeAwareCoordinateService:
             personal_color,
             selected_style,
             integrated_prompt,
-            personal_color_analysis
+            personal_color_analysis,
+            age_estimation
         )
-        
+
         # 画像生成（Imagen）
         coordinate_image = await self._generate_enhanced_coordinate_image(
             user_photo,
@@ -355,17 +360,22 @@ class AgeAwareCoordinateService:
             integrated_prompt,
             personal_color_analysis
         )
-        
-        return FashionCoordinate(
-            user_photo=user_photo,
-            generated_image=coordinate_image,
-            personal_color=personal_color,
-            style_preference=selected_style,
-            recommendation_text=coordinate_text["recommendation"],
-            coordinate_points=coordinate_text["points"],
-            color_analysis=coordinate_text["color_analysis"]
+
+        coordinate = FashionCoordinate(
+            generated_image=coordinate_image or b"",
+            recommendation_reason=coordinate_text.get("recommendation", ""),
+            styling_points=self._normalize_styling_points(coordinate_text.get("points", "")),
+            main_colors=self._extract_main_colors(personal_color_analysis, style_recommendation),
+            estimated_age=age_estimation.estimated_age,
+            style_type=selected_style,
+            metadata=self._build_generation_metadata(
+                age_estimation=age_estimation,
+                prompt_used="Age-aware coordinate generation"
+            )
         )
-    
+
+        return coordinate, coordinate_text.get("color_analysis", "")
+
     def _create_integrated_context_prompt(
         self,
         age_estimation: AgeEstimationResult,
@@ -404,13 +414,61 @@ class AgeAwareCoordinateService:
 年齢に適した上品さと個人の魅力を最大限に引き出します。
 """
         return integrated_context.strip()
+
+    def _normalize_styling_points(self, points_text: str) -> List[str]:
+        """スタイリングポイントのテキストをリストへ正規化"""
+        if not points_text:
+            return []
+
+        candidates = re.split(r"[\n\r・•\-]+", points_text)
+        normalized = [point.strip() for point in candidates if point.strip()]
+        return normalized or [points_text.strip()]
+
+    def _extract_main_colors(
+        self,
+        personal_color_analysis=None,
+        style_recommendation: Optional[StyleRecommendation] = None
+    ) -> List[str]:
+        """主要カラーリストを抽出"""
+        main_colors: List[str] = []
+
+        for color_info in getattr(getattr(personal_color_analysis, "color_palette", None), "primary_colors", [])[:3]:
+            name = getattr(color_info, "name", "")
+            hex_code = getattr(color_info, "hex_code", "")
+            if name and hex_code:
+                main_colors.append(f"{name} ({hex_code})")
+            elif name:
+                main_colors.append(name)
+            elif hex_code:
+                main_colors.append(hex_code)
+
+        if not main_colors and style_recommendation:
+            main_colors = style_recommendation.age_appropriate_colors[:3]
+
+        return main_colors or ["Neutral"]
+
+    def _build_generation_metadata(
+        self,
+        age_estimation: AgeEstimationResult,
+        prompt_used: str,
+        generation_time: float = 0.0
+    ) -> GenerationMetadata:
+        """GenerationMetadataを作成"""
+        return GenerationMetadata(
+            model_version="age-aware-v1.0",
+            generation_time=generation_time,
+            confidence_score=age_estimation.confidence_score,
+            estimated_age=age_estimation.estimated_age,
+            prompt_used=prompt_used
+        )
     
     async def _generate_enhanced_coordinate_description(
         self,
         personal_color: PersonalColorType,
         selected_style: StylePreference,
         integrated_context: str,
-        personal_color_analysis
+        personal_color_analysis,
+        age_estimation: AgeEstimationResult
     ) -> Dict[str, str]:
         """強化されたコーディネート説明を生成"""
         
@@ -648,7 +706,7 @@ Image should be photorealistic, well-lit, and showcase a complete outfit coordin
         selected_style: StylePreference,
         age_estimation: AgeEstimationResult,
         style_recommendation: StyleRecommendation
-    ) -> FashionCoordinate:
+    ) -> tuple[FashionCoordinate, str]:
         """年齢コンテキストを含むコーディネートを生成"""
         
         # 年齢に適したプロンプトの生成
@@ -673,15 +731,20 @@ Image should be photorealistic, well-lit, and showcase a complete outfit coordin
             age_context_prompt
         )
         
-        return FashionCoordinate(
-            user_photo=user_photo,
-            generated_image=coordinate_image,
-            personal_color=personal_color,
-            style_preference=selected_style,
-            recommendation_text=coordinate_text["recommendation"],
-            coordinate_points=coordinate_text["points"],
-            color_analysis=coordinate_text["color_analysis"]
+        coordinate = FashionCoordinate(
+            generated_image=coordinate_image or b"",
+            recommendation_reason=coordinate_text.get("recommendation", ""),
+            styling_points=self._normalize_styling_points(coordinate_text.get("points", "")),
+            main_colors=self._extract_main_colors(style_recommendation=style_recommendation),
+            estimated_age=age_estimation.estimated_age,
+            style_type=selected_style,
+            metadata=self._build_generation_metadata(
+                age_estimation=age_estimation,
+                prompt_used="Age-context coordinate generation"
+            )
         )
+
+        return coordinate, coordinate_text.get("color_analysis", "")
     
     def _create_age_context_prompt(
         self,
