@@ -6,7 +6,9 @@ import 'package:dio/dio.dart';
 import '../network/api_client.dart';
 
 // Camera feature
-import '../../features/camera/data/datasources/camera_data_source.dart';
+import 'package:flutter/foundation.dart';
+import '../../features/camera/data/datasources/camera_data_source.dart' show CameraDataSource, CameraDataSourceImpl;
+import '../../features/camera/data/datasources/web_camera_data_source.dart';
 import '../../features/camera/data/datasources/image_processing_data_source.dart';
 import '../../features/camera/data/repositories/camera_repository_impl.dart';
 import '../../features/camera/data/repositories/image_processing_repository_impl.dart';
@@ -102,7 +104,7 @@ Future<void> init() async {
 
   // Data sources
   sl.registerLazySingleton<CameraDataSource>(
-    () => CameraDataSourceImpl(),
+    () => kIsWeb ? WebCameraDataSource() : CameraDataSourceImpl(),
   );
   sl.registerLazySingleton<ImageProcessingDataSource>(
     () => ImageProcessingDataSourceImpl(),

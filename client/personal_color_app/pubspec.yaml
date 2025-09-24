@@ -63,6 +63,13 @@ dependencies:
   firebase_app_check: ^0.4.0
   url_launcher: ^6.2.2
 
+  # Web Support
+  universal_html: ^2.2.4  # HTML要素操作用
+  file_picker: ^6.1.1     # ファイル選択（Web対応）
+  path_provider: ^2.1.1   # パス管理
+  flutter_web_plugins:    # Web用プラグイン
+    sdk: flutter
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

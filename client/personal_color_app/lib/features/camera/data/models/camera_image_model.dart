@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import '../../domain/entities/camera_image.dart';
 
 /// CameraImageエンティティのデータモデル
@@ -59,6 +60,23 @@ class CameraImageModel extends CameraImage {
       filePath: filePath,
       timestamp: DateTime.now(),
       fileSize: fileSize,
+      width: width,
+      height: height,
+    );
+  }
+
+  /// バイトデータからモデルを作成（Web版用）
+  factory CameraImageModel.createFromBytes({
+    required String fileName,
+    required Uint8List imageBytes,
+    int? width,
+    int? height,
+  }) {
+    return CameraImageModel(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      filePath: 'web:$fileName', // Web版はファイルパスの代わりにプレフィックス付きファイル名
+      timestamp: DateTime.now(),
+      fileSize: imageBytes.length,
       width: width,
       height: height,
     );
