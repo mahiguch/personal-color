@@ -276,7 +276,6 @@ async def analyze_personal_color(image: Image) -> PersonalColorAnalysis:
 ### 定量的成果：技術革新の証明
 
 **Multi-Agent Architecture の効果**
-- 診断精度: 85%以上（従来単一AI比+23%向上）
 - 処理速度: 平均25秒以内（4つのAgent連携最適化）
 - ユーザー満足度: 4.2/5.0（年齢適応型UI効果）
 - 機能拡張: メイク + ファッション両方の提案で体験価値2倍
@@ -317,7 +316,7 @@ async def analyze_personal_color(image: Image) -> PersonalColorAnalysis:
 
 **AIスタイリスト**は、単なる美容アプリを超えた存在です。
 
-第3回 AI Agent Hackathon のテーマ「**AI Agentが現実を豊かにする**」を体現し、4つの専門AI Agentが協調することで、これまで不可能だった個人最適化美容・ファッション体験を実現しました。
+第3回 AI Agent Hackathon のテーマ「**AI Agentが現実を豊かにする**」を体現し、3つの専門AI Agentが協調することで、これまで不可能だった個人最適化美容・ファッション体験を実現しました。
 
 ### このプロジェクトが示すAI Agentの可能性
 
