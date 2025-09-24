@@ -1,8 +1,9 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'core/di/injection_container.dart' as di;
 import 'features/home/presentation/android/android_home_page.dart';
 import 'features/home/presentation/ios/ios_home_page.dart';
+import 'features/home/presentation/web/web_home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'core/services/firebase_app_check_service.dart';
@@ -27,8 +28,10 @@ void main() async {
     }
   }
   
-  // Firebase App Check初期化
-  await FirebaseAppCheckService.initialize();
+  // Firebase App Check初期化（Web環境では一時的にスキップ）
+  if (!kIsWeb) {
+    await FirebaseAppCheckService.initialize();
+  }
   
   runApp(const MyApp());
 }
@@ -55,14 +58,19 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Web環境の場合
+    if (kIsWeb) {
+      return WebHomePage(title: title);
+    }
+
     // Androidの場合は専用のホーム画面を使用
-    if (Platform.isAndroid) {
+    if (defaultTargetPlatform == TargetPlatform.android) {
       return AndroidNavigationService.wrapWithBackHandler(
         onWillPop: () => AndroidNavigationService.handleSystemBack(context),
         child: AndroidHomePage(title: title),
       );
     }
-    
+
     // iOSやその他のプラットフォーム用
     return IosHomePage(title: title);
   }

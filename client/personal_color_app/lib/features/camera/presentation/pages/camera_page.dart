@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../ios/ios_camera_page.dart';
 import '../android/android_camera_page.dart';
+import '../web/web_camera_page.dart';
 
 /// プラットフォームに応じたカメラページのラッパー
 class CameraPage extends StatelessWidget {
@@ -9,14 +11,17 @@ class CameraPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid) {
+    if (kIsWeb) {
+      // Web版
+      return const WebCameraPage();
+    } else if (Platform.isAndroid) {
       // Android版 - Material Design 3準拠
       return const AndroidCameraPage();
     } else if (Platform.isIOS) {
       // iOS版を使用
       return const IOSCameraPage();
     }
-    
+
     // フォールバック
     return _buildFallbackCameraPage();
   }
