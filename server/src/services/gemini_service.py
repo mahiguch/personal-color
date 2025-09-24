@@ -70,7 +70,7 @@ class GeminiService:
 
     def __init__(self):
         self.settings = get_settings()
-        self.model_name = "gemini-1.5-flash"  # 利用可能なGemini Flash
+        self.model_name = "gemini-2.0-flash-lite-001"
         self.client: Optional[genai.Client] = None
         self._initialize_service()
 
@@ -706,9 +706,14 @@ class GeminiService:
                 if not response or not response.text:
                     raise GeminiServiceError("Empty response from Gemini Vision Enhanced")
 
+                # デバッグ用: レスポンス全文をログ出力
+                logger.info(f"Enhanced response full text: {response.text}")
+
                 # 拡張JSON形式の検証
                 if not self.personal_color_prompt.validate_enhanced_response_format(response.text):
                     logger.warning(f"Enhanced response failed validation: {response.text[:100]}...")
+                    # 詳細な検証失敗理由をログ出力
+                    self._log_validation_details(response.text)
                     raise GeminiServiceError("Enhanced response failed validation")
 
                 # 成功
@@ -743,6 +748,80 @@ class GeminiService:
 
         # フォールバック応答を生成
         return await self._generate_enhanced_fallback()
+
+    def _log_validation_details(self, response_text: str) -> None:
+        """
+        検証失敗の詳細をログ出力
+        
+        Args:
+            response_text: 検証に失敗したレスポンステキスト
+        """
+        try:
+            # JSON解析を試行
+            json_start = response_text.find("{")
+            json_end = response_text.rfind("}") + 1
+            
+            if json_start == -1 or json_end <= json_start:
+                logger.error(f"No valid JSON structure found in response")
+                return
+                
+            json_text = response_text[json_start:json_end]
+            result_data = json.loads(json_text)
+            
+            # 必須フィールドの存在チェック
+            required_fields = [
+                "personal_color_type",
+                "confidence", 
+                "explanation",
+                "recommended_colors",
+                "tips",
+                "person_analysis"
+            ]
+            
+            missing_fields = []
+            for field in required_fields:
+                if field not in result_data:
+                    missing_fields.append(field)
+            
+            if missing_fields:
+                logger.error(f"Missing required fields: {missing_fields}")
+            
+            # person_analysis の詳細チェック
+            if "person_analysis" in result_data:
+                person_analysis = result_data["person_analysis"]
+                if not isinstance(person_analysis, dict):
+                    logger.error(f"person_analysis is not a dictionary: {type(person_analysis)}")
+                else:
+                    person_required = ["age_group", "gender", "confidence"]
+                    person_missing = []
+                    for field in person_required:
+                        if field not in person_analysis:
+                            person_missing.append(field)
+                    
+                    if person_missing:
+                        logger.error(f"Missing person_analysis fields: {person_missing}")
+                    
+                    # 値の検証
+                    if "age_group" in person_analysis:
+                        valid_ages = ["child", "student", "adult", "middleAge", "senior"]
+                        if person_analysis["age_group"] not in valid_ages:
+                            logger.error(f"Invalid age_group: '{person_analysis['age_group']}', valid: {valid_ages}")
+                    
+                    if "gender" in person_analysis:
+                        valid_genders = ["male", "female", "unknown"]
+                        if person_analysis["gender"] not in valid_genders:
+                            logger.error(f"Invalid gender: '{person_analysis['gender']}', valid: {valid_genders}")
+            
+            # パーソナルカラータイプの検証
+            if "personal_color_type" in result_data:
+                valid_types = ["Spring", "Summer", "Autumn", "Winter"]
+                if result_data["personal_color_type"] not in valid_types:
+                    logger.error(f"Invalid personal_color_type: '{result_data['personal_color_type']}', valid: {valid_types}")
+            
+        except json.JSONDecodeError as e:
+            logger.error(f"JSON parsing failed: {e}")
+        except Exception as e:
+            logger.error(f"Validation detail logging failed: {e}")
 
     # ----------------------
     # Enhanced helpers

@@ -271,14 +271,19 @@ class PersonalColorPrompt:
             bool: 正しい形式かどうか
         """
         try:
-            # JSONの抽出と解析
+            # デバッグ用: レスポンス全文をログ出力
+            logger.info(f"Validating enhanced response: {response_text}")
+            
+            # JSON の抽出と解析
             json_start = response_text.find("{")
             json_end = response_text.rfind("}") + 1
 
             if json_start == -1 or json_end <= json_start:
+                logger.warning("No valid JSON structure found in response")
                 return False
 
             json_text = response_text[json_start:json_end]
+            logger.info(f"Extracted JSON text: {json_text}")
             result_data = json.loads(json_text)
 
             # 必須フィールドのチェック
@@ -298,12 +303,13 @@ class PersonalColorPrompt:
 
             # パーソナルカラー部分の検証（既存ロジックを再利用）
             if not self.validate_response_format(response_text):
+                logger.warning("Basic personal color format validation failed")
                 return False
 
             # person_analysis部分の検証
             person_analysis = result_data["person_analysis"]
             if not isinstance(person_analysis, dict):
-                logger.warning("person_analysis is not a dictionary")
+                logger.warning(f"person_analysis is not a dictionary: {type(person_analysis)}")
                 return False
 
             # person_analysis必須フィールド
@@ -316,26 +322,30 @@ class PersonalColorPrompt:
             # age_group検証
             valid_age_groups = ["child", "student", "adult", "middleAge", "senior"]
             if person_analysis["age_group"] not in valid_age_groups:
-                logger.warning(f"Invalid age_group: {person_analysis['age_group']}")
+                logger.warning(f"Invalid age_group: '{person_analysis['age_group']}', valid values: {valid_age_groups}")
                 return False
 
             # gender検証
             valid_genders = ["male", "female", "unknown"]
             if person_analysis["gender"] not in valid_genders:
-                logger.warning(f"Invalid gender: {person_analysis['gender']}")
+                logger.warning(f"Invalid gender: '{person_analysis['gender']}', valid values: {valid_genders}")
                 return False
 
             # confidence検証（0-100の範囲）
             if not isinstance(person_analysis["confidence"], (int, float)):
-                logger.warning("person_analysis confidence is not numeric")
+                logger.warning(f"person_analysis confidence is not numeric: {type(person_analysis['confidence'])}")
                 return False
 
             if not (0 <= person_analysis["confidence"] <= 100):
-                logger.warning(f"person_analysis confidence out of range: {person_analysis['confidence']}")
+                logger.warning(f"person_analysis confidence out of range: {person_analysis['confidence']} (should be 0-100)")
                 return False
 
+            logger.info("Enhanced response format validation passed")
             return True
 
-        except (json.JSONDecodeError, KeyError, TypeError) as e:
+        except json.JSONDecodeError as e:
+            logger.error(f"JSON parsing failed in enhanced response validation: {e}")
+            return False
+        except (KeyError, TypeError) as e:
             logger.error(f"Enhanced response format validation failed: {e}")
             return False
