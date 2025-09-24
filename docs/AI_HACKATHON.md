@@ -12,7 +12,7 @@
 
 ## プロモーション動画
 
-@[youtube](BOBbEvrgAWM)
+@[youtube](Ai-HgLM8WPw)
 
 *3分でわかる AIスタイリスト の魅力 - 3つのAI Agentが織りなす、新しい美容体験の世界*
 
@@ -44,7 +44,7 @@
 **AIスタイリスト**は、Google Cloud の AI技術を活用した3つの専門AI Agentが協調し、従来の美容体験を根本的に変革します。単一のAIでは不可能だった、**多角的で包括的な美容支援**を実現しています。
 
 #### 1. 診断AI Agent - 客観的で精密なパーソナルカラー診断
-- **Vertex AI Gemini-2.5-flush** による高精度画像解析
+- **Vertex AI Gemini-2.x-flush** による高精度画像解析
 - 肌の色調、瞳の色、髪色を総合的に分析
 - Spring/Summer/Autumn/Winter の4シーズン診断
 - 年齢推定による適切なアドバイスレベルの自動調整
@@ -70,7 +70,7 @@
 User Photo Input
     ↓
 ┌─────────────────────────────────────────┐
-│ 診断AI Agent (Gemini-2.5-flush)          │
+│ 診断AI Agent (Gemini)          │
 │ • 肌・瞳・髪色の詳細分析                    │
 │ • パーソナルカラータイプ判定                 │
 │ • 年齢推定・経験レベル推定                  │
@@ -78,7 +78,7 @@ User Photo Input
     ↓              ↓
 ┌──────────────────────┐  ┌──────────────────────┐
 │ メイクAI Agent        │  │ コーデAI Agent        │
-│ (Imagen 4)           │  │ (Imagen 4)           │
+│ (Imagen 4)           │  │ (Imagen 4 + TryOn)   │
 │ • 最適メイク生成       │  │ • ファッション画像生成   │
 │ • 年齢適応スタイリング  │  │ • 年齢・スタイル適応    │
 │ • 表情・質感維持       │  │ • 季節感考慮コーデ      │
@@ -103,8 +103,9 @@ User Photo Input
                        │           ▼                  │
                        │ ┌──────────────────────────┐ │
                        │ │ Vertex AI Hub            │ │
-                       │ │ • Gemini-2.5-flush       │ │
+                       │ │ • Gemini-2.x-flush       │ │
                        │ │ • Imagen 4               │ │
+                       │ │ • Virtual Try On         │ │
                        │ └──────────────────────────┘ │
                        └──────────────────────────────┘
 ```
@@ -117,16 +118,16 @@ User Photo Input
 - ✅ **Cloud Run**: サーバーレスコンテナ実行環境
 
 **AI技術:**
-- ✅ **Vertex AI Gemini-2.5-flush**: 高精度画像解析・テキスト生成
+- ✅ **Vertex AI Gemini-2.x-flush**: 高精度画像解析・テキスト生成。2.0と2.5が混在しているため2.xと表記。
 - ✅ **Vertex AI Imagen 4**: リアルなメイク画像生成
-
+- ✅ **Virtual Try On**: 衣料品を着用している人物の画像を生成で
 **Backend (Python + Cloud Run)**
 - **FastAPI**: 高性能なAPI開発フレームワーク
 - **Google GenAI SDK**: Vertex AI との統合
 - **Clean Architecture**: 保守性と拡張性を重視した設計
 
 **AI Engine (Vertex AI)**
-- **Gemini-2.5-flash**: 高精度な画像解析・テキスト生成
+- **Gemini-2.x-flash**: 高精度な画像解析・テキスト生成
 - **Imagen 4**: 自然で高品質なメイク画像生成
 - **Multi-modal Processing**: 画像とテキストの統合処理
 
@@ -176,7 +177,7 @@ async def generate_age_appropriate_makeup(
 ## AI Agentが現実を豊かにする：ユーザー体験の革新
 
 ### 1. 瞬時の診断体験（30秒）：診断AI Agentの力
-「自撮り1枚」で始まる変革の旅。Vertex AI Gemini-2.5-flushが、従来は専門家でなければ困難だった精密な色彩分析と年齢推定を瞬時に実行します。
+「自撮り1枚」で始まる変革の旅。Vertex AI Gemini-2.x-flushが、従来は専門家でなければ困難だった精密な色彩分析と年齢推定を瞬時に実行します。
 
 ### 2. 視覚的変身体験（2分）：メイク＆コーデAI Agentの魔法
 Vertex AI Imagen 4による驚きのBefore/After体験。メイクアップとファッションコーディネート、両方の変身提案で「こんなに変われるんだ！」という発見は、自己肯定感向上の第一歩となります。
@@ -229,7 +230,7 @@ Step 2: アクセント
 **課題**: 照明条件や画像品質のばらつきによる診断精度の低下
 
 **解決策**:
-- Gemini-2.5-flush の multi-modal 機能を活用した複合的分析
+- Gemini-2.x-flush の multi-modal 機能を活用した複合的分析
 - 肌色・瞳色・髪色の RGB 値詳細解析
 - 照明補正アルゴリズムの実装
 
@@ -327,7 +328,7 @@ async def analyze_personal_color(image: Image) -> PersonalColorAnalysis:
    技術的革新が直接的にユーザーの自己肯定感と表現力向上に貢献
 
 3. **Google Cloud AI技術の最大活用**
-   Vertex AI の Gemini-2.5-flush と Imagen 4 と Virtual Try On の統合による、メイク・ファッション両分野での新しい価値創造
+   Vertex AI の Gemini-x-flush と Imagen 4 と Virtual Try On の統合による、メイク・ファッション両分野での新しい価値創造
 
 ### AI Agentが拓く社会の未来
 
@@ -347,7 +348,7 @@ AI Agent は、単なる効率化ツールではありません。**一人ひと
 - **Webティザーサイト**: https://personal-color-469007.web.app/
 
 **💻 開発・技術情報**
-- **技術スタック**: Flutter, Python FastAPI, Google Cloud Run, Vertex AI (Gemini-2.5-flush, Imagen 4, virtual-try-on-preview-08-04)
+- **技術スタック**: Flutter, Python FastAPI, Google Cloud Run, Vertex AI (Gemini-2.x-flush, Imagen 4, virtual-try-on-preview-08-04)
 - **アーキテクチャ**: Multi-Agent System, Clean Architecture, DDD
 
 **第3回 AI Agent Hackathon with Google Cloud 応募作品**

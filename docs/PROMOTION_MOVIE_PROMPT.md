@@ -230,3 +230,177 @@ Include these keywords in all prompts:
 ### Scene 10 Narration (72-80 seconds)
 **Japanese Script**: AIスタイリストで、あなたの毎日を美しく彩りませんか？AppStoreとGooglePlayで今すぐダウンロード。無料で始められる、あなただけのパーソナル美容コンサルタント。新しい自分を発見する旅を、今日から始めましょう。
 **Character Count**: 98文字
+
+### Scene 11 Narration (iPhone画面撮影 - アプリ起動)
+**Japanese Script**: まずはアプリを起動します。シンプルで使いやすいインターフェースで、どなたでも簡単に操作できます。「パーソナルカラー診断を始める」ボタンをタップして、診断をスタートしましょう。
+**Character Count**: 88文字
+
+### Scene 12 Narration (iPhone画面撮影 - カメラ撮影準備)
+**Japanese Script**: カメラ撮影の準備画面です。自然光の下で、正面を向いて撮影してください。アプリが最適な撮影条件をガイドしてくれるので、初めての方でも安心です。準備ができたら撮影ボタンを押します。
+**Character Count**: 95文字
+
+### Scene 13 Narration (iPhone画面撮影 - AI分析中)
+**Japanese Script**: AIが写真を分析中です。肌の色調、瞳の色、髪の色を詳細に解析し、あなたに最適なパーソナルカラータイプを判定しています。数秒でプロ級の診断結果が得られる、最新AI技術の力をご体験ください。
+**Character Count**: 98文字
+
+### Scene 14 Narration (iPhone画面撮影 - 診断結果表示)
+**Japanese Script**: 診断結果が表示されました。あなたはイエローベース・スプリングタイプです。明るく爽やかな色調が最も似合うパーソナルカラー。詳しい説明と、おすすめのカラーパレットも同時に確認できます。
+**Character Count**: 94文字
+
+### Scene 15 Narration (iPhone画面撮影 - おすすめカラー表示)
+**Japanese Script**: あなたに似合うカラーパレットがこちらです。コーラルピンク、アイボリー、ライトブルーなど、肌を美しく見せる色が一目瞭然。メイクやファッションに取り入れやすい、具体的な色見本を提供しています。
+**Character Count**: 98文字
+
+### Scene 16 Narration (iPhone画面撮影 - バーチャルメイク機能)
+**Japanese Script**: バーチャルメイク機能で、おすすめの色を実際に試してみましょう。リップカラーやアイシャドウを変更して、どの色が最も似合うか確認できます。買い物前の色選びにも便利な機能です。
+**Character Count**: 91文字
+
+### Scene 17 Narration (iPhone画面撮影 - コーディネート提案)
+**Japanese Script**: AIファッションコーディネート機能では、あなたのパーソナルカラーに合わせた洋服の組み合わせを提案します。季節やシーンに応じて、最適なスタイリングをAIが自動生成。毎日のコーディネートがもっと楽しくなります。
+**Character Count**: 110文字
+
+### Scene 18 Narration (iPhone画面撮影 - 結果保存・共有)
+**Japanese Script**: 診断結果は保存して、いつでも見返すことができます。お友達や家族とシェアして、一緒に美容を楽しむことも可能。あなたの美容体験を、大切な人と共有してください。
+**Character Count**: 83文字
+
+### Scene 19 Narration (iPhone画面撮影 - その他機能紹介)
+**Japanese Script**: その他にも便利な機能が満載です。コスメ購入ガイド、季節別スタイリング提案、年代別アドバイスなど、あなたの美容ライフをトータルサポート。AIスタイリストで、新しい自分を発見してください。
+**Character Count**: 97文字
+
+---
+
+## Scene 20-25: User Interview Section
+
+### User Interview Question List
+
+#### 基本情報収集
+1. **年齢と職業**
+   - 「お名前と年齢、普段のお仕事を教えてください」
+
+2. **アプリ使用前の課題**
+   - 「AIスタイリストを使う前は、どんなことで困っていましたか？」
+   - 「メイクやファッション選びで悩むことはありましたか？」
+
+#### アプリ体験について
+3. **初回使用の印象**
+   - 「アプリを初めて使った時の感想を教えてください」
+   - 「操作は分かりやすかったですか？」
+
+4. **診断結果への反応**
+   - 「パーソナルカラー診断の結果はいかがでしたか？」
+   - 「意外だった点や納得した点はありますか？」
+
+5. **機能の活用**
+   - 「どの機能を一番よく使っていますか？」
+   - 「バーチャルメイク機能やコーディネート提案はいかがですか？」
+
+#### 変化と効果
+6. **見た目の変化**
+   - 「アプリを使い始めてから、見た目に変化はありましたか？」
+   - 「周りの人から何か言われることはありますか？」
+
+7. **内面の変化**
+   - 「自分への自信や気持ちの面で変化はありましたか？」
+   - 「毎朝の身支度は楽しくなりましたか？」
+
+8. **具体的なエピソード**
+   - 「アプリのおかげで良かったエピソードがあれば教えてください」
+   - 「友人や家族からの反応はいかがでしたか？」
+
+#### 推奨度
+9. **他者への推奨**
+   - 「このアプリを友人や家族に勧めたいと思いますか？」
+   - 「どんな人に特におすすめしたいですか？」
+
+10. **総合評価**
+    - 「AIスタイリストを一言で表現すると？」
+    - 「今後も使い続けたいと思いますか？」
+
+### Scene 20-25 Narration Scripts
+
+#### Scene 20 Narration (ユーザーインタビュー1 - 20代女性)
+**Japanese Script**: 実際にAIスタイリストを体験された20代のユーザーさんにお話を伺いました。「診断結果が思っていた以上に当たっていて驚きました。今まで似合わないと思っていた色が、実は私にぴったりだったんです」
+**Character Count**: 95文字
+
+#### Scene 21 Narration (ユーザーインタビュー2 - 30代女性)
+**Japanese Script**: 30代の働く女性からは「毎朝の身支度時間が大幅に短縮されました。AIが提案してくれるコーディネートで迷わずに済むようになり、仕事前のストレスが減りました」とのお声をいただきました。
+**Character Count**: 92文字
+
+#### Scene 22 Narration (ユーザーインタビュー3 - 40代女性)
+**Japanese Script**: 40代の女性は「年齢に合ったメイクが分からなくて悩んでいましたが、AIが提案してくれるスタイルは自然で上品。娘からも『お母さん、きれいになったね』と言われるようになりました」
+**Character Count**: 95文字
+
+#### Scene 23 Narration (ユーザーインタビュー4 - 親子利用)
+**Japanese Script**: 親子でご利用いただいているケースも多数あります。「娘と一緒に診断を受けて、それぞれに似合う色を見つけられました。親子の会話も増えて、美容が共通の趣味になりました」
+**Character Count**: 88文字
+
+#### Scene 24 Narration (ユーザーインタビュー5 - 総合評価)
+**Japanese Script**: 「AIスタイリストのおかげで、自分らしさを見つけることができました」「毎日が楽しくなり、外出するのが待ち遠しいです」多くのユーザーから、嬉しいお声をいただいています。
+**Character Count**: 87文字
+
+#### Scene 25 Narration (インタビュー総括)
+**Japanese Script**: ユーザーの皆さんに共通しているのは、自信を持って毎日を過ごせるようになったということ。AIスタイリストが、あなたの毎日をもっと美しく、もっと楽しくします。あなたも今すぐ体験してみませんか？
+**Character Count**: 97文字
+
+---
+
+## Scene 26-28: Summary & CTA Section (Veo3 Generation)
+
+### Scene 26 (Summary - AI Technology Emphasis)
+**Theme**: AI技術の革新性とパーソナライゼーション
+
+**Veo3 prompt**:
+```
+Elegant montage showcasing AI technology and beauty transformation. Split screen composition: left side shows flowing data visualization with soft blue particles representing AI analysis, right side displays diverse women of different ages (20s, 30s, 40s) with subtle before/after transformations. Minimalist style with clean backgrounds, limited color palette of white, soft blue, and gentle pink. Simple geometric overlays suggest precision and personalization. Smooth transitions between different age groups. Professional, premium aesthetic with subtle digital effects. 8 seconds duration.
+```
+
+**Narration Script**:
+**Japanese Script**: 最新のAI技術があなたの美しさを科学的に解析し、完全にパーソナライズされた提案を実現。年齢や個性に合わせた最適なスタイルで、あなたらしい魅力を最大限に引き出します。
+**Character Count**: 87文字
+
+### Scene 27 (Summary - Lifestyle Enhancement)
+**Theme**: 日常生活の向上と自信の獲得
+
+**Veo3 prompt**:
+```
+Lifestyle enhancement showcase with minimalist design. Multiple scenes in clean, white-dominated environments: morning routine with confident woman choosing clothes effortlessly, office scene with professional styling, social gathering with natural, glowing appearance. All characters show positive, confident expressions. Simple line art overlays showing improvement arrows and positive symbols. Limited color palette with white backgrounds, soft pastels. Clean typography displaying key benefits in Japanese. Uplifting, aspirational mood. 8 seconds duration.
+```
+
+**Narration Script**:
+**Japanese Script**: 毎朝の身支度が楽しくなり、自分に自信が持てるように。仕事でもプライベートでも、あなたらしい輝きで周りの人を魅力し続けます。AIスタイリストで、理想の自分を毎日実現してください。
+**Character Count**: 93文字
+
+### Scene 28 (Final CTA - App Download)
+**Theme**: アプリダウンロードへの最終誘導
+
+**Veo3 prompt**:
+```
+Premium app download call-to-action scene with minimalist aesthetic. Center-focused smartphone displaying the AIスタイリスト app with App Store and Google Play icons prominently shown. Clean white background with subtle geometric patterns. QR codes appear elegantly on both sides of the phone. Simple animation with the phone gently rotating to show the sleek app interface. Download buttons pulse softly with gentle blue accent color. Professional lighting creates premium feel. Japanese text "今すぐダウンロード" appears in clean typography. 8 seconds duration.
+```
+
+**Narration Script**:
+**Japanese Script**: AIスタイリストで、あなたの毎日を美しく変えてみませんか？App StoreとGoogle Playで無料ダウンロード。新しいあなたとの出会いが、今ここから始まります。
+**Character Count**: 78文字
+
+---
+
+## Complete Video Structure Summary (28 Scenes Total)
+
+### Phase 1: Problem & Solution Introduction (Scenes 1-10)
+- Scene 1-2: 日常の悩み提起
+- Scene 3-6: AIスタイリスト機能紹介
+- Scene 7-10: 年齢適応・結果・満足度・CTA
+
+### Phase 2: App Demonstration (Scenes 11-19)
+- Scene 11-13: アプリ起動・撮影・AI分析
+- Scene 14-16: 診断結果・カラーパレット・バーチャルメイク
+- Scene 17-19: コーディネート・保存共有・その他機能
+
+### Phase 3: User Testimonials (Scenes 20-25)
+- Scene 20-22: 年代別ユーザーインタビュー
+- Scene 23-25: 親子利用・総合評価・インタビュー総括
+
+### Phase 4: Summary & Final CTA (Scenes 26-28)
+- Scene 26: AI技術の革新性まとめ
+- Scene 27: ライフスタイル向上まとめ
+- Scene 28: 最終アプリダウンロード誘導
